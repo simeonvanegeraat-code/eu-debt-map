@@ -1,16 +1,17 @@
-# EU Debt Map (MVP)
+# EU Debt Map (Clean JS Build)
 
-Interactive EU map with per-country ticking debt meter (estimated), country pages with sparkline, and AdSense integration.
+- JavaScript-only Next.js 14 App Router to reduce deploy errors on Vercel
+- Alias via `jsconfig.json` (`@/*`)
+- ESLint won't block builds (`next.config.mjs`)
+- Europe map with `react-simple-maps`
+- Country page with a ticking estimate + sparkline (Recharts)
+- Demo data in `lib/data.js`
 
-## Quick start
-1. `npm install`
-2. `npm run dev`  (http://localhost:3000)
+## Local
+```bash
+npm install
+npm run dev
+```
 
 ## Deploy
-- Vercel: import the repo → default settings.
-- Netlify: Next.js build (`next build`) + `netlify.toml` if needed.
-
-## Configure
-- `app/sitemap.ts`: replace `https://example.com` with your domain.
-- `app/layout.tsx`: set your AdSense client id.
-- `data/eu.json`: replace demo values with official data.
+Push to GitHub → Vercel (Add New → Project → Import → Deploy)
