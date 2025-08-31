@@ -17,7 +17,7 @@ export default function CountryPage({ params: { code } }){
   }, []);
 
   if(!country){
-    return <main className="container card">Onbekend land: {String(code).toUpperCase()}</main>;
+    return <main className="container card">Unknown country code: {String(code).toUpperCase()}</main>;
   }
 
   const current = interpolateDebt(country, now);
@@ -36,18 +36,20 @@ export default function CountryPage({ params: { code } }){
     return out;
   }, [country]);
 
+  const nf = new Intl.NumberFormat("en-GB");
+
   return (
     <main className="container grid" style={{alignItems:"start"}}>
       <section className="card" style={{gridColumn:"1 / -1"}}>
-        <a className="btn" href="/">← Terug</a>
+        <a className="btn" href="/">← Back</a>
         <h2 style={{marginTop:12}}>{country.flag} {country.name}</h2>
         <div className="mono" style={{fontSize:"28px",fontWeight:700}}>
-          Actuele schatting: €{new Intl.NumberFormat("nl-NL").format(Math.round(current))}
+          Current estimate: €{nf.format(Math.round(current))}
         </div>
         <div className="tag">
-          Peil van {new Date(country.prev_date).toLocaleDateString("nl-NL")} tot {new Date(country.last_date).toLocaleDateString("nl-NL")} —{" "}
+          From {new Date(country.prev_date).toLocaleDateString("en-GB")} to {new Date(country.last_date).toLocaleDateString("en-GB")} —{" "}
           <span style={{color: trendUp ? "var(--bad)" : delta<0 ? "var(--ok)" : "#9ca3af"}}>
-            {trendUp ? "Stijgend" : delta<0 ? "Dalend" : "Vlak"}
+            {trendUp ? "Rising" : delta<0 ? "Falling" : "Flat"}
           </span>
         </div>
       </section>
@@ -56,7 +58,7 @@ export default function CountryPage({ params: { code } }){
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={spark}>
             <YAxis hide domain={["dataMin","dataMax"]} />
-            <Tooltip formatter={(v)=> new Intl.NumberFormat("nl-NL").format(Math.round(v))} labelFormatter={()=> ""} />
+            <Tooltip formatter={(v)=> new Intl.NumberFormat("en-GB").format(Math.round(v))} labelFormatter={()=> ""} />
             <Line type="monotone" dataKey="v" dot={false} stroke={trendUp ? "#ef4444" : "#22c55e"} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
