@@ -3,23 +3,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
 
+// (Optioneel) forceer dat dit segment niet per ongeluk statisch blijft
+export const dynamic = "force-dynamic";
+
 export default function CountryPage({ params: { code } }) {
-  // Find country (case-insensitive)
+  // 1) Vind land
   const country = useMemo(() => {
     const want = String(code).toLowerCase();
     return countries.find((x) => x.code.toLowerCase() === want) || null;
   }, [code]);
 
-  // Simple, robust ticker
+  // 2) Hydration check (als deze 'true' wordt, draait client JS)
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
+  // 3) Eenvoudige, betrouwbare ticker
   const [nowMs, setNowMs] = useState(() => Date.now());
   const timerRef = useRef(null);
-
   useEffect(() => {
-    // update 10x per second so movement is obvious but still cheap
     timerRef.current = setInterval(() => setNowMs(Date.now()), 100);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => timerRef.current && clearInterval(timerRef.current);
   }, []);
 
   if (!country) {
@@ -38,6 +41,12 @@ export default function CountryPage({ params: { code } }) {
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <a className="btn" href="/">← Back</a>
         <h2 style={{ marginTop: 12 }}>{country.flag} {country.name}</h2>
+
+        {/* Hydration + tick diagnose */}
+        <div className="tag" style={{ marginBottom: 6 }}>
+          client: {hydrated ? "✅" : "⏳"} • tick: {nowMs}
+        </div>
+
         <div className="mono" style={{ fontSize: 28, fontWeight: 700 }}>
           Current estimate: €{nf.format(Math.round(current))}
         </div>
