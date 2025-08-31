@@ -6,18 +6,17 @@ function fmt(v) {
 }
 
 export default function DebugEurostat() {
-  const merged = countries.map((c) => {
+  const rows = countries.map((c) => {
     const es = EUROSTAT_SERIES?.[c.code];
-    const usedEurostat = !!es;
     return {
       code: c.code,
       name: c.name,
-      usedEurostat,
-      latestTime: es?.latestTime ?? "—",
-      previousTime: es?.previousTime ?? "—",
-      startValue: es?.startValue ?? c.prev_value_eur,
-      endValue: es?.endValue ?? c.last_value_eur,
-      trend: es?.trend ?? (c.last_value_eur > c.prev_value_eur ? "rising" : (c.last_value_eur < c.prev_value_eur ? "falling" : "flat")),
+      source: es ? "Eurostat ✅" : "Baseline",
+      prevQ: es?.previousTime ?? "—",
+      lastQ: es?.latestTime ?? "—",
+      start: es?.startValue ?? c.prev_value_eur,
+      end: es?.endValue ?? c.last_value_eur,
+      trend: (es?.endValue ?? c.last_value_eur) - (es?.startValue ?? c.prev_value_eur),
     };
   });
 
@@ -34,34 +33,31 @@ export default function DebugEurostat() {
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Code</th>
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Name</th>
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Source</th>
-              <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Prev (q)</th>
-              <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Last (q)</th>
+              <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>PrevQ</th>
+              <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>LastQ</th>
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Start €</th>
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>End €</th>
               <th style={{textAlign:"left",borderBottom:"1px solid #2b3444"}}>Trend</th>
             </tr>
           </thead>
           <tbody>
-            {merged.map((row) => (
-              <tr key={row.code}>
-                <td className="mono">{row.code}</td>
-                <td>{row.name}</td>
-                <td className="tag">{row.usedEurostat ? "Eurostat ✅" : "Baseline"}</td>
-                <td className="mono">{row.previousTime}</td>
-                <td className="mono">{row.latestTime}</td>
-                <td className="mono">€{fmt(row.startValue)}</td>
-                <td className="mono">€{fmt(row.endValue)}</td>
-                <td style={{color: row.trend === "rising" ? "var(--bad)" : row.trend === "falling" ? "var(--ok)" : "#9ca3af"}}>
-                  {row.trend}
+            {rows.map((r) => (
+              <tr key={r.code}>
+                <td className="mono">{r.code}</td>
+                <td>{r.name}</td>
+                <td className="tag">{r.source}</td>
+                <td className="mono">{r.prevQ}</td>
+                <td className="mono">{r.lastQ}</td>
+                <td className="mono">€{fmt(r.start)}</td>
+                <td className="mono">€{fmt(r.end)}</td>
+                <td className="mono" style={{color: r.trend>0 ? "var(--bad)" : r.trend<0 ? "var(--ok)" : "#9ca3af"}}>
+                  {r.trend>0 ? "↑ rising" : r.trend<0 ? "↓ falling" : "→ flat"}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="tag" style={{marginTop:12}}>
-        Tip: Als “Source” = Eurostat ✅ voor de meeste landen, dan draait je integratie goed. Je kunt deze pagina later gewoon verwijderen.
-      </p>
     </main>
   );
 }
