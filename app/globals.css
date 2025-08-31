@@ -1,24 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Simple dark theme */
-:root { color-scheme: dark; }
-body {
-  background: #0c121a;
-  color: #e6edf3;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-}
-.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-.card { background: #121a24; border: 1px solid #1f2b3a; border-radius: 12px; padding: 16px; }
-.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-.badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; }
-.badge.green { background:#113c2a; color:#7efab2; border:1px solid #1f5d43;}
-.badge.red { background:#3c1111; color:#ffa3a3; border:1px solid #5d1f1f;}
-.grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;}
-.country { background:#0e1621; border:1px solid #1b2635; border-radius:10px; padding:10px; text-decoration:none; color:inherit;}
-.country:hover { border-color:#2b3b54; transform: translateY(-1px); }
-.small { font-size:12px; opacity:0.7; }
-.footer { margin-top: 32px; display:flex; gap:16px; opacity:0.85;}
-hr.sep { border:0; border-top:1px solid #1f2b3a; margin: 16px 0; }
-.ad { background:#0a0f16; border:1px dashed #243044; border-radius:10px; padding:16px; text-align:center; opacity:.8 }
+:root { --bg:#0b1220; --fg:#e7ecf3; --muted:#8ea0b8; --ok:#22c55e; --bad:#ef4444; --card:#111827; --border:#1f2937; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:#93c5fd;text-decoration:none} a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.big{font-size:clamp(28px,5vw,48px);font-weight:800}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.tag{color:var(--muted);font-size:12px}
+.btn{display:inline-block;background:#1f2937;border:1px solid var(--border);padding:8px 12px;border-radius:10px;color:white}
+.mapWrap{overflow:hidden}
