@@ -1,15 +1,10 @@
-export default function AboutPage(){
+export const metadata = { title: "About – EU Debt Map" };
+
+export default function About() {
   return (
-    <main className="container card">
-      <h2>About this project</h2>
-      <p>
-        This site shows an indicative, ticking estimate of government debt by EU country,
-        based on two reference dates. It is for education/visualization only and is not an
-        official statistic.
-      </p>
-      <p>
-        For production, you can later connect Eurostat/ECB data and run a scheduled update.
-      </p>
-    </main>
+    <div className="card">
+      <h2 className="text-2xl font-bold mb-2">About</h2>
+      <p>This MVP shows an estimated live counter based on two reference points and a constant rate per second. Numbers are demo only.</p>
+    </div>
   );
 }
