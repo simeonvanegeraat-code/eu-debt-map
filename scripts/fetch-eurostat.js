@@ -27,7 +27,7 @@ const qEndDate = (timeStr) => {
 const orderFromIndex = (indexMap) =>
   Object.entries(indexMap).sort((a,b)=>a[1]-b[1]).map(([k])=>k);
 
-// We vragen ruimer op (laatste 8 kwartalen),
+// We vragen ruimer op (laatste 8 kwartalen)
 // zodat we per land altijd 2 *verschillende* kwartalen kunnen kiezen.
 const buildUrl = () => {
   const base = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt";
@@ -86,7 +86,6 @@ async function main() {
         lastKey = timeKeys[t];
         lastVal = v;
       } else if (timeKeys[t] !== lastKey) {
-        // tweede andere periode gevonden
         prevKey = timeKeys[t];
         prevVal = v;
         break;
@@ -94,8 +93,7 @@ async function main() {
     }
 
     if (lastKey === null) continue; // geen data
-    if (prevKey === null) {
-      // slechts één periode → maak ‘m flat (geen tik), maar vul toch basis
+    if (prevKey === null) { // slechts één periode → flat
       prevKey = lastKey;
       prevVal = lastVal;
     }
@@ -129,7 +127,7 @@ export const EUROSTAT_SERIES = ${JSON.stringify(out, null, 2)};
 `;
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, file, "utf8");
-  console.log(\`[fetch-eurostat] wrote \${OUT_FILE} with \${Object.keys(out).length} countries\`);
+  console.log(`[fetch-eurostat] wrote ${OUT_FILE} with ${Object.keys(out).length} countries`);
 }
 
 main().catch(err => {
