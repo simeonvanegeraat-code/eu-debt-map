@@ -3,34 +3,23 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
 
-// (Optioneel) forceer dat dit segment niet per ongeluk statisch blijft
-export const dynamic = "force-dynamic";
-
 export default function CountryPage({ params: { code } }) {
-  // 1) Vind land
+  // Zoek land
   const country = useMemo(() => {
     const want = String(code).toLowerCase();
     return countries.find((x) => x.code.toLowerCase() === want) || null;
   }, [code]);
 
-  // 2) Hydration check (als deze 'true' wordt, draait client JS)
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
-
-  // 3) Eenvoudige, betrouwbare ticker
+  // Simpele, betrouwbare ticker
   const [nowMs, setNowMs] = useState(() => Date.now());
   const timerRef = useRef(null);
   useEffect(() => {
-    timerRef.current = setInterval(() => setNowMs(Date.now()), 100);
+    timerRef.current = setInterval(() => setNowMs(Date.now()), 120);
     return () => timerRef.current && clearInterval(timerRef.current);
   }, []);
 
   if (!country) {
-    return (
-      <main className="container card">
-        Unknown country code: {String(code).toUpperCase()}
-      </main>
-    );
+    return <main className="container card">Unknown country: {String(code).toUpperCase()}</main>;
   }
 
   const current = interpolateDebt(country, nowMs);
@@ -40,16 +29,18 @@ export default function CountryPage({ params: { code } }) {
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <a className="btn" href="/">← Back</a>
-        <h2 style={{ marginTop: 12 }}>{country.flag} {country.name}</h2>
+        <h2 style={{ marginTop: 12 }}>
+          {country.flag} {country.name}
+        </h2>
 
-        {/* Hydration + tick diagnose */}
-        <div className="tag" style={{ marginBottom: 6 }}>
-          client: {hydrated ? "✅" : "⏳"} • tick: {nowMs}
-        </div>
-
-        <div className="mono" style={{ fontSize: 28, fontWeight: 700 }}>
+        <div className="mono" style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}>
           Current estimate: €{nf.format(Math.round(current))}
         </div>
+
+        <p className="tag" style={{ marginTop: 8 }}>
+          Based on Eurostat last two quarters ({country.prev_date} → {country.last_date}). Demo estimate
+          with simple per-second interpolation.
+        </p>
       </section>
     </main>
   );
