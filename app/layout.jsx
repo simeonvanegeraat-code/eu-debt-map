@@ -1,24 +1,35 @@
+// app/layout.jsx
 import "./globals.css";
+import Header from "@/components/Header";
 
 export const metadata = {
   title: "EU Debt Map",
-  description: "Indicative government debt per EU country (demo data)."
+  description:
+    "Explore EU-27 government debt. Click a country to see a live ticking estimate. Data derived from Eurostat; figures are demo estimates.",
+  openGraph: {
+    title: "EU Debt Map",
+    description:
+      "Explore EU-27 government debt. Click a country to see a live ticking estimate.",
+    url: "https://eu-debt-map.vercel.app/",
+    siteName: "EU Debt Map",
+    type: "website",
+  },
+  metadataBase: new URL("https://eu-debt-map.vercel.app"),
 };
 
-export default function RootLayout({ children }){
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <header className="container">
-          <h1 className="big">EU Debt Map</h1>
-          <div className="tag">MVP — demo figures, not official statistics</div>
-        </header>
+        <Header />
+
         {children}
-        <footer className="container" style={{opacity:.8,paddingTop:24}}>
-          <div className="grid">
-            <div className="card">© {new Date().getFullYear()} EU Debt Map</div>
-            <div className="card"><a href="/about">About</a></div>
-          </div>
+
+        <footer className="container grid" style={{ marginTop: 24 }}>
+          <section className="card">© {new Date().getFullYear()} EU Debt Map</section>
+          <section className="card">
+            <a href="/about">About</a>
+          </section>
         </footer>
       </body>
     </html>
