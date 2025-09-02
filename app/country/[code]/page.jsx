@@ -2,6 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
+import AdSlot from "@/components/AdSlot";
+import { SLOTS } from "@/lib/ads";
+
+// ...
+<div style={{ marginTop: 12 }}>
+  <AdSlot slot={SLOTS.countryUnder} />
+</div>
+
 
 export default function CountryPage({ params: { code } }) {
   // Zoek land

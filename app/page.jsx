@@ -1,3 +1,4 @@
+// app/page.jsx
 import EuropeMap from "@/components/EuropeMap";
 import { countries, trendFor } from "@/lib/data";
 
@@ -16,9 +17,7 @@ export default function HomePage() {
   // Largest debt (op basis van last_value_eur)
   const largestDebt =
     valid.length > 0
-      ? valid.reduce((a, b) =>
-          a.last_value_eur > b.last_value_eur ? a : b
-        )
+      ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b))
       : null;
 
   // Fastest growing (grootste positieve delta)
@@ -40,9 +39,7 @@ export default function HomePage() {
     <main className="container grid" style={{ alignItems: "start" }}>
       {/* Intro / uitleg */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0, marginBottom: 8 }}>
-          Welcome to EU Debt Map
-        </h2>
+        <h2 style={{ marginTop: 0, marginBottom: 8 }}>Welcome to EU Debt Map</h2>
         <p style={{ margin: 0 }}>
           Explore the government debt of all EU countries.{" "}
           <strong>Click a country on the map</strong> to see a live, ticking
@@ -83,6 +80,7 @@ export default function HomePage() {
             marginTop: 8,
           }}
         >
+          {/* Largest debt */}
           <div
             style={{
               background: "#0f172a",
@@ -97,15 +95,14 @@ export default function HomePage() {
                 <strong>
                   {largestDebt.flag} {largestDebt.name}
                 </strong>
-                <div className="mono">
-                  €{formatEUR(largestDebt.last_value_eur)}
-                </div>
+                <div className="mono">€{formatEUR(largestDebt.last_value_eur)}</div>
               </div>
             ) : (
               <div className="tag">—</div>
             )}
           </div>
 
+          {/* Fastest growing */}
           <div
             style={{
               background: "#0f172a",
@@ -129,6 +126,7 @@ export default function HomePage() {
             )}
           </div>
 
+          {/* Falling list */}
           <div
             style={{
               background: "#0f172a",
@@ -159,9 +157,7 @@ export default function HomePage() {
                     {c.code}
                   </span>
                 ))}
-                {fallingMore > 0 && (
-                  <span className="tag">+{fallingMore} more</span>
-                )}
+                {fallingMore > 0 && <span className="tag">+{fallingMore} more</span>}
               </div>
             ) : (
               <div className="tag">No countries currently falling.</div>
@@ -177,7 +173,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick list (blijft handig + SEO) */}
+      {/* Quick list (handig + SEO) */}
       <section className="card">
         <h3>Quick list</h3>
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -192,7 +188,8 @@ export default function HomePage() {
                   {c.flag} {c.name} —{" "}
                   <span
                     style={{
-                      color: t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af",
+                      color:
+                        t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af",
                     }}
                   >
                     {t > 0 ? "↑ rising" : t < 0 ? "↓ falling" : "→ flat"}

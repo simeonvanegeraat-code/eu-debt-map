@@ -1,4 +1,5 @@
 // app/layout.jsx
+import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 
@@ -21,6 +22,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+{/* AdSense loader (1x site-wide) */}
+<Script
+  id="adsense-js"
+  strategy="afterInteractive"
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
+  crossOrigin="anonymous"
+/>
         <Header />
 
         {children}
