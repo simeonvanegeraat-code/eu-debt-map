@@ -167,7 +167,7 @@ export default function HomePage() {
           <div
             style={{
               background: "#0f172a",
-              border: "1px solid "#1f2b3a",
+              border: "1px solid #1f2b3a", // ✅ fixed quotes here
               borderRadius: 12,
               padding: 12,
             }}
