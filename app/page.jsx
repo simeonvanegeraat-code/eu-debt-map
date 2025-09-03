@@ -1,6 +1,39 @@
 // app/page.jsx
+import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
 import { countries, trendFor } from "@/lib/data";
+
+// --- SEO / Metadata (site default = EN) ---
+export const metadata = {
+  title: "EU Debt Map | Explore national debts across the EU-27",
+  description:
+    "Interactive EU map with live, ticking estimates of government debt for EU-27 countries. Based on the last two Eurostat reference periods.",
+  openGraph: {
+    title: "EU Debt Map",
+    description:
+      "Explore government debt across the EU-27 with a live, ticking estimate per country.",
+    url: "https://eudebtmap.com/",
+    siteName: "EU Debt Map",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EU Debt Map",
+    description:
+      "Live, ticking estimates of EU government debt based on Eurostat.",
+  },
+  metadataBase: new URL("https://eudebtmap.com"),
+  alternates: {
+    canonical: "https://eudebtmap.com/",
+    languages: {
+      en: "https://eudebtmap.com/",
+      nl: "https://eudebtmap.com/nl",
+      de: "https://eudebtmap.com/de",
+      fr: "https://eudebtmap.com/fr",
+      "x-default": "https://eudebtmap.com/",
+    },
+  },
+};
 
 function formatEUR(v) {
   return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(
@@ -50,7 +83,7 @@ export default function HomePage() {
             <span className="tag">Red</span> = debt rising •{" "}
             <span className="tag">Green</span> = debt falling
           </li>
-          <li className="tag">
+          <li className="tag" aria-label="Disclaimer">
             Figures are simplified demo estimates for the MVP (not official
             statistics).
           </li>
@@ -64,7 +97,7 @@ export default function HomePage() {
           Green = debt falling • Red = debt rising (based on the last two
           reference dates)
         </p>
-        <div className="mapWrap">
+        <div className="mapWrap" role="region" aria-label="Interactive EU map">
           <EuropeMap />
         </div>
       </section>
@@ -88,6 +121,7 @@ export default function HomePage() {
               borderRadius: 12,
               padding: 12,
             }}
+            aria-label="Largest debt card"
           >
             <div className="tag">Largest debt</div>
             {largestDebt ? (
@@ -95,7 +129,9 @@ export default function HomePage() {
                 <strong>
                   {largestDebt.flag} {largestDebt.name}
                 </strong>
-                <div className="mono">€{formatEUR(largestDebt.last_value_eur)}</div>
+                <div className="mono" aria-live="polite">
+                  €{formatEUR(largestDebt.last_value_eur)}
+                </div>
               </div>
             ) : (
               <div className="tag">—</div>
@@ -110,6 +146,7 @@ export default function HomePage() {
               borderRadius: 12,
               padding: 12,
             }}
+            aria-label="Fastest growing debt card"
           >
             <div className="tag">Fastest growing</div>
             {fastestGrowing ? (
@@ -130,10 +167,11 @@ export default function HomePage() {
           <div
             style={{
               background: "#0f172a",
-              border: "1px solid #1f2b3a",
+              border: "1px solid "#1f2b3a",
               borderRadius: 12,
               padding: 12,
             }}
+            aria-label="Debt falling list"
           >
             <div className="tag">Debt falling</div>
             {falling.length > 0 ? (
@@ -153,6 +191,7 @@ export default function HomePage() {
                       marginBottom: 6,
                       fontSize: 12,
                     }}
+                    aria-label={`${c.name} falling`}
                   >
                     {c.code}
                   </span>
@@ -174,27 +213,27 @@ export default function HomePage() {
       </section>
 
       {/* Quick list (handig + SEO) */}
-      <section className="card">
+      <section className="card" aria-label="Quick list of countries">
         <h3>Quick list</h3>
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {countries.map((c) => {
             const t = trendFor(c);
+            const trendLabel = t > 0 ? "↑ rising" : t < 0 ? "↓ falling" : "→ flat";
+            const trendColor = t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af";
             return (
               <li
                 key={c.code}
                 style={{ padding: "8px 0", borderBottom: "1px dashed #2b3444" }}
               >
-                <a className="mono" href={`/country/${c.code.toLowerCase()}`}>
+                <Link
+                  className="mono"
+                  href={`/country/${c.code.toLowerCase()}`}
+                  aria-label={`${c.name} — ${trendLabel}`}
+                  prefetch
+                >
                   {c.flag} {c.name} —{" "}
-                  <span
-                    style={{
-                      color:
-                        t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af",
-                    }}
-                  >
-                    {t > 0 ? "↑ rising" : t < 0 ? "↓ falling" : "→ flat"}
-                  </span>
-                </a>
+                  <span style={{ color: trendColor }}>{trendLabel}</span>
+                </Link>
               </li>
             );
           })}
@@ -203,7 +242,7 @@ export default function HomePage() {
 
       {/* Disclaimer onderaan, unobtrusive */}
       <section className="card">
-        <div className="tag">
+        <div className="tag" role="note">
           Note: This MVP uses demo figures. Official data (Eurostat/ECB) will be
           connected in a future update.
         </div>
