@@ -1,4 +1,8 @@
 import Link from "next/link";
+import CTASidebar from "@/components/CTASidebar";
+
+// …
+<CTASidebar lang="de" homeHref="/de" methodologyHref="/de/methodology" />
 
 export const metadata = {
   title: "Was ist Staatsverschuldung? • EU Debt Map",

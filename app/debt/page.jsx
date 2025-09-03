@@ -1,5 +1,11 @@
 // app/debt/page.jsx
 import Link from "next/link";
+// bovenaan
+import CTASidebar from "@/components/CTASidebar";
+
+// … binnen de component, NA de main content:
+<CTASidebar lang="en" homeHref="/" methodologyHref="/methodology" />
+
 
 export const metadata = {
   title: "What is Government Debt? • EU Debt Map",

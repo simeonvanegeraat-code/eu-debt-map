@@ -1,4 +1,9 @@
 import Link from "next/link";
+import CTASidebar from "@/components/CTASidebar";
+
+// …
+<CTASidebar lang="fr" homeHref="/fr" methodologyHref="/fr/methodology" />
+
 
 export const metadata = {
   title: "Qu’est-ce que la dette publique ? • EU Debt Map",
