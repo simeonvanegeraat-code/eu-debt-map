@@ -1,26 +1,22 @@
-// app/page.jsx
 import EuropeMap from "@/components/EuropeMap";
 import { countries, trendFor } from "@/lib/data";
 
 function formatEUR(v) {
-  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(
+  return new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 }).format(
     Math.round(v)
   );
 }
 
-export default function HomePage() {
-  // Alleen landen met echte waarden voor highlights
+export default function HomePageNL() {
   const valid = countries.filter(
     (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
   );
 
-  // Largest debt (op basis van last_value_eur)
   const largestDebt =
     valid.length > 0
       ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b))
       : null;
 
-  // Fastest growing (grootste positieve delta)
   const withDelta = valid.map((c) => ({
     ...c,
     delta: c.last_value_eur - c.prev_value_eur,
@@ -30,169 +26,95 @@ export default function HomePage() {
       ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b))
       : null;
 
-  // Landen waar schuld daalt
   const falling = valid.filter((c) => c.last_value_eur < c.prev_value_eur);
-  const fallingPreview = falling.slice(0, 6); // eerste 6 tonen
+  const fallingPreview = falling.slice(0, 6);
   const fallingMore = Math.max(falling.length - fallingPreview.length, 0);
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* Intro / uitleg */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0, marginBottom: 8 }}>Welcome to EU Debt Map</h2>
-        <p style={{ margin: 0 }}>
-          Explore the government debt of all EU countries.{" "}
-          <strong>Click a country on the map</strong> to see a live, ticking
-          estimate for that country.
+        <h2>Welkom bij EU Debt Map</h2>
+        <p>
+          Ontdek de staatsschuld van alle EU-landen.{" "}
+          <strong>Klik op een land op de kaart</strong> om een live, tikkende
+          schatting voor dat land te zien.
         </p>
-        <ul style={{ marginTop: 10, marginBottom: 0 }}>
+        <ul>
           <li>
-            <span className="tag">Red</span> = debt rising •{" "}
-            <span className="tag">Green</span> = debt falling
+            <span className="tag">Rood</span> = schuld stijgt •{" "}
+            <span className="tag">Groen</span> = schuld daalt
           </li>
           <li className="tag">
-            Figures are simplified demo estimates for the MVP (not official
-            statistics).
+            Cijfers zijn vereenvoudigde demo-schattingen voor de MVP (niet de
+            officiële statistieken).
           </li>
         </ul>
       </section>
 
-      {/* Kaart */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU overview</h3>
+        <h3>EU-overzicht</h3>
         <p className="tag">
-          Green = debt falling • Red = debt rising (based on the last two
-          reference dates)
+          Groen = schuld daalt • Rood = schuld stijgt (gebaseerd op de laatste
+          twee referentieperiodes)
         </p>
         <div className="mapWrap">
           <EuropeMap />
         </div>
       </section>
 
-      {/* Highlights */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU debt highlights</h3>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 12,
-            marginTop: 8,
-          }}
-        >
-          {/* Largest debt */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a",
-              borderRadius: 12,
-              padding: 12,
-            }}
-          >
-            <div className="tag">Largest debt</div>
+        <h3>Hoogtepunten EU-schuld</h3>
+        <div className="highlight-grid">
+          <div>
+            <div className="tag">Grootste schuld</div>
             {largestDebt ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>
-                  {largestDebt.flag} {largestDebt.name}
-                </strong>
+              <>
+                <strong>{largestDebt.flag} {largestDebt.name}</strong>
                 <div className="mono">€{formatEUR(largestDebt.last_value_eur)}</div>
-              </div>
-            ) : (
-              <div className="tag">—</div>
-            )}
+              </>
+            ) : <div className="tag">—</div>}
           </div>
-
-          {/* Fastest growing */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a",
-              borderRadius: 12,
-              padding: 12,
-            }}
-          >
-            <div className="tag">Fastest growing</div>
+          <div>
+            <div className="tag">Snelst groeiend</div>
             {fastestGrowing ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>
-                  {fastestGrowing.flag} {fastestGrowing.name}
-                </strong>
+              <>
+                <strong>{fastestGrowing.flag} {fastestGrowing.name}</strong>
                 <div className="mono" style={{ color: "var(--bad)" }}>
                   ↑ +€{formatEUR(fastestGrowing.delta)}
                 </div>
-              </div>
-            ) : (
-              <div className="tag">—</div>
-            )}
+              </>
+            ) : <div className="tag">—</div>}
           </div>
-
-          {/* Falling list */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a",
-              borderRadius: 12,
-              padding: 12,
-            }}
-          >
-            <div className="tag">Debt falling</div>
+          <div>
+            <div className="tag">Schuld dalend</div>
             {falling.length > 0 ? (
-              <div style={{ marginTop: 6 }}>
+              <>
                 {fallingPreview.map((c) => (
-                  <span
-                    key={c.code}
-                    className="mono"
-                    style={{
-                      background: "#0b2b1d",
-                      border: "1px solid #1f5d43",
-                      color: "#7efab2",
-                      borderRadius: 10,
-                      padding: "2px 8px",
-                      marginRight: 6,
-                      display: "inline-block",
-                      marginBottom: 6,
-                      fontSize: 12,
-                    }}
-                  >
-                    {c.code}
-                  </span>
+                  <span key={c.code} className="mono chip">{c.code}</span>
                 ))}
-                {fallingMore > 0 && <span className="tag">+{fallingMore} more</span>}
-              </div>
-            ) : (
-              <div className="tag">No countries currently falling.</div>
-            )}
+                {fallingMore > 0 && <span className="tag">+{fallingMore} meer</span>}
+              </>
+            ) : <div className="tag">Geen landen met dalende schuld.</div>}
           </div>
         </div>
-
-        {/* Educatieve hook */}
-        <div style={{ marginTop: 12 }} className="tag">
-          Why does debt matter? Government debt influences interest rates,
-          inflation, and the stability of the EU economy. This project makes
-          those big numbers visible at a glance.
+        <div className="tag" style={{ marginTop: 12 }}>
+          Waarom is schuld belangrijk? Overheidsschuld beïnvloedt rente,
+          inflatie en de stabiliteit van de EU-economie. Dit project maakt die
+          grote cijfers in één oogopslag zichtbaar.
         </div>
       </section>
 
-      {/* Quick list (handig + SEO) */}
       <section className="card">
-        <h3>Quick list</h3>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <h3>Snelle lijst</h3>
+        <ul style={{ listStyle: "none", padding: 0 }}>
           {countries.map((c) => {
             const t = trendFor(c);
             return (
-              <li
-                key={c.code}
-                style={{ padding: "8px 0", borderBottom: "1px dashed #2b3444" }}
-              >
+              <li key={c.code}>
                 <a className="mono" href={`/country/${c.code.toLowerCase()}`}>
                   {c.flag} {c.name} —{" "}
-                  <span
-                    style={{
-                      color:
-                        t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af",
-                    }}
-                  >
-                    {t > 0 ? "↑ rising" : t < 0 ? "↓ falling" : "→ flat"}
+                  <span style={{ color: t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af" }}>
+                    {t > 0 ? "↑ stijgend" : t < 0 ? "↓ dalend" : "→ stabiel"}
                   </span>
                 </a>
               </li>
@@ -201,11 +123,10 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Disclaimer onderaan, unobtrusive */}
       <section className="card">
         <div className="tag">
-          Note: This MVP uses demo figures. Official data (Eurostat/ECB) will be
-          connected in a future update.
+          Let op: deze MVP gebruikt demo-cijfers. Officiële data (Eurostat/ECB)
+          wordt later gekoppeld.
         </div>
       </section>
     </main>
