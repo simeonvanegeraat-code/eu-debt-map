@@ -63,7 +63,7 @@ export default function CountryFacts({ code }) {
       </div>
 
       <div className="tag" style={{ marginTop: 10 }}>
-        Based on Eurostat last two quarters ({c.prev_date} → {c.last_date}). Simple linear estimate (demo).
+        Source: Eurostat (last two quarters, {c.prev_date} → {c.last_date})
       </div>
     </aside>
   );
