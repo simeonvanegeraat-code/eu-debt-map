@@ -5,6 +5,10 @@ import { countries, interpolateDebt } from "@/lib/data";
 // Als je AdSense gebruikt, laat onderstaande import staan; anders kun je ze verwijderen.
 import AdSlot from "@/components/AdSlot";
 import { SLOTS } from "@/lib/ads";
+import CountryFacts from "./CountryFacts";
+// ...
+<CountryFacts code={country.code} />
+
 
 export default function CountryClient({ countryCode }) {
   const country = useMemo(() => {
