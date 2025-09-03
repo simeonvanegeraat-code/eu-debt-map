@@ -2,47 +2,57 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
-// Als je AdSense gebruikt, laat onderstaande import staan; anders kun je ze verwijderen.
 import AdSlot from "@/components/AdSlot";
 import { SLOTS } from "@/lib/ads";
 import CountryFacts from "./CountryFacts";
-// ...
-<CountryFacts code={country.code} />
 
+function useTicker(ms = 120) {
+  const [now, setNow] = useState(() => Date.now());
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current = setInterval(() => setNow(Date.now()), ms);
+    return () => ref.current && clearInterval(ref.current);
+  }, [ms]);
+  return now;
+}
 
 export default function CountryClient({ countryCode }) {
+  // Zoek land veilig
   const country = useMemo(() => {
-    const want = String(countryCode).toLowerCase();
+    const want = String(countryCode || "").toLowerCase();
     return countries.find((x) => x.code.toLowerCase() === want) || null;
   }, [countryCode]);
 
-  const [nowMs, setNowMs] = useState(() => Date.now());
-  const timerRef = useRef(null);
-  useEffect(() => {
-    timerRef.current = setInterval(() => setNowMs(Date.now()), 120);
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+  const nowMs = useTicker(150);
 
   if (!country) {
     return (
       <main className="container card">
-        Unknown country: {String(countryCode).toUpperCase()}
+        Unknown country: {String(countryCode || "").toUpperCase()}
       </main>
     );
   }
 
-  const current = interpolateDebt(country, nowMs);
+  // Bereken huidig bedrag met robuuste interpolatie
+  let current = interpolateDebt(country, nowMs);
+  if (!Number.isFinite(current)) current = Number(country.last_value_eur) || 0;
+
   const nf = new Intl.NumberFormat("en-GB");
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <a className="btn" href="/">← Back</a>
+
         <h2 style={{ marginTop: 12 }}>
           {country.flag} {country.name}
         </h2>
 
-        <div className="mono" style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}>
+        <div
+          className="mono"
+          style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
+          aria-live="polite"
+        >
           Current estimate: €{nf.format(Math.round(current))}
         </div>
 
@@ -51,7 +61,10 @@ export default function CountryClient({ countryCode }) {
           with simple per-second interpolation.
         </p>
 
-        {/* AdSense slot (optioneel). Verwijder dit blok als je geen ads wil tonen hier. */}
+        {/* Compacte facts (trend, rate, bron) */}
+        <CountryFacts code={country.code} />
+
+        {/* AdSense slot (optioneel) */}
         <div style={{ marginTop: 12 }}>
           <AdSlot slot={SLOTS.countryUnder} />
         </div>
