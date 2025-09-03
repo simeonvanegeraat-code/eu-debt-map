@@ -5,18 +5,27 @@ import Header from "@/components/Header";
 
 export const metadata = {
   title: "EU Debt Map",
-  description:
-    "Explore EU-27 government debt. Click a country to see a live ticking estimate. Data derived from Eurostat; figures are demo estimates.",
+  description: "Explore EU-27 government debt...",
   openGraph: {
     title: "EU Debt Map",
-    description:
-      "Explore EU-27 government debt. Click a country to see a live ticking estimate.",
-    url: "https://eu-debt-map.vercel.app/",
+    description: "Explore EU-27 government debt...",
+    url: "https://eudebtmap.com/",
     siteName: "EU Debt Map",
     type: "website",
   },
-  metadataBase: new URL("https://eu-debt-map.vercel.app"),
+  metadataBase: new URL("https://eudebtmap.com"),
+  alternates: {
+    canonical: "https://eudebtmap.com/",
+    languages: {
+      "en": "https://eudebtmap.com/",
+      "nl": "https://eudebtmap.com/nl",
+      "de": "https://eudebtmap.com/de",
+      "fr": "https://eudebtmap.com/fr",
+      "x-default": "https://eudebtmap.com/",
+    },
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (

@@ -4,4 +4,10 @@ const nextConfig = {
   experimental: { typedRoutes: true },
   eslint: { ignoreDuringBuilds: true }
 };
-export default nextConfig;
+export default {
+  i18n: {
+    locales: ["en", "nl", "de", "fr"],
+    defaultLocale: "en",
+  },
+};
+

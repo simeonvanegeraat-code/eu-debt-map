@@ -9,6 +9,17 @@ const NAV = [
   { href: "/debt", label: "What is Debt?" },
   { href: "/methodology", label: "Methodology" },
   { href: "/about", label: "About" },
+<nav className="nav-desktop">
+  {NAV.map((item) => (
+    <Link key={item.href} href={item.href} className={...}>
+      {item.label}
+    </Link>
+  ))}
+  <div className="lang-switch">
+    <Link href="/en">EN</Link> | <Link href="/nl">NL</Link> | <Link href="/de">DE</Link> | <Link href="/fr">FR</Link>
+  </div>
+</nav>
+
 ];
 
 export default function Header() {

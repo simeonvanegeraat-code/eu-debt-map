@@ -1,55 +1,72 @@
-"use client";
+// app/country/[code]/page.jsx
+import { countries } from "@/lib/data";
+import CountryClient from "./CountryClient";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { countries, interpolateDebt } from "@/lib/data";
-import AdSlot from "@/components/AdSlot";
-import { SLOTS } from "@/lib/ads";
+// Helpertjes
+function findCountry(code) {
+  const want = String(code).toLowerCase();
+  return countries.find((x) => x.code.toLowerCase() === want) || null;
+}
+const nf0 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
 
-// ...
-<div style={{ marginTop: 12 }}>
-  <AdSlot slot={SLOTS.countryUnder} />
-</div>
-
-
-export default function CountryPage({ params: { code } }) {
-  // Zoek land
-  const country = useMemo(() => {
-    const want = String(code).toLowerCase();
-    return countries.find((x) => x.code.toLowerCase() === want) || null;
-  }, [code]);
-
-  // Simpele, betrouwbare ticker
-  const [nowMs, setNowMs] = useState(() => Date.now());
-  const timerRef = useRef(null);
-  useEffect(() => {
-    timerRef.current = setInterval(() => setNowMs(Date.now()), 120);
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
-
-  if (!country) {
-    return <main className="container card">Unknown country: {String(code).toUpperCase()}</main>;
+// Dynamische SEO per land
+export async function generateMetadata({ params }) {
+  const c = findCountry(params.code);
+  if (!c) {
+    return {
+      title: `Unknown country | EU Debt Map`,
+      description: `Country code ${String(params.code).toUpperCase()} is not part of the EU-27.`,
+    };
   }
 
-  const current = interpolateDebt(country, nowMs);
-  const nf = new Intl.NumberFormat("en-GB");
+  const title = `${c.name} national debt | EU Debt Map`;
+  const desc = `Live ticking estimate of ${c.name}'s government debt. Based on Eurostat (last two quarters ${c.prev_date} → ${c.last_date}). Current level around €${nf0.format(
+    Math.round(c.last_value_eur || 0)
+  )}.`;
 
-  return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <a className="btn" href="/">← Back</a>
-        <h2 style={{ marginTop: 12 }}>
-          {country.flag} {country.name}
-        </h2>
-
-        <div className="mono" style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}>
-          Current estimate: €{nf.format(Math.round(current))}
-        </div>
-
-        <p className="tag" style={{ marginTop: 8 }}>
-          Based on Eurostat last two quarters ({country.prev_date} → {country.last_date}). Demo estimate
-          with simple per-second interpolation.
-        </p>
-      </section>
-    </main>
-  );
+  return {
+    title,
+    description: desc,
+    openGraph: {
+      title,
+      description: desc,
+      type: "article",
+    },
+    alternates: {
+      canonical: `/country/${c.code.toLowerCase()}`,
+    },
+  };
 }
+
+export default function CountryPage({ params: { code } }) {
+  const c = findCountry(code);
+  if (!c) {
+    return (
+      <main className="container card">
+        Unknown country: {String(code).toUpperCase()}
+      </main>
+    );
+  }
+  // Render de client UI (teller + ads)
+  return <CountryClient countryCode={c.code} />;
+}
+export async function generateMetadata({ params }) {
+  const c = findCountry(params.code);
+  if (!c) return { title: "Unknown country | EU Debt Map" };
+
+  return {
+    title: `${c.name} national debt | EU Debt Map`,
+    description: `Live ticking estimate of ${c.name}'s government debt...`,
+    alternates: {
+      canonical: `/country/${c.code.toLowerCase()}`,
+      languages: {
+        "en": `/country/${c.code.toLowerCase()}`,
+        "nl": `/nl/country/${c.code.toLowerCase()}`,
+        "de": `/de/country/${c.code.toLowerCase()}`,
+        "fr": `/fr/country/${c.code.toLowerCase()}`,
+        "x-default": `/country/${c.code.toLowerCase()}`,
+      },
+    },
+  };
+}
+
