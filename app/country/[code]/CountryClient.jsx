@@ -2,17 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
+// Als je AdSense gebruikt, laat onderstaande import staan; anders kun je ze verwijderen.
 import AdSlot from "@/components/AdSlot";
 import { SLOTS } from "@/lib/ads";
 
 export default function CountryClient({ countryCode }) {
-  // Zoek land (client-side voor de ticker)
   const country = useMemo(() => {
     const want = String(countryCode).toLowerCase();
     return countries.find((x) => x.code.toLowerCase() === want) || null;
   }, [countryCode]);
 
-  // Simpele, betrouwbare ticker
   const [nowMs, setNowMs] = useState(() => Date.now());
   const timerRef = useRef(null);
   useEffect(() => {
@@ -48,6 +47,7 @@ export default function CountryClient({ countryCode }) {
           with simple per-second interpolation.
         </p>
 
+        {/* AdSense slot (optioneel). Verwijder dit blok als je geen ads wil tonen hier. */}
         <div style={{ marginTop: 12 }}>
           <AdSlot slot={SLOTS.countryUnder} />
         </div>
