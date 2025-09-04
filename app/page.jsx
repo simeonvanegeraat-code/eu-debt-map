@@ -1,9 +1,9 @@
-// app/page.jsx
 import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
+import QuickList from "@/components/QuickList";
 import { countries, trendFor } from "@/lib/data";
 
-// --- SEO / Metadata (site default = EN) ---
+// --- SEO / Metadata (EN) ---
 export const metadata = {
   title: "EU Debt Map | Explore national debts across the EU-27",
   description:
@@ -42,18 +42,15 @@ function formatEUR(v) {
 }
 
 export default function HomePage() {
-  // Alleen landen met echte waarden voor highlights
   const valid = countries.filter(
     (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
   );
 
-  // Largest debt (op basis van last_value_eur)
   const largestDebt =
     valid.length > 0
       ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b))
       : null;
 
-  // Fastest growing (grootste positieve delta)
   const withDelta = valid.map((c) => ({
     ...c,
     delta: c.last_value_eur - c.prev_value_eur,
@@ -63,14 +60,16 @@ export default function HomePage() {
       ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b))
       : null;
 
-  // Landen waar schuld daalt
-  const falling = valid.filter((c) => c.last_value_eur < c.prev_value_eur);
-  const fallingPreview = falling.slice(0, 6); // eerste 6 tonen
-  const fallingMore = Math.max(falling.length - fallingPreview.length, 0);
+  const quickItems = valid.map((c) => ({
+    code: c.code,
+    name: c.name,
+    flag: c.flag,
+    trend: trendFor(c),
+  }));
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* Intro / uitleg */}
+      {/* Intro */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h2 style={{ marginTop: 0, marginBottom: 8 }}>Welcome to EU Debt Map</h2>
         <p style={{ margin: 0 }}>
@@ -83,14 +82,13 @@ export default function HomePage() {
             <span className="tag">Red</span> = debt rising •{" "}
             <span className="tag">Green</span> = debt falling
           </li>
-          <li className="tag" aria-label="Disclaimer">
-            Figures are simplified demo estimates for the MVP (not official
-            statistics).
+          <li className="tag" aria-label="Method note">
+            Based on the two latest Eurostat reference dates.
           </li>
         </ul>
       </section>
 
-      {/* Kaart */}
+      {/* Map */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h3 style={{ marginTop: 0 }}>EU overview</h3>
         <p className="tag">
@@ -162,49 +160,9 @@ export default function HomePage() {
               <div className="tag">—</div>
             )}
           </div>
-
-          {/* Falling list */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a", // ✅ fixed quotes here
-              borderRadius: 12,
-              padding: 12,
-            }}
-            aria-label="Debt falling list"
-          >
-            <div className="tag">Debt falling</div>
-            {falling.length > 0 ? (
-              <div style={{ marginTop: 6 }}>
-                {fallingPreview.map((c) => (
-                  <span
-                    key={c.code}
-                    className="mono"
-                    style={{
-                      background: "#0b2b1d",
-                      border: "1px solid #1f5d43",
-                      color: "#7efab2",
-                      borderRadius: 10,
-                      padding: "2px 8px",
-                      marginRight: 6,
-                      display: "inline-block",
-                      marginBottom: 6,
-                      fontSize: 12,
-                    }}
-                    aria-label={`${c.name} falling`}
-                  >
-                    {c.code}
-                  </span>
-                ))}
-                {fallingMore > 0 && <span className="tag">+{fallingMore} more</span>}
-              </div>
-            ) : (
-              <div className="tag">No countries currently falling.</div>
-            )}
-          </div>
         </div>
 
-        {/* Educatieve hook */}
+        {/* Context */}
         <div style={{ marginTop: 12 }} className="tag">
           Why does debt matter? Government debt influences interest rates,
           inflation, and the stability of the EU economy. This project makes
@@ -212,41 +170,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick list (handig + SEO) */}
-      <section className="card" aria-label="Quick list of countries">
-        <h3>Quick list</h3>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-          {countries.map((c) => {
-            const t = trendFor(c);
-            const trendLabel = t > 0 ? "↑ rising" : t < 0 ? "↓ falling" : "→ flat";
-            const trendColor = t > 0 ? "var(--bad)" : t < 0 ? "var(--ok)" : "#9ca3af";
-            return (
-              <li
-                key={c.code}
-                style={{ padding: "8px 0", borderBottom: "1px dashed #2b3444" }}
-              >
-                <Link
-                  className="mono"
-                  href={`/country/${c.code.toLowerCase()}`}
-                  aria-label={`${c.name} — ${trendLabel}`}
-                  prefetch
-                >
-                  {c.flag} {c.name} —{" "}
-                  <span style={{ color: trendColor }}>{trendLabel}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      {/* Disclaimer onderaan, unobtrusive */}
-      <section className="card">
-        <div className="tag" role="note">
-          Note: This MVP uses demo figures. Official data (Eurostat/ECB) will be
-          connected in a future update.
-        </div>
-      </section>
+      {/* Collapsible Quick list */}
+      <QuickList
+        items={quickItems}
+        initialCount={8}
+        strings={{
+          title: "Quick list",
+          showAll: "Show all",
+          showLess: "Show less",
+          rising: "↑ rising",
+          falling: "↓ falling",
+          flat: "→ flat",
+          more: "more",
+        }}
+      />
     </main>
   );
 }
