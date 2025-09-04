@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
 import CountryFacts from "./CountryFacts";
@@ -31,7 +32,10 @@ export default function CountryPage({ params: { code } }) {
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <a className="btn" href="/">← Back</a>
+        <Link className="btn" href="/" prefetch>
+          ← Back
+        </Link>
+
         <h2 style={{ marginTop: 12 }}>
           {country.flag} {country.name}
         </h2>
@@ -39,6 +43,7 @@ export default function CountryPage({ params: { code } }) {
         <div
           className="mono"
           style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
+          aria-live="polite"
         >
           Current estimate: €{nf.format(Math.round(current))}
         </div>

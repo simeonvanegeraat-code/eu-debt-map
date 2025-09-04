@@ -21,14 +21,12 @@ const LOCALES = [
 const LOCALE_SET = new Set(LOCALES.map(l => l.code));
 
 function getCurrentLocale(pathname) {
-  // i18n default = en (zonder prefix). Met prefix: /nl, /de, /fr, /en (optioneel)
   const seg = pathname.split("/").filter(Boolean)[0] || "";
   return LOCALE_SET.has(seg) ? seg : "en";
 }
 
 function stripLocalePrefix(pathname) {
   const parts = pathname.split("/");
-  // ["", "nl", "country", "nl"] -> haal locale af als eerste segment
   if (parts.length > 1 && LOCALE_SET.has(parts[1])) {
     parts.splice(1, 1);
     const out = parts.join("/") || "/";
@@ -38,9 +36,8 @@ function stripLocalePrefix(pathname) {
 }
 
 function buildPathForLocale(pathname, targetLocale) {
-  const basePath = stripLocalePrefix(pathname); // Engelstalige basisroute
-  if (targetLocale === "en") return basePath;  // en = geen prefix
-  // Zorg dat dubbele slashes verdwijnen
+  const basePath = stripLocalePrefix(pathname);
+  if (targetLocale === "en") return basePath;
   if (basePath === "/") return `/${targetLocale}`;
   return `/${targetLocale}${basePath.startsWith("/") ? basePath : `/${basePath}`}`;
 }
@@ -53,7 +50,6 @@ function LanguageDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Klik-buiten om te sluiten
   useEffect(() => {
     function onDocClick(e) {
       if (!ref.current) return;
@@ -74,8 +70,9 @@ function LanguageDropdown() {
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
         aria-expanded={open}
+        aria-label="Change language"
         onClick={() => setOpen(v => !v)}
         className="lang-trigger"
         title="Change language"
@@ -89,7 +86,7 @@ function LanguageDropdown() {
 
       {open && (
         <ul
-          role="listbox"
+          role="menu"
           className="lang-menu"
           style={{
             position: "absolute",
@@ -107,8 +104,9 @@ function LanguageDropdown() {
           {LOCALES.map((opt) => {
             const active = opt.code === current;
             return (
-              <li key={opt.code} role="option" aria-selected={active}>
+              <li key={opt.code} role="none">
                 <button
+                  role="menuitem"
                   onClick={() => onSelect(opt)}
                   className="lang-item"
                   style={{
@@ -173,19 +171,16 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Sluit drawer bij route wissel
   useEffect(() => setOpen(false), [pathname]);
 
   return (
     <header className="site-header">
       <div className="container header-inner">
-        {/* Logo / title */}
         <Link href="/" className="brand" aria-label="EU Debt Map – Home">
           <span className="brand-logo">EU</span>
           <span className="brand-text">Debt Map</span>
         </Link>
 
-        {/* Desktop nav */}
         <nav className="nav-desktop">
           {NAV.map((item) => (
             <Link
@@ -199,7 +194,6 @@ export default function Header() {
           <LanguageDropdown />
         </nav>
 
-        {/* Mobile toggle */}
         <button
           className="hamburger"
           aria-label="Toggle menu"
@@ -211,7 +205,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile drawer */}
       <div className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}>
         {NAV.map((item) => (
           <Link
@@ -222,7 +215,6 @@ export default function Header() {
             {item.label}
           </Link>
         ))}
-        {/* Talen in mobiel: hergebruik dropdown (we tonen lijst inline) */}
         <div style={{ padding: "12px 16px", borderTop: "1px solid #1f2937" }}>
           <LanguageDropdown />
         </div>
