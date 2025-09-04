@@ -1,8 +1,8 @@
 // app/layout.jsx
 import "./globals.css";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer"; // ⬅️ gebruik client Footer
 import Script from "next/script";
-import { usePathname } from "next/navigation";
 
 export const metadata = {
   title: "EU Debt Map",
@@ -19,46 +19,6 @@ export const metadata = {
   metadataBase: new URL("https://eudebtmap.com"),
 };
 
-// 👇 Helper: maakt juiste prefix afhankelijk van locale
-function useLocalePrefix() {
-  const pathname = usePathname();
-  const seg = pathname?.split("/").filter(Boolean)[0] || "";
-  if (["nl", "de", "fr"].includes(seg)) return `/${seg}`;
-  return ""; // default = EN
-}
-
-function Footer() {
-  const prefix = useLocalePrefix();
-
-  return (
-    <footer className="container grid" style={{ marginTop: 24 }}>
-      <section className="card">
-        © {new Date().getFullYear()} EU Debt Map
-      </section>
-      <section
-        className="card"
-        style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
-      >
-        <a href={`${prefix}/about`}>About</a>
-        <a href={`${prefix}/methodology`}>Methodology</a>
-        <a href={`${prefix}/privacy`}>Privacy</a>
-        <a href={`${prefix}/cookies`}>Cookies</a>
-
-        {/* ✅ Extra link om Cookiebot-banner opnieuw te openen */}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            window?.Cookiebot?.renew?.();
-          }}
-        >
-          Cookie settings
-        </a>
-      </section>
-    </footer>
-  );
-}
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -72,7 +32,7 @@ export default function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
 
-        {/* Snellere connectie voor ads */}
+        {/* (optioneel) Snellere connecties voor ads */}
         <link
           rel="preconnect"
           href="https://pagead2.googlesyndication.com"
@@ -89,10 +49,10 @@ export default function RootLayout({ children }) {
 
         {children}
 
-        {/* Dynamische footer */}
+        {/* Dynamische, taalbewuste footer als Client Component */}
         <Footer />
 
-        {/* ✅ Google AdSense loader (na CMP) */}
+        {/* ✅ Google AdSense loader (ná CMP) */}
         <Script
           id="adsbygoogle-init"
           async
