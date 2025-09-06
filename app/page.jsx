@@ -1,7 +1,9 @@
+// app/page.jsx
 import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
 import QuickList from "@/components/QuickList";
 import { countries, trendFor } from "@/lib/data";
+import EUTotalTicker from "@/components/EUTotalTicker"; // ⬅️ nieuwe teller (voeg component toe)
 
 // --- SEO / Metadata (EN) ---
 export const metadata = {
@@ -42,6 +44,7 @@ function formatEUR(v) {
 }
 
 export default function HomePage() {
+  // Alleen landen met echte waarden voor highlights/quick list
   const valid = countries.filter(
     (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
   );
@@ -55,6 +58,7 @@ export default function HomePage() {
     ...c,
     delta: c.last_value_eur - c.prev_value_eur,
   }));
+
   const fastestGrowing =
     withDelta.length > 0
       ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b))
@@ -69,40 +73,55 @@ export default function HomePage() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* Intro */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0, marginBottom: 8 }}>Welcome to EU Debt Map</h2>
-        <p style={{ margin: 0 }}>
-          Explore the government debt of all EU countries.{" "}
-          <strong>Click a country on the map</strong> to see a live, ticking
-          estimate for that country.
-        </p>
-        <ul style={{ marginTop: 10, marginBottom: 0 }}>
-          <li>
-            <span className="tag">Red</span> = debt rising •{" "}
-            <span className="tag">Green</span> = debt falling
-          </li>
-          <li className="tag" aria-label="Method note">
-            Based on the two latest Eurostat reference dates.
-          </li>
-        </ul>
+      {/* === HERO (kort & krachtig, zonder legend) === */}
+      <section
+        className="card"
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gap: 12,
+          alignItems: "stretch",
+        }}
+      >
+        <div style={{ display: "grid", gap: 6 }}>
+          <h2 style={{ margin: 0 }}>See EU Government Debt, live</h2>
+          <p className="tag" style={{ margin: 0 }}>
+            Interactive map with per-country ticking estimates based on the last
+            two Eurostat quarters.
+          </p>
+          <p className="tag" style={{ margin: 0 }}>
+            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an
+            official statistic.
+          </p>
+        </div>
+
+        {/* EU-27 Total (live) */}
+        <EUTotalTicker />
       </section>
 
-      {/* Map */}
+      {/* === MAP === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h3 style={{ marginTop: 0 }}>EU overview</h3>
-        <p className="tag">
-          Green = debt falling • Red = debt rising (based on the last two
-          reference dates)
-        </p>
+
         <div className="mapWrap" role="region" aria-label="Interactive EU map">
           <EuropeMap />
         </div>
+
+        {/* Legend verplaatst naar onder de kaart */}
+        <div
+          className="tag"
+          aria-label="Map legend and method note"
+          style={{ marginTop: 8 }}
+        >
+          <strong>Legend:</strong> <span style={{ color: "var(--ok)" }}>Green</span> = debt falling •{" "}
+          <span style={{ color: "var(--bad)" }}>Red</span> = debt rising. Based on the last two reference dates.
+        </div>
       </section>
 
-      {/* Highlights */}
+      {/* === HIGHLIGHTS === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h3 style={{ marginTop: 0 }}>EU debt highlights</h3>
+
         <div
           style={{
             display: "grid",
@@ -170,7 +189,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Collapsible Quick list */}
+      {/* === QUICK LIST (collapsible) === */}
       <QuickList
         items={quickItems}
         initialCount={8}

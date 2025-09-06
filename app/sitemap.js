@@ -10,9 +10,9 @@ export default async function sitemap() {
     "fr", "fr/about", "fr/methodology", "fr/privacy", "fr/cookies",
   ];
 
-  // Landcodes EU-27 (indien je deze array al hebt, kun je importeren)
+  // Landcodes EU-27 (correctie: EL → GR voor Griekenland)
   const countries = [
-    "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","EL",
+    "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR",
     "HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"
   ];
 
