@@ -126,6 +126,20 @@ export default function HomePage() {
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
   };
 
+  // responsive CSS voor de 2-kolommen sectie (stapelen op mobiel)
+  const responsiveCss = `
+    .ql-articles{
+      display:grid;
+      gap:12px;
+      grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr);
+    }
+    @media (max-width: 920px){
+      .ql-articles{
+        grid-template-columns: 1fr !important;
+      }
+    }
+  `;
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       {/* === HERO (kort & krachtig, zonder legend) === */}
@@ -256,15 +270,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === QUICK LIST + LATEST ARTICLES (twee kolommen) === */}
-      <section
-        style={{
-          gridColumn: "1 / -1",
-          display: "grid",
-          gap: 12,
-          gridTemplateColumns: "minmax(260px, 1fr) minmax(260px, 1fr)",
-        }}
-      >
+      {/* === QUICK LIST + LATEST ARTICLES === */}
+      <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
         {/* Quick list (links) */}
         <div>
           <QuickList
@@ -282,19 +289,14 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Latest articles (rechts) */}
+        {/* Latest articles (rechts of eronder) */}
         <div className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <h3 style={{ margin: 0, flex: 1 }}>Latest articles</h3>
             <Link href="/articles" className="tag">View all →</Link>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gap: 12,
-            }}
-          >
+          <div style={{ display: "grid", gap: 12 }}>
             {topArticles.map((a) => (
               <ArticleCard key={a.slug} article={a} />
             ))}
@@ -304,6 +306,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* responsieve grid-aanpassing voor mobiel */}
+      <style>{responsiveCss}</style>
     </main>
   );
 }
