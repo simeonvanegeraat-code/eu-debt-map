@@ -54,7 +54,7 @@ export default function PrivacyPage() {
 
       <h3>Contact</h3>
       <p>
-        For questions about this policy, please contact us at: info@eudebtmap.com
+        For questions about this policy, please contact us at: firenature23@gmail.com
       </p>
     </main>
   );

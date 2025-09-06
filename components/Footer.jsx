@@ -25,6 +25,7 @@ export default function Footer() {
         <a href={`${prefix}/methodology`}>Methodology</a>
         <a href={`${prefix}/privacy`}>Privacy</a>
         <a href={`${prefix}/cookies`}>Cookies</a>
+        <a href={`${prefix}/contact`}>Contact</a>
 
         {/* Cookiebot: open banner opnieuw */}
         <a

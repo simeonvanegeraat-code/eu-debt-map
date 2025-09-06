@@ -1,7 +1,7 @@
 // app/layout.jsx
 import "./globals.css";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer"; // ⬅️ gebruik client Footer
+import Footer from "@/components/Footer";
 import Script from "next/script";
 
 export const metadata = {
@@ -23,7 +23,21 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* 🔐 Cookiebot CMP — vóór álle scripts */}
+        {/* ✅ Google Consent Mode v2 defaults (EU-compliance) */}
+        <Script id="consent-mode" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied'
+            });
+          `}
+        </Script>
+
+        {/* 🔐 Cookiebot CMP — vóór álle scripts die cookies kunnen zetten */}
         <Script
           id="cookiebot"
           src="https://consent.cookiebot.com/uc.js"
@@ -32,7 +46,7 @@ export default function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
 
-        {/* (optioneel) Snellere connecties voor ads */}
+        {/* (Optioneel) Snellere connecties voor ads */}
         <link
           rel="preconnect"
           href="https://pagead2.googlesyndication.com"

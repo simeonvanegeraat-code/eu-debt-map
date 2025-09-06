@@ -9,6 +9,7 @@ const NAV = [
   { href: "/debt", label: "What is Debt?" },
   { href: "/methodology", label: "Methodology" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const LOCALES = [
