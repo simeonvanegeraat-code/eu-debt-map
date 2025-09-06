@@ -3,7 +3,7 @@ import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
 import QuickList from "@/components/QuickList";
 import { countries, trendFor } from "@/lib/data";
-import EUTotalTicker from "@/components/EUTotalTicker"; // ⬅️ nieuwe teller (voeg component toe)
+import EUTotalTicker from "@/components/EUTotalTicker"; // ⬅️ nieuwe teller
 
 // --- SEO / Metadata (EN) ---
 export const metadata = {
@@ -44,7 +44,6 @@ function formatEUR(v) {
 }
 
 export default function HomePage() {
-  // Alleen landen met echte waarden voor highlights/quick list
   const valid = countries.filter(
     (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
   );
@@ -113,8 +112,22 @@ export default function HomePage() {
           aria-label="Map legend and method note"
           style={{ marginTop: 8 }}
         >
-          <strong>Legend:</strong> <span style={{ color: "var(--ok)" }}>Green</span> = debt falling •{" "}
-          <span style={{ color: "var(--bad)" }}>Red</span> = debt rising. Based on the last two reference dates.
+          <strong>Legend:</strong>{" "}
+          <span style={{ color: "var(--ok)" }}>Green</span> = debt falling •{" "}
+          <span style={{ color: "var(--bad)" }}>Red</span> = debt rising. Based
+          on the last two reference dates.
+        </div>
+
+        {/* 👇 Nieuwe CTA onder de kaart */}
+        <div
+          className="tag"
+          style={{
+            marginTop: 12,
+            fontWeight: 600,
+            textAlign: "center",
+          }}
+        >
+          Click any country on the map to see its live debt ticker.
         </div>
       </section>
 
