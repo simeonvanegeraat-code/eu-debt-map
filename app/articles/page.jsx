@@ -1,9 +1,9 @@
 // app/articles/page.jsx
 import { listArticles } from "@/lib/articles";
 import ArticleCard from "@/components/ArticleCard";
-import { getLocaleFromPathname, withLocale } from "@/lib/locale";
 import Link from "next/link";
 
+// simpele metadata
 export const metadata = {
   title: "Articles • EU Debt Map",
   description: "Analysis, explainers and trends around EU government debt.",
@@ -11,35 +11,40 @@ export const metadata = {
 
 function TagFilter({ tags = [], active, base = "/articles" }) {
   const unique = Array.from(new Set(tags.flat())).slice(0, 12);
+  const activeStyle = {
+    borderColor: "#2b3a4f",
+    background: "#0d1424",
+  };
+
   return (
     <div className="card" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      <Link href={base} className={"tag" + (!active ? " tag--active" : "")}>All</Link>
+      <Link
+        href={base}
+        className="tag"
+        style={!active ? activeStyle : undefined}
+      >
+        All
+      </Link>
       {unique.map((t) => (
         <Link
           key={t}
           href={`${base}?tag=${encodeURIComponent(t)}`}
-          className={"tag" + (active === t ? " tag--active" : "")}
+          className="tag"
+          style={active === t ? activeStyle : undefined}
         >
           {t}
         </Link>
       ))}
-      <style jsx>{`
-        .tag--active { border-color:#2b3a4f; background:#0d1424; }
-      `}</style>
     </div>
   );
 }
 
-export default function ArticlesPage({ searchParams, params }) {
-  // Bepaal taal uit URL prefix
-  // Next app router geeft pathname niet hier; gebruik lang uit params niet nodig
+export default function ArticlesPage({ searchParams }) {
   const tag = searchParams?.tag || null;
 
-  // Voor nu: Engels lijstje; later kun je per taal filteren
-  const items = listArticles(); // { lang: "en" } eventueel
-  const tags = items.map(a => a.tags || []);
-
-  const filtered = tag ? items.filter(a => a.tags?.includes(tag)) : items;
+  const items = listArticles(); // eventueel: { lang: "en" }
+  const tags = items.map((a) => a.tags || []);
+  const filtered = tag ? items.filter((a) => a.tags?.includes(tag)) : items;
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>

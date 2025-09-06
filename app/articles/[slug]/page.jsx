@@ -18,6 +18,16 @@ export default function ArticleDetailPage({ params }) {
 
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
+  const proseCss = `
+    .articleProse h2{ margin: 1rem 0 .5rem; }
+    .articleProse h3{ margin: .75rem 0 .4rem; }
+    .articleProse p{ line-height: 1.6; margin: .5rem 0; }
+    .articleProse ul{ margin: .5rem 0 .75rem 1.2rem; }
+    .articleProse li{ margin: .25rem 0; }
+    .articleProse .tag{ color:#9ca3af; }
+    .articleProse code{ background:#0b1220; padding:.1rem .3rem; border-radius:6px; }
+  `;
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <article className="card" style={{ gridColumn: "1 / -1" }}>
@@ -33,9 +43,11 @@ export default function ArticleDetailPage({ params }) {
           <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>
         </header>
 
-        {/* Body wordt veilig als HTML geïnjecteerd (komt uit onze eigen bron) */}
+        {/* Scopede CSS zonder styled-jsx */}
+        <style>{proseCss}</style>
+
         <div
-          className="prose"
+          className="articleProse"
           dangerouslySetInnerHTML={{ __html: article.body }}
         />
 
@@ -45,16 +57,6 @@ export default function ArticleDetailPage({ params }) {
           </div>
         </footer>
       </article>
-
-      <style jsx>{`
-        .prose :global(h2){ margin-top: 1rem; margin-bottom: .5rem; }
-        .prose :global(h3){ margin-top: .75rem; margin-bottom: .4rem; }
-        .prose :global(p){ line-height: 1.6; margin: .5rem 0; }
-        .prose :global(ul){ margin: .5rem 0 .75rem 1.2rem; }
-        .prose :global(li){ margin: .25rem 0; }
-        .prose :global(.tag){ color:#9ca3af; }
-        .prose :global(code){ background:#0b1220; padding:.1rem .3rem; border-radius:6px; }
-      `}</style>
     </main>
   );
 }
