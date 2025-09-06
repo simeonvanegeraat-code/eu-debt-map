@@ -2,6 +2,8 @@
 import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
 import QuickList from "@/components/QuickList";
+import ArticleCard from "@/components/ArticleCard";
+import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
 import EUTotalTicker from "@/components/EUTotalTicker"; // EU-27 live teller
 
@@ -70,6 +72,9 @@ export default function HomePage() {
     flag: c.flag,
     trend: trendFor(c),
   }));
+
+  // Artikelen (toon de 3 meest recente)
+  const topArticles = listArticles().slice(0, 3);
 
   // inline style helpers (donker thema, subtiele borders)
   const s = {
@@ -251,20 +256,54 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === QUICK LIST (collapsible) === */}
-      <QuickList
-        items={quickItems}
-        initialCount={8}
-        strings={{
-          title: "Quick list",
-          showAll: "Show all",
-          showLess: "Show less",
-          rising: "↑ rising",
-          falling: "↓ falling",
-          flat: "→ flat",
-          more: "more",
+      {/* === QUICK LIST + LATEST ARTICLES (twee kolommen) === */}
+      <section
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gap: 12,
+          gridTemplateColumns: "minmax(260px, 1fr) minmax(260px, 1fr)",
         }}
-      />
+      >
+        {/* Quick list (links) */}
+        <div>
+          <QuickList
+            items={quickItems}
+            initialCount={8}
+            strings={{
+              title: "Quick list",
+              showAll: "Show all",
+              showLess: "Show less",
+              rising: "↑ rising",
+              falling: "↓ falling",
+              flat: "→ flat",
+              more: "more",
+            }}
+          />
+        </div>
+
+        {/* Latest articles (rechts) */}
+        <div className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <h3 style={{ margin: 0, flex: 1 }}>Latest articles</h3>
+            <Link href="/articles" className="tag">View all →</Link>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gap: 12,
+            }}
+          >
+            {topArticles.map((a) => (
+              <ArticleCard key={a.slug} article={a} />
+            ))}
+            {topArticles.length === 0 && (
+              <div className="tag">No articles yet. Coming soon.</div>
+            )}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
