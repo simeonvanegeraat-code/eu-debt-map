@@ -3,7 +3,7 @@ import Link from "next/link";
 import EuropeMap from "@/components/EuropeMap";
 import QuickList from "@/components/QuickList";
 import { countries, trendFor } from "@/lib/data";
-import EUTotalTicker from "@/components/EUTotalTicker"; // ⬅️ nieuwe teller
+import EUTotalTicker from "@/components/EUTotalTicker"; // EU-27 live teller
 
 // --- SEO / Metadata (EN) ---
 export const metadata = {
@@ -44,6 +44,7 @@ function formatEUR(v) {
 }
 
 export default function HomePage() {
+  // Alleen landen met echte waarden voor highlights/quick list
   const valid = countries.filter(
     (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
   );
@@ -69,6 +70,56 @@ export default function HomePage() {
     flag: c.flag,
     trend: trendFor(c),
   }));
+
+  // inline style helpers (donker thema, subtiele borders)
+  const s = {
+    mapFooter: {
+      marginTop: 12,
+      border: "1px solid #203044",
+      borderRadius: 12,
+      padding: 12,
+      background: "rgba(15,23,42,0.6)",
+    },
+    legend: { fontSize: 14, lineHeight: 1.5 },
+    pill: {
+      display: "inline-block",
+      padding: "2px 8px",
+      borderRadius: 999,
+      fontWeight: 600,
+      fontSize: 12,
+      border: "1px solid transparent",
+      marginRight: 4,
+      marginLeft: 4,
+    },
+    pillOk: {
+      color: "var(--ok)",
+      borderColor: "#1f4d3a",
+      background: "rgba(34,197,94,.08)",
+    },
+    pillBad: {
+      color: "var(--bad)",
+      borderColor: "#5a1f2a",
+      background: "rgba(239,68,68,.08)",
+    },
+    sep: { margin: "0 8px", color: "#2b3444" },
+    muted: { color: "#9ca3af" },
+    cta: {
+      marginTop: 10,
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      padding: "10px 12px",
+      borderRadius: 10,
+      background: "rgba(255,255,255,0.03)",
+      border: "1px dashed #2a3a4f",
+      textAlign: "center",
+      justifyContent: "center",
+      fontSize: 14,
+      lineHeight: 1.6,
+      fontWeight: 600,
+    },
+    ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
+  };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
@@ -106,28 +157,26 @@ export default function HomePage() {
           <EuropeMap />
         </div>
 
-        {/* Legend verplaatst naar onder de kaart */}
-        <div
-          className="tag"
-          aria-label="Map legend and method note"
-          style={{ marginTop: 8 }}
-        >
-          <strong>Legend:</strong>{" "}
-          <span style={{ color: "var(--ok)" }}>Green</span> = debt falling •{" "}
-          <span style={{ color: "var(--bad)" }}>Red</span> = debt rising. Based
-          on the last two reference dates.
-        </div>
+        {/* Legend + CTA in één nette map-footer */}
+        <div role="note" aria-label="Map legend and action" style={s.mapFooter}>
+          <div style={s.legend}>
+            <strong>Legend:</strong>
+            <span style={{ ...s.pill, ...s.pillOk }}>Green</span>= debt falling
+            <span style={s.sep}>•</span>
+            <span style={{ ...s.pill, ...s.pillBad }}>Red</span>= debt rising
+            <span style={s.sep}>•</span>
+            <span style={s.muted}>Based on the last two reference dates.</span>
+          </div>
 
-        {/* 👇 Nieuwe CTA onder de kaart */}
-        <div
-          className="tag"
-          style={{
-            marginTop: 12,
-            fontWeight: 600,
-            textAlign: "center",
-          }}
-        >
-          Click any country on the map to see its live debt ticker.
+          <div style={s.cta}>
+            <span aria-hidden style={s.ctaIcon}>
+              ➜
+            </span>
+            <span>
+              <strong>Click any country</strong> on the map to see its live debt
+              ticker.
+            </span>
+          </div>
         </div>
       </section>
 
