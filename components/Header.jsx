@@ -1,8 +1,10 @@
+// components/Header.jsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -13,40 +15,16 @@ const NAV = [
 ];
 
 const LOCALES = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
-  { code: "de", label: "Deutsch",  flag: "🇩🇪" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "",  label: "English",  short: "EN", flag: "🇬🇧" }, // root = EN
+  { code: "nl", label: "Nederlands", short: "NL", flag: "🇳🇱" },
+  { code: "de", label: "Deutsch",    short: "DE", flag: "🇩🇪" },
+  { code: "fr", label: "Français",   short: "FR", flag: "🇫🇷" },
 ];
 
-const LOCALE_SET = new Set(LOCALES.map(l => l.code));
-
-function getCurrentLocale(pathname) {
-  const seg = pathname.split("/").filter(Boolean)[0] || "";
-  return LOCALE_SET.has(seg) ? seg : "en";
-}
-
-function stripLocalePrefix(pathname) {
-  const parts = pathname.split("/");
-  if (parts.length > 1 && LOCALE_SET.has(parts[1])) {
-    parts.splice(1, 1);
-    const out = parts.join("/") || "/";
-    return out.startsWith("/") ? out : "/" + out;
-  }
-  return pathname || "/";
-}
-
-function buildPathForLocale(pathname, targetLocale) {
-  const basePath = stripLocalePrefix(pathname);
-  if (targetLocale === "en") return basePath;
-  if (basePath === "/") return `/${targetLocale}`;
-  return `/${targetLocale}${basePath.startsWith("/") ? basePath : `/${basePath}`}`;
-}
-
 function LanguageDropdown() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const router = useRouter();
-  const current = getCurrentLocale(pathname);
+  const current = getLocaleFromPathname(pathname);
 
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -63,9 +41,10 @@ function LanguageDropdown() {
   const currentLocale = LOCALES.find(l => l.code === current) || LOCALES[0];
 
   function onSelect(next) {
-    const href = buildPathForLocale(pathname, next.code);
+    // behoud dezelfde pagina/route, vervang alleen de taalprefix
+    const target = withLocale(pathname, next.code);
     setOpen(false);
-    router.push(href);
+    router.push(target);
   }
 
   return (
@@ -105,7 +84,7 @@ function LanguageDropdown() {
           {LOCALES.map((opt) => {
             const active = opt.code === current;
             return (
-              <li key={opt.code} role="none">
+              <li key={opt.code || "en"} role="none">
                 <button
                   role="menuitem"
                   onClick={() => onSelect(opt)}
@@ -170,14 +149,21 @@ function LanguageDropdown() {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
+  const locale = getLocaleFromPathname(pathname);
 
   useEffect(() => setOpen(false), [pathname]);
+
+  // hulpfunctie voor "active" state per link
+  const isActive = (hrefBase) => {
+    const localized = withLocale(hrefBase, locale);
+    return pathname === localized || pathname.startsWith(localized + "/");
+  };
 
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="EU Debt Map – Home">
+        <Link href={withLocale("/", locale)} className="brand" aria-label="EU Debt Map – Home">
           <span className="brand-logo">EU</span>
           <span className="brand-text">Debt Map</span>
         </Link>
@@ -186,8 +172,8 @@ export default function Header() {
           {NAV.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
-              className={"nav-link" + (pathname === item.href ? " nav-link--active" : "")}
+              href={withLocale(item.href, locale)}
+              className={"nav-link" + (isActive(item.href) ? " nav-link--active" : "")}
             >
               {item.label}
             </Link>
@@ -210,8 +196,8 @@ export default function Header() {
         {NAV.map((item) => (
           <Link
             key={item.href}
-            href={item.href}
-            className={"drawer-link" + (pathname === item.href ? " drawer-link--active" : "")}
+            href={withLocale(item.href, locale)}
+            className={"drawer-link" + (isActive(item.href) ? " drawer-link--active" : "")}
           >
             {item.label}
           </Link>
