@@ -1,6 +1,6 @@
 // app/sitemap.js
-export default async function sitemap() {
-  const siteUrl = "https://www.eudebtmap.com"; // ⬅️ met www
+export async function GET() {
+  const siteUrl = "https://www.eudebtmap.com";
 
   const staticPaths = [
     "", "about", "methodology", "privacy", "cookies",
@@ -15,12 +15,23 @@ export default async function sitemap() {
   ];
 
   const countryPaths = countries.map(c => `country/${c.toLowerCase()}`);
-  const urls = [...staticPaths, ...countryPaths].map((p) => ({
-    url: `${siteUrl}/${p}`.replace(/\/$/, ""),
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: p === "" ? 1.0 : p.startsWith("country/") ? 0.8 : 0.6,
-  }));
 
-  return urls; // Next.js genereert XML
+  const urls = [...staticPaths, ...countryPaths];
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(p => `
+  <url>
+    <loc>${siteUrl}/${p}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${p === "" ? "1.0" : p.startsWith("country/") ? "0.8" : "0.6"}</priority>
+  </url>`).join("")}
+</urlset>`;
+
+  return new Response(xml, {
+    headers: {
+      "Content-Type": "application/xml",
+    },
+  });
 }
