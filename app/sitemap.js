@@ -1,8 +1,7 @@
 // app/sitemap.js
 export default async function sitemap() {
-  const siteUrl = "https://eudebtmap.com";
+  const siteUrl = "https://www.eudebtmap.com"; // ⬅️ met www
 
-  // Statische pagina's per taal
   const staticPaths = [
     "", "about", "methodology", "privacy", "cookies",
     "nl", "nl/about", "nl/methodology", "nl/privacy", "nl/cookies",
@@ -10,20 +9,18 @@ export default async function sitemap() {
     "fr", "fr/about", "fr/methodology", "fr/privacy", "fr/cookies",
   ];
 
-  // Landcodes EU-27 (correctie: EL → GR voor Griekenland)
   const countries = [
     "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR",
     "HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"
   ];
 
   const countryPaths = countries.map(c => `country/${c.toLowerCase()}`);
-
   const urls = [...staticPaths, ...countryPaths].map((p) => ({
-    url: `${siteUrl}/${p}`.replace(/\/$/, ""), // geen trailing slash voor root
+    url: `${siteUrl}/${p}`.replace(/\/$/, ""),
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: p === "" ? 1.0 : p.startsWith("country/") ? 0.8 : 0.6,
   }));
 
-  return urls;
+  return urls; // Next.js genereert XML
 }
