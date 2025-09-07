@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.eudebtmap.com/sitemap.xml
+Sitemap: https://eudebtmap.com/sitemap.xml
