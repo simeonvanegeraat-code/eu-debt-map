@@ -16,7 +16,7 @@ export const metadata = {
     title: "EU Debt Map",
     description:
       "Explore government debt across the EU-27 with a live, ticking estimate per country.",
-    url: "https://eudebtmap.com/",
+    url: "https://www.eudebtmap.com/",
     siteName: "EU Debt Map",
     type: "website",
   },
@@ -26,15 +26,16 @@ export const metadata = {
     description:
       "Live, ticking estimates of EU government debt based on Eurostat.",
   },
-  metadataBase: new URL("https://eudebtmap.com"),
+  // Consistent met www
+  metadataBase: new URL("https://www.eudebtmap.com"),
   alternates: {
-    canonical: "https://eudebtmap.com/",
+    canonical: "https://www.eudebtmap.com/",
     languages: {
-      en: "https://eudebtmap.com/",
-      nl: "https://eudebtmap.com/nl",
-      de: "https://eudebtmap.com/de",
-      fr: "https://eudebtmap.com/fr",
-      "x-default": "https://eudebtmap.com/",
+      en: "https://www.eudebtmap.com/",
+      nl: "https://www.eudebtmap.com/nl",
+      de: "https://www.eudebtmap.com/de",
+      fr: "https://www.eudebtmap.com/fr",
+      "x-default": "https://www.eudebtmap.com/",
     },
   },
 };
@@ -142,7 +143,7 @@ export default function HomePage() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* === HERO (kort & krachtig, zonder legend) === */}
+      {/* === HERO (kort & krachtig, nu met <h1>) === */}
       <section
         className="card"
         style={{
@@ -151,9 +152,12 @@ export default function HomePage() {
           gap: 12,
           alignItems: "stretch",
         }}
+        aria-labelledby="page-title"
       >
         <div style={{ display: "grid", gap: 6 }}>
-          <h2 style={{ margin: 0 }}>See EU Government Debt, live</h2>
+          <h1 id="page-title" style={{ margin: 0 }}>
+            See EU Government Debt, live
+          </h1>
           <p className="tag" style={{ margin: 0 }}>
             Interactive map with per-country ticking estimates based on the last
             two Eurostat quarters.
@@ -170,7 +174,7 @@ export default function HomePage() {
 
       {/* === MAP === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU overview</h3>
+        <h2 style={{ marginTop: 0 }}>EU overview</h2>
 
         <div className="mapWrap" role="region" aria-label="Interactive EU map">
           <EuropeMap />
@@ -201,7 +205,7 @@ export default function HomePage() {
 
       {/* === HIGHLIGHTS === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU debt highlights</h3>
+        <h2 style={{ marginTop: 0 }}>EU debt highlights</h2>
 
         <div
           style={{
@@ -292,7 +296,7 @@ export default function HomePage() {
         {/* Latest articles (rechts of eronder) */}
         <div className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h3 style={{ margin: 0, flex: 1 }}>Latest articles</h3>
+            <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
             <Link href="/articles" className="tag">View all →</Link>
           </div>
 
