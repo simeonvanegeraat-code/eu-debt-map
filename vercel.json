@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "http://eudebtmap.com/:path*",
+      "destination": "https://www.eudebtmap.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://eudebtmap.com/:path*",
+      "destination": "https://www.eudebtmap.com/:path*",
+      "permanent": true
+    }
+  ]
+}
