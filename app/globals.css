@@ -144,11 +144,11 @@ a:hover{text-decoration:underline}
   .chart-image img{
     max-width:520px;          /* hou de grafiek slank op desktop */
   }
+}  /* <-- deze sloot ontbrak */
+
 /* ===== About page layout fixes ===== */
 @media (max-width: 720px){
   .about-grid {
     grid-template-columns: 1fr !important;
   }
-}
-
 }
