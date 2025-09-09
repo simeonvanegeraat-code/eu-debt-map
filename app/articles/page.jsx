@@ -25,11 +25,5 @@ export default function ArticlesPage({ searchParams }) {
   const initialTag = searchParams?.tag ? String(searchParams.tag) : "All";
   const initialQ = searchParams?.q ? String(searchParams.q) : "";
 
-  return (
-    <ArticlesShell
-      articles={all}
-      initialTag={initialTag}
-      initialQ={initialQ}
-    />
-  );
+  return <ArticlesShell articles={all} initialTag={initialTag} initialQ={initialQ} />;
 }

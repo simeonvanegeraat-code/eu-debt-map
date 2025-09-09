@@ -1,13 +1,15 @@
 // components/ArticleCard.jsx
 import Link from "next/link";
+import { articleImage } from "@/lib/media";
 
-function CardThumb({ image, alt, title }) {
-  // gebruik gewone <img> zodat je geen next.config images hoeft te wijzigen
-  if (image) {
+function CardThumb({ article }) {
+  const src = articleImage(article, "cover");
+  const alt = article.imageAlt || article.title || "Article image";
+  if (src) {
     return (
       <img
-        src={image}
-        alt={alt || title || "Article image"}
+        src={src}
+        alt={alt}
         loading="lazy"
         style={{
           width: "100%",
@@ -20,7 +22,7 @@ function CardThumb({ image, alt, title }) {
       />
     );
   }
-  // Fallback / placeholder
+  // Fallback
   return (
     <div
       aria-hidden
@@ -33,9 +35,8 @@ function CardThumb({ image, alt, title }) {
         display: "grid",
         placeItems: "center",
         fontWeight: 700,
-        letterSpacing: 0.2,
       }}
-      title={title}
+      title={alt}
     >
       📊
     </div>
@@ -44,38 +45,27 @@ function CardThumb({ image, alt, title }) {
 
 export default function ArticleCard({ article }) {
   const dateFmt = new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+    day: "numeric", month: "short", year: "numeric",
   });
   const href = `/articles/${article.slug}`;
 
   return (
-    <article
-      className="card"
-      style={{ display: "grid", gap: 10, alignContent: "start" }}
-    >
-      <CardThumb image={article.image} alt={article.imageAlt} title={article.title} />
+    <article className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
+      <CardThumb article={article} />
 
       <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {article.date && <time>{dateFmt.format(new Date(article.date))}</time>}
         {article.tags?.length ? <span aria-hidden>•</span> : null}
-        {article.tags?.map((t) => (
-          <span key={t} className="tag">{t}</span>
-        ))}
+        {article.tags?.map((t) => <span key={t} className="tag">{t}</span>)}
       </div>
 
       <h3 style={{ margin: 0 }}>
         <Link href={href}>{article.title}</Link>
       </h3>
 
-      {article.excerpt && (
-        <p style={{ margin: 0, color: "#c8d1dc" }}>{article.excerpt}</p>
-      )}
+      {article.excerpt && <p style={{ margin: 0, color: "#c8d1dc" }}>{article.excerpt}</p>}
 
-      <div>
-        <Link href={href} className="tag">Read more →</Link>
-      </div>
+      <div><Link href={href} className="tag">Read more →</Link></div>
     </article>
   );
 }
