@@ -6,17 +6,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
-// Navigatie-items (zonder Articles; die tonen we als aparte CTA)
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/debt", label: "What is Debt?" },
   { href: "/methodology", label: "Methodology" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/articles", label: "Articles" }, // <-- toegevoegd aan normale NAV
 ];
 
 const LOCALES = [
-  { code: "", label: "English", short: "EN", flag: "🇬🇧" }, // root = EN
+  { code: "", label: "English", short: "EN", flag: "🇬🇧" },
   { code: "nl", label: "Nederlands", short: "NL", flag: "🇳🇱" },
   { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
   { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
@@ -59,12 +59,7 @@ function LanguageDropdown() {
       >
         <span style={{ fontSize: 16, marginRight: 6 }}>{currentLocale.flag}</span>
         <span style={{ fontWeight: 600 }}>{currentLocale.label}</span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          style={{ marginLeft: 6, opacity: 0.8 }}
-        >
+        <svg width="14" height="14" viewBox="0 0 20 20" style={{ marginLeft: 6, opacity: 0.8 }}>
           <path d="M5 7l5 6 5-6H5z" fill="currentColor" />
         </svg>
       </button>
@@ -142,18 +137,10 @@ function LanguageDropdown() {
           color: #e5e7eb;
           transition: border-color 0.15s ease, background 0.15s ease;
         }
-        .lang-trigger:hover {
-          border-color: #2b3a4f;
-          background: #0d1424;
-        }
-        .lang-trigger:focus {
-          outline: 2px solid #2563eb33;
-          outline-offset: 2px;
-        }
+        .lang-trigger:hover { border-color: #2b3a4f; background: #0d1424; }
+        .lang-trigger:focus { outline: 2px solid #2563eb33; outline-offset: 2px; }
         @media (max-width: 768px) {
-          .lang-trigger {
-            padding: 8px 10px;
-          }
+          .lang-trigger { padding: 8px 10px; }
         }
       `}</style>
     </div>
@@ -172,17 +159,10 @@ export default function Header() {
     return pathname === localized || pathname.startsWith(localized + "/");
   };
 
-  const articlesHref = withLocale("/articles", locale);
-  const articlesActive = isActive("/articles");
-
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link
-          href={withLocale("/", locale)}
-          className="brand"
-          aria-label="EU Debt Map – Home"
-        >
+        <Link href={withLocale("/", locale)} className="brand" aria-label="EU Debt Map – Home">
           <span className="brand-logo">EU</span>
           <span className="brand-text">Debt Map</span>
         </Link>
@@ -193,26 +173,11 @@ export default function Header() {
             <Link
               key={item.href}
               href={withLocale(item.href, locale)}
-              className={
-                "nav-link" + (isActive(item.href) ? " nav-link--active" : "")
-              }
+              className={"nav-link" + (isActive(item.href) ? " nav-link--active" : "")}
             >
               {item.label}
             </Link>
           ))}
-
-          {/* Articles CTA */}
-          <Link
-            href={articlesHref}
-            className={"nav-cta" + (articlesActive ? " nav-cta--active" : "")}
-            aria-label="Read latest articles"
-          >
-            <span aria-hidden style={{ marginRight: 6 }}>
-              📰
-            </span>
-            Articles
-          </Link>
-
           <LanguageDropdown />
         </nav>
 
@@ -234,109 +199,15 @@ export default function Header() {
           <Link
             key={item.href}
             href={withLocale(item.href, locale)}
-            className={
-              "drawer-link" + (isActive(item.href) ? " drawer-link--active" : "")
-            }
+            className={"drawer-link" + (isActive(item.href) ? " drawer-link--active" : "")}
           >
             {item.label}
           </Link>
         ))}
-
-        {/* Articles CTA in drawer */}
-        <Link
-          href={articlesHref}
-          className={"drawer-cta" + (articlesActive ? " drawer-cta--active" : "")}
-        >
-          <span aria-hidden style={{ marginRight: 6 }}>
-            📰
-          </span>
-          Articles
-        </Link>
-
-        <div
-          style={{ padding: "12px 16px", borderTop: "1px solid #1f2937" }}
-        >
+        <div style={{ padding: "12px 16px", borderTop: "1px solid #1f2937" }}>
           <LanguageDropdown />
         </div>
       </div>
-
-      {/* Inline styles for nav + CTA */}
-      <style jsx>{`
-        .nav-link {
-          display: inline-flex;
-          align-items: center;
-          padding: 8px 12px;
-          border-radius: 10px;
-          border: 1px solid #1f2b3a;
-          background: transparent;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 1.4;
-          color: #e5e7eb;
-          transition: background 0.15s ease, border-color 0.15s ease;
-          margin-left: 6px;
-        }
-        .nav-link:hover {
-          background: rgba(255, 255, 255, 0.05);
-          border-color: #2b3a4f;
-        }
-        .nav-link--active {
-          border-color: #3b82f6;
-        }
-
-        .nav-cta {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px 12px;
-          border-radius: 10px;
-          border: 1px solid #3b82f6; /* lichte blauwe rand */
-          background: transparent;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 1.4;
-          color: #e5e7eb;
-          transition: background 0.15s ease, border-color 0.15s ease,
-            transform 0.06s ease;
-          margin-left: 6px;
-        }
-        .nav-cta:hover {
-          background: rgba(59, 130, 246, 0.08);
-          border-color: #60a5fa;
-        }
-        .nav-cta:active {
-          transform: translateY(1px);
-        }
-        .nav-cta--active {
-          border-color: #93c5fd;
-          box-shadow: 0 0 0 2px #1d4ed833 inset;
-        }
-
-        .drawer-cta {
-          display: inline-flex;
-          align-items: center;
-          margin: 8px 16px 12px;
-          padding: 10px 12px;
-          border-radius: 10px;
-          border: 1px solid #3b82f6; /* zelfde blauwe rand */
-          background: transparent;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 1.4;
-          color: #e5e7eb;
-        }
-        .drawer-cta:hover {
-          background: rgba(59, 130, 246, 0.08);
-          border-color: #60a5fa;
-        }
-        .drawer-cta--active {
-          border-color: #93c5fd;
-          box-shadow: 0 0 0 2px #1d4ed833 inset;
-        }
-      `}</style>
     </header>
   );
 }
