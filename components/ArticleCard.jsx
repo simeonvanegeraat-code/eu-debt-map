@@ -1,25 +1,65 @@
 // components/ArticleCard.jsx
-"use client";
-
 import Link from "next/link";
 
-export default function ArticleCard({ article, hrefBase = "/articles" }) {
-  if (!article) return null;
-  const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" });
-  const href = `${hrefBase}/${article.slug}`;
+function CardThumb({ image, alt, title }) {
+  // gebruik gewone <img> zodat je geen next.config images hoeft te wijzigen
+  if (image) {
+    return (
+      <img
+        src={image}
+        alt={alt || title || "Article image"}
+        loading="lazy"
+        style={{
+          width: "100%",
+          height: 140,
+          objectFit: "cover",
+          borderRadius: 12,
+          border: "1px solid #1f2b3a",
+          background: "#0b1220",
+        }}
+      />
+    );
+  }
+  // Fallback / placeholder
+  return (
+    <div
+      aria-hidden
+      style={{
+        height: 140,
+        borderRadius: 12,
+        border: "1px solid #1f2b3a",
+        background:
+          "linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12))",
+        display: "grid",
+        placeItems: "center",
+        fontWeight: 700,
+        letterSpacing: 0.2,
+      }}
+      title={title}
+    >
+      📊
+    </div>
+  );
+}
+
+export default function ArticleCard({ article }) {
+  const dateFmt = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+  const href = `/articles/${article.slug}`;
 
   return (
     <article
       className="card"
-      style={{
-        display: "grid",
-        gap: 8,
-        borderColor: "#1f2b3a",
-      }}
+      style={{ display: "grid", gap: 10, alignContent: "start" }}
     >
+      <CardThumb image={article.image} alt={article.imageAlt} title={article.title} />
+
       <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
-        <span aria-hidden>•</span>
+        {article.date && <time>{dateFmt.format(new Date(article.date))}</time>}
+        {article.tags?.length ? <span aria-hidden>•</span> : null}
         {article.tags?.map((t) => (
           <span key={t} className="tag">{t}</span>
         ))}
@@ -29,9 +69,11 @@ export default function ArticleCard({ article, hrefBase = "/articles" }) {
         <Link href={href}>{article.title}</Link>
       </h3>
 
-      <p style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>
+      {article.excerpt && (
+        <p style={{ margin: 0, color: "#c8d1dc" }}>{article.excerpt}</p>
+      )}
 
-      <div style={{ marginTop: 4 }}>
+      <div>
         <Link href={href} className="tag">Read more →</Link>
       </div>
     </article>
