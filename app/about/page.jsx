@@ -28,7 +28,7 @@ export default function AboutPage() {
         <p className="mt-3 text-gray-300">
           I created <strong>EU Debt Map</strong> as a personal hobby project.  
           I’ve always been curious about economics and data, and I wanted to build 
-          something that makes complex numbers—like national debt—easier to understand.  
+          something that makes complex numbers, like national debt, easier to understand.  
         </p>
         <p className="mt-3 text-gray-300">
           This site is independent: I’m not part of any government or institution. 

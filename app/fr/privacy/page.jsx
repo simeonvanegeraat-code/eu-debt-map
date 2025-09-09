@@ -1,70 +1,77 @@
 export const metadata = {
-  title: "Confidentialité & Cookies • EU Debt Map",
-  description: "Politique de confidentialité et de cookies d’EU Debt Map, et utilisation de Google AdSense.",
-  alternates: {
-    canonical: "https://eudebtmap.com/fr/privacy",
-    languages: {
-      en: "https://eudebtmap.com/privacy",
-      nl: "https://eudebtmap.com/nl/privacy",
-      de: "https://eudebtmap.com/de/privacy",
-      fr: "https://eudebtmap.com/fr/privacy",
-      "x-default": "https://eudebtmap.com/privacy",
-    },
-  },
+  title: "Politique de confidentialité • EU Debt Map",
+  description:
+    "Politique de confidentialité et de cookies pour EU Debt Map, y compris Google AdSense et la gestion du consentement.",
+  alternates: { canonical: "https://www.eudebtmap.com/fr/privacy" },
 };
 
-export default function PrivacyFR() {
+export default function PrivacyPage() {
+  const email = "firenature23@gmail.com";
+  const lastUpdated = "9 septembre 2025";
+
   return (
-    <main className="container card">
-      <h2>Confidentialité & Cookies</h2>
-      <p>
-        EU Debt Map (« nous ») respecte votre vie privée. Cette page explique
-        comment nous utilisons les données et les cookies sur ce site.
-      </p>
+    <main className="container grid gap-6 py-10">
+      <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
+        <h1 className="text-3xl font-extrabold tracking-tight">Politique de confidentialité & Cookies</h1>
+        <p className="mt-2 text-sm text-gray-400">Dernière mise à jour : {lastUpdated}</p>
+        <p className="mt-4 text-gray-300">
+          EU Debt Map (« nous ») respecte votre vie privée. Cette page explique quelles données nous traitons,
+          comment nous utilisons les cookies et les choix qui s’offrent à vous.
+        </p>
+      </section>
 
-      <h3>Publicité et Google AdSense</h3>
-      <p>
-        Nous affichons des publicités via Google AdSense. Google et ses partenaires
-        peuvent utiliser des cookies et des technologies similaires pour diffuser des
-        annonces personnalisées et non personnalisées en fonction de vos visites sur ce
-        site et d’autres sites.
-      </p>
-      <p>
-        En savoir plus :{" "}
-        <a
-          href="https://policies.google.com/technologies/ads"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Google – Publicité & Politique de confidentialité
-        </a>
-        .
-      </p>
+      <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
+        <h2 className="text-2xl font-bold">Publicité & Google AdSense</h2>
+        <p className="mt-3 text-gray-300">
+          Nous utilisons Google AdSense pour afficher des annonces. Google et ses partenaires peuvent utiliser
+          des cookies ou des technologies similaires pour diffuser des annonces personnalisées et non
+          personnalisées en fonction de vos visites sur ce site et d’autres sites.
+        </p>
+        <p className="mt-3">
+          <a
+            href="https://policies.google.com/technologies/ads"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            En savoir plus sur les technologies publicitaires de Google
+          </a>
+          .
+        </p>
+      </section>
 
-      <h3>Gestion du consentement (CMP)</h3>
-      <p>
-        Lors de votre première visite, une bannière de cookies et de consentement s’affiche,
-        fournie par une plateforme de gestion du consentement (CMP) certifiée par Google.
-        Vous pouvez modifier vos choix à tout moment via les paramètres de la CMP.
-      </p>
+      <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
+        <h2 className="text-2xl font-bold">Gestion du consentement</h2>
+        <p className="mt-3 text-gray-300">
+          Lors de votre première visite, vous verrez une bannière de consentement aux cookies gérée par Cookiebot
+          (un CMP certifié par Google). Vous pouvez modifier ou retirer votre consentement à tout moment :
+        </p>
+        <ul className="mt-3 list-disc pl-6 text-gray-300">
+          <li>
+            <a href="javascript:Cookiebot.renew()" className="underline hover:no-underline">
+              Ouvrir les paramètres des cookies
+            </a>{" "}
+            (réouvrez la bannière pour mettre à jour vos choix)
+          </li>
+          <li>Gérer ou supprimer les cookies dans les paramètres de votre navigateur</li>
+        </ul>
+      </section>
 
-      <h3>Analyse et performance</h3>
-      <p>
-        Nous pouvons utiliser des analyses de base pour comprendre l’utilisation du site.
-        Celles-ci ne collectent pas d’informations personnellement identifiables.
-      </p>
+      <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
+        <h2 className="text-2xl font-bold">Analyse</h2>
+        <p className="mt-3 text-gray-300">
+          Nous utilisons des outils d’analyse simples et respectueux de la vie privée pour comprendre l’utilisation du site.
+          Ces outils ne collectent pas d’informations personnelles identifiables.
+        </p>
+      </section>
 
-      <h3>Vos choix</h3>
-      <ul>
-        <li>Vous pouvez accepter ou refuser les cookies publicitaires via la CMP.</li>
-        <li>Vous pouvez gérer ou supprimer les cookies dans les paramètres de votre navigateur.</li>
-      </ul>
-
-      <h3>Contact</h3>
-      <p>
-        Pour toute question, contactez-nous :{" "}
-        <a href="mailto:info@eudebtmap.com">info@eudebtmap.com</a>
-      </p>
+      <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
+        <h2 className="text-2xl font-bold">Contact</h2>
+        <p className="mt-3 text-gray-300">
+          Des questions concernant cette politique ? Écrivez-nous à{" "}
+          <a href={`mailto:${email}`} className="underline hover:no-underline">{email}</a>.
+        </p>
+      </section>
     </main>
   );
 }
