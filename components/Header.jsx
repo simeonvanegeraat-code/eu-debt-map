@@ -235,37 +235,57 @@ export default function Header() {
 
       {/* Inline styles for CTA */}
       <style jsx>{`
-        .nav-cta {
-          display: inline-flex;
-          align-items: center;
-          padding: 8px 12px;
-          border-radius: 10px;
-          border: 1px solid #2b3a4f;
-          background: rgba(255,255,255,0.05);
-          text-decoration: none;
-          font-weight: 700;
-          color: #e5e7eb;
-          transition: background .15s ease, border-color .15s ease, transform .06s ease;
-          margin-left: 6px;
-        }
-        .nav-cta:hover { background: rgba(255,255,255,0.08); border-color: #3a4b64; }
-        .nav-cta:active { transform: translateY(1px); }
-        .nav-cta--active { border-color: #5aa3ff; box-shadow: 0 0 0 2px #1d4ed833 inset; }
+  /* Desktop Articles button */
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;            /* zelfde als nav-link */
+    border-radius: 10px;
+    border: 1px solid #3b82f6;    /* lichte blauwe rand */
+    background: transparent;      /* geen grijze fill meer */
+    text-decoration: none;
+    font-weight: 600;             /* match met nav-link */
+    font-size: 14px;
+    line-height: 1.4;
+    color: #e5e7eb;
+    transition: background .15s ease, border-color .15s ease, transform .06s ease;
+    margin-left: 6px;
+  }
+  .nav-cta:hover {
+    background: rgba(59,130,246,0.08);  /* zachte blauwe hover */
+    border-color: #60a5fa;
+  }
+  .nav-cta:active { transform: translateY(1px); }
+  .nav-cta--active {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 2px #1d4ed833 inset;
+  }
 
-        .drawer-cta {
-          display: inline-flex;
-          align-items: center;
-          margin: 8px 16px 12px;
-          padding: 10px 12px;
-          border-radius: 10px;
-          border: 1px solid #2b3a4f;
-          background: rgba(255,255,255,0.05);
-          text-decoration: none;
-          font-weight: 700;
-          color: #e5e7eb;
-        }
-        .drawer-cta--active { border-color: #5aa3ff; box-shadow: 0 0 0 2px #1d4ed833 inset; }
-      `}</style>
+  /* Mobile drawer Articles button */
+  .drawer-cta {
+    display: inline-flex;
+    align-items: center;
+    margin: 8px 16px 12px;
+    padding: 10px 12px;            /* iets hoger in drawer */
+    border-radius: 10px;
+    border: 1px solid #3b82f6;     /* zelfde blauwe rand */
+    background: transparent;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #e5e7eb;
+  }
+  .drawer-cta:hover {
+    background: rgba(59,130,246,0.08);
+    border-color: #60a5fa;
+  }
+  .drawer-cta--active {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 2px #1d4ed833 inset;
+  }
+`}</style>
     </header>
   );
 }
