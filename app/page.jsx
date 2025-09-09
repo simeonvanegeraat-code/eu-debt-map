@@ -3,6 +3,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
+import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
 
@@ -52,6 +53,21 @@ export const metadata = {
 
 function formatEUR(v) {
   return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v));
+}
+
+// Bepaal groei per seconde voor een land
+function perSecondForCountry(c) {
+  if (!c) return 0;
+  if (typeof c.per_second === "number") return c.per_second;
+
+  const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
+  // Gebruik exacte secondes als die in je dataset zit
+  if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
+    return delta / c.seconds_between;
+  }
+  // Fallback: ~90 dagen tussen twee kwartalen
+  const approxSeconds = 90 * 24 * 60 * 60;
+  return delta / approxSeconds;
 }
 
 export default function HomePage() {
@@ -184,7 +200,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === HIGHLIGHTS === */}
+      {/* === HIGHLIGHTS (nu live tikkend) === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h2 style={{ marginTop: 0 }}>EU debt highlights</h2>
 
@@ -196,49 +212,32 @@ export default function HomePage() {
             marginTop: 8,
           }}
         >
-          {/* Largest debt */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a",
-              borderRadius: 12,
-              padding: 12,
-            }}
-            aria-label="Largest debt card"
-          >
-            <div className="tag">Largest debt</div>
-            {largestDebt ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>{largestDebt.flag} {largestDebt.name}</strong>
-                <div className="mono" aria-live="polite">€{formatEUR(largestDebt.last_value_eur)}</div>
-              </div>
-            ) : (
-              <div className="tag">—</div>
-            )}
-          </div>
+          {/* Largest debt – live */}
+          {largestDebt ? (
+            <HighlightTicker
+              label="Largest debt"
+              flag={largestDebt.flag}
+              name={largestDebt.name}
+              start={largestDebt.last_value_eur}
+              perSecond={perSecondForCountry(largestDebt)}
+            />
+          ) : (
+            <div className="tag">—</div>
+          )}
 
-          {/* Fastest growing */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #1f2b3a",
-              borderRadius: 12,
-              padding: 12,
-            }}
-            aria-label="Fastest growing debt card"
-          >
-            <div className="tag">Fastest growing</div>
-            {fastestGrowing ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>{fastestGrowing.flag} {fastestGrowing.name}</strong>
-                <div className="mono" style={{ color: "var(--bad)" }}>
-                  ↑ +€{formatEUR(fastestGrowing.delta)}
-                </div>
-              </div>
-            ) : (
-              <div className="tag">—</div>
-            )}
-          </div>
+          {/* Fastest growing – live */}
+          {fastestGrowing ? (
+            <HighlightTicker
+              label="Fastest growing"
+              flag={fastestGrowing.flag}
+              name={fastestGrowing.name}
+              start={fastestGrowing.last_value_eur}
+              perSecond={perSecondForCountry(fastestGrowing)}
+              accent="var(--bad)" // forceer rood accent voor “growing”
+            />
+          ) : (
+            <div className="tag">—</div>
+          )}
         </div>
 
         <div style={{ marginTop: 12 }} className="tag">
