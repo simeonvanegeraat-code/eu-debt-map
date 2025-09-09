@@ -6,13 +6,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
+// Nieuwe volgorde + labels:
+// Home, What is Debt?, Articles, About, Methodology
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/debt", label: "What is Debt?" },
+  { href: "/articles", label: "Articles" },
+  { href: "/about", label: "About" },        // kort in header, pagina-titel blijft About & Contact
   { href: "/methodology", label: "Methodology" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/articles", label: "Articles" }, // <-- toegevoegd aan normale NAV
 ];
 
 const LOCALES = [

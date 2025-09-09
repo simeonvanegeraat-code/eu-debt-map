@@ -1,4 +1,3 @@
-// next.config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -9,7 +8,16 @@ const nextConfig = {
     defaultLocale: "en",
     localeDetection: false, // ✅ zet detectie uit
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/contact",
+        destination: "/about",
+        permanent: true, // 308 redirect voor SEO + AdSense
+      },
+    ];
+  },
 };
 
 export default nextConfig;
-

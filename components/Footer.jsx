@@ -8,49 +8,92 @@ import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 export default function Footer() {
   const pathname = usePathname() || "/";
   const locale = getLocaleFromPathname(pathname);
+  const year = new Date().getFullYear();
 
-  function reopenCookieBanner(e) {
+  function openCookieSettings(e) {
     e.preventDefault();
-    // Cookiebot API: open/renew banner indien aanwezig
-    if (typeof window !== "undefined" && window.Cookiebot && typeof window.Cookiebot.renew === "function") {
+    // Cookiebot global (laadt via je CMP script)
+    if (typeof window !== "undefined" && window.Cookiebot?.renew) {
       window.Cookiebot.renew();
-    } else {
-      // kleine fallback: meld aan gebruiker dat het moment niet lukt
-      alert("Cookie banner is not available right now.");
     }
   }
 
   return (
     <footer
-      className="container grid"
-      style={{ marginTop: 24 }}
-      aria-label="Site footer"
+      className="container"
+      style={{
+        display: "grid",
+        gap: 14,
+        gridTemplateColumns: "1fr",
+        padding: "24px 0 36px",
+      }}
     >
-      {/* Info / copyright */}
-      <section className="card" aria-label="About this site">
-        © {new Date().getFullYear()} EU Debt Map
-        <span className="tag" style={{ marginLeft: 8 }}>
-          Independent educational visualization based on Eurostat data.
-        </span>
-      </section>
-
-      {/* Navigatie-links, gelokaliseerd */}
-      <section
-        className="card"
-        style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}
-        aria-label="Footer navigation"
+      <div
+        style={{
+          display: "grid",
+          gap: 12,
+          gridTemplateColumns: "1fr",
+        }}
       >
-        <Link href={withLocale("/about", locale)}>About</Link>
-        <Link href={withLocale("/methodology", locale)}>Methodology</Link>
-        <Link href={withLocale("/privacy", locale)}>Privacy</Link>
-        <Link href={withLocale("/cookies", locale)}>Cookies</Link>
-        <Link href={withLocale("/contact", locale)}>Contact</Link>
+        {/* Bovenste rij: copy + tagline */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "16px 18px",
+            borderRadius: 16,
+            border: "1px solid #1f2b3a",
+            background: "#0b1220",
+          }}
+        >
+          <span>© {year} <strong>EU Debt Map</strong></span>
+          <span style={{ opacity: 0.75 }}>
+            Independent educational visualization based on Eurostat data.
+          </span>
+        </div>
 
-        {/* Cookiebot: open banner opnieuw */}
-        <a href="#" onClick={reopenCookieBanner} className="tag" style={{ marginLeft: "auto" }}>
-          Cookie settings
-        </a>
-      </section>
+        {/* Onderste rij: navigatie */}
+        <nav
+          aria-label="Footer"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            padding: "14px 18px",
+            borderRadius: 16,
+            border: "1px solid #1f2b3a",
+            background: "#0b1220",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link href={withLocale("/about", locale)} className="footer-link">
+            About
+          </Link>
+          <Link href={withLocale("/methodology", locale)} className="footer-link">
+            Methodology
+          </Link>
+          <Link href={withLocale("/privacy", locale)} className="footer-link">
+            Privacy
+          </Link>
+
+          <a href="#" onClick={openCookieSettings} className="footer-link">
+            Cookie settings
+          </a>
+        </nav>
+      </div>
+
+      <style jsx>{`
+        .footer-link {
+          padding: 6px 10px;
+          border-radius: 10px;
+          border: 1px solid transparent;
+        }
+        .footer-link:hover {
+          border-color: #2b3a4f;
+          background: #0d1424;
+        }
+      `}</style>
     </footer>
   );
 }
