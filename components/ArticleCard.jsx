@@ -1,6 +1,4 @@
 // components/ArticleCard.jsx
-"use client";
-
 import Link from "next/link";
 import { articleImage } from "@/lib/media";
 
@@ -17,73 +15,84 @@ function formatDate(iso) {
 }
 
 export default function ArticleCard({ article }) {
-  const href = `/articles/${article.slug}`;
-  const img = articleImage(article, "cover"); // verwacht 600x600 (webp/jpg/png)
-  const alt = article.imageAlt || article.title || "Article image";
+  const src = articleImage(article, "cover");
+  const alt = article.imageAlt || article.title || "Article";
 
   return (
-    <article className="card" style={{ display: "grid", gap: 10 }}>
-      <Link href={href} className="thumb" aria-label={article.title}>
-        {img ? (
-          <img
-            src={img}
-            alt={alt}
-            width={600}
-            height={600}
-            loading="lazy"
-            decoding="async"
-          />
-        ) : (
-          <div className="thumb-fallback" aria-hidden>📊</div>
+    <article
+      className="card"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "120px 1fr",
+        gap: 12,
+        alignItems: "start",
+      }}
+    >
+      {/* Thumbnail */}
+      {src ? (
+        <img
+          src={src}
+          alt={alt}
+          width={120}
+          height={120}
+          loading="lazy"
+          decoding="async"
+          style={{
+            width: 120,
+            height: 120,
+            objectFit: "cover",
+            borderRadius: 12,
+            border: "1px solid #1f2b3a",
+            background: "#0b1220",
+          }}
+        />
+      ) : (
+        <div
+          aria-hidden
+          title={alt}
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: 12,
+            border: "1px solid #1f2b3a",
+            background:
+              "linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12))",
+            display: "grid",
+            placeItems: "center",
+            fontSize: 24,
+          }}
+        >
+          📊
+        </div>
+      )}
+
+      {/* Tekst */}
+      <div style={{ display: "grid", gap: 6, alignContent: "start" }}>
+        <div className="tag" style={{ opacity: 0.9 }}>
+          {formatDate(article.date)}{" "}
+          {(article.tags || []).slice(0, 4).map((t) => (
+            <span key={t} className="tag" style={{ marginLeft: 6 }}>
+              {t}
+            </span>
+          ))}
+        </div>
+
+        <h3 style={{ margin: 0, lineHeight: 1.25 }}>
+          <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+        </h3>
+
+        {article.summary && (
+          <p className="tag" style={{ margin: 0 }}>
+            {article.summary}
+          </p>
         )}
-      </Link>
 
-      <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <time dateTime={article.date}>{formatDate(article.date)}</time>
-        <span aria-hidden>•</span>
-        {(article.tags || []).slice(0, 4).map((t) => (
-          <span key={t} className="tag">{t}</span>
-        ))}
+        <div>
+          <Link href={`/articles/${article.slug}`} className="tag">
+            Read more →
+          </Link>
+        </div>
       </div>
-
-      <h3 style={{ margin: 0, lineHeight: 1.25 }}>
-        <Link href={href}>{article.title}</Link>
-      </h3>
-
-      <p className="tag" style={{ margin: 0, color: "#c8d1dc" }}>
-        {article.summary}
-      </p>
-
-      <div>
-        <Link href={href} className="tag">Read more →</Link>
-      </div>
-
-      {/* square thumb styles */}
-      <style>{`
-        .thumb{
-          display:block;
-          width:100%;
-          aspect-ratio:1 / 1;         /* altijd vierkant */
-          border-radius:12px;
-          overflow:hidden;
-          border:1px solid #1f2b3a;
-          background:#0b1220;
-        }
-        .thumb img{
-          width:100%;
-          height:100%;
-          object-fit:cover;           /* center-crop */
-          display:block;
-        }
-        .thumb-fallback{
-          width:100%;
-          height:100%;
-          display:grid;
-          place-items:center;
-          font-size:28px;
-          background:linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12));
-        }
-      `}</style>
     </article>
   );
 }
