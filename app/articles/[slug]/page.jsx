@@ -1,14 +1,32 @@
 // app/articles/[slug]/page.jsx
 import { getArticle } from "@/lib/articles";
 import { notFound } from "next/navigation";
+import ShareBar from "@/components/ShareBar";
+
+const SITE = "https://www.eudebtmap.com";
 
 export async function generateMetadata({ params }) {
   const a = getArticle(params.slug);
   if (!a) return { title: "Article • EU Debt Map" };
+  const url = `${SITE}/articles/${params.slug}`;
   return {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
-    openGraph: { title: a.title, description: a.summary },
+    alternates: { canonical: url },
+    openGraph: {
+      title: a.title,
+      description: a.summary,
+      url,
+      siteName: "EU Debt Map",
+      type: "article",
+      // image optioneel: a.image && [{ url: a.image, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: a.title,
+      description: a.summary,
+      // images: a.image ? [a.image] : undefined,
+    },
   };
 }
 
@@ -16,6 +34,7 @@ export default function ArticleDetailPage({ params }) {
   const article = getArticle(params.slug);
   if (!article) return notFound();
 
+  const url = `${SITE}/articles/${params.slug}`;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
   const proseCss = `
@@ -30,20 +49,23 @@ export default function ArticleDetailPage({ params }) {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      <article className="card" style={{ gridColumn: "1 / -1" }}>
-        <header style={{ display: "grid", gap: 8, marginBottom: 8 }}>
+      <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
+        <header style={{ display: "grid", gap: 8 }}>
           <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
-            <span aria-hidden>•</span>
+            {article.tags?.length ? <span aria-hidden>•</span> : null}
             {article.tags?.map((t) => (
               <span key={t} className="tag">{t}</span>
             ))}
           </div>
           <h1 style={{ margin: 0 }}>{article.title}</h1>
-          <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>
+          {article.summary && <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>}
+
+          {/* Share bovenaan */}
+          <ShareBar url={url} title={article.title} summary={article.summary} />
         </header>
 
-        {/* Scopede CSS zonder styled-jsx */}
+        {/* Scopede CSS */}
         <style>{proseCss}</style>
 
         <div
@@ -51,7 +73,10 @@ export default function ArticleDetailPage({ params }) {
           dangerouslySetInnerHTML={{ __html: article.body }}
         />
 
-        <footer style={{ marginTop: 16 }}>
+        <footer style={{ display: "grid", gap: 10 }}>
+          {/* Share onderaan */}
+          <ShareBar url={url} title={article.title} summary={article.summary} />
+
           <div className="tag">
             Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.
           </div>
