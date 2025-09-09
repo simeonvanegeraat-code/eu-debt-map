@@ -1,11 +1,21 @@
 // app/page.jsx
 import Link from "next/link";
-import EuropeMap from "@/components/EuropeMap";
+import dynamic from "next/dynamic";                       // ⬅️ nieuw
 import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
 import EUTotalTicker from "@/components/EUTotalTicker"; // EU-27 live teller
+
+// Kaart lazy-loaden, geen SSR (scheelt FCP/LCP op mobiel)
+const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
+  ssr: false,
+  loading: () => (
+    <div style={{height: 420, display:"grid", placeItems:"center"}} className="card">
+      Loading map…
+    </div>
+  ),
+});
 
 // --- SEO / Metadata (EN) ---
 export const metadata = {
@@ -143,7 +153,7 @@ export default function HomePage() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* === HERO (kort & krachtig, nu met <h1>) === */}
+      {/* === HERO === */}
       <section
         className="card"
         style={{
@@ -180,7 +190,7 @@ export default function HomePage() {
           <EuropeMap />
         </div>
 
-        {/* Legend + CTA in één nette map-footer */}
+        {/* Legend + CTA */}
         <div role="note" aria-label="Map legend and action" style={s.mapFooter}>
           <div style={s.legend}>
             <strong>Legend:</strong>
@@ -192,12 +202,9 @@ export default function HomePage() {
           </div>
 
           <div style={s.cta}>
-            <span aria-hidden style={s.ctaIcon}>
-              ➜
-            </span>
+            <span aria-hidden style={s.ctaIcon}>➜</span>
             <span>
-              <strong>Click any country</strong> on the map to see its live debt
-              ticker.
+              <strong>Click any country</strong> on the map to see its live debt ticker.
             </span>
           </div>
         </div>
@@ -228,9 +235,7 @@ export default function HomePage() {
             <div className="tag">Largest debt</div>
             {largestDebt ? (
               <div style={{ marginTop: 6 }}>
-                <strong>
-                  {largestDebt.flag} {largestDebt.name}
-                </strong>
+                <strong>{largestDebt.flag} {largestDebt.name}</strong>
                 <div className="mono" aria-live="polite">
                   €{formatEUR(largestDebt.last_value_eur)}
                 </div>
@@ -253,9 +258,7 @@ export default function HomePage() {
             <div className="tag">Fastest growing</div>
             {fastestGrowing ? (
               <div style={{ marginTop: 6 }}>
-                <strong>
-                  {fastestGrowing.flag} {fastestGrowing.name}
-                </strong>
+                <strong>{fastestGrowing.flag} {fastestGrowing.name}</strong>
                 <div className="mono" style={{ color: "var(--bad)" }}>
                   ↑ +€{formatEUR(fastestGrowing.delta)}
                 </div>

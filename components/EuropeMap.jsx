@@ -3,7 +3,7 @@
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { countries as DATA } from "@/lib/data";
 
-const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+const GEO_URL = "/maps/countries-110m.json";
 
 const NAME_TO_ISO2 = {
   "Austria":"AT","Belgium":"BE","Bulgaria":"BG","Croatia":"HR","Cyprus":"CY",
