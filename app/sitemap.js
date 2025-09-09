@@ -1,28 +1,82 @@
 // app/sitemap.js
+import { listArticles } from "@/lib/articles";
+import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.gen";
+
 export default async function sitemap() {
-  const siteUrl = "https://www.eudebtmap.com";
+  const SITE = "https://www.eudebtmap.com";
 
-  const staticPaths = [
-    "", "about", "methodology", "privacy", "cookies",
-    "nl", "nl/about", "nl/methodology", "nl/privacy", "nl/cookies",
-    "de", "de/about", "de/methodology", "de/privacy", "de/cookies",
-    "fr", "fr/about", "fr/methodology", "fr/privacy", "fr/cookies",
-  ];
+  // Gebruik dataset-timestamp als lastModified voor data-gedreven routes
+  const dataLastMod = EUROSTAT_UPDATED_AT ? new Date(EUROSTAT_UPDATED_AT) : new Date();
 
-  const countries = [
+  // Statische routes op root
+  const ROOT_STATIC = ["", "about", "debt", "methodology", "privacy", "cookies", "articles"];
+
+  // Locale home + locale subpages die ook echt bestaan in /app/<locale>/
+  const LOCALES = ["nl", "de", "fr"];
+  const LOCALE_SUBPAGES = ["about", "debt", "methodology", "privacy"]; // géén cookies in locales
+
+  // EU-27 landcodes (country/[code])
+  const COUNTRY_CODES = [
     "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR",
     "HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"
   ];
 
-  const urls = [
-    ...staticPaths,
-    ...countries.map((c) => `country/${c.toLowerCase()}`),
-  ].map((p) => ({
-    url: `${siteUrl}${p === "" ? "" : `/${encodeURI(p)}`}`,
-    lastModified: new Date(),                 // Next mag Date of string
-    changeFrequency: "weekly",
-    priority: p === "" ? 1.0 : p.startsWith("country/") ? 0.8 : 0.6,
-  }));
+  const urls = [];
+
+  // Root + statische pagina's
+  for (const p of ROOT_STATIC) {
+    const isHome = p === "";
+    const isArticlesList = p === "articles";
+    urls.push({
+      url: `${SITE}${isHome ? "" : `/${p}`}`,
+      lastModified: isHome ? dataLastMod : (isArticlesList ? new Date() : dataLastMod),
+      changeFrequency: isHome ? "daily" : (isArticlesList ? "weekly" : "monthly"),
+      priority: isHome ? 1.0 : (isArticlesList ? 0.7 : 0.6),
+    });
+  }
+
+  // Locale home + locale subpages
+  for (const loc of LOCALES) {
+    // /nl, /de, /fr
+    urls.push({
+      url: `${SITE}/${loc}`,
+      lastModified: dataLastMod,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    });
+
+    // /nl/about, /nl/debt, ...
+    for (const sp of LOCALE_SUBPAGES) {
+      urls.push({
+        url: `${SITE}/${loc}/${sp}`,
+        lastModified: dataLastMod,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
+    }
+  }
+
+  // Country-pagina's
+  for (const code of COUNTRY_CODES) {
+    urls.push({
+      url: `${SITE}/country/${code.toLowerCase()}`,
+      lastModified: dataLastMod,
+      changeFrequency: "daily",
+      priority: 0.8,
+    });
+  }
+
+  // Artikelen (uit file-based "CMS")
+  const articles = listArticles(); // nieuwste eerst
+  for (const a of articles) {
+    // a.slug, a.date
+    urls.push({
+      url: `${SITE}/articles/${a.slug}`,
+      lastModified: a.date ? new Date(a.date) : new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    });
+  }
 
   return urls;
 }
