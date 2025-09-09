@@ -7,50 +7,62 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ArticleCard from "@/components/ArticleCard";
 import { articleImage } from "@/lib/media";
 
+const THUMB = 120; // één plek om de thumbnailmaat te wijzigen
+
 function formatDate(iso) {
   try {
-    return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" })
-      .format(new Date(iso));
-  } catch { return iso || ""; }
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return iso || "";
+  }
 }
+
 const uniq = (arr) => Array.from(new Set(arr)).filter(Boolean);
 
-function FeaturedThumb({ article }) {
+function SquareThumb({ article, alt }) {
   const src = articleImage(article, "cover");
-  const alt = article.imageAlt || article.title || "Article";
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        width={THUMB}
+        height={THUMB}
+        loading="lazy"
+        decoding="async"
+        style={{
+          width: THUMB,
+          height: THUMB,
+          objectFit: "cover",
+          borderRadius: 12,
+          border: "1px solid #1f2b3a",
+          background: "#0b1220",
+        }}
+      />
+    );
+  }
   return (
-    <Link href={`/articles/${article.slug}`} className="fthumb" aria-label={article.title}>
-      {src ? (
-        <img src={src} alt={alt} width={600} height={600} loading="lazy" decoding="async" />
-      ) : (
-        <div className="fthumb-fallback" aria-hidden>📊</div>
-      )}
-      <style>{`
-        .fthumb{
-          display:block;
-          width:100%;
-          aspect-ratio:1 / 1;          /* vierkant */
-          border-radius:12px;
-          overflow:hidden;
-          border:1px solid #1f2b3a;
-          background:#0b1220;
-        }
-        .fthumb img{
-          width:100%;
-          height:100%;
-          object-fit:cover;            /* center-crop */
-          display:block;
-        }
-        .fthumb-fallback{
-          width:100%;
-          height:100%;
-          display:grid;
-          place-items:center;
-          font-size:32px;
-          background:linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12));
-        }
-      `}</style>
-    </Link>
+    <div
+      aria-hidden
+      title={alt}
+      style={{
+        width: THUMB,
+        height: THUMB,
+        borderRadius: 12,
+        border: "1px solid #1f2b3a",
+        background:
+          "linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12))",
+        display: "grid",
+        placeItems: "center",
+        fontSize: 24,
+      }}
+    >
+      📊
+    </div>
   );
 }
 
@@ -73,8 +85,10 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
   // URL sync (?tag=&q=)
   useEffect(() => {
     const sp = new URLSearchParams(searchParams?.toString() || "");
-    if (active && active !== "All") sp.set("tag", active); else sp.delete("tag");
-    if (q?.trim()) sp.set("q", q.trim()); else sp.delete("q");
+    if (active && active !== "All") sp.set("tag", active);
+    else sp.delete("tag");
+    if (q?.trim()) sp.set("q", q.trim());
+    else sp.delete("q");
     const next = sp.toString() ? `${pathname}?${sp.toString()}` : pathname;
     router.replace(next, { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,8 +98,11 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return rest.filter((a) => {
-      const inTag = active === "All" ||
-        (a.tags || []).map((t) => t.toLowerCase()).includes((active || "").toLowerCase());
+      const inTag =
+        active === "All" ||
+        (a.tags || [])
+          .map((t) => t.toLowerCase())
+          .includes((active || "").toLowerCase());
       if (!inTag) return false;
       if (!needle) return true;
       const hay = `${a.title} ${a.summary || ""} ${(a.tags || []).join(" ")}`.toLowerCase();
@@ -115,14 +132,22 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
             placeholder="Search articles…"
             aria-label="Search articles"
             style={{
-              flex: 1, height: 40, padding: "0 12px", borderRadius: 10,
-              border: "1px solid #1f2b3a", background: "#0b1220", color: "inherit",
+              flex: 1,
+              height: 40,
+              padding: "0 12px",
+              borderRadius: 10,
+              border: "1px solid #1f2b3a",
+              background: "#0b1220",
+              color: "inherit",
             }}
           />
           {(q || active !== "All") && (
             <button
               className="tag"
-              onClick={() => { setQ(""); setActive("All"); }}
+              onClick={() => {
+                setQ("");
+                setActive("All");
+              }}
               title="Clear filters"
             >
               Clear
@@ -138,7 +163,9 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
               style={{
                 border: "1px solid " + (active === "All" ? "#3256e1" : "#1f2b3a"),
                 background: active === "All" ? "rgba(49,130,246,.15)" : "rgba(255,255,255,.03)",
-                padding: "6px 10px", borderRadius: 999, fontWeight: 600,
+                padding: "6px 10px",
+                borderRadius: 999,
+                fontWeight: 600,
               }}
             >
               All
@@ -153,7 +180,9 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
                   style={{
                     border: "1px solid " + (isActive ? "#3256e1" : "#1f2b3a"),
                     background: isActive ? "rgba(49,130,246,.15)" : "rgba(255,255,255,.03)",
-                    padding: "6px 10px", borderRadius: 999, fontWeight: 600,
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    fontWeight: 600,
                   }}
                 >
                   {t}
@@ -164,37 +193,45 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
         </div>
       </section>
 
-      {/* FEATURED — alleen zonder filters */}
+      {/* FEATURED — nu hetzelfde thumbformaat en grid als de rest */}
       {!hasActiveFilters && featured && (
         <section
           className="card"
           style={{
             display: "grid",
-            gap: 16,
-            gridTemplateColumns: "minmax(220px, 280px) 1fr", // thumb links, tekst rechts
+            gridTemplateColumns: `${THUMB}px 1fr`,
+            gap: 12,
             alignItems: "start",
           }}
         >
-          <FeaturedThumb article={featured} />
+          <SquareThumb article={featured} alt={featured.title} />
           <div style={{ display: "grid", gap: 8, alignContent: "start" }}>
             <div className="tag" style={{ opacity: 0.9 }}>
               Featured · {formatDate(featured.date)}
             </div>
-            <h2 style={{ margin: 0 }}>
+            <h2 style={{ margin: 0, lineHeight: 1.25 }}>
               <Link href={`/articles/${featured.slug}`}>{featured.title}</Link>
             </h2>
-            <div style={{ color: "#c8d1dc" }}>{featured.summary}</div>
+            {featured.summary && (
+              <div style={{ color: "#c8d1dc" }}>{featured.summary}</div>
+            )}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
-              {(featured.tags || []).slice(0, 4).map((t) => <span key={t} className="tag">{t}</span>)}
+              {(featured.tags || []).slice(0, 4).map((t) => (
+                <span key={t} className="tag">
+                  {t}
+                </span>
+              ))}
             </div>
             <div style={{ marginTop: 8 }}>
-              <Link href={`/articles/${featured.slug}`} className="tag">Read more →</Link>
+              <Link href={`/articles/${featured.slug}`} className="tag">
+                Read more →
+              </Link>
             </div>
           </div>
         </section>
       )}
 
-      {/* GRID */}
+      {/* GRID met gewone kaarten (gebruikt ArticleCard met dezelfde 120×120 thumb) */}
       <section
         className="card"
         style={{
@@ -203,8 +240,12 @@ export default function ArticlesShell({ articles, initialTag = "All", initialQ =
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
-        {filtered.map((a) => <ArticleCard key={a.slug} article={a} />)}
-        {filtered.length === 0 && <div className="tag">No articles match your filters.</div>}
+        {filtered.map((a) => (
+          <ArticleCard key={a.slug} article={a} />
+        ))}
+        {filtered.length === 0 && (
+          <div className="tag">No articles match your filters.</div>
+        )}
       </section>
 
       <style>{`.plain{background:transparent;border:0;padding:0;cursor:pointer}`}</style>
