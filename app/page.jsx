@@ -1,23 +1,25 @@
 // app/page.jsx
 import Link from "next/link";
-import dynamic from "next/dynamic";                       // ⬅️ nieuw
+import dynamic from "next/dynamic";
 import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
-import EUTotalTicker from "@/components/EUTotalTicker"; // EU-27 live teller
 
-// Kaart lazy-loaden, geen SSR (scheelt FCP/LCP op mobiel)
+// Kaart & Ticker client-only (ssr:false) => geen hydration mismatch
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
   loading: () => (
-    <div style={{height: 420, display:"grid", placeItems:"center"}} className="card">
+    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card">
       Loading map…
     </div>
   ),
 });
 
-// --- SEO / Metadata (EN) ---
+const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), {
+  ssr: false,
+});
+
 export const metadata = {
   title: "EU Debt Map | Explore national debts across the EU-27",
   description:
@@ -33,10 +35,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "EU Debt Map",
-    description:
-      "Live, ticking estimates of EU government debt based on Eurostat.",
+    description: "Live, ticking estimates of EU government debt based on Eurostat.",
   },
-  // Consistent met www
   metadataBase: new URL("https://www.eudebtmap.com"),
   alternates: {
     canonical: "https://www.eudebtmap.com/",
@@ -51,21 +51,15 @@ export const metadata = {
 };
 
 function formatEUR(v) {
-  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(
-    Math.round(v)
-  );
+  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v));
 }
 
 export default function HomePage() {
   // Alleen landen met echte waarden voor highlights/quick list
-  const valid = countries.filter(
-    (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
-  );
+  const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
 
   const largestDebt =
-    valid.length > 0
-      ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b))
-      : null;
+    valid.length > 0 ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b)) : null;
 
   const withDelta = valid.map((c) => ({
     ...c,
@@ -73,9 +67,7 @@ export default function HomePage() {
   }));
 
   const fastestGrowing =
-    withDelta.length > 0
-      ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b))
-      : null;
+    withDelta.length > 0 ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b)) : null;
 
   const quickItems = valid.map((c) => ({
     code: c.code,
@@ -84,10 +76,8 @@ export default function HomePage() {
     trend: trendFor(c),
   }));
 
-  // Artikelen (toon de 3 meest recente)
   const topArticles = listArticles().slice(0, 3);
 
-  // inline style helpers (donker thema, subtiele borders)
   const s = {
     mapFooter: {
       marginTop: 12,
@@ -107,16 +97,8 @@ export default function HomePage() {
       marginRight: 4,
       marginLeft: 4,
     },
-    pillOk: {
-      color: "var(--ok)",
-      borderColor: "#1f4d3a",
-      background: "rgba(34,197,94,.08)",
-    },
-    pillBad: {
-      color: "var(--bad)",
-      borderColor: "#5a1f2a",
-      background: "rgba(239,68,68,.08)",
-    },
+    pillOk: { color: "var(--ok)", borderColor: "#1f4d3a", background: "rgba(34,197,94,.08)" },
+    pillBad: { color: "var(--bad)", borderColor: "#5a1f2a", background: "rgba(239,68,68,.08)" },
     sep: { margin: "0 8px", color: "#2b3444" },
     muted: { color: "#9ca3af" },
     cta: {
@@ -137,7 +119,6 @@ export default function HomePage() {
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
   };
 
-  // responsive CSS voor de 2-kolommen sectie (stapelen op mobiel)
   const responsiveCss = `
     .ql-articles{
       display:grid;
@@ -145,9 +126,7 @@ export default function HomePage() {
       grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr);
     }
     @media (max-width: 920px){
-      .ql-articles{
-        grid-template-columns: 1fr !important;
-      }
+      .ql-articles{ grid-template-columns: 1fr !important; }
     }
   `;
 
@@ -156,12 +135,7 @@ export default function HomePage() {
       {/* === HERO === */}
       <section
         className="card"
-        style={{
-          gridColumn: "1 / -1",
-          display: "grid",
-          gap: 12,
-          alignItems: "stretch",
-        }}
+        style={{ gridColumn: "1 / -1", display: "grid", gap: 12, alignItems: "stretch" }}
         aria-labelledby="page-title"
       >
         <div style={{ display: "grid", gap: 6 }}>
@@ -169,12 +143,12 @@ export default function HomePage() {
             See EU Government Debt, live
           </h1>
           <p className="tag" style={{ margin: 0 }}>
-            Interactive map with per-country ticking estimates based on the last
-            two Eurostat quarters.
+            Interactive map with per-country ticking estimates based on the last two Eurostat
+            quarters.
           </p>
           <p className="tag" style={{ margin: 0 }}>
-            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an
-            official statistic.
+            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official
+            statistic.
           </p>
         </div>
 
@@ -236,9 +210,7 @@ export default function HomePage() {
             {largestDebt ? (
               <div style={{ marginTop: 6 }}>
                 <strong>{largestDebt.flag} {largestDebt.name}</strong>
-                <div className="mono" aria-live="polite">
-                  €{formatEUR(largestDebt.last_value_eur)}
-                </div>
+                <div className="mono" aria-live="polite">€{formatEUR(largestDebt.last_value_eur)}</div>
               </div>
             ) : (
               <div className="tag">—</div>
@@ -269,17 +241,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Context */}
         <div style={{ marginTop: 12 }} className="tag">
-          Why does debt matter? Government debt influences interest rates,
-          inflation, and the stability of the EU economy. This project makes
-          those big numbers visible at a glance.
+          Why does debt matter? Government debt influences interest rates, inflation, and the
+          stability of the EU economy. This project makes those big numbers visible at a glance.
         </div>
       </section>
 
       {/* === QUICK LIST + LATEST ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
-        {/* Quick list (links) */}
         <div>
           <QuickList
             items={quickItems}
@@ -296,7 +265,6 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Latest articles (rechts of eronder) */}
         <div className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
@@ -307,14 +275,11 @@ export default function HomePage() {
             {topArticles.map((a) => (
               <ArticleCard key={a.slug} article={a} />
             ))}
-            {topArticles.length === 0 && (
-              <div className="tag">No articles yet. Coming soon.</div>
-            )}
+            {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
           </div>
         </div>
       </section>
 
-      {/* responsieve grid-aanpassing voor mobiel */}
       <style>{responsiveCss}</style>
     </main>
   );

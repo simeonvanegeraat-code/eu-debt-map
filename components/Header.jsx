@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
+// Navigatie-items (zonder Articles; die tonen we als aparte CTA)
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/debt", label: "What is Debt?" },
@@ -41,7 +42,6 @@ function LanguageDropdown() {
   const currentLocale = LOCALES.find(l => l.code === current) || LOCALES[0];
 
   function onSelect(next) {
-    // behoud dezelfde pagina/route, vervang alleen de taalprefix
     const target = withLocale(pathname, next.code);
     setOpen(false);
     router.push(target);
@@ -154,11 +154,13 @@ export default function Header() {
 
   useEffect(() => setOpen(false), [pathname]);
 
-  // hulpfunctie voor "active" state per link
   const isActive = (hrefBase) => {
     const localized = withLocale(hrefBase, locale);
     return pathname === localized || pathname.startsWith(localized + "/");
   };
+
+  const articlesHref = withLocale("/articles", locale);
+  const articlesActive = isActive("/articles");
 
   return (
     <header className="site-header">
@@ -168,6 +170,7 @@ export default function Header() {
           <span className="brand-text">Debt Map</span>
         </Link>
 
+        {/* Desktop nav */}
         <nav className="nav-desktop">
           {NAV.map((item) => (
             <Link
@@ -178,9 +181,21 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+
+          {/* Articles CTA */}
+          <Link
+            href={articlesHref}
+            className={"nav-cta" + (articlesActive ? " nav-cta--active" : "")}
+            aria-label="Read latest articles"
+          >
+            <span aria-hidden style={{ marginRight: 6 }}>📰</span>
+            Articles
+          </Link>
+
           <LanguageDropdown />
         </nav>
 
+        {/* Mobile hamburger */}
         <button
           className="hamburger"
           aria-label="Toggle menu"
@@ -192,6 +207,7 @@ export default function Header() {
         </button>
       </div>
 
+      {/* Mobile drawer */}
       <div className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}>
         {NAV.map((item) => (
           <Link
@@ -202,10 +218,54 @@ export default function Header() {
             {item.label}
           </Link>
         ))}
+
+        {/* Articles CTA in drawer */}
+        <Link
+          href={articlesHref}
+          className={"drawer-cta" + (articlesActive ? " drawer-cta--active" : "")}
+        >
+          <span aria-hidden style={{ marginRight: 6 }}>📰</span>
+          Articles
+        </Link>
+
         <div style={{ padding: "12px 16px", borderTop: "1px solid #1f2937" }}>
           <LanguageDropdown />
         </div>
       </div>
+
+      {/* Inline styles for CTA */}
+      <style jsx>{`
+        .nav-cta {
+          display: inline-flex;
+          align-items: center;
+          padding: 8px 12px;
+          border-radius: 10px;
+          border: 1px solid #2b3a4f;
+          background: rgba(255,255,255,0.05);
+          text-decoration: none;
+          font-weight: 700;
+          color: #e5e7eb;
+          transition: background .15s ease, border-color .15s ease, transform .06s ease;
+          margin-left: 6px;
+        }
+        .nav-cta:hover { background: rgba(255,255,255,0.08); border-color: #3a4b64; }
+        .nav-cta:active { transform: translateY(1px); }
+        .nav-cta--active { border-color: #5aa3ff; box-shadow: 0 0 0 2px #1d4ed833 inset; }
+
+        .drawer-cta {
+          display: inline-flex;
+          align-items: center;
+          margin: 8px 16px 12px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          border: 1px solid #2b3a4f;
+          background: rgba(255,255,255,0.05);
+          text-decoration: none;
+          font-weight: 700;
+          color: #e5e7eb;
+        }
+        .drawer-cta--active { border-color: #5aa3ff; box-shadow: 0 0 0 2px #1d4ed833 inset; }
+      `}</style>
     </header>
   );
 }
