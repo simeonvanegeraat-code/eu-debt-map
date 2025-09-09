@@ -2,7 +2,7 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Script from "next/script";
+import Script from "next/script"; // oké voor consent/cookiebot
 
 export const metadata = {
   title: "EU Debt Map",
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* ✅ Google Consent Mode v2 defaults (EU-compliance) */}
+        {/* ✅ Google Consent Mode v2 (EU) */}
         <Script id="consent-mode" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* 🔐 Cookiebot CMP — vóór álle scripts die cookies kunnen zetten */}
+        {/* 🔐 Cookiebot vóór alle scripts die cookies kunnen zetten */}
         <Script
           id="cookiebot"
           src="https://consent.cookiebot.com/uc.js"
@@ -46,34 +46,25 @@ export default function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
 
-        {/* (Optioneel) Snellere connecties voor ads */}
-        <link
-          rel="preconnect"
-          href="https://pagead2.googlesyndication.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://googleads.g.doubleclick.net"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body>
-        <Header />
+        {/* Aanbevolen door Google voor Auto ads */}
+        <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
 
-        {children}
+        {/* (Optioneel) snellere connecties */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
 
-        {/* Dynamische, taalbewuste footer als Client Component */}
-        <Footer />
-
-        {/* ✅ Google AdSense loader (ná CMP) */}
-        <Script
-          id="adsbygoogle-init"
+        {/* ✅ Auto Ads script: géén next/script, geen preload */}
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
+      </head>
+
+      <body>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   );
