@@ -8,7 +8,6 @@ import { interpolateDebt } from "@/lib/data";
 import MapCTA from "@/components/MapCTA";
 import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
-import CountryPager from "@/components/CountryPager";
 import LatestArticles from "@/components/LatestArticles";
 import CountrySwitcher from "@/components/CountrySwitcher"; // alleen onderaan
 import CountryFacts from "./CountryFacts";
@@ -64,23 +63,23 @@ export default function CountryClient({ country }) {
         Estimated public debt (live): €{nf.format(Math.round(current))}
       </div>
 
-      {/* strakke share bar */}
       <ShareBar title={`${safeCountry.name} public debt`} />
 
-      {/* Facts + rate uitleg */}
       <div id={rateBoxId}>
         <CountryFacts code={safeCountry.code} />
       </div>
 
-      {/* Linker kolom: CTA + laatste artikel */}
-      <div className="grid" style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}>
+      <div
+        className="grid"
+        style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
+      >
         <div className="grid" style={{ gap: 16 }}>
+          {/* Map card bevat nu ook Prev/Next */}
           <MapCTA code={safeCountry.code} name={safeCountry.name} />
+          {/* laatste artikel als card met thumbnail */}
           <LatestArticles max={1} />
         </div>
       </div>
-
-      <CountryPager code={safeCountry.code} />
 
       {/* Switcher alleen onderaan */}
       <div style={{ marginTop: 16 }}>
