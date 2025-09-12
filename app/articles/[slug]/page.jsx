@@ -3,6 +3,7 @@ import { getArticle } from "@/lib/articles";
 import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage } from "@/lib/media";
+import ArticleRail from "@/components/ArticleRail";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -78,6 +79,9 @@ export default function ArticleDetailPage({ params }) {
         <style>{proseCss}</style>
 
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body }} />
+
+        {/* Verder lezen */}
+        <ArticleRail currentSlug={article.slug} lang={article.lang} max={4} title="More articles" />
 
         <footer style={{ display: "grid", gap: 10 }}>
           <ShareBar url={url} title={article.title} summary={article.summary} />
