@@ -1,105 +1,45 @@
 // components/ShareBar.jsx
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-export default function ShareBar({ url, title, summary }) {
+export default function ShareBar({ title }) {
   const [copied, setCopied] = useState(false);
+  const url = useMemo(() => (typeof window !== "undefined" ? window.location.href : ""), []);
 
-  async function shareNative() {
-    try {
-      if (navigator.share) {
-        await navigator.share({ title, text: summary, url });
-      } else {
-        await copy();
-      }
-    } catch {
-      /* user cancelled */
-    }
-  }
-
-  async function copy() {
+  const copy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch {
-      setCopied(false);
-    }
-  }
+    } catch {}
+  }, [url]);
 
-  const btn = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 8,
-    padding: "8px 12px",
-    borderRadius: 10,
-    border: "1px solid #1f2b3a",
-    background: "#0b1220",
-    cursor: "pointer",
-    textDecoration: "none",
-  };
+  const tweetUrl = useMemo(() => {
+    const u = new URL("https://twitter.com/intent/tweet");
+    u.searchParams.set("url", url);
+    if (title) u.searchParams.set("text", title);
+    return u.toString();
+  }, [url, title]);
 
-  const asTag = { fontSize: 13, fontWeight: 600 };
-
-  const encodedUrl = encodeURIComponent(url);
-  const encodedTitle = encodeURIComponent(title);
-
-  const links = [
-    {
-      label: "X",
-      href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-      icon: "𝕏",
-    },
-    {
-      label: "LinkedIn",
-      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-      icon: "in",
-    },
-    {
-      label: "Facebook",
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      icon: "f",
-    },
-    {
-      label: "Email",
-      href: `mailto:?subject=${encodedTitle}&body=${encodedUrl}`,
-      icon: "✉️",
-    },
-  ];
+  const redditUrl = useMemo(() => {
+    const u = new URL("https://www.reddit.com/submit");
+    u.searchParams.set("url", url);
+    if (title) u.searchParams.set("title", title);
+    return u.toString();
+  }, [url, title]);
 
   return (
-    <div
-      role="group"
-      aria-label="Share article"
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 8,
-      }}
-    >
-      {/* Native share / copy */}
-      <button onClick={shareNative} style={{ ...btn, ...asTag }} className="tag">
-        📤 Share
+    <div className="flex items-center gap-2 mt-3" aria-label="Share this page">
+      <button className="btn" onClick={copy} aria-label="Copy link">
+        {copied ? "✓ Copied" : "Copy link"}
       </button>
-      <button onClick={copy} style={{ ...btn, ...asTag }} className="tag">
-        {copied ? "✓ Copied" : "🔗 Copy link"}
-      </button>
-
-      {/* Networks */}
-      {links.map((l) => (
-        <a
-          key={l.label}
-          href={l.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ ...btn, ...asTag }}
-          className="tag"
-          aria-label={`Share on ${l.label}`}
-        >
-          {l.icon} {l.label}
-        </a>
-      ))}
+      <a className="btn" href={tweetUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        Share on X
+      </a>
+      <a className="btn" href={redditUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
+        Reddit
+      </a>
     </div>
   );
 }
