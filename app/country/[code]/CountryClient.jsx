@@ -9,10 +9,16 @@ import MapCTA from "@/components/MapCTA";
 import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
-import CountrySwitcher from "@/components/CountrySwitcher"; // alleen onderaan
+import CountrySwitcher from "@/components/CountrySwitcher";
 import CountryFacts from "./CountryFacts";
 
-export default function CountryClient({ country }) {
+// EN/NL labels
+const LIVE_LABELS = {
+  en: "Estimated public debt (live):",
+  nl: "Staatsschuld (live):",
+};
+
+export default function CountryClient({ country, lang = "en" }) {
   const safeCountry = country ?? null;
 
   const prefersReducedMotion =
@@ -41,10 +47,15 @@ export default function CountryClient({ country }) {
   }
 
   const rateBoxId = "country-rate-desc";
+  const liveLabel = LIVE_LABELS[lang] || LIVE_LABELS.en;
+  const backHref = lang === "nl" ? "/nl" : "/"; // NL route gaat terug naar /nl
+  const shareTitle = lang === "nl"
+    ? `${safeCountry.name} staatsschuld`
+    : `${safeCountry.name} public debt`;
 
   return (
     <>
-      <Link className="btn" href="/" prefetch>
+      <Link className="btn" href={backHref} prefetch>
         ← Back
       </Link>
 
@@ -60,10 +71,10 @@ export default function CountryClient({ country }) {
         aria-live="polite"
         aria-describedby={rateBoxId}
       >
-        Estimated public debt (live): €{nf.format(Math.round(current))}
+        {liveLabel} €{nf.format(Math.round(current))}
       </div>
 
-      <ShareBar title={`${safeCountry.name} public debt`} />
+      <ShareBar title={shareTitle} />
 
       <div id={rateBoxId}>
         <CountryFacts code={safeCountry.code} />
