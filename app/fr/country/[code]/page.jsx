@@ -1,4 +1,4 @@
-// app/nl/country/[code]/page.jsx
+// app/fr/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "@/app/country/[code]/CountryClient";
@@ -15,11 +15,11 @@ export async function generateMetadata({ params }) {
   const code = String(params.code).toLowerCase();
   const c = (Array.isArray(countries) ? countries : []).find(x => String(x.code).toLowerCase() === code);
   const name = c?.name || code.toUpperCase();
-  const url = `${SITE}/nl/country/${code}`;
+  const url = `${SITE}/fr/country/${code}`;
 
   return {
-    title: `Staatsschuld ${name} (live teller) • EU Debt Map`,
-    description: `Bekijk de actuele (geschatte) staatsschuld van ${name} met een live teller in euro per seconde. Gebaseerd op Eurostat.`,
+    title: `Dette publique de ${name} (compteur en direct) • EU Debt Map`,
+    description: `Estimation en direct de la dette publique de ${name} (€/s), basée sur les deux dernières références Eurostat.`,
     alternates: {
       canonical: url,
       languages: {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
 
 export const dynamic = "error";
 
-export default function CountryPageNL({ params: { code } }) {
+export default function CountryPageFR({ params: { code } }) {
   const cc = String(code).toLowerCase();
   const country = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === cc
@@ -44,7 +44,7 @@ export default function CountryPageNL({ params: { code } }) {
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient country={country} lang="nl" introSlot={<CountryIntro country={country} lang="nl" />} />
+        <CountryClient country={country} lang="fr" introSlot={<CountryIntro country={country} lang="fr" />} />
       </section>
     </main>
   );

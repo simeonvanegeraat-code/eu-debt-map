@@ -9,16 +9,27 @@ import MapCTA from "@/components/MapCTA";
 import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
-import CountrySwitcher from "@/components/CountrySwitcher";
 import CountryFacts from "./CountryFacts";
 
-// EN/NL labels
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
+  de: "Staatsschulden (live):",
+  fr: "Dette publique estimée (live) :",
 };
 
-export default function CountryClient({ country, lang = "en" }) {
+const SHARE_TITLES = {
+  en: (name) => `${name} public debt`,
+  nl: (name) => `${name} staatsschuld`,
+  de: (name) => `${name} Staatsschulden`,
+  fr: (name) => `${name} dette publique`,
+};
+
+export default function CountryClient({
+  country,
+  lang = "en",
+  introSlot = null, // optioneel: taal-tekst boven de map
+}) {
   const safeCountry = country ?? null;
 
   const prefersReducedMotion =
@@ -42,22 +53,21 @@ export default function CountryClient({ country, lang = "en" }) {
     return interpolateDebt(safeCountry, nowMs);
   }, [safeCountry, nowMs]);
 
-  if (!safeCountry) {
-    return <div className="container card">Unknown country</div>;
-  }
+  if (!safeCountry) return <div className="container card">Unknown country</div>;
 
   const rateBoxId = "country-rate-desc";
   const liveLabel = LIVE_LABELS[lang] || LIVE_LABELS.en;
-  const backHref = lang === "nl" ? "/nl" : "/"; // NL route gaat terug naar /nl
-  const shareTitle = lang === "nl"
-    ? `${safeCountry.name} staatsschuld`
-    : `${safeCountry.name} public debt`;
+
+  const backHref =
+    lang === "nl" ? "/nl" :
+    lang === "de" ? "/de" :
+    lang === "fr" ? "/fr" : "/";
+
+  const shareTitle = (SHARE_TITLES[lang] || SHARE_TITLES.en)(safeCountry.name);
 
   return (
     <>
-      <Link className="btn" href={backHref} prefetch>
-        ← Back
-      </Link>
+      <Link className="btn" href={backHref} prefetch>← Back</Link>
 
       <h2 style={{ marginTop: 12 }}>
         {safeCountry.flag} {safeCountry.name}
@@ -80,21 +90,14 @@ export default function CountryClient({ country, lang = "en" }) {
         <CountryFacts code={safeCountry.code} />
       </div>
 
-      <div
-        className="grid"
-        style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
-      >
+      {/* Taal-specifieke SEO-intro (zelfde plek in elke taal) */}
+      {introSlot}
+
+      <div className="grid" style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}>
         <div className="grid" style={{ gap: 16 }}>
-          {/* Map card bevat nu ook Prev/Next */}
           <MapCTA code={safeCountry.code} name={safeCountry.name} />
-          {/* laatste artikel als card met thumbnail */}
           <LatestArticles max={1} />
         </div>
-      </div>
-
-      {/* Switcher alleen onderaan */}
-      <div style={{ marginTop: 16 }}>
-        <CountrySwitcher currentCode={safeCountry.code} />
       </div>
     </>
   );
