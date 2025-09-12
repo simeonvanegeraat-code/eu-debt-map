@@ -2,21 +2,26 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Script from "next/script"; // oké voor consent/cookiebot
+import Script from "next/script";
 
 export const metadata = {
   title: "EU Debt Map",
   description:
     "Explore EU-27 government debt. Click a country to see a live ticking estimate. Data derived from Eurostat.",
+  // ✅ ALLES via www + https
+  metadataBase: new URL("https://www.eudebtmap.com"),
   openGraph: {
     title: "EU Debt Map",
     description:
       "Explore EU-27 government debt. Click a country to see a live ticking estimate.",
-    url: "https://eudebtmap.com/",
+    url: "https://www.eudebtmap.com/",
     siteName: "EU Debt Map",
     type: "website",
   },
-  metadataBase: new URL("https://eudebtmap.com"),
+  // ✅ Root canonical (pagina-specifiek doen we per route, zie hieronder)
+  alternates: {
+    canonical: "https://www.eudebtmap.com/",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -46,14 +51,12 @@ export default function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
 
-        {/* Aanbevolen door Google voor Auto ads */}
+        {/* Ads readiness */}
         <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
-
-        {/* (Optioneel) snellere connecties */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
 
-        {/* ✅ Auto Ads script: géén next/script, geen preload */}
+        {/* ✅ Auto Ads script */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"

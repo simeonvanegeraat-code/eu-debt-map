@@ -8,7 +8,14 @@ const SITE = "https://www.eudebtmap.com";
 
 export async function generateMetadata({ params }) {
   const a = getArticle(params.slug);
-  if (!a) return { title: "Article • EU Debt Map" };
+  if (!a) {
+    return {
+      title: "Article • EU Debt Map",
+      alternates: { canonical: `${SITE}/articles/${params.slug}` },
+      openGraph: { url: `${SITE}/articles/${params.slug}` },
+    };
+  }
+
   const url = `${SITE}/articles/${params.slug}`;
   const og = articleOgImage(a);
 
@@ -57,10 +64,14 @@ export default function ArticleDetailPage({ params }) {
           <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
             {article.tags?.length ? <span aria-hidden>•</span> : null}
-            {article.tags?.map((t) => <span key={t} className="tag">{t}</span>)}
+            {article.tags?.map((t) => (
+              <span key={t} className="tag">{t}</span>
+            ))}
           </div>
           <h1 style={{ margin: 0 }}>{article.title}</h1>
-          {article.summary && <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>}
+          {article.summary && (
+            <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>
+          )}
           <ShareBar url={url} title={article.title} summary={article.summary} />
         </header>
 
