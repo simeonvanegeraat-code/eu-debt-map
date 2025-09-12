@@ -1,74 +1,77 @@
+// app/country/[code]/CountryClient.jsx
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { countries, interpolateDebt } from "@/lib/data";
-import AdSlot from "@/components/AdSlot";
-import { SLOTS } from "@/lib/ads";
-import CountryFacts from "./CountryFacts";
+import { interpolateDebt } from "@/lib/data";
 
-function useTicker(ms = 120) {
-  const [now, setNow] = useState(() => Date.now());
-  const ref = useRef(null);
+export default function CountryClient({ country }) {
+  // Fallback safeguard (zou niet voorkomen door server-check)
+  const safeCountry = country ?? null;
+
+  // Respecteer prefers-reduced-motion: minder vaak updaten voor toegankelijkheid/zuinigheid
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  const timerRef = useRef(null);
+
   useEffect(() => {
-    ref.current = setInterval(() => setNow(Date.now()), ms);
-    return () => ref.current && clearInterval(ref.current);
-  }, [ms]);
-  return now;
-}
+    // 120ms zoals je had, maar iets trager bij reduced motion
+    const interval = prefersReducedMotion ? 500 : 120;
+    timerRef.current = setInterval(() => setNowMs(Date.now()), interval);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefersReducedMotion]);
 
-export default function CountryClient({ countryCode }) {
-  // Zoek land veilig
-  const country = useMemo(() => {
-    const want = String(countryCode || "").toLowerCase();
-    return countries.find((x) => x.code.toLowerCase() === want) || null;
-  }, [countryCode]);
+  // Intl formatter memoriseren
+  const nf = useMemo(() => new Intl.NumberFormat("en-GB"), []);
+  const current = useMemo(() => {
+    if (!safeCountry) return 0;
+    return interpolateDebt(safeCountry, nowMs);
+  }, [safeCountry, nowMs]);
 
-  const nowMs = useTicker(150);
-
-  if (!country) {
+  if (!safeCountry) {
     return (
-      <main className="container card">
-        Unknown country: {String(countryCode || "").toUpperCase()}
-      </main>
+      <div className="container card">
+        Unknown country
+      </div>
     );
   }
 
-  // Bereken huidig bedrag met robuuste interpolatie
-  let current = interpolateDebt(country, nowMs);
-  if (!Number.isFinite(current)) current = Number(country.last_value_eur) || 0;
-
-  const nf = new Intl.NumberFormat("en-GB");
-
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <a className="btn" href="/">← Back</a>
+    <>
+      <Link className="btn" href="/" prefetch>
+        ← Back
+      </Link>
 
-        <h2 style={{ marginTop: 12 }}>
-          {country.flag} {country.name}
-        </h2>
+      <h2 style={{ marginTop: 12 }}>
+        {safeCountry.flag} {safeCountry.name}
+      </h2>
 
-        <div
-          className="mono"
-          style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
-          aria-live="polite"
-        >
-          Current estimate: €{nf.format(Math.round(current))}
-        </div>
+      <div
+        className="mono"
+        style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
+        aria-live="polite"
+      >
+        Current estimate: €{nf.format(Math.round(current))}
+      </div>
 
-        <p className="tag" style={{ marginTop: 8 }}>
-          Based on Eurostat last two quarters ({country.prev_date} → {country.last_date}). Demo estimate
-          with simple per-second interpolation.
-        </p>
-
-        {/* Compacte facts (trend, rate, bron) */}
-        <CountryFacts code={country.code} />
-
-        {/* AdSense slot (optioneel) */}
-        <div style={{ marginTop: 12 }}>
-          <AdSlot slot={SLOTS.countryUnder} />
-        </div>
-      </section>
-    </main>
+      {/* Infobox met details (ongewijzigd) */}
+      {/* Belangrijk: CountryFacts werkt nu met safeCountry.code */}
+      {/* Als jouw CountryFacts in dezelfde map staat, behoud het importpad zoals je had */}
+      {/* Voor tree-shaking en stabiliteit is het netter om CountryFacts hier te importeren */}
+      {/* maar we laten jouw bestaande structuur met ./CountryFacts in stand: */}
+      <CountryFacts code={safeCountry.code} />
+    </>
   );
 }
+
+// Let op: omdat dit bestand naast page.jsx staat,
+// zorg dat je in page.jsx geen aparte import van CountryFacts nodig hebt.
+// Als jouw originele CountryFacts import in page.jsx zat, verplaats 'm hierheen:
+import CountryFacts from "./CountryFacts";

@@ -1,55 +1,43 @@
-"use client";
+// app/country/[code]/page.jsx
+import { notFound } from "next/navigation";
+import { countries } from "@/lib/data";
+import CountryClient from "./CountryClient";
 
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { countries, interpolateDebt } from "@/lib/data";
-import CountryFacts from "./CountryFacts";
+export async function generateStaticParams() {
+  // 'countries' is bij jou een array met { code, ... }
+  try {
+    const codes = Array.isArray(countries)
+      ? countries.map((c) => ({ code: String(c.code).toLowerCase() }))
+      : [];
+    // Fallback (zou niet nodig moeten zijn als lib/data klopt)
+    return codes.length
+      ? codes
+      : [
+          "at","be","bg","hr","cy","cz","dk","ee","fi","fr","de","gr","hu","ie",
+          "it","lv","lt","lu","mt","nl","pl","pt","ro","sk","si","es","se",
+        ].map((code) => ({ code }));
+  } catch {
+    return [];
+  }
+}
+
+// Volledig statisch (gooit fout bij dynamic fetches)
+export const dynamic = "error";
 
 export default function CountryPage({ params: { code } }) {
-  const country = useMemo(() => {
-    const want = String(code).toLowerCase();
-    return countries.find((x) => x.code.toLowerCase() === want) || null;
-  }, [code]);
+  const want = String(code).toLowerCase();
+  const country =
+    Array.isArray(countries)
+      ? countries.find((x) => String(x.code).toLowerCase() === want)
+      : null;
 
-  const [nowMs, setNowMs] = useState(() => Date.now());
-  const timerRef = useRef(null);
-  useEffect(() => {
-    timerRef.current = setInterval(() => setNowMs(Date.now()), 120);
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+  if (!country) return notFound();
 
-  if (!country) {
-    return (
-      <main className="container card">
-        Unknown country: {String(code).toUpperCase()}
-      </main>
-    );
-  }
-
-  const current = interpolateDebt(country, nowMs);
-  const nf = new Intl.NumberFormat("en-GB");
-
+  // Geef het volledige country-object door aan de client component
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <Link className="btn" href="/" prefetch>
-          ← Back
-        </Link>
-
-        <h2 style={{ marginTop: 12 }}>
-          {country.flag} {country.name}
-        </h2>
-
-        <div
-          className="mono"
-          style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
-          aria-live="polite"
-        >
-          Current estimate: €{nf.format(Math.round(current))}
-        </div>
-
-        {/* Infobox met details */}
-        <CountryFacts code={country.code} />
+        <CountryClient country={country} />
       </section>
     </main>
   );
