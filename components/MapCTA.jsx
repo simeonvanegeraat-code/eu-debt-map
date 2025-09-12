@@ -2,17 +2,23 @@
 import Link from "next/link";
 import { countries } from "@/lib/data";
 
-export default function MapCTA({ code, name }) {
-  // prev/next alfabetisch
-  const base = Array.isArray(countries) ? [...countries] : [];
-  base.sort((a, b) => a.name.localeCompare(b.name));
-  const idx = base.findIndex(
-    (c) => String(c.code).toLowerCase() === String(code).toLowerCase()
-  );
-  const prev = idx >= 0 ? base[(idx - 1 + base.length) % base.length] : null;
-  const next = idx >= 0 ? base[(idx + 1) % base.length] : null;
+export default function MapCTA({ code, name, lang = "en" }) {
+  // taal-root: '' (en), '/nl', '/de', '/fr'
+  const base = lang && lang !== "en" ? `/${lang}` : "";
 
-  // gedeelde knop-stijl + expliciete marges om “plakken” te voorkomen
+  // prev/next alfabetisch
+  const baseList = Array.isArray(countries) ? [...countries] : [];
+  baseList.sort((a, b) => a.name.localeCompare(b.name));
+
+  const want = String(code || "").toLowerCase();
+  const idx = baseList.findIndex(
+    (c) => String(c.code).toLowerCase() === want
+  );
+
+  const prev = idx >= 0 ? baseList[(idx - 1 + baseList.length) % baseList.length] : null;
+  const next = idx >= 0 ? baseList[(idx + 1) % baseList.length] : null;
+
+  // gedeelde knop-stijl + expliciete margins (robust)
   const btnStyle = {
     display: "inline-flex",
     alignItems: "center",
@@ -21,8 +27,8 @@ export default function MapCTA({ code, name }) {
     borderRadius: 12,
     paddingInline: 14,
     whiteSpace: "nowrap",
-    marginRight: 12,   // <<< spacing
-    marginBottom: 12,  // <<< spacing
+    marginRight: 12,
+    marginBottom: 12,
   };
 
   return (
@@ -33,12 +39,11 @@ export default function MapCTA({ code, name }) {
         <strong>{name}</strong>.
       </p>
 
-      {/* CTA + pager onder elkaar; knoppen gebruiken margins voor ruimte */}
       <div style={{ marginTop: 12 }}>
         <div>
           <Link
             className="btn"
-            href="/#map"
+            href={`${base}/#map`}
             aria-label="Open interactive map"
             style={btnStyle}
             title="Open interactive map"
@@ -51,7 +56,7 @@ export default function MapCTA({ code, name }) {
           {prev && (
             <Link
               className="btn"
-              href={`/country/${String(prev.code).toLowerCase()}`}
+              href={`${base}/country/${String(prev.code).toLowerCase()}`}
               prefetch
               aria-label={`Go to ${prev.name}`}
               title={prev.name}
@@ -63,7 +68,7 @@ export default function MapCTA({ code, name }) {
           {next && (
             <Link
               className="btn"
-              href={`/country/${String(next.code).toLowerCase()}`}
+              href={`${base}/country/${String(next.code).toLowerCase()}`}
               prefetch
               aria-label={`Go to ${next.name}`}
               title={next.name}

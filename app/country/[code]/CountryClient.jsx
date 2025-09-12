@@ -93,9 +93,13 @@ export default function CountryClient({
       {/* Taal-specifieke SEO-intro (zelfde plek in elke taal) */}
       {introSlot}
 
-      <div className="grid" style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}>
+      <div
+        className="grid"
+        style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
+      >
         <div className="grid" style={{ gap: 16 }}>
-          <MapCTA code={safeCountry.code} name={safeCountry.name} />
+          {/* Geef lang mee zodat links in dezelfde taal blijven */}
+          <MapCTA code={safeCountry.code} name={safeCountry.name} lang={lang} />
           <LatestArticles max={1} />
         </div>
       </div>
