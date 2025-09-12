@@ -4,20 +4,26 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 function Icon({ name, size = 16 }) {
-  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "currentColor", ariaHidden: true };
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "currentColor" };
   if (name === "link") {
     return (
-      <svg {...common}><path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l4.95-4.95a3 3 0 0 0-4.24-4.24l-1.41 1.41a1 1 0 1 0 1.41 1.41l1.41-1.41a1 1 0 0 1 1.41 1.41l-4.95 4.95ZM13.41 10.59a1 1 0 0 0-1.41-1.41L7.05 14.13a3 3 0 1 0 4.24 4.24l1.41-1.41a1 1 0 0 0-1.41-1.41l-1.41 1.41a1 1 0 1 1-1.41-1.41l4.95-4.95Z"/></svg>
+      <svg {...common} aria-hidden="true">
+        <path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l4.95-4.95a3 3 0 0 0-4.24-4.24l-1.41 1.41a1 1 0 1 0 1.41 1.41l1.41-1.41a1 1 0 0 1 1.41 1.41l-4.95 4.95ZM13.41 10.59a1 1 0 0 0-1.41-1.41L7.05 14.13a3 3 0 1 0 4.24 4.24l1.41-1.41a1 1 0 0 0-1.41-1.41l-1.41 1.41a1 1 0 1 1-1.41-1.41l4.95-4.95Z"/>
+      </svg>
     );
   }
   if (name === "x") {
     return (
-      <svg {...common}><path d="M4 4h2.8l5.2 6.7L17.3 4H20l-7.1 9 7.5 9H17.6l-5.6-7.1L6.2 22H4l7.5-9L4 4z"/></svg>
+      <svg {...common} aria-hidden="true">
+        <path d="M4 4h2.8l5.2 6.7L17.3 4H20l-7.1 9 7.5 9H17.6l-5.6-7.1L6.2 22H4l7.5-9L4 4z"/>
+      </svg>
     );
   }
   if (name === "reddit") {
     return (
-      <svg {...common}><path d="M22 12c0 4.42-4.48 8-10 8S2 16.42 2 12s4.48-8 10-8c1.77 0 3.43.37 4.88 1.02l1.7-3.02 1.79.98-1.86 3.3A7.8 7.8 0 0 1 22 12Zm-14.5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM12 19c2.02 0 3.76-.86 4.66-2.11a.75.75 0 0 0-1.22-.86C14.79 16.9 13.5 17.5 12 17.5s-2.79-.6-3.44-1.47a.75.75 0 0 0-1.22.86C8.24 18.14 9.98 19 12 19Z"/></svg>
+      <svg {...common} aria-hidden="true">
+        <path d="M22 12c0 4.42-4.48 8-10 8S2 16.42 2 12s4.48-8 10-8c1.77 0 3.43.37 4.88 1.02l1.7-3.02 1.79.98-1.86 3.3A7.8 7.8 0 0 1 22 12Zm-14.5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM12 19c2.02 0 3.76-.86 4.66-2.11a.75.75 0 0 0-1.22-.86C14.79 16.9 13.5 17.5 12 17.5s-2.79-.6-3.44-1.47a.75.75 0 0 0-1.22.86C8.24 18.14 9.98 19 12 19Z"/>
+      </svg>
     );
   }
   return null;
@@ -53,15 +59,28 @@ export default function ShareBar({ title }) {
     return u.toString();
   }, [url, title]);
 
-  const Btn = ({ onClick, href, children, ariaLabel }) => (
-    href ? (
+  const Btn = ({ onClick, href, children, ariaLabel }) => {
+    const baseStyle = {
+      // gelijke maat knoppen
+      width: 148,
+      height: 40,
+      borderRadius: 12,
+      // nette inhoud
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      paddingInline: 12,
+      whiteSpace: "nowrap",
+    };
+    return href ? (
       <a
         className="btn"
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={ariaLabel}
-        style={{ display: "inline-flex", alignItems: "center", gap: 8, paddingInline: 12 }}
+        style={baseStyle}
       >
         {children}
       </a>
@@ -70,23 +89,29 @@ export default function ShareBar({ title }) {
         className="btn"
         onClick={onClick}
         aria-label={ariaLabel}
-        style={{ display: "inline-flex", alignItems: "center", gap: 8, paddingInline: 12 }}
+        style={baseStyle}
       >
         {children}
       </button>
-    )
-  );
+    );
+  };
 
   return (
-    <div className="flex items-center gap-2 mt-3">
+    <div
+      className="flex flex-wrap mt-3"
+      // expliciete gaps (als je utility 'gap-*' overschreven wordt)
+      style={{ columnGap: 12, rowGap: 12 }}
+    >
       <Btn onClick={copy} ariaLabel="Copy link">
         <Icon name="link" />
         {copied ? "Copied" : "Copy"}
       </Btn>
-      <Btn href={xUrl} ariaLabel="Share on X">
+
+      <Btn href={xUrl} ariaLabel="Share on X (Twitter)">
         <Icon name="x" />
-        X
+        {"X (Twitter)"}
       </Btn>
+
       <Btn href={redditUrl} ariaLabel="Share on Reddit">
         <Icon name="reddit" />
         Reddit
