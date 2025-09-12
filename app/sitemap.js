@@ -12,8 +12,11 @@ export default async function sitemap() {
   const ROOT_STATIC = ["", "about", "debt", "methodology", "privacy", "cookies", "articles"];
 
   // Locale home + locale subpages die ook echt bestaan in /app/<locale>/
-  const LOCALES = ["nl", "de", "fr"];
+  const LOCALES = ["nl", "de", "fr"]; // bestaande locale secties
   const LOCALE_SUBPAGES = ["about", "debt", "methodology", "privacy"]; // géén cookies in locales
+
+  // Hreflang talen (inclusief EN)
+  const ALL_LOCALES = ["en", "nl", "de", "fr"];
 
   // EU-27 landcodes (country/[code])
   const COUNTRY_CODES = [
@@ -56,20 +59,29 @@ export default async function sitemap() {
     }
   }
 
-  // Country-pagina's
+  // Country-pagina's met hreflang alternates (EN + NL/DE/FR)
   for (const code of COUNTRY_CODES) {
-    urls.push({
-      url: `${SITE}/country/${code.toLowerCase()}`,
-      lastModified: dataLastMod,
-      changeFrequency: "daily",
-      priority: 0.8,
-    });
+    const low = code.toLowerCase();
+    const langs = {
+      en: `${SITE}/country/${low}`,
+      nl: `${SITE}/nl/country/${low}`,
+      de: `${SITE}/de/country/${low}`,
+      fr: `${SITE}/fr/country/${low}`,
+    };
+    for (const loc of ALL_LOCALES) {
+      urls.push({
+        url: langs[loc],
+        lastModified: dataLastMod,
+        changeFrequency: "daily",
+        priority: 0.8,
+        alternates: { languages: langs },
+      });
+    }
   }
 
-  // Artikelen (uit file-based "CMS")
+  // Artikelen (file-based CMS)
   const articles = listArticles(); // nieuwste eerst
   for (const a of articles) {
-    // a.slug, a.date
     urls.push({
       url: `${SITE}/articles/${a.slug}`,
       lastModified: a.date ? new Date(a.date) : new Date(),
