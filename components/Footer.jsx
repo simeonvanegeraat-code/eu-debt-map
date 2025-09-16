@@ -15,15 +15,25 @@ export default function Footer() {
     try {
       if (typeof window === "undefined") return;
       const cs = window.CookieScript || {};
+
+      // Probeer direct het voorkeuren-paneel te openen
+      if (typeof cs.showPreferences === "function") return cs.showPreferences();
+      if (typeof cs.open === "function") return cs.open("preferences");
+
+      // Fallbacks: banner opnieuw tonen
       if (typeof cs.renew === "function") return cs.renew();
       if (typeof cs.show === "function") return cs.show();
-      if (typeof cs.open === "function") return cs.open();
+
+      // Laatste redmiddel: IAB TCF UI
       if (typeof window.__tcfapi === "function") {
         return window.__tcfapi("displayConsentUi", 2, () => {});
       }
-      console.warn("[CookieScript] Geen reopen-functie gevonden.");
+
+      console.warn("[CookieScript] Geen methode om voorkeuren te openen gevonden.");
+      alert("Cookie preferences are currently unavailable. Please try again.");
     } catch (err) {
       console.warn("[CookieScript] reopen error:", err);
+      alert("Cookie preferences are currently unavailable. Please try again.");
     }
   }
 

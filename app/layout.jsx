@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
         {/* 2) CookieScript CMP */}
         <Script
           id="cookiescript"
-          src="//cdn.cookie-script.com/s/bbe5413b31fadf1554acac4c6b3e4986.js"
+          src="https://cdn.cookie-script.com/s/bbe5413b31fadf1554acac4c6b3e4986.js"
           strategy="beforeInteractive"
         />
 
