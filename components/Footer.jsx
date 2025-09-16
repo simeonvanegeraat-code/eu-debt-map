@@ -12,9 +12,18 @@ export default function Footer() {
 
   function openCookieSettings(e) {
     e.preventDefault();
-    // Cookiebot global (laadt via je CMP script)
-    if (typeof window !== "undefined" && window.Cookiebot?.renew) {
-      window.Cookiebot.renew();
+    try {
+      if (typeof window === "undefined") return;
+      const cs = window.CookieScript || {};
+      if (typeof cs.renew === "function") return cs.renew();
+      if (typeof cs.show === "function") return cs.show();
+      if (typeof cs.open === "function") return cs.open();
+      if (typeof window.__tcfapi === "function") {
+        return window.__tcfapi("displayConsentUi", 2, () => {});
+      }
+      console.warn("[CookieScript] Geen reopen-functie gevonden.");
+    } catch (err) {
+      console.warn("[CookieScript] reopen error:", err);
     }
   }
 
@@ -47,7 +56,9 @@ export default function Footer() {
             background: "#0b1220",
           }}
         >
-          <span>© {year} <strong>EU Debt Map</strong></span>
+          <span>
+            © {year} <strong>EU Debt Map</strong>
+          </span>
           <span style={{ opacity: 0.75 }}>
             Independent educational visualization based on Eurostat data.
           </span>
@@ -76,9 +87,11 @@ export default function Footer() {
           <Link href={withLocale("/privacy", locale)} className="footer-link">
             Privacy
           </Link>
-
+          <Link href={withLocale("/cookies", locale)} className="footer-link">
+            Cookie Policy
+          </Link>
           <a href="#" onClick={openCookieSettings} className="footer-link">
-            Cookie settings
+            Cookie preferences
           </a>
         </nav>
       </div>
