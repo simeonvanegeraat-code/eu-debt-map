@@ -1,5 +1,4 @@
 // app/cookies/page.jsx
-import CookiePrefsButton from "@/components/CookiePrefsButton";
 
 export const metadata = {
   title: "Cookie Policy • EU Debt Map",
@@ -42,12 +41,16 @@ export default function CookiesPage() {
         You can change or withdraw your consent at any time:
       </p>
 
-      {/* Opent het CookieScript-voorkeurenpaneel */}
-      <CookiePrefsButton />
+      {/* Officiële CookieScript-trigger */}
+      <a
+        href="#"
+        className="csconsentlink underline hover:no-underline"
+        style={{ display: "inline-block", marginTop: 8 }}
+      >
+        Open cookie preferences
+      </a>
 
-      {/* Optioneel: ruimte voor een declaratie/rapport embed van CookieScript.
-          Als je in het CookieScript-dashboard een "declaration/report" snippet krijgt,
-          plak het hier in plaats van Cookiebot’s oude <script id="CookieDeclaration" ...>. */}
+      {/* Optioneel: CookieScript declaration/report embed kan hier */}
       <div style={{ marginTop: 32 }} />
     </main>
   );
