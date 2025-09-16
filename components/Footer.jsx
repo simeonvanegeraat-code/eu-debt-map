@@ -13,28 +13,25 @@ export default function Footer() {
   function openCookieSettings(e) {
     e.preventDefault();
     try {
-      if (typeof window === "undefined") return;
-      const cs = window.CookieScript || {};
+      // 1) Officiële API – open het voorkeuren/bannervenster
+      if (window?.CookieScript?.instance?.show) return window.CookieScript.instance.show();
 
-      // Probeer direct het voorkeuren-paneel te openen
+      // 2) Fallbacks voor oudere builds
+      const cs = window.CookieScript || {};
       if (typeof cs.showPreferences === "function") return cs.showPreferences();
       if (typeof cs.open === "function") return cs.open("preferences");
-
-      // Fallbacks: banner opnieuw tonen
       if (typeof cs.renew === "function") return cs.renew();
       if (typeof cs.show === "function") return cs.show();
 
-      // Laatste redmiddel: IAB TCF UI
+      // 3) Laatste redmiddel: IAB TCF helper (als TCF aanstaat)
       if (typeof window.__tcfapi === "function") {
         return window.__tcfapi("displayConsentUi", 2, () => {});
       }
-
-      console.warn("[CookieScript] Geen methode om voorkeuren te openen gevonden.");
-      alert("Cookie preferences are currently unavailable. Please try again.");
     } catch (err) {
+      // negeer; class-trigger pakt 'm meestal toch op
       console.warn("[CookieScript] reopen error:", err);
-      alert("Cookie preferences are currently unavailable. Please try again.");
     }
+    // Geen alert: CookieScript's eigen class-trigger (csconsentlink) klikt meestal alsnog door
   }
 
   return (
@@ -100,7 +97,14 @@ export default function Footer() {
           <Link href={withLocale("/cookies", locale)} className="footer-link">
             Cookie Policy
           </Link>
-          <a href="#" onClick={openCookieSettings} className="footer-link">
+
+          {/* Belangrijk: className 'csconsentlink' is de officiële trigger.
+             We houden onClick als extra fallback. */}
+          <a
+            href="#"
+            className="footer-link csconsentlink"
+            onClick={openCookieSettings}
+          >
             Cookie preferences
           </a>
         </nav>
