@@ -1,4 +1,6 @@
 // app/privacy/page.jsx
+import CookiePrefsButton from "@/components/CookiePrefsButton";
+
 export const metadata = {
   title: "Privacy Policy • EU Debt Map",
   description:
@@ -8,7 +10,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   const email = "firenature23@gmail.com";
-  const lastUpdated = "September 16, 2025"; // update wanneer je iets wijzigt
+  const lastUpdated = "September 16, 2025";
 
   return (
     <main className="container grid gap-6 py-10">
@@ -48,29 +50,7 @@ export default function PrivacyPage() {
         </p>
         <ul className="mt-3 list-disc pl-6 text-gray-300">
           <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                try {
-                  const cs = window.CookieScript || {};
-                  if (typeof cs.showPreferences === "function") return cs.showPreferences();
-                  if (typeof cs.open === "function") return cs.open("preferences");
-                  if (typeof cs.renew === "function") return cs.renew();
-                  if (typeof cs.show === "function") return cs.show();
-                  if (typeof window.__tcfapi === "function") {
-                    return window.__tcfapi("displayConsentUi", 2, () => {});
-                  }
-                  alert("Cookie preferences are currently unavailable. Please try again.");
-                } catch {
-                  alert("Cookie preferences are currently unavailable. Please try again.");
-                }
-              }}
-              className="underline hover:no-underline"
-            >
-              Open cookie preferences
-            </a>{" "}
-            (update your choices)
+            <CookiePrefsButton label="Open cookie preferences" /> (update your choices)
           </li>
           <li>Manage or delete cookies via your browser settings.</li>
         </ul>

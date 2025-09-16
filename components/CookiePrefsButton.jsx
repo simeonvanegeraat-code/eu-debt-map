@@ -5,18 +5,18 @@ import { useEffect, useState, useCallback } from "react";
 export default function CookiePrefsButton({ label = "Open cookie preferences" }) {
   const [ready, setReady] = useState(false);
 
-  // check elke 300ms tot CookieScript of __tcfapi klaar is (max ~5s)
   useEffect(() => {
     let tries = 0;
     const iv = setInterval(() => {
       const hasCS =
         typeof window !== "undefined" &&
         window.CookieScript &&
-        (typeof window.CookieScript.renew === "function" ||
-         typeof window.CookieScript.show === "function" ||
-         typeof window.CookieScript.open === "function");
+        (typeof window.CookieScript.showPreferences === "function" ||
+         typeof window.CookieScript.open === "function" ||
+         typeof window.CookieScript.renew === "function" ||
+         typeof window.CookieScript.show === "function");
       const hasTCF = typeof window !== "undefined" && typeof window.__tcfapi === "function";
-      if (hasCS || hasTCF || ++tries > 16) { // ~16 * 300ms = ~4.8s
+      if (hasCS || hasTCF || ++tries > 16) {
         setReady(hasCS || hasTCF);
         clearInterval(iv);
       }
@@ -28,9 +28,10 @@ export default function CookiePrefsButton({ label = "Open cookie preferences" })
     e.preventDefault();
     try {
       const cs = window.CookieScript || {};
+      if (typeof cs.showPreferences === "function") return cs.showPreferences();
+      if (typeof cs.open === "function") return cs.open("preferences");
       if (typeof cs.renew === "function") return cs.renew();
       if (typeof cs.show === "function") return cs.show();
-      if (typeof cs.open === "function") return cs.open();
       if (typeof window.__tcfapi === "function") {
         return window.__tcfapi("displayConsentUi", 2, () => {});
       }
