@@ -1,9 +1,36 @@
 // components/CountryIntro.jsx
-export default function CountryIntro({ country, lang = "en" }) {
-  if (!country) return null;
-  const name = country.name;
+"use client";
 
-  if (lang === "nl") {
+import { useMemo } from "react";
+import { usePathname } from "next/navigation";
+import { countryName } from "@/lib/countries";
+import { getLocaleFromPathname } from "@/lib/locale";
+
+// Toegestane talen
+const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
+// NB: in jullie setup is "" = Engels op root. We normaliseren hieronder.
+
+export default function CountryIntro({ country, lang }) {
+  if (!country) return null;
+
+  // 1) Taal bepalen: prop > URL > "en"
+  const pathname = usePathname() || "/";
+  const detected = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
+  const effLang = useMemo(() => {
+    // "" in jullie project = Engels
+    const norm = (x) => (x === "" ? "en" : x);
+    const fromProp = norm(lang);
+    const fromUrl = norm(detected);
+    if (fromProp && SUPPORTED.has(fromProp)) return fromProp;
+    if (fromUrl && SUPPORTED.has(fromUrl)) return fromUrl;
+    return "en";
+  }, [lang, detected]);
+
+  // 2) Vertaalde weergavenaam
+  const name = countryName(country.code, effLang);
+
+  // 3) Content per taal
+  if (effLang === "nl") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
         <h3 className="text-base font-semibold mb-2">Staatsschuld {name}: live schatting</h3>
@@ -20,7 +47,7 @@ export default function CountryIntro({ country, lang = "en" }) {
     );
   }
 
-  if (lang === "de") {
+  if (effLang === "de") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
         <h3 className="text-base font-semibold mb-2">Staatsschulden {name}: Live-Schätzung</h3>
@@ -37,7 +64,7 @@ export default function CountryIntro({ country, lang = "en" }) {
     );
   }
 
-  if (lang === "fr") {
+  if (effLang === "fr") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
         <h3 className="text-base font-semibold mb-2">Dette publique de {name} : estimation en direct</h3>
@@ -54,7 +81,7 @@ export default function CountryIntro({ country, lang = "en" }) {
     );
   }
 
-  // EN
+  // EN (default)
   return (
     <section className="card" style={{ padding: 12, marginTop: 12 }}>
       <h3 className="text-base font-semibold mb-2">About {name}&rsquo;s national debt</h3>

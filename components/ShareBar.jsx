@@ -1,4 +1,3 @@
-// components/ShareBar.jsx
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -57,19 +56,18 @@ export default function ShareBar({ title }) {
     width: 156,
     height: 40,
     borderRadius: 12,
-    display: "inline-flex",            // forceer naast elkaar mogelijk
+    display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
     columnGap: 8,
     paddingInline: 12,
     whiteSpace: "nowrap",
-    marginRight: 12,                   // <<< expliciete spacing
-    marginBottom: 12,                  // <<< expliciete spacing
+    marginRight: 12,
+    marginBottom: 12,
   };
 
   return (
     <div
-      // flex + wrap, maar spacing komt uit per-button margins (robuster)
       style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
       aria-label="Share this page"
     >
