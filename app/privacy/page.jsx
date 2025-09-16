@@ -2,13 +2,13 @@
 export const metadata = {
   title: "Privacy Policy • EU Debt Map",
   description:
-    "Privacy & cookies policy for EU Debt Map, including Google AdSense and consent management details.",
+    "Privacy & cookies policy for EU Debt Map, including Google AdSense, Google Analytics 4, and consent management details.",
   alternates: { canonical: "https://www.eudebtmap.com/privacy" },
 };
 
 export default function PrivacyPage() {
   const email = "firenature23@gmail.com";
-  const lastUpdated = "September 9, 2025"; // update wanneer je iets wijzigt
+  const lastUpdated = "September 16, 2025"; // update wanneer je iets wijzigt
 
   return (
     <main className="container grid gap-6 py-10">
@@ -24,9 +24,8 @@ export default function PrivacyPage() {
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h2 className="text-2xl font-bold">Advertising & Google AdSense</h2>
         <p className="mt-3 text-gray-300">
-          We use Google AdSense to display ads. Google and its partners may use cookies or similar
-          technologies to serve personalised and non-personalised ads based on your visits to this and
-          other websites.
+          We use Google AdSense to display ads. In the EEA/UK/CH we follow Google’s requirements for user consent.
+          Depending on your choice, Google may show personalized or non-personalized ads.
         </p>
         <p className="mt-3">
           <a
@@ -44,28 +43,44 @@ export default function PrivacyPage() {
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h2 className="text-2xl font-bold">Consent Management</h2>
         <p className="mt-3 text-gray-300">
-          On your first visit you’ll see a consent banner powered by Cookiebot (a Google-certified CMP).
+          On your first visit you’ll see a consent banner powered by <strong>CookieScript</strong> (IAB TCF and Google Consent Mode v2).
           You can change or withdraw your consent at any time:
         </p>
         <ul className="mt-3 list-disc pl-6 text-gray-300">
           <li>
             <a
-              href="javascript:Cookiebot.renew()"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                try {
+                  const cs = window.CookieScript || {};
+                  if (typeof cs.showPreferences === "function") return cs.showPreferences();
+                  if (typeof cs.open === "function") return cs.open("preferences");
+                  if (typeof cs.renew === "function") return cs.renew();
+                  if (typeof cs.show === "function") return cs.show();
+                  if (typeof window.__tcfapi === "function") {
+                    return window.__tcfapi("displayConsentUi", 2, () => {});
+                  }
+                  alert("Cookie preferences are currently unavailable. Please try again.");
+                } catch {
+                  alert("Cookie preferences are currently unavailable. Please try again.");
+                }
+              }}
               className="underline hover:no-underline"
             >
-              Open cookie settings
+              Open cookie preferences
             </a>{" "}
-            (reopen the banner to update your choices)
+            (update your choices)
           </li>
-          <li>Manage or delete cookies via your browser settings</li>
+          <li>Manage or delete cookies via your browser settings.</li>
         </ul>
       </section>
 
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h2 className="text-2xl font-bold">Analytics</h2>
         <p className="mt-3 text-gray-300">
-          We use lightweight, privacy-friendly analytics to understand site usage. These do not collect
-          personally identifiable information.
+          We use <strong>Google Analytics 4</strong> to understand site usage. In the EEA/UK/CH Analytics only runs
+          after you grant consent (via Consent Mode v2). IP anonymization is enabled.
         </p>
       </section>
 
