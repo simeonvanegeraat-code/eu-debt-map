@@ -10,30 +10,6 @@ export default function Footer() {
   const locale = getLocaleFromPathname(pathname);
   const year = new Date().getFullYear();
 
-  function openCookieSettings(e) {
-    e.preventDefault();
-    try {
-      // 1) Officiële API – open het voorkeuren/bannervenster
-      if (window?.CookieScript?.instance?.show) return window.CookieScript.instance.show();
-
-      // 2) Fallbacks voor oudere builds
-      const cs = window.CookieScript || {};
-      if (typeof cs.showPreferences === "function") return cs.showPreferences();
-      if (typeof cs.open === "function") return cs.open("preferences");
-      if (typeof cs.renew === "function") return cs.renew();
-      if (typeof cs.show === "function") return cs.show();
-
-      // 3) Laatste redmiddel: IAB TCF helper (als TCF aanstaat)
-      if (typeof window.__tcfapi === "function") {
-        return window.__tcfapi("displayConsentUi", 2, () => {});
-      }
-    } catch (err) {
-      // negeer; class-trigger pakt 'm meestal toch op
-      console.warn("[CookieScript] reopen error:", err);
-    }
-    // Geen alert: CookieScript's eigen class-trigger (csconsentlink) klikt meestal alsnog door
-  }
-
   return (
     <footer
       className="container"
@@ -98,13 +74,8 @@ export default function Footer() {
             Cookie Policy
           </Link>
 
-          {/* Belangrijk: className 'csconsentlink' is de officiële trigger.
-             We houden onClick als extra fallback. */}
-          <a
-            href="#"
-            className="footer-link csconsentlink"
-            onClick={openCookieSettings}
-          >
+          {/* Officiële CookieScript-trigger: geen JS, alleen deze class */}
+          <a href="#" className="footer-link csconsentlink">
             Cookie preferences
           </a>
         </nav>

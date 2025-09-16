@@ -1,6 +1,4 @@
 // app/privacy/page.jsx
-import CookiePrefsButton from "@/components/CookiePrefsButton";
-
 export const metadata = {
   title: "Privacy Policy • EU Debt Map",
   description:
@@ -50,7 +48,10 @@ export default function PrivacyPage() {
         </p>
         <ul className="mt-3 list-disc pl-6 text-gray-300">
           <li>
-            <CookiePrefsButton label="Open cookie preferences" /> (update your choices)
+            <a href="#" className="csconsentlink underline hover:no-underline">
+              Open cookie preferences
+            </a>{" "}
+            (update your choices)
           </li>
           <li>Manage or delete cookies via your browser settings.</li>
         </ul>
