@@ -1,3 +1,4 @@
+// components/Header.jsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -5,15 +6,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
-// Nieuwe volgorde + labels:
-// Home, What is Debt?, Articles, About, Methodology
+// Nav-items (Articles blijft ENG/root)
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/debt", label: "What is Debt?" },
-  { href: "/articles", label: "Articles" },
-  { href: "/about", label: "About" },        // kort in header, pagina-titel blijft About & Contact
+  { href: "/articles", label: "Articles" },     // <-- root only (no locale)
+  { href: "/about", label: "About" },
   { href: "/methodology", label: "Methodology" },
 ];
+
+// Routes die NIET gelokaliseerd worden
+const NO_LOCALE = new Set(["/articles"]);
 
 const LOCALES = [
   { code: "", label: "English", short: "EN", flag: "🇬🇧" },
@@ -21,6 +24,15 @@ const LOCALES = [
   { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
   { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
 ];
+
+function localeAwareHref(hrefBase, locale) {
+  return NO_LOCALE.has(hrefBase) ? hrefBase : withLocale(hrefBase, locale);
+}
+
+function isActivePath(pathname, hrefBase, locale) {
+  const target = localeAwareHref(hrefBase, locale);
+  return pathname === target || pathname.startsWith(target + "/");
+}
 
 function LanguageDropdown() {
   const pathname = usePathname() || "/";
@@ -42,7 +54,21 @@ function LanguageDropdown() {
   const currentLocale = LOCALES.find((l) => l.code === current) || LOCALES[0];
 
   function onSelect(next) {
-    const target = withLocale(pathname, next.code);
+    // Wissel van taal voor de huidige pagina.
+    // Als huidige route NO_LOCALE is (zoals /articles), forceer dan root + dezelfde path.
+    const parts = pathname.split("?")[0].split("#")[0];
+    let target = parts;
+
+    // Bouw nieuwe pad met withLocale, behalve als het een NO_LOCALE route is
+    const base = (() => {
+      // strip bestaande locale segment
+      const seg = parts.replace(/^\/+/, "").split("/")[0] || "";
+      const rest = LOCALES.some(l => l.code === seg) ? parts.replace(new RegExp(`^/${seg}`), "") : parts;
+      return rest || "/";
+    })();
+
+    target = NO_LOCALE.has(base) ? base : withLocale(base, next.code);
+
     setOpen(false);
     router.push(target);
   }
@@ -154,15 +180,10 @@ export default function Header() {
 
   useEffect(() => setOpen(false), [pathname]);
 
-  const isActive = (hrefBase) => {
-    const localized = withLocale(hrefBase, locale);
-    return pathname === localized || pathname.startsWith(localized + "/");
-  };
-
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href={withLocale("/", locale)} className="brand" aria-label="EU Debt Map – Home">
+        <Link href={localeAwareHref("/", locale)} className="brand" aria-label="EU Debt Map – Home">
           <span className="brand-logo">EU</span>
           <span className="brand-text">Debt Map</span>
         </Link>
@@ -172,8 +193,11 @@ export default function Header() {
           {NAV.map((item) => (
             <Link
               key={item.href}
-              href={withLocale(item.href, locale)}
-              className={"nav-link" + (isActive(item.href) ? " nav-link--active" : "")}
+              href={localeAwareHref(item.href, locale)}
+              className={
+                "nav-link" +
+                (isActivePath(pathname, item.href, locale) ? " nav-link--active" : "")
+              }
             >
               {item.label}
             </Link>
@@ -198,8 +222,11 @@ export default function Header() {
         {NAV.map((item) => (
           <Link
             key={item.href}
-            href={withLocale(item.href, locale)}
-            className={"drawer-link" + (isActive(item.href) ? " drawer-link--active" : "")}
+            href={localeAwareHref(item.href, locale)}
+            className={
+              "drawer-link" +
+              (isActivePath(pathname, item.href, locale) ? " drawer-link--active" : "")
+            }
           >
             {item.label}
           </Link>

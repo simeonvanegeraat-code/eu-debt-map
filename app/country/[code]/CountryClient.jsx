@@ -1,8 +1,8 @@
-// app/country/[code]/CountryClient.jsx
 "use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { interpolateDebt } from "@/lib/data";
 
 import MapCTA from "@/components/MapCTA";
@@ -11,11 +11,26 @@ import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
 import CountryFacts from "./CountryFacts";
 
+import { countryName } from "@/lib/countries";
+import { getLocaleFromPathname } from "@/lib/locale";
+
+// Toegestane talen ("" = EN op root)
+const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
+const norm = (x) => (x === "" ? "en" : x);
+
+// UI labels
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
   de: "Staatsschulden (live):",
   fr: "Dette publique estimée (live) :",
+};
+
+const BACK_LABELS = {
+  en: "← Back",
+  nl: "← Terug",
+  de: "← Zurück",
+  fr: "← Retour",
 };
 
 const SHARE_TITLES = {
@@ -31,6 +46,22 @@ export default function CountryClient({
   introSlot = null, // optioneel: taal-tekst boven de map
 }) {
   const safeCountry = country ?? null;
+
+  // 1) Taal bepalen: prop > URL > EN
+  const pathname = usePathname() || "/";
+  const fromUrl = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
+  const effLang = useMemo(() => {
+    const p = norm(lang);
+    const u = norm(fromUrl);
+    if (SUPPORTED.has(p)) return p;
+    if (SUPPORTED.has(u)) return u;
+    return "en";
+  }, [lang, fromUrl]);
+
+  // 2) Vertaalde weergavenaam van het land
+  const displayName = safeCountry
+    ? countryName(safeCountry.code, effLang)
+    : "";
 
   const prefersReducedMotion =
     typeof window !== "undefined" &&
@@ -56,21 +87,25 @@ export default function CountryClient({
   if (!safeCountry) return <div className="container card">Unknown country</div>;
 
   const rateBoxId = "country-rate-desc";
-  const liveLabel = LIVE_LABELS[lang] || LIVE_LABELS.en;
+  const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
 
   const backHref =
-    lang === "nl" ? "/nl" :
-    lang === "de" ? "/de" :
-    lang === "fr" ? "/fr" : "/";
+    effLang === "nl" ? "/nl" :
+    effLang === "de" ? "/de" :
+    effLang === "fr" ? "/fr" : "/";
 
-  const shareTitle = (SHARE_TITLES[lang] || SHARE_TITLES.en)(safeCountry.name);
+  const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
+
+  const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
   return (
     <>
-      <Link className="btn" href={backHref} prefetch>← Back</Link>
+      <Link className="btn" href={backHref} prefetch>
+        {backText}
+      </Link>
 
       <h2 style={{ marginTop: 12 }}>
-        {safeCountry.flag} {safeCountry.name}
+        {safeCountry.flag} {displayName}
       </h2>
 
       <LabelsBar country={safeCountry} valueNow={current} />
@@ -98,8 +133,8 @@ export default function CountryClient({
         style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
       >
         <div className="grid" style={{ gap: 16 }}>
-          {/* Geef lang mee zodat links in dezelfde taal blijven */}
-          <MapCTA code={safeCountry.code} name={safeCountry.name} lang={lang} />
+          {/* Geef vertaalde naam door aan de CTA */}
+          <MapCTA code={safeCountry.code} name={displayName} lang={effLang} />
           <LatestArticles max={1} />
         </div>
       </div>
