@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage } from "@/lib/media";
 import ArticleRail from "@/components/ArticleRail";
+import AdBox from "@/components/AdBox"; // <-- nieuw
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -78,10 +79,16 @@ export default function ArticleDetailPage({ params }) {
 
         <style>{proseCss}</style>
 
+        {/* Ad 1: bovenin content (na intro). Vervang door jouw echte slot ID */}
+        <AdBox slot="YOUR_SLOT_ID_1" />
+
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body }} />
 
         {/* Verder lezen */}
         <ArticleRail currentSlug={article.slug} lang={article.lang} max={4} title="More articles" />
+
+        {/* Ad 2: onderaan content. Vervang door jouw echte slot ID */}
+        <AdBox slot="YOUR_SLOT_ID_2" />
 
         <footer style={{ display: "grid", gap: 10 }}>
           <ShareBar url={url} title={article.title} summary={article.summary} />
