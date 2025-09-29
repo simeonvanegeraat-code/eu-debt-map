@@ -16,16 +16,16 @@ export default function AdsTestPage() {
         Deze pagina forceert handmatige advertentieblokken en toont live je Consent Mode status.
       </p>
 
-      {/* ---- Handmatig advertentieblok 1 ---- */}
-      <AdBox slot="8705915822" />
+      {/* ---- Handmatig advertentieblok 1 (met test-ads aan) ---- */}
+      <AdBox slot="8705915822" test />
 
       <p>
         Als je hierboven niets ziet (ook na herladen en na het geven van advertising-consent),
         dan ligt het waarschijnlijk aan CMP/Consent of aan CSP-headers.
       </p>
 
-      {/* ---- Handmatig advertentieblok 2 ---- */}
-      <AdBox slot="8705915822" />
+      {/* ---- Handmatig advertentieblok 2 (ook test) ---- */}
+      <AdBox slot="8705915822" test />
 
       {/* Live inzage in consent-cookies en dataLayer events */}
       <ConsentDebug />
