@@ -37,17 +37,25 @@ const nextConfig = {
             "https://fundingchoicesmessages.google.com " +
             "https://ep2.adtrafficquality.google",
 
-          // Styles (CookieScript + Google consent surfaces)
+          // Styles (CookieScript + Google consent/Fonts)
           "style-src 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
-            "https://tpc.googlesyndication.com",
+            "https://tpc.googlesyndication.com " +
+            "https://fonts.googleapis.com",
+
+          // Sommige browsers melden expliciet style-src-elem; voeg daarom ook deze toe
+          "style-src-elem 'self' 'unsafe-inline' " +
+            "https://cdn.cookie-script.com " +
+            "https://fundingchoicesmessages.google.com " +
+            "https://tpc.googlesyndication.com " +
+            "https://fonts.googleapis.com",
 
           // Afbeeldingen (ruim genoeg voor ads/trackers)
           "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://www.google-analytics.com",
 
-          // Fonts
-          "font-src 'self' data: https:",
+          // Fonts (Google Fonts)
+          "font-src 'self' data: https://fonts.gstatic.com",
 
           // Iframes (ads, GTM, Funding Choices)
           "frame-src https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://www.googletagmanager.com https://fundingchoicesmessages.google.com",
