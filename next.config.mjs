@@ -44,15 +44,19 @@ const nextConfig = {
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
 
-          // Voor browsers die expliciet style-src-elem checken
+          // Sommige browsers checken expliciet style-src-elem
           "style-src-elem 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
 
-          // Afbeeldingen
-          "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://www.google-analytics.com",
+          // Afbeeldingen (voeg hier ATQ image host toe)
+          "img-src 'self' data: blob: " +
+            "https://*.googlesyndication.com " +
+            "https://*.doubleclick.net " +
+            "https://www.google-analytics.com " +
+            "https://*.adtrafficquality.google",   // ⬅️ nieuw (de fout was ep1.adtrafficquality.google)
 
           // Fonts (Google Fonts)
           "font-src 'self' data: https://fonts.gstatic.com",
@@ -64,8 +68,8 @@ const nextConfig = {
             "https://*.googlesyndication.com " +
             "https://www.googletagmanager.com " +
             "https://fundingchoicesmessages.google.com " +
-            "https://ep2.adtrafficquality.google " + // ⬅️ toegevoegd
-            "https://www.google.com",                // ⬅️ toegevoegd
+            "https://ep2.adtrafficquality.google " +
+            "https://www.google.com",
 
           // Netwerkverkeer (XHR/fetch/beacons)
           "connect-src 'self' https: wss: " +
