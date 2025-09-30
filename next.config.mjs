@@ -24,7 +24,7 @@ const nextConfig = {
           // Basis
           "default-src 'self'",
 
-          // Scripts (Consent Mode, CookieScript, GTM/GA4, AdSense/DoubleClick, Funding Choices)
+          // Scripts (Consent Mode, CookieScript, GTM/GA4, AdSense/DoubleClick, Funding Choices, ATQ/Sodar)
           "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
             "https://cdn.cookie-script.com " +
             "https://report.cookie-script.com " +
@@ -34,10 +34,14 @@ const nextConfig = {
             "https://securepubads.g.doubleclick.net " +
             "https://googleads.g.doubleclick.net " +
             "https://www.googletagservices.com " +
-            "https://fundingchoicesmessages.google.com",
+            "https://fundingchoicesmessages.google.com " +
+            "https://ep2.adtrafficquality.google",
 
-          // Styles (CookieScript + inline)
-          "style-src 'self' 'unsafe-inline' https://cdn.cookie-script.com",
+          // Styles (CookieScript + Google consent surfaces)
+          "style-src 'self' 'unsafe-inline' " +
+            "https://cdn.cookie-script.com " +
+            "https://fundingchoicesmessages.google.com " +
+            "https://tpc.googlesyndication.com",
 
           // Afbeeldingen (ruim genoeg voor ads/trackers)
           "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://www.google-analytics.com",
@@ -52,14 +56,15 @@ const nextConfig = {
           "connect-src 'self' https: wss: " +
             "https://*.doubleclick.net " +
             "https://*.googlesyndication.com " +
-            "https://adservice.google.com " +         // soms gebruikt
-            "https://adservice.google.nl " +          // lokale variant (voeg meer TLD's toe indien nodig)
+            "https://adservice.google.com " +
+            "https://adservice.google.nl " +
             "https://www.google-analytics.com " +
             "https://region1.google-analytics.com " +
             "https://www.googletagmanager.com " +
             "https://cdn.cookie-script.com " +
             "https://report.cookie-script.com " +
-            "https://fundingchoicesmessages.google.com",
+            "https://fundingchoicesmessages.google.com " +
+            "https://ep2.adtrafficquality.google",
 
           // Overige
           "manifest-src 'self'",
