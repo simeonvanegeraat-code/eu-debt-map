@@ -24,7 +24,7 @@ const nextConfig = {
           // Basis
           "default-src 'self'",
 
-          // Scripts (Consent Mode, CookieScript, GTM/GA4, AdSense/DoubleClick, Funding Choices, ATQ/Sodar)
+          // Scripts (Consent Mode, CMP, GTM/GA4, AdSense/DoubleClick, Funding Choices, ATQ/Sodar)
           "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
             "https://cdn.cookie-script.com " +
             "https://report.cookie-script.com " +
@@ -37,28 +37,35 @@ const nextConfig = {
             "https://fundingchoicesmessages.google.com " +
             "https://ep2.adtrafficquality.google",
 
-          // Styles (CookieScript + Google consent/Fonts)
+          // Styles (CMP + Google consent/Fonts)
           "style-src 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
 
-          // Sommige browsers melden expliciet style-src-elem; voeg daarom ook deze toe
+          // Voor browsers die expliciet style-src-elem checken
           "style-src-elem 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
 
-          // Afbeeldingen (ruim genoeg voor ads/trackers)
+          // Afbeeldingen
           "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://www.google-analytics.com",
 
           // Fonts (Google Fonts)
           "font-src 'self' data: https://fonts.gstatic.com",
 
-          // Iframes (ads, GTM, Funding Choices)
-          "frame-src https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://www.googletagmanager.com https://fundingchoicesmessages.google.com",
+          // Iframes (ads, GTM, Funding Choices, ATQ & google.com containers)
+          "frame-src " +
+            "https://tpc.googlesyndication.com " +
+            "https://googleads.g.doubleclick.net " +
+            "https://*.googlesyndication.com " +
+            "https://www.googletagmanager.com " +
+            "https://fundingchoicesmessages.google.com " +
+            "https://ep2.adtrafficquality.google " + // ⬅️ toegevoegd
+            "https://www.google.com",                // ⬅️ toegevoegd
 
           // Netwerkverkeer (XHR/fetch/beacons)
           "connect-src 'self' https: wss: " +
