@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze */}
+        {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze (Funding Choices zal dit updaten) */}
         <Script id="consent-mode" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -41,12 +41,8 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* 2) CookieScript CMP */}
-        <Script
-          id="cookiescript"
-          src="https://cdn.cookie-script.com/s/bbe5413b31fadf1554acac4c6b3e4986.js"
-          strategy="beforeInteractive"
-        />
+        {/* ⚠️ GEEN CookieScript meer laden (CMP uit) */}
+        {/* 2) CookieScript was hier => VERWIJDERD */}
 
         {/* 3) AdSense meta + preconnects */}
         <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
@@ -61,7 +57,7 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
-        {/* 4) AdSense altijd laden (Consent Mode regelt opslag) */}
+        {/* 4) AdSense altijd laden (Funding Choices + Consent Mode regelen opslag/consent) */}
         <Script
           id="adsense"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
@@ -69,85 +65,27 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
-        {/* 5) (Optioneel) GA4 pas na analytics-consent
-            - Laat staan als je GA4 gebruikt; zo niet, kun je dit weglaten. */}
+        {/* 5) (Optioneel) GA4 – alleen als je GA4 gebruikt. Zo niet: laat {false && ...} staan */}
         {false && (
           <>
-            <script
-              type="text/plain"
-              data-cookiecategory="analytics"
-              data-blockingmode="auto"
-              async
+            <Script
+              id="ga4-loader"
               src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"
-            ></script>
-            <script
-              type="text/plain"
-              data-cookiecategory="analytics"
-              data-blockingmode="auto"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'G-XXXXXXX', { anonymize_ip: true });
-                `,
-              }}
-            ></script>
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-XXXXXXX', { anonymize_ip: true });
+              `}
+            </Script>
           </>
         )}
 
-        {/* 6) Bridge: CookieScript -> Google Consent Mode (performance/targeting mapping) */}
-        <Script id="cmp-bridge" strategy="afterInteractive">
-          {`
-            function getCookie(name){
-              return ('; '+document.cookie).split('; '+name+'=').pop().split(';')[0] || '';
-            }
-
-            function parseCategories(rawCookie) {
-              try {
-                const obj = JSON.parse(rawCookie);
-                let cats = obj?.categories ?? [];
-                if (typeof cats === 'string') {
-                  try { cats = JSON.parse(cats); } catch(e) {}
-                }
-                return Array.isArray(cats) ? cats : [];
-              } catch (e) {
-                return [];
-              }
-            }
-
-            function updateConsentFromCookieScript(){
-              try{
-                const raw = decodeURIComponent(getCookie('CookieScriptConsent'));
-                if (!raw) return;
-
-                const cats = parseCategories(raw);
-
-                // CookieScript: analytics = "performance", advertising/personalization = "targeting"
-                const analyticsGranted = cats.includes('performance');
-                const adsGranted       = cats.includes('targeting');
-
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-
-                gtag('consent', 'update', {
-                  analytics_storage:  analyticsGranted ? 'granted' : 'denied',
-                  ad_storage:         adsGranted ? 'granted' : 'denied',
-                  ad_user_data:       adsGranted ? 'granted' : 'denied',
-                  ad_personalization: adsGranted ? 'granted' : 'denied',
-                  // extra storages (optioneel/informatief)
-                  functionality_storage: 'granted',
-                  personalization_storage: adsGranted ? 'granted' : 'denied',
-                  security_storage: 'granted'
-                });
-              } catch (e) {}
-            }
-
-            document.addEventListener('CookieScriptLoaded', updateConsentFromCookieScript);
-            document.addEventListener('CookieScriptConsentUpdated', updateConsentFromCookieScript);
-            setTimeout(updateConsentFromCookieScript, 1200);
-          `}
-        </Script>
+        {/* ⚠️ GEEN CookieScript->Consent bridge meer (Funding Choices doet consent updates) */}
+        {/* 6) cmp-bridge was hier => VERWIJDERD */}
       </head>
 
       <body>
