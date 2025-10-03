@@ -1,3 +1,4 @@
+// app/country/[code]/CountryClient.jsx
 "use client";
 
 import Link from "next/link";
@@ -59,9 +60,7 @@ export default function CountryClient({
   }, [lang, fromUrl]);
 
   // 2) Vertaalde weergavenaam van het land
-  const displayName = safeCountry
-    ? countryName(safeCountry.code, effLang)
-    : "";
+  const displayName = safeCountry ? countryName(safeCountry.code, effLang) : "";
 
   const prefersReducedMotion =
     typeof window !== "undefined" &&
@@ -100,34 +99,51 @@ export default function CountryClient({
 
   return (
     <>
-      <Link className="btn" href={backHref} prefetch>
-        {backText}
-      </Link>
+      {/* Back knop */}
+      <div style={{ marginBottom: 8 }}>
+        <Link className="btn" href={backHref} prefetch>
+          {backText}
+        </Link>
+      </div>
 
-      <h2 style={{ marginTop: 12 }}>
-        {safeCountry.flag} {displayName}
-      </h2>
+      {/* Landtitel */}
+      <h1 style={{ margin: 0 }}>
+        {safeCountry.flag ? <span style={{ marginRight: 8 }}>{safeCountry.flag}</span> : null}
+        {displayName}
+      </h1>
 
+      {/* Bovenste labelbalk met metadata (ongewijzigde functionaliteit) */}
       <LabelsBar country={safeCountry} valueNow={current} />
 
+      {/* Live bedrag – zelfde look als homepage */}
       <div
         className="mono"
-        style={{ fontSize: 34, fontWeight: 800, marginTop: 8 }}
+        style={{ marginTop: 10, display: "flex", alignItems: "baseline", gap: 10 }}
         aria-live="polite"
         aria-describedby={rateBoxId}
       >
-        {liveLabel} €{nf.format(Math.round(current))}
+        <span className="tag" style={{ whiteSpace: "nowrap" }}>
+          {liveLabel}
+        </span>
+        <span className="ticker-hero num" suppressHydrationWarning>
+          €{nf.format(Math.round(current))}
+        </span>
       </div>
 
-      <ShareBar title={shareTitle} />
+      {/* Delen */}
+      <div style={{ marginTop: 8 }}>
+        <ShareBar title={shareTitle} />
+      </div>
 
-      <div id={rateBoxId}>
+      {/* Feiten/bronblok (functionaliteit blijft in CountryFacts) */}
+      <div id={rateBoxId} style={{ marginTop: 8 }}>
         <CountryFacts code={safeCountry.code} />
       </div>
 
       {/* Taal-specifieke SEO-intro (zelfde plek in elke taal) */}
       {introSlot}
 
+      {/* CTA + artikel */}
       <div
         className="grid"
         style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
