@@ -10,7 +10,7 @@ import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/debt", label: "What is Debt?" },
-  { href: "/articles", label: "Articles" },     // <-- root only (no locale)
+  { href: "/articles", label: "Articles" }, // <-- root only (no locale)
   { href: "/about", label: "About" },
   { href: "/methodology", label: "Methodology" },
 ];
@@ -54,21 +54,18 @@ function LanguageDropdown() {
   const currentLocale = LOCALES.find((l) => l.code === current) || LOCALES[0];
 
   function onSelect(next) {
-    // Wissel van taal voor de huidige pagina.
-    // Als huidige route NO_LOCALE is (zoals /articles), forceer dan root + dezelfde path.
     const parts = pathname.split("?")[0].split("#")[0];
-    let target = parts;
 
-    // Bouw nieuwe pad met withLocale, behalve als het een NO_LOCALE route is
+    // strip bestaande locale segment
     const base = (() => {
-      // strip bestaande locale segment
       const seg = parts.replace(/^\/+/, "").split("/")[0] || "";
-      const rest = LOCALES.some(l => l.code === seg) ? parts.replace(new RegExp(`^/${seg}`), "") : parts;
+      const rest = LOCALES.some((l) => l.code === seg)
+        ? parts.replace(new RegExp(`^/${seg}`), "")
+        : parts;
       return rest || "/";
     })();
 
-    target = NO_LOCALE.has(base) ? base : withLocale(base, next.code);
-
+    const target = NO_LOCALE.has(base) ? base : withLocale(base, next.code);
     setOpen(false);
     router.push(target);
   }
@@ -98,12 +95,12 @@ function LanguageDropdown() {
             position: "absolute",
             right: 0,
             top: "calc(100% + 8px)",
-            minWidth: 180,
-            background: "#0b1220",
-            border: "1px solid #1f2b3a",
-            borderRadius: 10,
+            minWidth: 200,
+            background: "var(--header-menu-bg)",
+            border: "1px solid var(--header-border)",
+            borderRadius: 12,
             padding: 6,
-            boxShadow: "0 10px 25px rgba(0,0,0,.35)",
+            boxShadow: "var(--shadow-md)",
             zIndex: 50,
           }}
         >
@@ -121,8 +118,8 @@ function LanguageDropdown() {
                     width: "100%",
                     gap: 10,
                     padding: "10px 12px",
-                    borderRadius: 8,
-                    background: active ? "rgba(96,165,250,.12)" : "transparent",
+                    borderRadius: 10,
+                    background: active ? "var(--header-chip-active-bg)" : "transparent",
                     border: "none",
                     color: "inherit",
                     cursor: "pointer",
@@ -131,19 +128,7 @@ function LanguageDropdown() {
                   <span style={{ fontSize: 16 }}>{opt.flag}</span>
                   <span style={{ flex: 1 }}>{opt.label}</span>
                   {active && (
-                    <span
-                      className="tag"
-                      style={{
-                        fontSize: 11,
-                        background: "#0b2b1d",
-                        border: "1px solid #1f5d43",
-                        color: "#7efab2",
-                        padding: "1px 6px",
-                        borderRadius: 8,
-                      }}
-                    >
-                      Active
-                    </span>
+                    <span className="tag lang-active-tag">Active</span>
                   )}
                 </button>
               </li>
@@ -157,14 +142,22 @@ function LanguageDropdown() {
           display: inline-flex;
           align-items: center;
           padding: 8px 12px;
-          border-radius: 10px;
-          border: 1px solid #1f2b3a;
-          background: #0f172a;
-          color: #e5e7eb;
+          border-radius: 12px;
+          border: 1px solid var(--header-border);
+          background: var(--header-chip-bg);
+          color: var(--header-fg);
           transition: border-color 0.15s ease, background 0.15s ease;
         }
-        .lang-trigger:hover { border-color: #2b3a4f; background: #0d1424; }
+        .lang-trigger:hover { border-color: var(--header-border-strong); background: var(--header-chip-bg-hover); }
         .lang-trigger:focus { outline: 2px solid #2563eb33; outline-offset: 2px; }
+        .lang-active-tag{
+          font-size: 11px;
+          background: var(--header-active-tag-bg);
+          border: 1px solid var(--header-active-tag-border);
+          color: var(--header-active-tag-fg);
+          padding: 1px 6px;
+          border-radius: 999px;
+        }
         @media (max-width: 768px) {
           .lang-trigger { padding: 8px 10px; }
         }
@@ -181,7 +174,7 @@ export default function Header() {
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="site-header">
+    <header className="site-header site-header--light">
       <div className="container header-inner">
         <Link href={localeAwareHref("/", locale)} className="brand" aria-label="EU Debt Map – Home">
           <span className="brand-logo">EU</span>
@@ -231,7 +224,7 @@ export default function Header() {
             {item.label}
           </Link>
         ))}
-        <div style={{ padding: "12px 16px", borderTop: "1px solid #1f2937" }}>
+        <div style={{ padding: "12px 16px", borderTop: "1px solid var(--header-border)" }}>
           <LanguageDropdown />
         </div>
       </div>

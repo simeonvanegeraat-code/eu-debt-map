@@ -20,36 +20,38 @@ export default function HighlightTicker({ label, flag, name, start, perSecond, a
   const [value, setValue] = useState(start);
 
   useEffect(() => {
-    // tik elke seconde door
-    const id = setInterval(() => setValue(v => v + perSecond), 1000);
+    const id = setInterval(() => setValue((v) => v + perSecond), 1000);
     return () => clearInterval(id);
   }, [perSecond]);
 
   const trendIcon = useMemo(() => (perSecond > 0 ? "↑" : perSecond < 0 ? "↓" : "→"), [perSecond]);
   const trendColor = useMemo(() => {
     if (accent) return accent;
-    if (perSecond > 0) return "var(--bad)";   // rood bij oplopende schuld
-    if (perSecond < 0) return "var(--ok)";    // groen bij dalende schuld
+    if (perSecond > 0) return "var(--bad)";
+    if (perSecond < 0) return "var(--ok)";
     return "var(--muted)";
   }, [perSecond, accent]);
 
   return (
     <div
       style={{
-        background: "#0f172a",
-        border: "1px solid #1f2b3a",
-        borderRadius: 12,
-        padding: 12,
+        background: "var(--card)",
+        border: "1px solid var(--border)",
+        borderRadius: 14,
+        padding: 14,
+        boxShadow: "var(--shadow-sm)",
       }}
       aria-live="polite"
     >
       <div className="tag">{label}</div>
       <div style={{ marginTop: 6 }}>
         <strong>{flag} {name}</strong>
-        <div className="mono" style={{ marginTop: 2 }}>
+
+        <div className="ticker-xl num" style={{ marginTop: 4 }}>
           €{formatEUR(value)}
         </div>
-        <div className="tag" style={{ marginTop: 4, color: trendColor }}>
+
+        <div className="tag" style={{ marginTop: 6, color: trendColor }}>
           {trendIcon} {perSecond >= 0 ? "+" : "−"}€{formatEUR(Math.abs(perSecond))}/s · live estimate
         </div>
       </div>

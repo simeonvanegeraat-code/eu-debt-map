@@ -1,4 +1,9 @@
 /* ===========================
+   Fonts (UI + Numbers)
+   =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@400;700&display=swap');
+
+/* ===========================
    Global tokens & resets
    =========================== */
 :root{
@@ -7,9 +12,9 @@
   --fg: #e7ecf3;
   --muted: #9ab0c9;
   --card: #0f172a;
-  --card-elev: #111827;         /* iets lichter voor hover */
+  --card-elev: #111827;
   --border: #1f2937;
-  --accent: #7ab6ff;            /* iets vriendelijker blauw */
+  --accent: #7ab6ff;
   --accent-weak: #2b3444;
   --ok: #22c55e;
   --bad: #ef4444;
@@ -18,12 +23,12 @@
   --radius: 16px;
   --radius-sm: 10px;
 
-  /* zachte, moderne schaduwen */
+  /* schaduwen */
   --shadow-sm: 0 1px 1px rgba(0,0,0,.18), 0 1px 6px rgba(0,0,0,.12);
   --shadow-md: 0 6px 18px rgba(0,0,0,.25);
 
   /* typografie */
-  --font-system: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  --font-system: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
   --leading: 1.65;
   --leading-tight: 1.2;
 
@@ -36,6 +41,19 @@
   --sp-6: 24px;
   --sp-7: 32px;
   --sp-8: 40px;
+
+  /* Header theming (licht) */
+  --header-bg: rgba(249, 250, 251, .92);
+  --header-fg: #0b1220;
+  --header-border: #e5e7eb;
+  --header-border-strong: #cbd5e1;
+  --header-chip-bg: #ffffff;
+  --header-chip-bg-hover: #f8fafc;
+  --header-chip-active-bg: rgba(96,165,250,.12);
+  --header-menu-bg: #ffffff;
+  --header-active-tag-bg: #eefdf5;
+  --header-active-tag-border: #bbf7d0;
+  --header-active-tag-fg: #065f46;
 
   color-scheme: dark light;
 }
@@ -99,6 +117,23 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .num{ font-variant-numeric: tabular-nums; }
 
+/* Grote, opvallende tellers (hero) */
+.ticker-hero{
+  font-family: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4.8vw, 3.4rem);
+  letter-spacing: -0.5px;
+  color: var(--accent);
+}
+
+/* Tickers in highlight cards */
+.ticker-xl{
+  font-family: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3.2vw, 2rem);
+  letter-spacing: -0.25px;
+}
+
 /* ===========================
    Layout helpers
    =========================== */
@@ -148,10 +183,16 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
    =========================== */
 .site-header{
   position: sticky; top: 0; z-index: 50;
-  backdrop-filter: saturate(1.2) blur(8px);
-  background: linear-gradient(to bottom, rgba(11,18,32,.92), rgba(11,18,32,.75));
-  border-bottom: 1px solid var(--border);
+  backdrop-filter: saturate(1.1) blur(8px);
+  border-bottom: 1px solid var(--header-border);
 }
+
+/* Lichte header look (ook in dark UI) */
+.site-header--light{
+  background: var(--header-bg);
+  color: var(--header-fg);
+}
+
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap: var(--sp-4); }
 
 .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
@@ -163,31 +204,32 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
   font-weight:800; color:white; letter-spacing:.25px;
   box-shadow: 0 6px 16px rgba(59,130,246,.25);
 }
-.brand-text{ font-weight:800; font-size:clamp(18px,2.5vw,24px); color:var(--fg); }
+.brand-text{ font-weight:800; font-size:clamp(18px,2.5vw,24px); color:var(--header-fg); }
 
 .nav-desktop{ display:none; gap:8px; }
 .nav-link{
-  padding:8px 10px; border-radius:10px; border:1px solid var(--accent-weak);
-  text-decoration:none; color:var(--fg); font-weight:500;
+  padding:8px 10px; border-radius:10px; border:1px solid var(--header-border);
+  text-decoration:none; color:var(--header-fg); font-weight:500;
+  background:#fff;
   transition: background .2s ease, border-color .2s ease;
 }
-.nav-link:hover{ background:rgba(255,255,255,.04); border-color:#3a4a60; }
-.nav-link--active{ border-color:#3b82f6; background:rgba(59,130,246,.10); }
+.nav-link:hover{ background:#f8fafc; border-color:var(--header-border-strong); }
+.nav-link--active{ border-color:#c7d2fe; background:#eef2ff; }
 
 .hamburger{
-  width:42px; height:42px; border-radius:10px; border:1px solid var(--accent-weak);
-  background:#0f172a; display:grid; place-items:center; padding:8px; cursor:pointer;
+  width:42px; height:42px; border-radius:10px; border:1px solid var(--header-border);
+  background:#ffffff; display:grid; place-items:center; padding:8px; cursor:pointer;
 }
-.hamburger span{ width:20px; height:2px; background:#cbd5e1; display:block; border-radius:2px; }
+.hamburger span{ width:20px; height:2px; background:#334155; display:block; border-radius:2px; }
 
-.nav-drawer{ display:none; border-top:1px solid var(--border); background:rgba(11,18,32,.96); }
+.nav-drawer{ display:none; border-top:1px solid var(--header-border); background:#ffffff; color:#0b1220; }
 .nav-drawer--open{ display:block; }
 .drawer-link{
-  display:block; padding:14px 24px; border-bottom:1px solid var(--border);
-  color:var(--fg); text-decoration:none;
+  display:block; padding:14px 24px; border-bottom:1px solid var(--header-border);
+  color:#0b1220; text-decoration:none;
 }
-.drawer-link:hover{ background:rgba(255,255,255,.04); }
-.drawer-link--active{ background:rgba(59,130,246,.10); border-left:3px solid #3b82f6; }
+.drawer-link:hover{ background:#f8fafc; }
+.drawer-link--active{ background:#eef2ff; border-left:3px solid #3b82f6; }
 
 @media (min-width: 860px){
   .nav-desktop{ display:flex; }
