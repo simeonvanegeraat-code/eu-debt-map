@@ -22,11 +22,12 @@ const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), {
 });
 
 export const metadata = {
-  title: "EU Debt Map | Explore national debts across the EU-27",
+  // ✅ SEO-versterkt
+  title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
   description:
-    "Interactive EU map with live, ticking estimates of government debt for EU-27 countries. Based on the last two Eurostat reference periods.",
+    "See EU government debt live, country by country. Interactive EU-27 debt map with real-time estimates, debt growth, and comparisons. Based on Eurostat data.",
   openGraph: {
-    title: "EU Debt Map",
+    title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
     description:
       "Explore government debt across the EU-27 with a live, ticking estimate per country.",
     url: "https://www.eudebtmap.com/",
@@ -35,7 +36,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "EU Debt Map",
+    title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
     description: "Live, ticking estimates of EU government debt based on Eurostat.",
   },
   metadataBase: new URL("https://www.eudebtmap.com"),
@@ -155,16 +156,16 @@ export default function HomePage() {
         aria-labelledby="page-title"
       >
         <div style={{ display: "grid", gap: 6 }}>
+          {/* ✅ Sterke H1 */}
           <h1 id="page-title" style={{ margin: 0 }}>
-            See EU Government Debt, live
+            Live EU Government Debt Map – National Debt by Country
           </h1>
           <p className="tag" style={{ margin: 0 }}>
-            Interactive map with per-country ticking estimates based on the last two Eurostat
-            quarters.
+            Interactive EU-27 map with per-country ticking estimates based on the last two Eurostat
+            reference periods.
           </p>
           <p className="tag" style={{ margin: 0 }}>
-            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official
-            statistic.
+            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.
           </p>
         </div>
 
@@ -198,11 +199,33 @@ export default function HomePage() {
             </span>
           </div>
         </div>
+
+        {/* ✅ 150–200 woorden SEO-tekst onder de kaart */}
+        <div className="tag" style={{ marginTop: 14, lineHeight: 1.7 }}>
+          <h2 style={{ margin: "8px 0" }}>EU debt explained in simple terms</h2>
+          <p style={{ margin: 0 }}>
+            This EU Debt Map shows the national debt of all EU-27 countries in real time. Using
+            Eurostat as a baseline, each country’s latest official figure is extrapolated per second
+            to create a live, ticking estimate. The goal is clarity: a fast, visual way to compare
+            government debt across the European Union and understand how it changes over time. Click
+            any country on the map to drill into its numbers and see whether debt is rising or
+            falling. You can compare large economies such as France, Germany, and Italy with smaller
+            member states, and observe different trends across the Eurozone. While this is an
+            educational visualization—not an official statistic—it provides a timely overview of
+            debt levels and growth dynamics that shape interest rates, inflation, fiscal policy, and
+            the broader EU economy in 2025. For methodology and data notes, explore the country pages
+            and articles linked below.
+          </p>
+        </div>
       </section>
 
       {/* === HIGHLIGHTS (nu live tikkend) === */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0 }}>EU debt highlights</h2>
+        {/* ✅ Sterke H2’s voor SEO */}
+        <div style={{ display: "grid", gap: 8 }}>
+          <h2 style={{ margin: 0 }}>Largest EU debts in 2025</h2>
+          <h2 style={{ margin: 0 }}>Fastest growing debt in the Eurozone</h2>
+        </div>
 
         <div
           style={{
@@ -241,8 +264,8 @@ export default function HomePage() {
         </div>
 
         <div style={{ marginTop: 12 }} className="tag">
-          Why does debt matter? Government debt influences interest rates, inflation, and the
-          stability of the EU economy. This project makes those big numbers visible at a glance.
+          Government debt affects interest rates, inflation, and the stability of the EU economy.
+          This project makes those big numbers visible at a glance.
         </div>
       </section>
 
@@ -277,6 +300,21 @@ export default function HomePage() {
             {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
           </div>
         </div>
+      </section>
+
+      {/* (Optioneel) mini-FAQ voor extra SEO/featured snippets */}
+      <section className="card" style={{ gridColumn: "1 / -1" }}>
+        <h2 style={{ marginTop: 0 }}>FAQ: EU government debt</h2>
+        <h3 style={{ marginBottom: 6 }}>How is the live estimate calculated?</h3>
+        <p className="tag" style={{ marginTop: 0 }}>
+          We interpolate between the last two Eurostat reference periods and extrapolate per second.
+          Country pages include the baseline and trend indicator.
+        </p>
+        <h3 style={{ marginBottom: 6 }}>Is this an official statistic?</h3>
+        <p className="tag" style={{ marginTop: 0 }}>
+          No. It’s an educational visualization based on official data to improve understanding and
+          spark discussion.
+        </p>
       </section>
 
       <style>{responsiveCss}</style>
