@@ -64,10 +64,13 @@
 *{ box-sizing:border-box; }
 html,body{
   margin:0; padding:0;
+  width:100%; max-width:100%;
   background:var(--bg); color:var(--fg);
   font-family: var(--font-system);
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%; /* voorkomt iOS auto-zoom */
+  overflow-x: hidden;             /* geen horizontale scroll op mobiel */
 }
 
 img{ max-width:100%; height:auto; display:block; }

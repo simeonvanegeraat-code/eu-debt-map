@@ -95,15 +95,17 @@ export default function HomePage() {
 
   const topArticles = listArticles().slice(0, 3);
 
+  // === LIGHT legenda/CTA styles (geen dark leftovers) ===
   const s = {
     mapFooter: {
       marginTop: 12,
-      border: "1px solid #203044",
+      border: "1px solid var(--border)",
       borderRadius: 12,
       padding: 12,
-      background: "rgba(15,23,42,0.6)",
+      background: "#ffffff",
+      boxShadow: "var(--shadow-sm)",
     },
-    legend: { fontSize: 14, lineHeight: 1.5 },
+    legend: { fontSize: 14, lineHeight: 1.5, color: "var(--fg)" },
     pill: {
       display: "inline-block",
       padding: "2px 8px",
@@ -113,11 +115,13 @@ export default function HomePage() {
       border: "1px solid transparent",
       marginRight: 4,
       marginLeft: 4,
+      background: "#f3f4f6",
+      color: "#0b1220",
     },
-    pillOk: { color: "var(--ok)", borderColor: "#1f4d3a", background: "rgba(34,197,94,.08)" },
-    pillBad: { color: "var(--bad)", borderColor: "#5a1f2a", background: "rgba(239,68,68,.08)" },
-    sep: { margin: "0 8px", color: "#2b3444" },
-    muted: { color: "#9ca3af" },
+    pillOk: { color: "var(--ok)", borderColor: "#bbf7d0", background: "#ecfdf5" },
+    pillBad: { color: "var(--bad)", borderColor: "#fecaca", background: "#fef2f2" },
+    sep: { margin: "0 8px", color: "#94a3b8" },
+    muted: { color: "#4a617b" },
     cta: {
       marginTop: 10,
       display: "flex",
@@ -125,13 +129,14 @@ export default function HomePage() {
       gap: 8,
       padding: "10px 12px",
       borderRadius: 10,
-      background: "rgba(255,255,255,0.03)",
-      border: "1px dashed #2a3a4f",
+      background: "#f8fafc",
+      border: "1px dashed #cbd5e1",
       textAlign: "center",
       justifyContent: "center",
       fontSize: 14,
       lineHeight: 1.6,
       fontWeight: 600,
+      color: "#0b1220",
     },
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
   };

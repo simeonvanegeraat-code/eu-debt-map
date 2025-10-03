@@ -26,7 +26,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze (Funding Choices zal dit updaten) */}
+        {/* Viewport: volle breedte (ook in in-app browsers) */}
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+
+        {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze (Funding Choices updatet dit) */}
         <Script id="consent-mode" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -46,9 +52,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
 
-        {/* 3) Theme colors voor browser UI (dark & light) */}
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1220" />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+        {/* 3) Theme color (site is nu altijd licht) */}
+        <meta name="theme-color" content="#ffffff" />
 
         {/* 4) AdSense (Auto Ads). Consent Mode regelt opslag/consent. */}
         <Script
@@ -58,7 +63,7 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
-        {/* 5) (Optioneel) GA4 – uitgeschakeld. Laat staan als toggle. */}
+        {/* 5) (Optioneel) GA4 – uitgeschakeld. */}
         {false && (
           <>
             <Script id="ga4-loader" src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX" strategy="afterInteractive" />
@@ -74,7 +79,7 @@ export default function RootLayout({ children }) {
         )}
       </head>
 
-      {/* Let CSS alle kleuren regelen (geen hardcoded bg/text hier) */}
+      {/* Kleuren/typografie via CSS-variabelen */}
       <body>
         <Header />
         {children}
