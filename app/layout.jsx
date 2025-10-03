@@ -41,23 +41,16 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* ⚠️ GEEN CookieScript meer laden (CMP uit) */}
-        {/* 2) CookieScript was hier => VERWIJDERD */}
-
-        {/* 3) AdSense meta + preconnects */}
+        {/* 2) AdSense meta + preconnects */}
         <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
-        <link
-          rel="preconnect"
-          href="https://pagead2.googlesyndication.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://googleads.g.doubleclick.net"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
 
-        {/* 4) AdSense altijd laden (Funding Choices + Consent Mode regelen opslag/consent) */}
+        {/* 3) Theme colors voor browser UI (dark & light) */}
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1220" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+
+        {/* 4) AdSense (Auto Ads). Consent Mode regelt opslag/consent. */}
         <Script
           id="adsense"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
@@ -65,14 +58,10 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
-        {/* 5) (Optioneel) GA4 – alleen als je GA4 gebruikt. Zo niet: laat {false && ...} staan */}
+        {/* 5) (Optioneel) GA4 – uitgeschakeld. Laat staan als toggle. */}
         {false && (
           <>
-            <Script
-              id="ga4-loader"
-              src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"
-              strategy="afterInteractive"
-            />
+            <Script id="ga4-loader" src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX" strategy="afterInteractive" />
             <Script id="ga4-init" strategy="afterInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
@@ -83,11 +72,9 @@ export default function RootLayout({ children }) {
             </Script>
           </>
         )}
-
-        {/* ⚠️ GEEN CookieScript->Consent bridge meer (Funding Choices doet consent updates) */}
-        {/* 6) cmp-bridge was hier => VERWIJDERD */}
       </head>
 
+      {/* Let CSS alle kleuren regelen (geen hardcoded bg/text hier) */}
       <body>
         <Header />
         {children}
