@@ -5,7 +5,7 @@ import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname } from "@/lib/locale";
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.gen";
+import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live"; // <-- NIEUW pad
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -28,8 +28,7 @@ export default async function CountryPage({ params: { code } }) {
   // Alleen de display-naam lokaliseren; data/URL blijven gelijk
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
-  // ### NIEUW: Haal GDP live op via Eurostat (gecachet in eurostat.gen)
-  // We gebruiken ISO2 landcode (bv. "NL")
+  // Haal GDP live op via Eurostat (gecachet in eurostat.live)
   let gdpAbs = null;
   let gdpPeriod = null;
   try {
@@ -41,7 +40,7 @@ export default async function CountryPage({ params: { code } }) {
     gdpPeriod = null;
   }
 
-  // Maak yearLabel (mooie SEO-tekst) uit GDP-periode of uit last_date
+  // Year label voor SEO-tekst
   const yearLabel =
     (typeof gdpPeriod === "string" && gdpPeriod.slice(0, 4)) ||
     (country?.last_date ? String(country.last_date).slice(0, 4) : "Latest");

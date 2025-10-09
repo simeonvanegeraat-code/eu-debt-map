@@ -1,41 +1,25 @@
 // app/api/gdp/route.js
 import { NextResponse } from "next/server";
+import * as Eurostat from "@/lib/eurostat.live";
 
-export const runtime = "nodejs";         // Edge vermijden
-export const dynamic = "force-dynamic";  // niet cachen tijdens debug
-
-async function loadEurostatModule() {
-  // Probeer met expliciete extensie (Vercel/Next kan streng resolven)
-  try {
-    return await import("@/lib/eurostat.gen.js");
-  } catch {}
-  try {
-    return await import("@/lib/eurostat.gen");
-  } catch {}
-  // Als alles faalt, gooi een duidelijke fout
-  throw new Error("Cannot import '@/lib/eurostat.gen(.js)'");
-}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const geo = (searchParams.get("geo") || "NL").toUpperCase();
 
-    const mod = await loadEurostatModule();
     const getLatest =
-      mod.getLatestGDPForGeoEUR ||
-      (mod.default && mod.default.getLatestGDPForGeoEUR);
+      Eurostat.getLatestGDPForGeoEUR ||
+      (Eurostat.default && Eurostat.default.getLatestGDPForGeoEUR);
 
     if (typeof getLatest !== "function") {
-      // Help debuggen: toon keys die wél geëxporteerd zijn
       const keys = [
-        ...Object.keys(mod || {}),
-        ...Object.keys((mod && mod.default) || {}),
+        ...Object.keys(Eurostat || {}),
+        ...Object.keys((Eurostat && Eurostat.default) || {}),
       ];
-      throw new Error(
-        "getLatestGDPForGeoEUR not available from eurostat.gen; exports: " +
-          JSON.stringify(keys)
-      );
+      throw new Error("getLatestGDPForGeoEUR not exported; exports: " + JSON.stringify(keys));
     }
 
     const t0 = Date.now();
@@ -54,9 +38,6 @@ export async function GET(req) {
       took_ms: ms,
     });
   } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: String(err?.message || err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, error: String(err?.message || err) }, { status: 500 });
   }
 }

@@ -1,16 +1,8 @@
 // app/debug/gdp/page.jsx
+import * as Eurostat from "@/lib/eurostat.live";
+
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-async function loadEurostatModule() {
-  try {
-    return await import("@/lib/eurostat.gen.js");
-  } catch {}
-  try {
-    return await import("@/lib/eurostat.gen");
-  } catch {}
-  throw new Error("Cannot import '@/lib/eurostat.gen(.js)'");
-}
 
 const EU27 = [
   "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR",
@@ -24,16 +16,15 @@ function fmtEUR(n){
 }
 
 export default async function DebugGDPPage() {
-  let first = { valueEUR: null, period: null };
-  try {
-    const mod = await loadEurostatModule();
-    const getLatest =
-      mod.getLatestGDPForGeoEUR ||
-      (mod.default && mod.default.getLatestGDPForGeoEUR);
-    if (typeof getLatest === "function") {
-      first = await getLatest("NL");
-    }
-  } catch {}
+  const getLatest =
+    Eurostat.getLatestGDPForGeoEUR ||
+    (Eurostat.default && Eurostat.default.getLatestGDPForGeoEUR);
+
+  const initialGeo = "NL";
+  let first = { valueEUR: null, period: null, cached: false };
+  if (typeof getLatest === "function") {
+    first = await getLatest(initialGeo);
+  }
 
   return (
     <main className="container card">
