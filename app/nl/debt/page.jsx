@@ -7,7 +7,7 @@ export async function generateMetadata() {
   const path = "/debt";
   const title = "Wat is Staatsschuld? • EU Debt Map";
   const description =
-    "Eenvoudige uitleg van staatsschuld: waarom landen lenen, hoe de schuld/BBP-verhouding werkt en waarom dat ertoe doet voor economie en burgers.";
+    "Heldere uitleg van staatsschuld: waarom landen lenen, hoe de schuld/BBP-verhouding (debt-to-GDP) werkt en waarom dat belangrijk is voor economie en burgers.";
 
   return {
     metadataBase: base,
@@ -54,58 +54,55 @@ export default function DebtExplainerNL() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
 
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        {/* Inhoud voorlopig Engels; later kun je vertalen */}
-        <h2>What is Government Debt?</h2>
+        <h2>Wat is staatsschuld?</h2>
         <p>
-          <strong>Government debt</strong> is the money a country owes. It’s similar to a
-          family taking a mortgage to buy a house or a student loan for school:
-          big costs are spread out over time.
+          <strong>Staatsschuld</strong> is het geld dat een land verschuldigd is. Je kunt het
+          vergelijken met een hypotheek of studielening: grote uitgaven worden uitgesmeerd over tijd.
         </p>
 
-        <h3>Why do governments borrow?</h3>
+        <h3>Waarom lenen overheden?</h3>
         <ul>
-          <li><strong>To build and invest:</strong> roads, schools, hospitals, clean energy.</li>
-          <li><strong>To handle crises:</strong> disasters, recessions, pandemics.</li>
-          <li><strong>To smooth timing:</strong> when tax income and spending don’t match.</li>
+          <li><strong>Investeren:</strong> wegen, scholen, ziekenhuizen, schone energie.</li>
+          <li><strong>Schokken opvangen:</strong> rampen, recessies, pandemieën.</li>
+          <li><strong>Tijd overbruggen:</strong> als belastinginkomsten en uitgaven niet gelijk lopen.</li>
         </ul>
 
-        <h3>How is debt measured?</h3>
+        <h3>Hoe meten we schuld?</h3>
         <p>
-          Debt is shown in euros (€) and also as a share of the economy:
-          the <strong>debt-to-GDP ratio</strong>.
+          We tonen schuld in euro’s (€) en als aandeel van de economie:
+          de <strong>schuld/BBP-verhouding</strong> (debt-to-GDP).
         </p>
         <div className="tag" role="note" style={{ marginTop: 6, lineHeight: 1.5 }}>
-          <strong>Example:</strong> If a country produces €1 trillion in a year (GDP) and
-          owes €500 billion, the debt-to-GDP ratio is <strong>50%</strong>.
+          <strong>Voorbeeld:</strong> produceert een land in een jaar €1 biljoen (BBP) en
+          is de schuld €500 miljard, dan is de schuld/BBP-ratio <strong>50%</strong>.
         </div>
 
-        <h3>Why does debt matter?</h3>
+        <h3>Waarom is schuld belangrijk?</h3>
         <ul>
-          <li><strong>Interest costs:</strong> more debt means more money spent on interest.</li>
-          <li><strong>Policy room:</strong> high interest bills leave less for schools,
-            healthcare, or tax cuts.</li>
-          <li><strong>Stability:</strong> in the EU, debt levels are monitored to keep
-            economies healthy and stable.</li>
+          <li><strong>Rente-lasten:</strong> meer schuld = meer geld naar rente.</li>
+          <li><strong>Beleidsruimte:</strong> hoge rente-lasten laten minder over voor onderwijs, zorg of lastenverlichting.</li>
+          <li><strong>Stabiliteit:</strong> in de EU worden schuldniveaus gemonitord om economieën gezond te houden.</li>
         </ul>
 
         <h3>FAQ</h3>
-        <p><strong>Who do countries borrow from?</strong><br/>
-          Mostly investors who buy government bonds: banks, pension funds, and sometimes
-          other countries or institutions.
+        <p><strong>Van wie leent een land?</strong><br/>
+          Voornamelijk beleggers die staatsobligaties kopen: banken, pensioenfondsen en soms andere landen of instellingen.
         </p>
-        <p><strong>What is a “safe” level of debt?</strong><br/>
-          There is no single magic number. The EU often uses <strong>60% of GDP</strong>
-          as a guideline, but actual levels differ by country and over time.
+        <p><strong>Wat is een “veilig” niveau?</strong><br/>
+          Er is geen magisch getal. De EU hanteert vaak <strong>60% van het BBP</strong> als richtlijn,
+          maar werkelijke niveaus verschillen per land en in de tijd.
         </p>
-        <p><strong>Where can I see current debt figures?</strong><br/>
-          Use the <Link href="/nl" className="btn" style={{ padding: "2px 8px" }}>EU map</Link> and click a country for a live estimate based on the latest reference dates.
+        <p><strong>Waar zie ik actuele cijfers?</strong><br/>
+          Gebruik de <Link href="/nl" className="btn" style={{ padding: "2px 8px" }}>EU-kaart</Link> en klik op een land
+          voor een live schatting op basis van de laatste referentieperioden.
         </p>
 
         <p className="tag" style={{ marginTop: 10 }}>
-          Sources: Eurostat (government finance statistics) and national finance ministries.
+          Bronnen: Eurostat (overheidsfinanciën) en nationale ministeries van Financiën.
         </p>
       </section>
 
+      {/* CTA-sidebar met NL-routes */}
       <CTASidebar lang="nl" homeHref="/nl" methodologyHref="/nl/methodology" />
     </main>
   );
