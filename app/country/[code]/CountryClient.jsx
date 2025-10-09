@@ -11,6 +11,7 @@ import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
 import CountryFacts from "./CountryFacts";
+import DebtToGDPPill from "@/components/DebtToGDPPill";
 
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname } from "@/lib/locale";
@@ -46,7 +47,7 @@ export default function CountryClient({
   lang = "en",
   introSlot = null, // optioneel: taal-tekst boven de map
 
-  // ### NIEUW: doorgegeven vanuit server (page.jsx)
+  // Doorgegeven vanuit server (page.jsx)
   gdpAbs = null,
   gdpPeriod = null,
   yearLabel = "Latest",
@@ -102,6 +103,10 @@ export default function CountryClient({
 
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
+  // NIEUW: live Debt/GDP (alleen tonen als gdpAbs bekend is)
+  const ratioPct =
+    Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
+
   return (
     <>
       {/* Back knop */}
@@ -117,8 +122,19 @@ export default function CountryClient({
         {displayName}
       </h1>
 
-      {/* Bovenste labelbalk met metadata (ongewijzigde functionaliteit) */}
-      <LabelsBar country={safeCountry} valueNow={current} />
+      {/* Bovenste labelbalk met metadata + subtiele Debt/GDP pill rechts */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          flexWrap: "wrap",
+          marginTop: 6,
+        }}
+      >
+        <LabelsBar country={safeCountry} valueNow={current} />
+        <DebtToGDPPill ratioPct={ratioPct} />
+      </div>
 
       {/* Live bedrag – zelfde look als homepage */}
       <div
@@ -140,18 +156,17 @@ export default function CountryClient({
         <ShareBar title={shareTitle} />
       </div>
 
-      {/* Feiten/bronblok (CountryFacts toont nu ook Debt-to-GDP als gdpAbs aanwezig is) */}
+      {/* Feiten/bronblok (CountryFacts toont ook Debt-to-GDP als gdpAbs aanwezig is) */}
       <div id={rateBoxId} style={{ marginTop: 8 }}>
         <CountryFacts
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={yearLabel}
         />
-        {/* Als je het GDP-periode label ergens wilt tonen, kan dat hier: */}
         {/* {gdpPeriod && <div className="tag" style={{marginTop:8}}>GDP period: {gdpPeriod}</div>} */}
       </div>
 
-      {/* Taal-specifieke SEO-intro (zelfde plek in elke taal) */}
+      {/* Taal-specifieke SEO-intro */}
       {introSlot}
 
       {/* CTA + artikel */}
@@ -160,7 +175,6 @@ export default function CountryClient({
         style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
       >
         <div className="grid" style={{ gap: 16 }}>
-          {/* Geef vertaalde naam door aan de CTA */}
           <MapCTA code={safeCountry.code} name={displayName} lang={effLang} />
           <LatestArticles max={1} />
         </div>
