@@ -3,22 +3,25 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { countries, interpolateDebt } from "@/lib/data";
 import { countryName } from "@/lib/countries";
+import { getLocaleFromPathname } from "@/lib/locale";
+import { t } from "@/lib/i18n";
 
 const nf0 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
 
 function colorFor(pct) {
   if (!Number.isFinite(pct)) return "#cbd5e1";
-  return pct < 60 ? "var(--ok)" : pct < 90 ? "#f59e0b" /* amber */ : "var(--bad)";
+  return pct < 60 ? "var(--ok)" : pct < 90 ? "#f59e0b" : "var(--bad)";
 }
 
-function Row({ c, nowMs, gdpEUR, rank }) {
+function Row({ c, nowMs, gdpEUR, rank, lang }) {
   const debtNow = useMemo(() => interpolateDebt(c, nowMs), [c, nowMs]);
   const ratio = Number.isFinite(gdpEUR) && gdpEUR > 0 ? (debtNow / gdpEUR) * 100 : null;
 
   const pct = Math.max(0, Math.min(200, Number.isFinite(ratio) ? ratio : 0));
-  const fill = Math.min(100, pct); // visueel tot 100% vullen
+  const fill = Math.min(100, pct);
   const col = colorFor(pct);
 
   return (
@@ -37,15 +40,17 @@ function Row({ c, nowMs, gdpEUR, rank }) {
 
       <div style={{ display: "grid", gap: 6 }}>
         <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
-          <strong>{c.flag ? <span style={{ marginRight: 6 }}>{c.flag}</span> : null}{countryName(c.code, "en")}</strong>
+          <strong>
+            {c.flag ? <span style={{ marginRight: 6 }}>{c.flag}</span> : null}
+            {countryName(c.code, lang)}
+          </strong>
           <span className="tag" style={{ fontVariantNumeric: "tabular-nums" }}>
             Debt: €{nf0.format(Math.round(debtNow))}
           </span>
         </div>
 
-        {/* ratio bar */}
         <div
-          aria-label={`Debt to GDP bar for ${countryName(c.code, "en")}`}
+          aria-label={`Debt to GDP bar for ${countryName(c.code, lang)}`}
           style={{
             height: 10,
             borderRadius: 999,
@@ -65,19 +70,18 @@ function Row({ c, nowMs, gdpEUR, rank }) {
           />
         </div>
 
-        {/* legend compact */}
         <div className="tag" style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             <span style={{ width: 8, height: 8, background: "var(--ok)", borderRadius: 999 }} />
-            &lt;60%
+            {t(lang, "dtg.legend.low")}
           </span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             <span style={{ width: 8, height: 8, background: "#f59e0b", borderRadius: 999 }} />
-            60–90%
+            {t(lang, "dtg.legend.mid")}
           </span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             <span style={{ width: 8, height: 8, background: "var(--bad)", borderRadius: 999 }} />
-            &gt;90%
+            {t(lang, "dtg.legend.high")}
           </span>
         </div>
       </div>
@@ -101,28 +105,30 @@ function Row({ c, nowMs, gdpEUR, rank }) {
           {Number.isFinite(pct) ? `${Math.round(pct)}%` : "—"}
         </div>
         <div className="tag" style={{ marginTop: 6 }}>
-          <Link href={`/country/${c.code.toLowerCase()}`}>Open country →</Link>
+          <Link href={`/country/${c.code.toLowerCase()}`}>{t(lang, "dtg.openCountry")}</Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default function DebtToGDPList() {
+export default function DebtToGDPList({ lang: langProp }) {
+  const pathname = usePathname() || "/";
+  const fromUrl = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
+  const lang = langProp || fromUrl || "en";
+
   const list = (Array.isArray(countries) ? countries : []).slice();
   const [nowMs, setNowMs] = useState(() => Date.now());
-  const [gdpMap, setGdpMap] = useState({}); // { NL: number|null, ... }
+  const [gdpMap, setGdpMap] = useState({});
   const [loading, setLoading] = useState(true);
-  const [order, setOrder] = useState("desc"); // desc = worst first
+  const [order, setOrder] = useState("desc"); // worst first
 
-  // light timer voor “live” ranks (niet te snel om jank te voorkomen)
-  const tRef = useRef(null);
+  const tmr = useRef(null);
   useEffect(() => {
-    tRef.current = setInterval(() => setNowMs(Date.now()), 500);
-    return () => tRef.current && clearInterval(tRef.current);
+    tmr.current = setInterval(() => setNowMs(Date.now()), 500);
+    return () => tmr.current && clearInterval(tmr.current);
   }, []);
 
-  // fetch all GDPs via API
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -144,7 +150,6 @@ export default function DebtToGDPList() {
     return () => { cancelled = true; };
   }, []);
 
-  // bereken ratio per land
   const rows = useMemo(() => {
     const out = list.map((c) => {
       const debt = interpolateDebt(c, nowMs);
@@ -164,7 +169,7 @@ export default function DebtToGDPList() {
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         <div className="tag">
-          Live ranking by <strong>Debt / GDP</strong> (updates every ~0.5s).
+          {t(lang, "dtg.liveRank")} <strong>{t(lang, "dtg.debtGDP")}</strong> (updates every ~0.5s).
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button
@@ -174,17 +179,15 @@ export default function DebtToGDPList() {
             aria-label="Toggle sorting"
             title="Toggle sorting"
           >
-            Sort: {order === "desc" ? "High → Low" : "Low → High"}
+            {order === "desc" ? t(lang, "dtg.sortHighLow") : t(lang, "dtg.sortLowHigh")}
           </button>
         </div>
       </div>
 
-      {loading && (
-        <div className="tag">Loading GDP from Eurostat…</div>
-      )}
+      {loading && <div className="tag">{t(lang, "dtg.loading")}</div>}
 
       {rows.map((row, i) => (
-        <Row key={row.c.code} c={row.c} nowMs={nowMs} gdpEUR={row.gdp} rank={i + 1} />
+        <Row key={row.c.code} c={row.c} nowMs={nowMs} gdpEUR={row.gdp} rank={i + 1} lang={lang} />
       ))}
 
       <div className="tag" style={{ marginTop: 8 }}>

@@ -1,29 +1,39 @@
 // app/methodology/page.jsx
+export async function generateMetadata() {
+  const base = new URL("https://www.eudebtmap.com");
+  const path = "/methodology";
+  const title = "Methodology • EU Debt Map";
+  const description =
+    "How EU Debt Map sources, transforms and interpolates government debt data for the EU-27.";
 
-export const metadata = {
-  title: "Methodology • EU Debt Map",
-  description:
-    "How EU Debt Map sources, transforms and interpolates government debt data for the EU-27.",
-  openGraph: {
-    title: "Methodology • EU Debt Map",
-    description:
-      "Data source, filters, conversion and the live ticker interpolation used by EU Debt Map.",
-    url: "https://eudebtmap.com/methodology",
-    siteName: "EU Debt Map",
-    type: "article",
-  },
-  metadataBase: new URL("https://eudebtmap.com"),
-  alternates: {
-    canonical: "https://eudebtmap.com/methodology",
-    languages: {
-      en: "https://eudebtmap.com/methodology",
-      nl: "https://eudebtmap.com/nl/methodology",
-      de: "https://eudebtmap.com/de/methodology",
-      fr: "https://eudebtmap.com/fr/methodology",
-      "x-default": "https://eudebtmap.com/methodology",
+  return {
+    metadataBase: base,
+    title,
+    description,
+    alternates: {
+      canonical: `${base}${path}`,
+      languages: {
+        en: `${base}${path}`,
+        nl: `${base}/nl${path}`,
+        de: `${base}/de${path}`,
+        fr: `${base}/fr${path}`,
+        "x-default": `${base}${path}`,
+      },
     },
-  },
-};
+    openGraph: {
+      title,
+      description: "Data source, filters, conversion and the live ticker interpolation used by EU Debt Map.",
+      url: `${base}${path}`,
+      siteName: "EU Debt Map",
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
 
 // --- lightweight presentational helpers (no client code) ---
 function Callout({ type = "info", title, children }) {
@@ -86,8 +96,36 @@ function CodeBlock({ title, children }) {
 export default function MethodologyPage() {
   const todayISO = new Date().toISOString().slice(0, 10);
 
+  // JSON-LD: FAQ (blijft zoals je had, maar we zetten hem hier ook neer voor context)
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Which data source is used?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Eurostat gov_10q_ggdebt: general government (S.13), gross debt (GD), quarterly (freq=Q), values in million euro (unit=MIO_EUR), EU-27.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How is the live ticker calculated?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "We linearly interpolate between the last two quarters and, after the last reference date, extrapolate using a per-second rate derived from their difference.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+
       {/* Header / TL;DR */}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h2 style={{ marginTop: 0 }}>Methodology</h2>
@@ -134,11 +172,7 @@ export default function MethodologyPage() {
           >
             Dataset page
           </a>
-          <a
-            className="btn"
-            href="/about"
-            aria-label="Learn more about the project"
-          >
+          <a className="btn" href="/about" aria-label="Learn more about the project">
             About the project
           </a>
         </div>
@@ -237,37 +271,6 @@ current_estimate(now) =
           <a href="/privacy">Privacy & Cookies</a>.
         </p>
       </section>
-
-      {/* SEO: FAQ JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: [
-              {
-                "@type": "Question",
-                name: "Which data source is used?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text:
-                    "Eurostat gov_10q_ggdebt: general government (S.13), gross debt (GD), quarterly (freq=Q), values in million euro (unit=MIO_EUR), EU-27.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "How is the live ticker calculated?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text:
-                    "We linearly interpolate between the last two quarters and, after the last reference date, extrapolate using a per-second rate derived from their difference.",
-                },
-              },
-            ],
-          }),
-        }}
-      />
     </main>
   );
 }

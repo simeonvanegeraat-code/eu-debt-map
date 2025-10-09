@@ -20,7 +20,7 @@ import { getLocaleFromPathname } from "@/lib/locale";
 const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
 const norm = (x) => (x === "" ? "en" : x);
 
-// UI labels
+// UI labels (al meertalig)
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
@@ -42,12 +42,38 @@ const SHARE_TITLES = {
   fr: (name) => `${name} dette publique`,
 };
 
+// Kleine client cache voor GDP-API
+const GDP_TTL_MS = 6 * 60 * 60 * 1000; // 6 uur
+function readGDPCache(iso2) {
+  try {
+    const raw = sessionStorage.getItem(`gdp:${iso2}`);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== "object") return null;
+    if (Date.now() - (obj.ts || 0) > GDP_TTL_MS) return null;
+    if (!Number.isFinite(obj.value)) return null;
+    return { value: obj.value, period: obj.period || null };
+  } catch {
+    return null;
+  }
+}
+function writeGDPCache(iso2, value, period) {
+  try {
+    sessionStorage.setItem(
+      `gdp:${iso2}`,
+      JSON.stringify({ value, period: period || null, ts: Date.now() })
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
 export default function CountryClient({
   country,
   lang = "en",
   introSlot = null,
 
-  // Optioneel: kan nog steeds via SSR worden meegegeven, maar is niet vereist
+  // Optioneel: kan via SSR worden meegegeven, maar is niet vereist
   gdpAbs: gdpAbsFromServer = null,
   gdpPeriod: gdpPeriodFromServer = null,
   yearLabel = "Latest",
@@ -89,31 +115,49 @@ export default function CountryClient({
     return interpolateDebt(safeCountry, nowMs);
   }, [safeCountry, nowMs]);
 
-  // ---------- NIEUW: GDP client-side ophalen ----------
+  // ---------- GDP ophalen (met sessionStorage cache) ----------
   const [gdpAbs, setGdpAbs] = useState(
     Number.isFinite(gdpAbsFromServer) ? gdpAbsFromServer : null
   );
   const [gdpPeriod, setGdpPeriod] = useState(gdpPeriodFromServer || null);
 
   useEffect(() => {
-    if (!safeCountry || Number.isFinite(gdpAbsFromServer)) return; // al via SSR
+    if (!safeCountry) return;
+    if (Number.isFinite(gdpAbsFromServer)) return; // al via SSR
+
+    const geo = String(safeCountry.code || "").toUpperCase();
+    const cached = typeof window !== "undefined" ? readGDPCache(geo) : null;
+    if (cached) {
+      setGdpAbs(cached.value);
+      setGdpPeriod(cached.period);
+      return;
+    }
+
     let cancelled = false;
+    const ctrl = new AbortController();
+
     (async () => {
       try {
-        const res = await fetch(`/api/gdp?geo=${encodeURIComponent(safeCountry.code)}`, {
+        const res = await fetch(`/api/gdp?geo=${encodeURIComponent(geo)}`, {
           method: "GET",
           cache: "no-store",
+          signal: ctrl.signal,
         });
         const json = await res.json();
         if (!cancelled && json?.ok && Number.isFinite(json.gdp_eur)) {
           setGdpAbs(json.gdp_eur);
           setGdpPeriod(json.period || null);
+          writeGDPCache(geo, json.gdp_eur, json.period || null);
         }
       } catch {
         // stil falen; UI blijft werken zonder GDP
       }
     })();
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+      try { ctrl.abort(); } catch {}
+    };
   }, [safeCountry, gdpAbsFromServer]);
 
   if (!safeCountry) return <div className="container card">Unknown country</div>;
@@ -189,8 +233,10 @@ export default function CountryClient({
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={yearLabel}
         />
-        {/* Debug-tip:
-        {Number.isFinite(gdpAbs) && <div className="tag">GDP: €{nf.format(Math.round(gdpAbs))} ({gdpPeriod || "—"})</div>}
+        {/* Debug:
+        {Number.isFinite(gdpAbs) && (
+          <div className="tag">GDP: €{nf.format(Math.round(gdpAbs))} ({gdpPeriod || "—"})</div>
+        )}
         */}
       </div>
 

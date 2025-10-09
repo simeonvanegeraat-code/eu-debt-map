@@ -21,36 +21,48 @@ const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), {
   ssr: false,
 });
 
-export const metadata = {
-  // ✅ SEO-versterkt
-  title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
-  description:
-    "See EU government debt live, country by country. Interactive EU-27 debt map with real-time estimates, debt growth, and comparisons. Based on Eurostat data.",
-  openGraph: {
-    title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
-    description:
-      "Explore government debt across the EU-27 with a live, ticking estimate per country.",
-    url: "https://www.eudebtmap.com/",
-    siteName: "EU Debt Map",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "EU Debt Map – Live National Debt by Country (EU-27, 2025)",
-    description: "Live, ticking estimates of EU government debt based on Eurostat.",
-  },
-  metadataBase: new URL("https://www.eudebtmap.com"),
-  alternates: {
-    canonical: "https://www.eudebtmap.com/",
-    languages: {
-      en: "https://www.eudebtmap.com/",
-      nl: "https://www.eudebtmap.com/nl",
-      de: "https://www.eudebtmap.com/de",
-      fr: "https://www.eudebtmap.com/fr",
-      "x-default": "https://www.eudebtmap.com/",
+// --- SEO: generateMetadata (EN root) ---
+export async function generateMetadata() {
+  const base = new URL("https://www.eudebtmap.com");
+  const title = "EU Debt Map – Live National Debt by Country (EU-27, 2025)";
+  const description =
+    "See EU government debt live, country by country. Interactive EU-27 debt map with real-time estimates, debt growth, and comparisons. Based on Eurostat data.";
+
+  return {
+    metadataBase: base,
+    title,
+    description,
+    alternates: {
+      canonical: "https://www.eudebtmap.com/",
+      languages: {
+        en: "https://www.eudebtmap.com/",
+        nl: "https://www.eudebtmap.com/nl",
+        de: "https://www.eudebtmap.com/de",
+        fr: "https://www.eudebtmap.com/fr",
+        "x-default": "https://www.eudebtmap.com/",
+      },
     },
-  },
-};
+    openGraph: {
+      title,
+      description: "Explore government debt across the EU-27 with a live, ticking estimate per country.",
+      url: "https://www.eudebtmap.com/",
+      siteName: "EU Debt Map",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: "Live, ticking estimates of EU government debt based on Eurostat.",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  };
+}
 
 function formatEUR(v) {
   return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v));
@@ -62,12 +74,10 @@ function perSecondForCountry(c) {
   if (typeof c.per_second === "number") return c.per_second;
 
   const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
-  // Gebruik exacte secondes als die in je dataset zit
   if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
     return delta / c.seconds_between;
   }
-  // Fallback: ~90 dagen tussen twee kwartalen
-  const approxSeconds = 90 * 24 * 60 * 60;
+  const approxSeconds = 90 * 24 * 60 * 60; // ~90 dagen tussen kwartalen
   return delta / approxSeconds;
 }
 
@@ -152,8 +162,35 @@ export default function HomePage() {
     }
   `;
 
+  // --- JSON-LD (Website + Organization) voor betere vindbaarheid ---
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    url: "https://www.eudebtmap.com/",
+    name: "EU Debt Map",
+    inLanguage: "en",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://www.eudebtmap.com/country/{country}",
+      "query-input": "required name=country",
+    },
+  };
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "EU Debt Map",
+    url: "https://www.eudebtmap.com/",
+    sameAs: [
+      "https://www.eudebtmap.com/",
+    ],
+  };
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      {/* JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
+
       {/* === HERO === */}
       <section
         className="card"

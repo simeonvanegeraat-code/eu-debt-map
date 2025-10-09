@@ -1,39 +1,64 @@
 // app/debt/page.jsx
 import Link from "next/link";
-// bovenaan
 import CTASidebar from "@/components/CTASidebar";
 
-// … binnen de component, NA de main content:
-<CTASidebar lang="en" homeHref="/" methodologyHref="/methodology" />
+export async function generateMetadata() {
+  const base = new URL("https://www.eudebtmap.com");
+  const path = "/debt";
+  const title = "What is Government Debt? • EU Debt Map";
+  const description =
+    "Simple explanation of government debt, why countries borrow, how debt-to-GDP works, and why it matters for people and the economy.";
 
-
-export const metadata = {
-  title: "What is Government Debt? • EU Debt Map",
-  description:
-    "Simple explanation of government debt, why countries borrow, how debt-to-GDP works, and why it matters for people and the economy.",
-  openGraph: {
-    title: "What is Government Debt? • EU Debt Map",
-    description:
-      "Government debt explained in plain English with examples, FAQs, and links to official sources.",
-    type: "article",
-    url: "https://eudebtmap.com/debt",
-    siteName: "EU Debt Map",
-  },
-  alternates: {
-    canonical: "https://eudebtmap.com/debt",
-    languages: {
-      en: "https://eudebtmap.com/debt",
-      nl: "https://eudebtmap.com/nl/debt",
-      de: "https://eudebtmap.com/de/debt",
-      fr: "https://eudebtmap.com/fr/debt",
-      "x-default": "https://eudebtmap.com/debt",
+  return {
+    metadataBase: base,
+    title,
+    description,
+    alternates: {
+      canonical: `${base}${path}`,
+      languages: {
+        en: `${base}${path}`,
+        nl: `${base}/nl${path}`,
+        de: `${base}/de${path}`,
+        fr: `${base}/fr${path}`,
+        "x-default": `${base}${path}`,
+      },
     },
-  },
-};
+    openGraph: {
+      title,
+      description: "Government debt explained in plain English with examples, FAQs, and links to official sources.",
+      type: "article",
+      url: `${base}${path}`,
+      siteName: "EU Debt Map",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  };
+}
 
 export default function DebtExplainer() {
+  // JSON-LD: Article (lichte markup zodat Google context heeft)
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "What is Government Debt?",
+    about: ["government debt", "public finance", "debt-to-GDP"],
+    inLanguage: "en",
+    isPartOf: { "@type": "WebSite", name: "EU Debt Map", url: "https://www.eudebtmap.com/" },
+    mainEntityOfPage: "https://www.eudebtmap.com/debt",
+  };
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <h2>What is Government Debt?</h2>
         <p>
@@ -54,11 +79,7 @@ export default function DebtExplainer() {
           Debt is shown in euros (€) and also as a share of the economy:
           the <strong>debt-to-GDP ratio</strong>.
         </p>
-        <div
-          className="tag"
-          role="note"
-          style={{ marginTop: 6, lineHeight: 1.5 }}
-        >
+        <div className="tag" role="note" style={{ marginTop: 6, lineHeight: 1.5 }}>
           <strong>Example:</strong> If a country produces €1 trillion in a year (GDP) and
           owes €500 billion, the debt-to-GDP ratio is <strong>50%</strong>.
         </div>
@@ -66,14 +87,10 @@ export default function DebtExplainer() {
         <h3>Why does debt matter?</h3>
         <ul>
           <li><strong>Interest costs:</strong> more debt means more money spent on interest.</li>
-          <li>
-            <strong>Policy room:</strong> high interest bills leave less for schools,
-            healthcare, or tax cuts.
-          </li>
-          <li>
-            <strong>Stability:</strong> in the EU, debt levels are monitored to keep
-            economies healthy and stable.
-          </li>
+          <li><strong>Policy room:</strong> high interest bills leave less for schools,
+            healthcare, or tax cuts.</li>
+          <li><strong>Stability:</strong> in the EU, debt levels are monitored to keep
+            economies healthy and stable.</li>
         </ul>
 
         <h3>FAQ</h3>
@@ -93,6 +110,9 @@ export default function DebtExplainer() {
           Sources: Eurostat (government finance statistics) and national finance ministries.
         </p>
       </section>
+
+      {/* CTA-sidebar: linkt terug naar home & methodologie */}
+      <CTASidebar lang="en" homeHref="/" methodologyHref="/methodology" />
     </main>
   );
 }

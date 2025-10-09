@@ -1,24 +1,58 @@
 // app/about/page.jsx
-export const metadata = {
-  title: "About & Contact | EU Debt Map",
-  description:
-    "Learn about EU Debt Map, why it was created, and how to get in touch.",
-  alternates: { canonical: "https://www.eudebtmap.com/about" },
-  openGraph: {
-    title: "About & Contact | EU Debt Map",
-    description:
-      "EU Debt Map is an independent hobby project visualizing EU-27 national debt. Contact Simeon via email for feedback or questions.",
-    url: "https://www.eudebtmap.com/about",
-    siteName: "EU Debt Map",
-    type: "website",
-  },
-};
+export async function generateMetadata() {
+  const base = new URL("https://www.eudebtmap.com");
+  const path = "/about";
+  const title = "About & Contact | EU Debt Map";
+  const description = "Learn about EU Debt Map, why it was created, and how to get in touch.";
+
+  return {
+    metadataBase: base,
+    title,
+    description,
+    alternates: {
+      canonical: `${base}${path}`,
+      languages: {
+        en: `${base}${path}`,
+        nl: `${base}/nl${path}`,
+        de: `${base}/de${path}`,
+        fr: `${base}/fr${path}`,
+        "x-default": `${base}${path}`,
+      },
+    },
+    openGraph: {
+      title,
+      description:
+        "EU Debt Map is an independent hobby project visualizing EU-27 national debt. Contact Simeon via email for feedback or questions.",
+      url: `${base}${path}`,
+      siteName: "EU Debt Map",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
 
 export default function AboutPage() {
   const email = "firenature23@gmail.com";
 
+  // JSON-LD (Person) voor eenvoudige 'about' markup
+  const personLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Simeon",
+    url: "https://www.eudebtmap.com",
+    email,
+    description:
+      "Independent hobby project visualizing EU government debt with live estimates.",
+  };
+
   return (
     <main className="container grid gap-6 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
+
       {/* Personal intro */}
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h1 className="text-3xl font-extrabold tracking-tight">About & Contact</h1>
@@ -74,22 +108,6 @@ export default function AboutPage() {
           </a>
         </div>
       </section>
-
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Person",
-            name: "Simeon",
-            url: "https://www.eudebtmap.com",
-            email,
-            description:
-              "Independent hobby project visualizing EU government debt with live estimates.",
-          }),
-        }}
-      />
     </main>
   );
 }
