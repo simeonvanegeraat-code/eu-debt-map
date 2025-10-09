@@ -45,6 +45,11 @@ export default function CountryClient({
   country,
   lang = "en",
   introSlot = null, // optioneel: taal-tekst boven de map
+
+  // ### NIEUW: doorgegeven vanuit server (page.jsx)
+  gdpAbs = null,
+  gdpPeriod = null,
+  yearLabel = "Latest",
 }) {
   const safeCountry = country ?? null;
 
@@ -135,9 +140,15 @@ export default function CountryClient({
         <ShareBar title={shareTitle} />
       </div>
 
-      {/* Feiten/bronblok (functionaliteit blijft in CountryFacts) */}
+      {/* Feiten/bronblok (CountryFacts toont nu ook Debt-to-GDP als gdpAbs aanwezig is) */}
       <div id={rateBoxId} style={{ marginTop: 8 }}>
-        <CountryFacts code={safeCountry.code} />
+        <CountryFacts
+          code={safeCountry.code}
+          gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
+          yearLabel={yearLabel}
+        />
+        {/* Als je het GDP-periode label ergens wilt tonen, kan dat hier: */}
+        {/* {gdpPeriod && <div className="tag" style={{marginTop:8}}>GDP period: {gdpPeriod}</div>} */}
       </div>
 
       {/* Taal-specifieke SEO-intro (zelfde plek in elke taal) */}
