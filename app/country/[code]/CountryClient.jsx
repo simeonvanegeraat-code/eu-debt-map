@@ -45,11 +45,11 @@ const SHARE_TITLES = {
 export default function CountryClient({
   country,
   lang = "en",
-  introSlot = null, // optioneel: taal-tekst boven de map
+  introSlot = null,
 
-  // Doorgegeven vanuit server (page.jsx)
-  gdpAbs = null,
-  gdpPeriod = null,
+  // Optioneel: kan nog steeds via SSR worden meegegeven, maar is niet vereist
+  gdpAbs: gdpAbsFromServer = null,
+  gdpPeriod: gdpPeriodFromServer = null,
   yearLabel = "Latest",
 }) {
   const safeCountry = country ?? null;
@@ -65,7 +65,7 @@ export default function CountryClient({
     return "en";
   }, [lang, fromUrl]);
 
-  // 2) Vertaalde weergavenaam van het land
+  // 2) Vertaalde weergavenaam
   const displayName = safeCountry ? countryName(safeCountry.code, effLang) : "";
 
   const prefersReducedMotion =
@@ -89,6 +89,33 @@ export default function CountryClient({
     return interpolateDebt(safeCountry, nowMs);
   }, [safeCountry, nowMs]);
 
+  // ---------- NIEUW: GDP client-side ophalen ----------
+  const [gdpAbs, setGdpAbs] = useState(
+    Number.isFinite(gdpAbsFromServer) ? gdpAbsFromServer : null
+  );
+  const [gdpPeriod, setGdpPeriod] = useState(gdpPeriodFromServer || null);
+
+  useEffect(() => {
+    if (!safeCountry || Number.isFinite(gdpAbsFromServer)) return; // al via SSR
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/gdp?geo=${encodeURIComponent(safeCountry.code)}`, {
+          method: "GET",
+          cache: "no-store",
+        });
+        const json = await res.json();
+        if (!cancelled && json?.ok && Number.isFinite(json.gdp_eur)) {
+          setGdpAbs(json.gdp_eur);
+          setGdpPeriod(json.period || null);
+        }
+      } catch {
+        // stil falen; UI blijft werken zonder GDP
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [safeCountry, gdpAbsFromServer]);
+
   if (!safeCountry) return <div className="container card">Unknown country</div>;
 
   const rateBoxId = "country-rate-desc";
@@ -100,10 +127,9 @@ export default function CountryClient({
     effLang === "fr" ? "/fr" : "/";
 
   const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
-
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
-  // NIEUW: live Debt/GDP (alleen tonen als gdpAbs bekend is)
+  // Live Debt/GDP (alleen als GDP bekend is)
   const ratioPct =
     Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
 
@@ -122,7 +148,7 @@ export default function CountryClient({
         {displayName}
       </h1>
 
-      {/* Bovenste labelbalk met metadata + subtiele Debt/GDP pill rechts */}
+      {/* Labels + subtiele Debt/GDP pill */}
       <div
         style={{
           display: "flex",
@@ -136,7 +162,7 @@ export default function CountryClient({
         <DebtToGDPPill ratioPct={ratioPct} />
       </div>
 
-      {/* Live bedrag – zelfde look als homepage */}
+      {/* Live bedrag */}
       <div
         className="mono"
         style={{ marginTop: 10, display: "flex", alignItems: "baseline", gap: 10 }}
@@ -156,14 +182,16 @@ export default function CountryClient({
         <ShareBar title={shareTitle} />
       </div>
 
-      {/* Feiten/bronblok (CountryFacts toont ook Debt-to-GDP als gdpAbs aanwezig is) */}
+      {/* Feitenblok — toont Debt-to-GDP zodra gdpAbs bekend is */}
       <div id={rateBoxId} style={{ marginTop: 8 }}>
         <CountryFacts
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={yearLabel}
         />
-        {/* {gdpPeriod && <div className="tag" style={{marginTop:8}}>GDP period: {gdpPeriod}</div>} */}
+        {/* Debug-tip:
+        {Number.isFinite(gdpAbs) && <div className="tag">GDP: €{nf.format(Math.round(gdpAbs))} ({gdpPeriod || "—"})</div>}
+        */}
       </div>
 
       {/* Taal-specifieke SEO-intro */}

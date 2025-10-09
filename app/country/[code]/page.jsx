@@ -5,13 +5,13 @@ import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname } from "@/lib/locale";
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live"; // <-- NIEUW pad
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
   return list.map((c) => ({ code: String(c.code).toLowerCase() }));
 }
 
+// We willen absoluut geen dynamic fetch tijdens pre-render:
 export const dynamic = "error";
 
 export default async function CountryPage({ params: { code } }) {
@@ -21,28 +21,15 @@ export default async function CountryPage({ params: { code } }) {
   );
   if (!country) return notFound();
 
-  // Detecteer taal via jullie bestaande helper; val terug op 'en'
+  // Taal bepalen
   const rawLang = getLocaleFromPathname?.() || "en";
   const lang = ["en", "nl", "de", "fr"].includes(rawLang) ? rawLang : "en";
 
-  // Alleen de display-naam lokaliseren; data/URL blijven gelijk
+  // Alleen display-naam lokaliseren
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
-  // Haal GDP live op via Eurostat (gecachet in eurostat.live)
-  let gdpAbs = null;
-  let gdpPeriod = null;
-  try {
-    const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
-    gdpAbs = Number.isFinite(valueEUR) ? valueEUR : null;
-    gdpPeriod = period || null;
-  } catch {
-    gdpAbs = null;
-    gdpPeriod = null;
-  }
-
-  // Year label voor SEO-tekst
+  // Yearlabel uit je bestaande data (we fetchen GDP niet in SSR)
   const yearLabel =
-    (typeof gdpPeriod === "string" && gdpPeriod.slice(0, 4)) ||
     (country?.last_date ? String(country.last_date).slice(0, 4) : "Latest");
 
   return (
@@ -51,10 +38,9 @@ export default async function CountryPage({ params: { code } }) {
         <CountryClient
           country={localizedCountry}
           lang={lang}
-          gdpAbs={gdpAbs}
-          gdpPeriod={gdpPeriod}
           yearLabel={yearLabel}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+          // GDP wordt client-side opgehaald in CountryClient via /api/gdp
         />
       </section>
     </main>
