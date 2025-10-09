@@ -1,5 +1,5 @@
 // app/debug/gdp/page.jsx
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.gen";
+import * as Eurostat from "@/lib/eurostat.gen";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,9 +16,15 @@ function fmtEUR(n){
 }
 
 export default async function DebugGDPPage() {
-  // haal NL als default op server-side
+  const getLatest =
+    Eurostat.getLatestGDPForGeoEUR ||
+    (Eurostat.default && Eurostat.default.getLatestGDPForGeoEUR);
+
   const initialGeo = "NL";
-  const first = await getLatestGDPForGeoEUR(initialGeo);
+  let first = { valueEUR: null, period: null, cached: false };
+  if (typeof getLatest === "function") {
+    first = await getLatest(initialGeo);
+  }
 
   return (
     <main className="container card">
@@ -44,9 +50,9 @@ export default async function DebugGDPPage() {
       </form>
 
       <p className="tag" style={{marginTop:12}}>
-        Als de API een geldige <code>gdp_eur</code> teruggeeft maar je landpagina
-        toont niets, zit het probleem in de props-doorvoer/render. Als de API
-        <em>geen</em> waarde geeft, is er een fetch/parsing/netwerk-issue.
+        Als de API een geldige <code>gdp_eur</code> teruggeeft maar de landpagina niets toont,
+        zit het probleem in props-doorvoer/render. Als de API <em>geen</em> waarde geeft,
+        is er een fetch/parsing/runtime-issue.
       </p>
     </main>
   );
