@@ -9,6 +9,7 @@ import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 // Nav-items (Articles blijft ENG/root)
 const NAV = [
   { href: "/", label: "Home" },
+  { href: "/debt-to-gdp", label: "Debt-to-GDP" },    // ← NIEUW (tussen Home en What is Debt?)
   { href: "/debt", label: "What is Debt?" },
   { href: "/articles", label: "Articles" }, // <-- root only (no locale)
   { href: "/about", label: "About" },
@@ -127,9 +128,7 @@ function LanguageDropdown() {
                 >
                   <span style={{ fontSize: 16 }}>{opt.flag}</span>
                   <span style={{ flex: 1 }}>{opt.label}</span>
-                  {active && (
-                    <span className="tag lang-active-tag">Active</span>
-                  )}
+                  {active && <span className="tag lang-active-tag">Active</span>}
                 </button>
               </li>
             );
