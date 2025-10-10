@@ -1,0 +1,1 @@
+Put your article hero images here, e.g. digital-euro-2025.jpg (≥1200px wide).

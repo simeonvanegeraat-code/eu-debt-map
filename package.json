@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "fetch:data": "node scripts/fetch-eurostat.js",
-    "prebuild": "node scripts/fetch-eurostat.js"
+    "prebuild": "node scripts/fetch-eurostat.js",
+    "new:article": "node scripts/new-article.js en 2025 new-article-slug \"New Article Title\""
   },
   "dependencies": {
     "next": "14.2.5",

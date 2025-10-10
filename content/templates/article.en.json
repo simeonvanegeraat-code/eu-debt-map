@@ -1,0 +1,12 @@
+{
+  "slug": "your-slug-here",
+  "title": "Your title here",
+  "summary": "Short summary (1–2 sentences).",
+  "excerpt": "Same as summary, used in some components.",
+  "tags": [],
+  "date": "2025-10-10",
+  "lang": "en",
+  "image": "/images/articles/placeholder.jpg",
+  "imageAlt": "Describe the image for accessibility",
+  "body": "<h2>Intro</h2><p>Write your article body as HTML or minimal markup here.</p>"
+}
