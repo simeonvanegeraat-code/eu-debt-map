@@ -2,6 +2,8 @@
 import { listArticles } from "@/lib/articles";
 import ArticlesShell from "@/components/ArticlesShell";
 
+export const runtime = "nodejs"; // fs gegarandeerd ok
+
 export const metadata = {
   title: "Articles & Analysis • EU Debt Map",
   description:
@@ -18,12 +20,15 @@ export const metadata = {
 };
 
 export default function ArticlesPage({ searchParams }) {
-  const all = listArticles()
-    .slice()
-    .sort((a, b) => +new Date(b.date || 0) - +new Date(a.date || 0));
-
+  const all = listArticles(); // al gesorteerd: newest first
   const initialTag = searchParams?.tag ? String(searchParams.tag) : "All";
   const initialQ = searchParams?.q ? String(searchParams.q) : "";
 
-  return <ArticlesShell articles={all} initialTag={initialTag} initialQ={initialQ} />;
+  return (
+    <ArticlesShell
+      articles={all}
+      initialTag={initialTag}
+      initialQ={initialQ}
+    />
+  );
 }

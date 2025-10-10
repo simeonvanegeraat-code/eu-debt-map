@@ -1,53 +1,36 @@
-// components/LatestArticles.jsx
-import Link from "next/link";
-import Image from "next/image";
-import { articles } from "@/lib/articles";
+"use client";
 
-export default function LatestArticles({ max = 1 }) {
-  const list = Array.isArray(articles) ? [...articles] : [];
-  list.sort((a, b) => String(b.date).localeCompare(String(a.date)));
-  const picks = list.slice(0, max);
-
-  if (!picks.length) return null;
-
+export default function LatestArticles({ articles = [] }) {
+  if (!articles.length) return null;
   return (
-    <div className="card" style={{ padding: 12 }}>
-      <h3 className="text-base font-semibold mb-3">Latest article</h3>
+    <section aria-labelledby="latest-articles-heading" className="space-y-4">
+      <h2 id="latest-articles-heading" className="text-xl font-semibold">
+        Latest articles
+      </h2>
 
-      {picks.map((a) => (
-        <Link
-          key={a.slug}
-          href={`/articles/${a.slug}`}
-          className="flex gap-3 items-start group"
-          aria-label={a.title}
-        >
-          <div
-            className="shrink-0 overflow-hidden rounded-xl border border-slate-800"
-            style={{ width: 120, height: 120, background: "#0b1220" }}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {articles.map((a) => (
+          <a
+            key={a.slug}
+            href={`/articles/${a.slug}`}
+            className="rounded-xl border p-3 hover:shadow-md transition"
           >
-            <Image
-              src={a.image || "/articles/placeholder-600.jpg"}
-              alt={a.imageAlt || a.title || "Article image"}
-              width={600}
-              height={600}
-              sizes="120px"
-              style={{ display: "block", width: "120px", height: "120px", objectFit: "cover" }}
-            />
-          </div>
-
-          <div className="min-w-0">
-            <div className="text-sm font-semibold group-hover:underline">{a.title}</div>
-            {a.date && (
-              <time className="text-xs text-slate-400 block mt-1" dateTime={a.date}>
-                {a.date}
-              </time>
-            )}
-            {a.summary && (
-              <p className="text-sm text-slate-300 mt-2 line-clamp-3">{a.summary}</p>
-            )}
-          </div>
-        </Link>
-      ))}
-    </div>
+            {a.image ? (
+              <img
+                src={a.image}
+                alt={a.imageAlt || a.title}
+                className="w-full h-40 object-cover rounded-md mb-2"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : null}
+            <h3 className="font-medium">{a.title}</h3>
+            {a.summary ? (
+              <p className="text-sm opacity-80 mt-1 line-clamp-3">{a.summary}</p>
+            ) : null}
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
