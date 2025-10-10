@@ -79,9 +79,6 @@ export default function ArticleDetailPage({ params }) {
 
         <style>{proseCss}</style>
 
-        {/* Ad 1 */}
-        <AdBox slot="YOUR_SLOT_ID_1" />
-
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body }} />
 
         {/* Verder lezen via SERVER wrapper */}
@@ -91,9 +88,6 @@ export default function ArticleDetailPage({ params }) {
           limit={4}
           title="More articles"
         />
-
-        {/* Ad 2 */}
-        <AdBox slot="YOUR_SLOT_ID_2" />
 
         <footer style={{ display: "grid", gap: 10 }}>
           <ShareBar url={url} title={article.title} summary={article.summary} />
