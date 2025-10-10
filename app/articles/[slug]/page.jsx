@@ -1,26 +1,27 @@
 // app/articles/[slug]/page.jsx
+export const runtime = "nodejs";
+
 import { getArticle } from "@/lib/articles";
 import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
-import AdBox from "@/components/AdBox";
 
 const SITE = "https://www.eudebtmap.com";
 
 export async function generateMetadata({ params }) {
   const a = getArticle(params.slug);
+  const url = `${SITE}/articles/${params.slug}`;
+
   if (!a) {
     return {
       title: "Article • EU Debt Map",
-      alternates: { canonical: `${SITE}/articles/${params.slug}` },
-      openGraph: { url: `${SITE}/articles/${params.slug}` },
+      alternates: { canonical: url },
+      openGraph: { url },
     };
   }
 
-  const url = `${SITE}/articles/${params.slug}`;
   const og = articleOgImage(a);
-
   return {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
@@ -59,8 +60,35 @@ export default function ArticleDetailPage({ params }) {
     .articleProse code{ background:#0b1220; padding:.1rem .3rem; border-radius:6px; }
   `;
 
+  // --- JSON-LD (NewsArticle fallback op Article)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.summary || undefined,
+    datePublished: new Date(article.date).toISOString(),
+    dateModified: new Date(article.date).toISOString(),
+    inLanguage: article.lang || "en",
+    mainEntityOfPage: url,
+    author: { "@type": "Organization", name: "EU Debt Map" },
+    publisher: {
+      "@type": "Organization",
+      name: "EU Debt Map",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/icons/icon-512.png`, // update naar jouw logo-pad
+        width: 512,
+        height: 512
+      }
+    },
+    image: article.image ? [`${SITE}${article.image}`] : undefined
+  };
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      {/* JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
         <header style={{ display: "grid", gap: 8 }}>
           <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

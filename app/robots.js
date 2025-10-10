@@ -1,11 +1,16 @@
 // app/robots.js
 export default function robots() {
+  const base = "https://www.eudebtmap.com";
   return {
     rules: {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.eudebtmap.com/sitemap.xml",
-    host: "https://www.eudebtmap.com",
+    host: base,
+    // meerdere sitemaps mag als array
+    sitemap: [
+      `${base}/sitemap.xml`,
+      `${base}/news-sitemap.xml`,
+    ],
   };
 }
