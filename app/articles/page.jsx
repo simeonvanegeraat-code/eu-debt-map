@@ -2,7 +2,7 @@
 import { listArticles } from "@/lib/articles";
 import ArticlesShell from "@/components/ArticlesShell";
 
-export const runtime = "nodejs"; // fs gegarandeerd ok
+export const runtime = "nodejs";
 
 export const metadata = {
   title: "Articles & Analysis • EU Debt Map",
@@ -11,24 +11,14 @@ export const metadata = {
   alternates: { canonical: "https://www.eudebtmap.com/articles" },
   openGraph: {
     title: "Articles & Analysis • EU Debt Map",
-    description:
-      "Explainers and insights on EU government debt, built on Eurostat data.",
+    description: "Explainers and insights on EU government debt, built on Eurostat data.",
     url: "https://www.eudebtmap.com/articles",
     siteName: "EU Debt Map",
     type: "website",
   },
 };
 
-export default function ArticlesPage({ searchParams }) {
-  const all = listArticles(); // al gesorteerd: newest first
-  const initialTag = searchParams?.tag ? String(searchParams.tag) : "All";
-  const initialQ = searchParams?.q ? String(searchParams.q) : "";
-
-  return (
-    <ArticlesShell
-      articles={all}
-      initialTag={initialTag}
-      initialQ={initialQ}
-    />
-  );
+export default function ArticlesPage() {
+  const all = listArticles(); // al newest-first
+  return <ArticlesShell articles={all} />;
 }
