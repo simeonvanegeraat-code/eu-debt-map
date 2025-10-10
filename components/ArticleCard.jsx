@@ -1,98 +1,135 @@
-// components/ArticleCard.jsx
-import Link from "next/link";
-import { articleImage } from "@/lib/media";
+"use client";
 
-function formatDate(iso) {
-  try {
-    return new Intl.DateTimeFormat("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(iso));
-  } catch {
-    return iso || "";
-  }
+import Link from "next/link";
+
+function clamp(txt, n = 2) {
+  return (
+    <span style={{
+      display: "-webkit-box",
+      WebkitLineClamp: n,
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden"
+    }}>{txt}</span>
+  );
 }
 
 export default function ArticleCard({ article }) {
-  const src = articleImage(article, "cover");
-  const alt = article.imageAlt || article.title || "Article";
+  const {
+    slug,
+    title,
+    summary,
+    image,
+    imageAlt,
+    date,
+    tags = []
+  } = article || {};
 
   return (
-    <article
-      className="card"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "120px 1fr",
-        gap: 12,
-        alignItems: "start",
-      }}
+    <Link
+      href={`/articles/${slug}`}
+      className="article-card"
+      aria-label={title}
     >
-      {/* Thumbnail */}
-      {src ? (
-        <img
-          src={src}
-          alt={alt}
-          width={120}
-          height={120}
-          loading="lazy"
-          decoding="async"
-          style={{
-            width: 120,
-            height: 120,
-            objectFit: "cover",
-            borderRadius: 12,
-            border: "1px solid #1f2b3a",
-            background: "#0b1220",
-          }}
-        />
-      ) : (
-        <div
-          aria-hidden
-          title={alt}
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 12,
-            border: "1px solid #1f2b3a",
-            background:
-              "linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12))",
-            display: "grid",
-            placeItems: "center",
-            fontSize: 24,
-          }}
-        >
-          📊
+      {image ? (
+        <div className="thumb">
+          <img
+            src={image}
+            alt={imageAlt || title}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
-      )}
+      ) : null}
 
-      {/* Tekst */}
-      <div style={{ display: "grid", gap: 6, alignContent: "start" }}>
-        <div className="tag" style={{ opacity: 0.9 }}>
-          {formatDate(article.date)}{" "}
-          {(article.tags || []).slice(0, 4).map((t) => (
-            <span key={t} className="tag" style={{ marginLeft: 6 }}>
-              {t}
-            </span>
+      <div className="body">
+        <div className="meta">
+          <time dateTime={date}>
+            {new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+              .format(new Date(date))}
+          </time>
+          {tags.slice(0,2).map((t) => (
+            <span key={t} className="pill">{t}</span>
           ))}
         </div>
 
-        <h3 style={{ margin: 0, lineHeight: 1.25 }}>
-          <Link href={`/articles/${article.slug}`}>{article.title}</Link>
-        </h3>
-
-        {article.summary && (
-          <p className="tag" style={{ margin: 0 }}>
-            {article.summary}
-          </p>
-        )}
-
-        <div>
-          <Link href={`/articles/${article.slug}`} className="tag">
-            Read more →
-          </Link>
-        </div>
+        <h3 className="title">{title}</h3>
+        {summary ? <p className="excerpt">{clamp(summary, 3)}</p> : null}
+        <span className="more">Read more →</span>
       </div>
-    </article>
+
+      <style>{`
+        .article-card{
+          display:flex;
+          flex-direction:column;
+          border:1px solid var(--border);
+          border-radius:12px;
+          overflow:hidden;
+          background:#fff;
+          transition:box-shadow .15s ease, transform .05s ease;
+        }
+        .article-card:hover{ box-shadow:var(--shadow-sm); transform:translateY(-1px); }
+
+        /* Thumb: altijd 16:9, vult breedte, geen rare hoogtes */
+        .thumb{
+          width:100%;
+          aspect-ratio:16/9;
+          background:#eef3ff;
+          overflow:hidden;
+        }
+        .thumb img{
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          display:block;
+        }
+
+        .body{
+          display:grid;
+          gap:6px;
+          padding:10px;
+        }
+
+        .meta{
+          display:flex;
+          flex-wrap:wrap;
+          gap:6px;
+          align-items:center;
+          font-size:12px;
+          color:#334155;
+          opacity:.9;
+        }
+        .pill{
+          padding:2px 8px;
+          border-radius:999px;
+          border:1px solid #e5e7eb;
+          background:#f8fafc;
+          font-weight:600;
+        }
+
+        .title{
+          margin:0;
+          font-size:16px;
+          line-height:1.25;
+        }
+        .excerpt{
+          margin:0;
+          color:#475569;
+          font-size:14px;
+          line-height:1.5;
+        }
+        .more{
+          margin-top:4px;
+          font-size:13px;
+          color:#1d4ed8;
+          font-weight:600;
+        }
+
+        /* Compactere layout op heel kleine schermen */
+        @media (max-width: 380px){
+          .title{ font-size:15px; }
+          .excerpt{ font-size:13px; }
+        }
+      `}</style>
+    </Link>
   );
 }

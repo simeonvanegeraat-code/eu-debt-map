@@ -3,9 +3,8 @@
 
 import Link from "next/link";
 import ArticleCard from "@/components/ArticleCard";
-import { articleImage } from "@/lib/media";
 
-const THUMB = 120; // één plek om de thumbnailmaat te wijzigen
+const THUMB = 120; // formaat van de thumbnail in de featured-kaart
 
 function formatDate(iso) {
   try {
@@ -19,46 +18,45 @@ function formatDate(iso) {
   }
 }
 
-function SquareThumb({ article, alt }) {
-  const src = articleImage(article, "cover");
-  if (src) {
+function SquareThumb({ src, alt }) {
+  if (!src) {
     return (
-      <img
-        src={src}
-        alt={alt}
-        width={THUMB}
-        height={THUMB}
-        loading="lazy"
-        decoding="async"
+      <div
+        aria-hidden
+        title={alt}
         style={{
           width: THUMB,
           height: THUMB,
-          objectFit: "cover",
           borderRadius: 12,
-          border: "1px solid #1f2b3a",
-          background: "#0b1220",
+          border: "1px solid #e5e7eb",
+          background:
+            "linear-gradient(135deg, rgba(37,99,235,.12), rgba(99,102,241,.10))",
+          display: "grid",
+          placeItems: "center",
+          fontSize: 24,
         }}
-      />
+      >
+        📊
+      </div>
     );
   }
   return (
-    <div
-      aria-hidden
-      title={alt}
+    <img
+      src={src}
+      alt={alt}
+      width={THUMB}
+      height={THUMB}
+      loading="lazy"
+      decoding="async"
       style={{
         width: THUMB,
         height: THUMB,
+        objectFit: "cover",
         borderRadius: 12,
-        border: "1px solid #1f2b3a",
-        background:
-          "linear-gradient(135deg, rgba(37,99,235,.18), rgba(99,102,241,.12))",
-        display: "grid",
-        placeItems: "center",
-        fontSize: 24,
+        border: "1px solid #e5e7eb",
+        background: "#f8fafc",
       }}
-    >
-      📊
-    </div>
+    />
   );
 }
 
@@ -87,7 +85,7 @@ export default function ArticlesShell({ articles = [] }) {
             alignItems: "start",
           }}
         >
-          <SquareThumb article={featured} alt={featured.title} />
+          <SquareThumb src={featured.image} alt={featured.imageAlt || featured.title} />
           <div style={{ display: "grid", gap: 8, alignContent: "start" }}>
             <div className="tag" style={{ opacity: 0.9 }}>
               Featured · {formatDate(featured.date)}
@@ -95,9 +93,11 @@ export default function ArticlesShell({ articles = [] }) {
             <h2 style={{ margin: 0, lineHeight: 1.25 }}>
               <Link href={`/articles/${featured.slug}`}>{featured.title}</Link>
             </h2>
+
             {featured.summary && (
-              <div style={{ color: "#c8d1dc" }}>{featured.summary}</div>
+              <div style={{ color: "#475569" }}>{featured.summary}</div>
             )}
+
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
               {(featured.tags || []).slice(0, 4).map((t) => (
                 <span key={t} className="tag">
@@ -105,6 +105,7 @@ export default function ArticlesShell({ articles = [] }) {
                 </span>
               ))}
             </div>
+
             <div style={{ marginTop: 8 }}>
               <Link href={`/articles/${featured.slug}`} className="tag">
                 Read more →
@@ -115,20 +116,31 @@ export default function ArticlesShell({ articles = [] }) {
       )}
 
       {/* GRID */}
-      <section
-        className="card"
-        style={{
-          display: "grid",
-          gap: 12,
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        }}
-      >
-        {rest.length > 0 ? (
-          rest.map((a) => <ArticleCard key={a.slug} article={a} />)
-        ) : (
-          <div className="tag">No other articles yet.</div>
-        )}
+      <section className="card">
+        <div className="articles-grid">
+          {rest.length > 0 ? (
+            rest.map((a) => <ArticleCard key={a.slug} article={a} />)
+          ) : (
+            <div className="tag">No other articles yet.</div>
+          )}
+        </div>
       </section>
+
+      {/* Page-scoped CSS */}
+      <style>{`
+        /* Responsive grid – netjes op mobiel */
+        .articles-grid{
+          display:grid;
+          gap:12px;
+          grid-template-columns: 1fr; /* mobiel: 1 kolom */
+        }
+        @media (min-width: 640px){
+          .articles-grid{ grid-template-columns: 1fr 1fr; } /* tablet: 2 kolommen */
+        }
+        @media (min-width: 1024px){
+          .articles-grid{ grid-template-columns: 1fr 1fr 1fr; } /* desktop: 3 kolommen */
+        }
+      `}</style>
     </main>
   );
 }
