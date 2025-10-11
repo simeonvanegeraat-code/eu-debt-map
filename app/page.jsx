@@ -137,7 +137,7 @@ export default function HomePage() {
     sameAs: ["https://www.eudebtmap.com/"],
   };
 
-  // Light-styles voor mapfooter pills (bewust lokaal gehouden)
+  // Light-styles voor mapfooter pills
   const s = {
     mapFooter: {
       marginTop: 12,
@@ -261,7 +261,6 @@ export default function HomePage() {
             marginTop: 8,
           }}
         >
-          {/* Largest debt – live */}
           {largestDebt ? (
             <HighlightTicker
               label="Largest debt"
@@ -274,7 +273,6 @@ export default function HomePage() {
             <div className="tag">—</div>
           )}
 
-          {/* Fastest growing – live */}
           {fastestGrowing ? (
             <HighlightTicker
               label="Fastest growing"
@@ -282,7 +280,7 @@ export default function HomePage() {
               name={fastestGrowing.name}
               start={fastestGrowing.last_value_eur}
               perSecond={perSecondForCountry(fastestGrowing)}
-              accent="var(--bad)" // forceer rood accent voor “growing”
+              accent="var(--bad)"
             />
           ) : (
             <div className="tag">—</div>
@@ -300,7 +298,7 @@ export default function HomePage() {
         <div>
           <QuickList
             items={quickItems}
-            initialCount={8}
+            initialCount={quickItems.length} // ✅ toon alles standaard
             strings={{
               title: "Quick list",
               showAll: "Show all",
