@@ -105,7 +105,39 @@ export default function HomePage() {
 
   const topArticles = listArticles().slice(0, 3);
 
-  // === LIGHT legenda/CTA styles (geen dark leftovers) ===
+  const responsiveCss = `
+    .ql-articles{
+      display:grid;
+      gap:12px;
+      grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr);
+    }
+    @media (max-width: 920px){
+      .ql-articles{ grid-template-columns: 1fr !important; }
+    }
+  `;
+
+  // --- JSON-LD (Website + Organization) ---
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    url: "https://www.eudebtmap.com/",
+    name: "EU Debt Map",
+    inLanguage: "en",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://www.eudebtmap.com/country/{country}",
+      "query-input": "required name=country",
+    },
+  };
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "EU Debt Map",
+    url: "https://www.eudebtmap.com/",
+    sameAs: ["https://www.eudebtmap.com/"],
+  };
+
+  // Light-styles voor mapfooter pills (bewust lokaal gehouden)
   const s = {
     mapFooter: {
       marginTop: 12,
@@ -151,40 +183,6 @@ export default function HomePage() {
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
   };
 
-  const responsiveCss = `
-    .ql-articles{
-      display:grid;
-      gap:12px;
-      grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr);
-    }
-    @media (max-width: 920px){
-      .ql-articles{ grid-template-columns: 1fr !important; }
-    }
-  `;
-
-  // --- JSON-LD (Website + Organization) voor betere vindbaarheid ---
-  const websiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    url: "https://www.eudebtmap.com/",
-    name: "EU Debt Map",
-    inLanguage: "en",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://www.eudebtmap.com/country/{country}",
-      "query-input": "required name=country",
-    },
-  };
-  const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "EU Debt Map",
-    url: "https://www.eudebtmap.com/",
-    sameAs: [
-      "https://www.eudebtmap.com/",
-    ],
-  };
-
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       {/* JSON-LD */}
@@ -192,31 +190,27 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
 
       {/* === HERO === */}
-      <section
-        className="card"
-        style={{ gridColumn: "1 / -1", display: "grid", gap: 12, alignItems: "stretch" }}
-        aria-labelledby="page-title"
-      >
-        <div style={{ display: "grid", gap: 6 }}>
-          {/* ✅ Sterke H1 */}
-          <h1 id="page-title" style={{ margin: 0 }}>
-            Live EU Government Debt Map – National Debt by Country
+      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
+        <header>
+          <h1 id="page-title" className="hero-title">
+            Live EU Government Debt Map
           </h1>
-          <p className="tag" style={{ margin: 0 }}>
+          <p className="hero-lede">
             Interactive EU-27 map with per-country ticking estimates based on the last two Eurostat
             reference periods.
           </p>
-          <p className="tag" style={{ margin: 0 }}>
-            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.
+          <p className="tag" style={{ marginTop: 6 }}>
+            Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educational
+            visualization, not an official statistic.
           </p>
-        </div>
+        </header>
 
         {/* EU-27 Total (live) */}
         <EUTotalTicker />
       </section>
 
       {/* === MAP === */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <h2 style={{ marginTop: 0 }}>EU overview</h2>
 
         <div className="mapWrap" role="region" aria-label="Interactive EU map">
@@ -242,32 +236,22 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ✅ 150–200 woorden SEO-tekst onder de kaart */}
+        {/* Korte uitleg onder de kaart (SEO) */}
         <div className="tag" style={{ marginTop: 14, lineHeight: 1.7 }}>
-          <h2 style={{ margin: "8px 0" }}>EU debt explained in simple terms</h2>
+          <h3 style={{ margin: "8px 0" }}>EU debt explained in simple terms</h3>
           <p style={{ margin: 0 }}>
             This EU Debt Map shows the national debt of all EU-27 countries in real time. Using
             Eurostat as a baseline, each country’s latest official figure is extrapolated per second
-            to create a live, ticking estimate. The goal is clarity: a fast, visual way to compare
-            government debt across the European Union and understand how it changes over time. Click
-            any country on the map to drill into its numbers and see whether debt is rising or
-            falling. You can compare large economies such as France, Germany, and Italy with smaller
-            member states, and observe different trends across the Eurozone. While this is an
-            educational visualization—not an official statistic—it provides a timely overview of
-            debt levels and growth dynamics that shape interest rates, inflation, fiscal policy, and
-            the broader EU economy in 2025. For methodology and data notes, explore the country pages
-            and articles linked below.
+            to create a live, ticking estimate. Click any country to drill into its numbers and see
+            whether debt is rising or falling. This is an educational visualization—not an official
+            statistic.
           </p>
         </div>
       </section>
 
-      {/* === HIGHLIGHTS (nu live tikkend) === */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        {/* ✅ Sterke H2’s voor SEO */}
-        <div style={{ display: "grid", gap: 8 }}>
-          <h2 style={{ margin: 0 }}>Largest EU debts in 2025</h2>
-          <h2 style={{ margin: 0 }}>Fastest growing debt in the Eurozone</h2>
-        </div>
+      {/* === HIGHLIGHTS === */}
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+        <h2 style={{ marginTop: 0 }}>Highlights</h2>
 
         <div
           style={{
@@ -305,10 +289,10 @@ export default function HomePage() {
           )}
         </div>
 
-        <div style={{ marginTop: 12 }} className="tag">
-          Government debt affects interest rates, inflation, and the stability of the EU economy.
-          This project makes those big numbers visible at a glance.
-        </div>
+        <p className="tag" style={{ marginTop: 12 }}>
+          Government debt shapes interest rates, inflation, fiscal policy, and the broader EU
+          economy. These live tickers surface the biggest movements at a glance.
+        </p>
       </section>
 
       {/* === QUICK LIST + LATEST ARTICLES === */}
@@ -329,7 +313,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="card" style={{ display: "grid", gap: 10, alignContent: "start" }}>
+        <div className="card section" style={{ alignContent: "start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
             <Link href="/articles" className="tag">View all →</Link>
@@ -344,14 +328,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* (Optioneel) mini-FAQ voor extra SEO/featured snippets */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
+      {/* Mini-FAQ (extra SEO) */}
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <h2 style={{ marginTop: 0 }}>FAQ: EU government debt</h2>
+
         <h3 style={{ marginBottom: 6 }}>How is the live estimate calculated?</h3>
         <p className="tag" style={{ marginTop: 0 }}>
           We interpolate between the last two Eurostat reference periods and extrapolate per second.
           Country pages include the baseline and trend indicator.
         </p>
+
         <h3 style={{ marginBottom: 6 }}>Is this an official statistic?</h3>
         <p className="tag" style={{ marginTop: 0 }}>
           No. It’s an educational visualization based on official data to improve understanding and

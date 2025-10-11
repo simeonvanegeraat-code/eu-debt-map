@@ -1,7 +1,7 @@
 /* ===========================
    Fonts (UI + Numbers)
    =========================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
 
 /* ===========================
    Global tokens & resets
@@ -20,21 +20,30 @@
   --accent-weak:#cfe0ff;
 
   --ok:#22c55e;
-  --warn:#f59e0b; /* NIEUW: amber voor 60–90% */
+  --warn:#f59e0b; /* 60–90% */
   --bad:#ef4444;
 
   /* layout */
   --radius: 16px;
   --radius-sm: 10px;
 
-  /* schaduwen (licht) */
-  --shadow-sm: 0 1px 1px rgba(0,0,0,.10), 0 1px 6px rgba(0,0,0,.08);
-  --shadow-md: 0 6px 18px rgba(0,0,0,.12);
+  /* schaduwen (licht) – iets subtieler, strakker */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 12px rgba(15, 23, 42, .05);
+  --shadow-md: 0 10px 24px rgba(15, 23, 42, .10);
 
   /* typografie */
+  --font-display: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
   --font-system: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
   --leading: 1.65;
   --leading-tight: 1.2;
+
+  /* schaal met clamp(): prettige responsiviteit */
+  --fs-body: clamp(15px, 0.35vw + 14px, 18px);
+  --fs-sm: clamp(13px, 0.25vw + 12px, 15px);
+  --fs-h3: clamp(18px, 0.8vw + 16px, 22px);
+  --fs-h2: clamp(22px, 1.2vw + 18px, 28px);
+  --fs-h1: clamp(28px, 2vw + 20px, 40px);
+  --fs-hero: clamp(36px, 4vw + 14px, 56px);
 
   /* spacing scale (8pt-ish) */
   --sp-1: 6px;
@@ -70,21 +79,24 @@ html,body{
   width:100%; max-width:100%;
   background:var(--bg); color:var(--fg);
   font-family: var(--font-system);
+  font-size: var(--fs-body);
+  line-height: var(--leading);
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   text-rendering: optimizeLegibility;
-  -webkit-text-size-adjust: 100%; /* voorkomt iOS auto-zoom */
-  overflow-x: hidden;             /* geen horizontale scroll op mobiel */
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 img{ max-width:100%; height:auto; display:block; }
 
 /* Links */
 a{
   color: var(--accent);
-  text-underline-offset: 2px;
-  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
 }
-a:hover{ text-decoration: underline; }
-::selection{ background: rgba(122,182,255,.25); }
+a:hover{ text-decoration-color: var(--accent); }
+::selection{ background: color-mix(in oklab, var(--accent) 25%, transparent); }
 
 /* Toegankelijke focusring */
 :focus-visible{
@@ -105,34 +117,74 @@ a:hover{ text-decoration: underline; }
 ::-webkit-scrollbar-track{ background:transparent; }
 
 /* ===========================
-   Typography helpers
+   Typography
    =========================== */
-h1,h2,h3,h4{ line-height: var(--leading-tight); margin: 0 0 var(--sp-3) 0; }
-p{ line-height: var(--leading); margin: var(--sp-3) 0; }
-.tag{ color:var(--muted); font-size:.85rem; }
+h1,h2,h3,h4{
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--sp-3) 0;
+  letter-spacing: -0.015em;
+}
+h1{ font-size: var(--fs-h1); }
+h2{ font-size: var(--fs-h2); }
+h3{ font-size: var(--fs-h3); }
+p{ margin: var(--sp-3) 0; }
+.tag{ color:var(--muted); font-size:var(--fs-sm); }
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .num{ font-variant-numeric: tabular-nums; }
 
+/* Hero varianten voor de home */
+.hero-title{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-hero);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #2563eb, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 var(--sp-3) 0;
+}
+.hero-lede{
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: clamp(16px, 0.4vw + 14px, 20px);
+}
+
 /* Tickers */
 .ticker-hero{
-  font-family: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(2.2rem, 4.8vw, 3.4rem);
   letter-spacing: -0.5px;
   color: var(--accent);
 }
 .ticker-xl{
-  font-family: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(1.4rem, 3.2vw, 2rem);
   letter-spacing: -0.25px;
 }
 
+/* Kleine typografische utilities */
+.eyebrow{
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: var(--fs-sm);
+  color: var(--accent);
+}
+.lede{ font-size: clamp(16px,0.5vw + 14px,20px); color: var(--muted); }
+
 /* ===========================
    Layout helpers
    =========================== */
-.container{ max-width: 1180px; margin:0 auto; padding: var(--sp-6); }
-@media (max-width: 720px){ .container{ padding: var(--sp-5); } }
+.container{ max-width: 1140px; margin:0 auto; padding: var(--sp-7) var(--sp-6); }
+@media (max-width: 720px){ .container{ padding: var(--sp-6) var(--sp-5); } }
+
+.section{ display:grid; gap: var(--sp-6); }
+.section--tight{ gap: var(--sp-4); }
 
 .card{
   background: var(--card);
@@ -153,7 +205,7 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
 /* Buttons */
 .btn{
   display:inline-flex; align-items:center; gap:8px;
-  background: linear-gradient(180deg, #e5e7eb, #dbe3ea);
+  background: linear-gradient(180deg, #eef2f6, #e5e7eb);
   border: 1px solid var(--border);
   padding: 10px 14px;
   border-radius: var(--radius-sm);
@@ -161,11 +213,15 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
   box-shadow: var(--shadow-sm);
   transition: transform .08s ease, background .2s ease, border-color .2s ease;
 }
-.btn:hover{ background:#eef2f6; border-color:#cbd5e1; }
+.btn:hover{ background:#f3f6fb; border-color:#cbd5e1; }
 .btn:active{ transform: translateY(1px); }
 
 /* Map wrapper */
-.mapWrap{ overflow:hidden; border-radius: 14px; }
+.mapWrap{
+  overflow:hidden; border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
 
 /* Advertentiekaart + vaste slot-hoogte (voorkomt CLS) */
 .ad-card{
@@ -175,13 +231,9 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
 }
 .ad-slot{
   display:block;
-  min-height: 280px;           /* reserveer ruimte voor AdSense */
+  min-height: 280px; /* reserveer ruimte voor AdSense */
   width: 100%;
-  background: repeating-linear-gradient(
-    45deg,
-    #f3f4f6, #f3f4f6 10px,
-    #ffffff 10px, #ffffff 20px
-  );
+  background: repeating-linear-gradient(45deg,#f3f4f6, #f3f4f6 10px,#ffffff 10px, #ffffff 20px);
   border: 1px dashed #e5e7eb;
   border-radius: 12px;
 }
@@ -198,7 +250,6 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
   background: var(--header-bg);
   color: var(--header-fg);
 }
-
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap: var(--sp-4); }
 
 .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
@@ -248,11 +299,11 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
    =========================== */
 .article-header{ margin:8px 0 12px 0; }
 .article-title{ margin:0 0 6px 0; line-height:1.2; }
-.article-meta{ margin:0; color:var(--muted); font-size:.95rem; }
+.article-meta{ margin:0; color:var(--muted); font-size:var(--fs-sm); }
 
 .article-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 14px 0; }
 
-.article-body{ margin-top:8px; line-height:1.7; }
+.article-body{ margin-top:8px; line-height:1.75; }
 .article-body h2{ margin:18px 0 8px; }
 .article-body p{ margin:8px 0; }
 
@@ -264,7 +315,7 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
 
 .article-body img{ max-width:100%; height:auto; display:block; border-radius:10px; }
 .article-body .caption{
-  font-size:0.9rem; opacity:0.85; text-align:center; margin-top:6px; color:var(--muted);
+  font-size:var(--fs-sm); opacity:0.85; text-align:center; margin-top:6px; color:var(--muted);
 }
 
 /* ===========================
@@ -276,7 +327,7 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
   max-height:320px; object-fit:cover;
 }
 .figure figcaption{
-  font-size:.85rem; opacity:.8; margin-top:.25rem; text-align:center; color:var(--muted);
+  font-size:var(--fs-sm); opacity:.8; margin-top:.25rem; text-align:center; color:var(--muted);
 }
 .figure--right{ float:none; max-width:100%; margin:0 auto 1rem auto; }
 @media (min-width: 900px){
@@ -296,7 +347,7 @@ p{ line-height: var(--leading); margin: var(--sp-3) 0; }
 .chart-image{ flex:1; min-width:260px; }
 .chart-image img{ margin:0 auto; }
 .chart-table table{
-  width:100%; border-collapse:collapse; font-size:14px;
+  width:100%; border-collapse:collapse; font-size:var(--fs-sm);
   background:var(--card); border:1px solid var(--border);
   border-radius:12px; overflow:hidden;
 }

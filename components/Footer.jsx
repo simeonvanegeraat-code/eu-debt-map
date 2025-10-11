@@ -35,14 +35,16 @@ export default function Footer() {
             gap: 12,
             padding: "16px 18px",
             borderRadius: 16,
-            border: "1px solid #1f2b3a",
-            background: "#0b1220",
+            border: "1px solid var(--border)",
+            background: "var(--card)",
+            boxShadow: "var(--shadow-sm)",
+            color: "var(--muted)",
           }}
         >
           <span>
-            © {year} <strong>EU Debt Map</strong>
+            © {year} <strong style={{ color: "var(--fg)" }}>EU Debt Map</strong>
           </span>
-          <span style={{ opacity: 0.75 }}>
+          <span style={{ opacity: 0.9 }}>
             Independent educational visualization based on Eurostat data.
           </span>
         </div>
@@ -56,8 +58,9 @@ export default function Footer() {
             gap: 14,
             padding: "14px 18px",
             borderRadius: 16,
-            border: "1px solid #1f2b3a",
-            background: "#0b1220",
+            border: "1px solid var(--border)",
+            background: "var(--card)",
+            boxShadow: "var(--shadow-sm)",
             flexWrap: "wrap",
           }}
         >
@@ -86,10 +89,18 @@ export default function Footer() {
           padding: 6px 10px;
           border-radius: 10px;
           border: 1px solid transparent;
+          color: var(--accent);
+          text-decoration: none;
+          text-underline-offset: 3px;
         }
         .footer-link:hover {
-          border-color: #2b3a4f;
-          background: #0d1424;
+          background: #f8fafc;
+          border-color: var(--header-border-strong);
+          text-decoration: underline;
+        }
+        .footer-link:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 3px;
         }
       `}</style>
     </footer>
