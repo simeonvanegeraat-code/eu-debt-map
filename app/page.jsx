@@ -190,10 +190,9 @@ export default function HomePage() {
           <h1
             id="page-title"
             className="hero-title"
-            /* donkerder groen + iets kleinere max op mobiel voor contrast/leesbaarheid */
             style={{
-              fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)",
-              background: "linear-gradient(90deg, #2563eb, #00875a)",
+              fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)", // iets kleinere max op mobiel
+              background: "linear-gradient(90deg, #2563eb, #00875a)", // donkerder groen voor contrast
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               marginBottom: 8,
@@ -202,25 +201,34 @@ export default function HomePage() {
             Live EU Government Debt Map
           </h1>
 
-          {/* SEO-verhaal: semibold eerste zin */}
+          {/* Korte intro met semibold eerste zin */}
           <p className="hero-lede" style={{ maxWidth: 760 }}>
             <span style={{ fontWeight: 600 }}>
               If you added together every euro of public debt from all 27 EU countries, you’d get the number shown below — a live, ticking estimate that never stands still.
-            </span>{" "}
-            The EU Debt Map visualizes the combined national debts of the European Union in real time. Each country’s most recent Eurostat data point is used as a baseline, then projected second by second to show how fast public debt continues to grow (or, in rare cases, shrink). This isn’t just a statistic — it’s a pulse of Europe’s financial health. Whether you’re comparing France to Germany, tracking Italy’s debt ratio, or exploring smaller economies like Estonia and Malta, this map translates complex fiscal data into an intuitive visual that updates every second.
+            </span>
           </p>
         </header>
 
-        {/* EU-27 Total (live) – extra ademruimte */}
+        {/* EU-27 Total (live) – direct onder de intro */}
         <div style={{ marginTop: 16 }}>
           <EUTotalTicker />
         </div>
 
-        {/* Bron: visueel gescheiden en iets lichter */}
+        {/* Uitlegblok onder de teller */}
+        <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
+          The EU Debt Map visualizes the combined national debts of the European Union in real time.
+          Each country’s most recent Eurostat data point is used as a baseline, then projected second by
+          second to show how fast public debt continues to grow (or, in rare cases, shrink). This isn’t
+          just a statistic — it’s a pulse of Europe’s financial health. Whether you’re comparing France
+          to Germany, tracking Italy’s debt ratio, or exploring smaller economies like Estonia and Malta,
+          this map translates complex fiscal data into an intuitive visual that updates every second.
+        </p>
+
+        {/* Bronregel onder de uitleg */}
         <p
           className="tag"
           style={{
-            marginTop: 12,
+            marginTop: 14,
             paddingTop: 10,
             borderTop: "1px solid var(--border)",
             color: "#4b5563",
