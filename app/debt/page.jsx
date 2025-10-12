@@ -1,13 +1,12 @@
 // app/debt/page.jsx
 import Link from "next/link";
-import CTASidebar from "@/components/CTASidebar";
 
 export async function generateMetadata() {
   const base = new URL("https://www.eudebtmap.com");
   const path = "/debt";
   const title = "What is Government Debt? • EU Debt Map";
   const description =
-    "Clear, friendly explainer of government debt: why countries borrow, what debt-to-GDP means, how debt changes over time, and why it matters for people and the economy.";
+    "Clear explainer of government debt: why countries borrow, what debt-to-GDP means, how debt changes over time, and why it matters for people and the economy.";
 
   return {
     metadataBase: base,
@@ -26,7 +25,7 @@ export async function generateMetadata() {
     openGraph: {
       title,
       description:
-        "Government debt explained in plain English with examples, FAQs, and links to official sources. Understand debt-to-GDP and how debt changes over time.",
+        "Government debt explained in plain English with examples, FAQs, and links to official sources.",
       type: "article",
       url: `${base}${path}`,
       siteName: "EU Debt Map",
@@ -45,7 +44,6 @@ export async function generateMetadata() {
 }
 
 export default function DebtExplainer() {
-  // JSON-LD: Article (+ light FAQ entities) for richer SERP
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -60,8 +58,18 @@ export default function DebtExplainer() {
     <main className="container grid" style={{ alignItems: "start" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
 
-      {/* HERO */}
-      <section className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
+      {/* ==== HERO (tekst + optionele afbeelding) ==== */}
+      <section
+        className="card"
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gap: 16,
+          alignItems: "center",
+          gridTemplateColumns: "1.2fr .8fr",
+        }}
+      >
+        {/* Tekstkolom */}
         <header style={{ maxWidth: 760 }}>
           <h1
             className="hero-title"
@@ -75,147 +83,242 @@ export default function DebtExplainer() {
           >
             What is Government Debt?
           </h1>
+
+          {/* Vetgedrukte eerste zin */}
           <p className="hero-lede" style={{ marginTop: 8 }}>
             <span style={{ fontWeight: 600 }}>
               Think of government debt as the price of big, long-term decisions spread over time —
               the roads we drive on, the hospitals we rely on, the shock absorbers in a crisis.
-            </span>{" "}
-            Countries borrow for the same reason families sometimes do: to invest today and pay back
-            gradually. The details matter — and that’s where debt-to-GDP, interest costs and
-            fiscal rules come in.
+            </span>
           </p>
+
+          {/* Witte regel voor vloeiende overgang */}
+          <div
+            aria-hidden
+            style={{
+              height: 8,
+              background: "#ffffff",
+              borderRadius: 6,
+              margin: "8px 0 6px",
+              boxShadow: "inset 0 0 0 1px var(--border)",
+            }}
+          />
+
+          {/* Rest van de intro – normale tekst, geen extra bold */}
+          <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
+            Countries borrow for similar reasons families do: invest today, pay back gradually.
+            The details matter — that’s where debt-to-GDP, interest costs and fiscal rules come in.
+          </p>
+
+          <div className="tag" style={{ marginTop: 8 }}>
+            Prefer the map?{" "}
+            <Link href="/" className="btn" style={{ padding: "6px 10px", marginLeft: 6 }}>
+              See the EU map →
+            </Link>
+          </div>
         </header>
 
-        {/* SHORT NAV / CONTEXT */}
-        <div className="tag" style={{ marginTop: 2 }}>
-          Prefer the map?{" "}
-          <Link href="/" className="btn" style={{ padding: "6px 10px", marginLeft: 6 }}>
-            See the EU map →
-          </Link>
+        {/* Afbeeldingskolom (vervang bron door je asset in /public) */}
+        <figure
+          style={{
+            display: "grid",
+            placeItems: "center",
+            background: "#f3f4f6",
+            border: "1px solid var(--border)",
+            borderRadius: 12,
+            padding: 12,
+            aspectRatio: "16/10",
+            overflow: "hidden",
+          }}
+        >
+          <img
+            src="/images/debt-hero.svg"
+            alt="Illustration: debt, GDP and interest over time"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+        </figure>
+      </section>
+
+      {/* ==== UITLEG ==== */}
+      <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
+        <section>
+          <h2 className="article-title">Why do governments borrow?</h2>
+          <p className="article-body">
+            Borrowing isn’t only patchwork — it’s how countries finance projects that outlast a single
+            budget and cushion the economy when shocks hit.
+          </p>
+          <ul>
+            <li>
+              <strong>Invest & build.</strong> Roads, rail, schools, hospitals, clean energy and defence.
+            </li>
+            <li>
+              <strong>Handle shocks.</strong> Recessions, disasters or pandemics can cut tax income while costs rise.
+            </li>
+            <li>
+              <strong>Smooth timing.</strong> Spending is lumpy; tax flows are steady. Debt bridges the gap.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="article-title">Debt-to-GDP, in plain words</h2>
+          <p>
+            Debt is reported in euros (<span className="mono">€</span>) and as a share of the economy:
+            the <em>debt-to-GDP ratio</em>. It puts debt in context by comparing it with what the economy
+            produces in a year.
+          </p>
+          <div
+            className="tag"
+            role="note"
+            style={{
+              marginTop: 8,
+              border: "1px solid var(--border)",
+              background: "#f9fafb",
+              padding: "10px 12px",
+              borderRadius: 10,
+            }}
+          >
+            <strong>Example.</strong> If GDP is <strong>€1 trillion</strong> and government debt is{" "}
+            <strong>€500 billion</strong>, debt-to-GDP equals <strong>50%</strong>.
+          </div>
+        </section>
+
+        <section>
+          <h2 className="article-title">Debt vs. deficit: what’s the difference?</h2>
+          <p>
+            <strong>Debt</strong> is the total outstanding stock from past borrowing. A{" "}
+            <strong>deficit</strong> is a yearly shortfall when spending exceeds revenue. Deficits add
+            to debt; surpluses can reduce it.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="article-title">Why does debt matter for people?</h2>
+          <p className="article-body">
+            Debt affects everyday life through three channels:
+          </p>
+          <ul>
+            <li>Interest costs — money spent on interest can’t fund schools or healthcare.</li>
+            <li>Policy room — lower interest bills give more space to invest or respond to shocks.</li>
+            <li>Stability — in the EU, debt and deficits are monitored to keep finances sustainable.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="article-title">How does debt change over time?</h2>
+          <p>Three forces shape debt-to-GDP:</p>
+          <ol>
+            <li>
+              <strong>Primary balance:</strong> budget before interest. Surpluses push debt down; deficits push it up.
+            </li>
+            <li>
+              <strong>Growth vs. interest:</strong> if growth outpaces the interest rate on debt, the ratio can stabilise or fall.
+            </li>
+            <li>
+              <strong>One-offs:</strong> bank rescues, asset sales, inflation shocks or FX moves (outside the euro).
+            </li>
+          </ol>
+        </section>
+
+        <section>
+          <h2 className="article-title">FAQ</h2>
+          <details>
+            <summary><strong>Who lends to governments?</strong></summary>
+            <p className="tag" style={{ marginTop: 8 }}>
+              Mainly investors who buy government bonds: banks, pension funds, insurers and sometimes
+              other countries or institutions.
+            </p>
+          </details>
+
+          <details>
+            <summary><strong>Is there a “safe” level of debt?</strong></summary>
+            <p className="tag" style={{ marginTop: 8 }}>
+              No single number fits all. In the EU, <strong>60% of GDP</strong> is often used as a guide,
+              but sustainability depends on growth, interest rates, demographics and policy.
+            </p>
+          </details>
+
+          <details>
+            <summary><strong>Where can I see current figures?</strong></summary>
+            <p className="tag" style={{ marginTop: 8 }}>
+              Use the{" "}
+              <Link href="/" className="btn" style={{ padding: "2px 8px" }}>
+                EU map
+              </Link>{" "}
+              and click a country for a live estimate based on the latest reference dates.
+            </p>
+          </details>
+
+          <p className="tag" style={{ marginTop: 10 }}>
+            Sources: Eurostat (government finance statistics) and national finance ministries. Educational overview; not investment advice.
+          </p>
+        </section>
+      </article>
+
+      {/* ==== Lichte, bijpassende “Explore more” in plaats van zwarte blokken ==== */}
+      <section
+        className="card"
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gap: 12,
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        }}
+      >
+        <div className="card" style={{ margin: 0 }}>
+          <h3 style={{ marginTop: 0 }}>Compare two countries</h3>
+          <p className="tag" style={{ marginTop: 6 }}>Open both pages to compare live figures.</p>
+          <div className="tag" style={{ display: "grid", gap: 6 }}>
+            <Link href="/country/DE">Germany</Link>
+            <Link href="/country/FR">France</Link>
+            <Link href="/country/IT">Italy</Link>
+            <Link href="/country/NL">Netherlands</Link>
+            <Link href="/country/ES">Spain</Link>
+          </div>
+        </div>
+
+        <div className="card" style={{ margin: 0 }}>
+          <h3 style={{ marginTop: 0 }}>Popular country pages</h3>
+          <p className="tag" style={{ marginTop: 6 }}>
+            Explore the live ticker and trend for each country.
+          </p>
+          <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link href="/country/DE" className="nav-link">DE Germany</Link>
+            <Link href="/country/FR" className="nav-link">FR France</Link>
+            <Link href="/country/IT" className="nav-link">IT Italy</Link>
+            <Link href="/country/ES" className="nav-link">ES Spain</Link>
+            <Link href="/country/NL" className="nav-link">NL Netherlands</Link>
+          </div>
+        </div>
+
+        <div className="card" style={{ margin: 0, display: "grid", gap: 8, alignContent: "start" }}>
+          <h3 style={{ marginTop: 0 }}>Learn more</h3>
+          <Link href="/" className="btn">See the EU map</Link>
+          <Link href="/methodology" className="btn">Methodology</Link>
         </div>
       </section>
 
-      {/* CORE EXPLAINER */}
-      <article className="card" style={{ gridColumn: "1 / -1" }}>
-        <h2 className="article-title">Why do governments borrow?</h2>
-        <p className="article-body">
-          Borrowing isn’t just about plugging gaps — it’s often about building the future and
-          smoothing the path to get there.
-        </p>
-        <ul>
-          <li>
-            <strong>Invest & build:</strong> roads, rail, schools, hospitals, clean energy and
-            defence — projects that last longer than a single budget year.
-          </li>
-          <li>
-            <strong>Handle shocks:</strong> recessions, natural disasters or pandemics can shrink tax
-            income and raise costs at the same time.
-          </li>
-          <li>
-            <strong>Smooth timing:</strong> spending needs are lumpy; tax revenue arrives steadily.
-            Debt helps bridge the timing gap.
-          </li>
-        </ul>
-
-        <h2 className="article-title">Debt-to-GDP, explained simply</h2>
-        <p>
-          Debt is reported in euros (<span className="mono">€</span>) and as a share of the economy:
-          the <strong>debt-to-GDP ratio</strong>. It puts a country’s debt in context by comparing it
-          to what the economy produces in a year.
-        </p>
-        <div
-          className="tag"
-          role="note"
-          style={{
-            marginTop: 8,
-            border: "1px solid var(--border)",
-            background: "#f9fafb",
-            padding: "10px 12px",
-            borderRadius: 10,
-          }}
-        >
-          <strong>Example</strong> — If an economy produces <strong>€1 trillion</strong> (GDP) and
-          the government owes <strong>€500 billion</strong>, then debt-to-GDP is{" "}
-          <strong>50%</strong>.
-        </div>
-        <p className="article-body" style={{ marginTop: 10 }}>
-          Ratios help compare across countries of different sizes — but they don’t tell the whole
-          story. Interest rates, economic growth and the maturity of the debt also matter.
-        </p>
-
-        <h2 className="article-title">Debt vs. deficit: what’s the difference?</h2>
-        <p>
-          <strong>Debt</strong> is the total stock — the sum of past borrowing that hasn’t been
-          repaid yet. A <strong>deficit</strong> is the yearly flow — when a government spends more
-          than it collects in taxes. Running deficits adds to the debt; running a surplus can reduce it.
-        </p>
-
-        <h2 className="article-title">Why does debt matter for people?</h2>
-        <ul>
-          <li>
-            <strong>Interest costs:</strong> the more you owe, the more you pay in interest — money
-            that can’t be used for schools, healthcare or tax cuts.
-          </li>
-          <li>
-            <strong>Policy room:</strong> lower debt and lower interest bills can give governments
-            more room to respond to shocks or invest.
-          </li>
-          <li>
-            <strong>Stability & rules:</strong> in the EU, debt and deficits are monitored to
-            support sustainable public finances and economic stability.
-          </li>
-        </ul>
-
-        <h2 className="article-title">How does debt change over time?</h2>
-        <p>Three forces drive the path of debt-to-GDP:</p>
-        <ol>
-          <li>
-            <strong>Primary balance:</strong> the budget before interest. Surpluses push debt down;
-            deficits push it up.
-          </li>
-          <li>
-            <strong>Interest rates vs. growth:</strong> if the economy grows faster than the interest
-            rate on debt, ratios can stabilise or fall more easily.
-          </li>
-          <li>
-            <strong>One-off factors:</strong> bank rescues, asset sales, inflation shocks or
-            exchange-rate moves (outside the euro) can shift the numbers.
-          </li>
-        </ol>
-
-        <h2 className="article-title">Common questions</h2>
-        <h3 style={{ marginBottom: 6 }}>Who lends to governments?</h3>
-        <p className="tag" style={{ marginTop: 0 }}>
-          Mostly investors who buy government bonds: banks, pension funds, insurance companies and,
-          at times, other countries or institutions.
-        </p>
-
-        <h3 style={{ marginBottom: 6 }}>Is there a single “safe” level of debt?</h3>
-        <p className="tag" style={{ marginTop: 0 }}>
-          No single magic number fits every country. In the EU, a <strong>60% of GDP</strong> guide
-          is often referenced, but sustainable levels depend on growth, interest rates, demographics
-          and policy choices.
-        </p>
-
-        <h3 style={{ marginBottom: 6 }}>Where can I see today’s figures?</h3>
-        <p className="tag" style={{ marginTop: 0 }}>
-          Use the{" "}
-          <Link href="/" className="btn" style={{ padding: "2px 8px" }}>
-            EU map
-          </Link>{" "}
-          and click a country for a live estimate based on the latest reference dates.
-        </p>
-
-        <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "12px 0" }} />
-
-        <p className="tag" style={{ marginTop: 6 }}>
-          Sources: Eurostat (government finance statistics) and national finance ministries. This
-          page is an educational overview — not investment advice or an official statistic.
-        </p>
-      </article>
-
-      {/* Contextual CTAs (reuse your component) */}
-      <CTASidebar lang="en" homeHref="/" methodologyHref="/methodology" />
+      {/* Lokale styles voor kleine tweaks */}
+      <style jsx>{`
+        /* Op small screens: hero in één kolom */
+        @media (max-width: 900px) {
+          section.card[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        details {
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: #f9fafb;
+          padding: 10px 12px;
+          margin: 8px 0;
+        }
+        details summary {
+          cursor: pointer;
+          list-style: none;
+        }
+        details summary::-webkit-details-marker { display: none; }
+      `}</style>
     </main>
   );
 }
