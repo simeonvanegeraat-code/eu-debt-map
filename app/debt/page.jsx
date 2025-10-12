@@ -123,9 +123,9 @@ export default function DebtExplainer() {
           }}
         >
           <img
-            src="/images/debt-hero.svg"
+            src="/images/debt-hero.jpg"
             alt="Illustration: debt, GDP and interest over time"
-            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }}
           />
         </figure>
       </section>
