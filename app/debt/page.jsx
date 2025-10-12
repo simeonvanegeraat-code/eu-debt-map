@@ -59,16 +59,7 @@ export default function DebtExplainer() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
 
       {/* ==== HERO (tekst + optionele afbeelding) ==== */}
-      <section
-        className="card"
-        style={{
-          gridColumn: "1 / -1",
-          display: "grid",
-          gap: 16,
-          alignItems: "center",
-          gridTemplateColumns: "1.2fr .8fr",
-        }}
-      >
+      <section className="card debt-hero" style={{ gridColumn: "1 / -1" }}>
         {/* Tekstkolom */}
         <header style={{ maxWidth: 760 }}>
           <h1
@@ -104,7 +95,7 @@ export default function DebtExplainer() {
             }}
           />
 
-          {/* Rest van de intro – normale tekst, geen extra bold */}
+          {/* Rest van de intro – normale tekst */}
           <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
             Countries borrow for similar reasons families do: invest today, pay back gradually.
             The details matter — that’s where debt-to-GDP, interest costs and fiscal rules come in.
@@ -222,7 +213,8 @@ export default function DebtExplainer() {
 
         <section>
           <h2 className="article-title">FAQ</h2>
-          <details>
+
+          <details className="debt-faq">
             <summary><strong>Who lends to governments?</strong></summary>
             <p className="tag" style={{ marginTop: 8 }}>
               Mainly investors who buy government bonds: banks, pension funds, insurers and sometimes
@@ -230,7 +222,7 @@ export default function DebtExplainer() {
             </p>
           </details>
 
-          <details>
+          <details className="debt-faq">
             <summary><strong>Is there a “safe” level of debt?</strong></summary>
             <p className="tag" style={{ marginTop: 8 }}>
               No single number fits all. In the EU, <strong>60% of GDP</strong> is often used as a guide,
@@ -238,7 +230,7 @@ export default function DebtExplainer() {
             </p>
           </details>
 
-          <details>
+          <details className="debt-faq">
             <summary><strong>Where can I see current figures?</strong></summary>
             <p className="tag" style={{ marginTop: 8 }}>
               Use the{" "}
@@ -255,7 +247,7 @@ export default function DebtExplainer() {
         </section>
       </article>
 
-      {/* ==== Lichte, bijpassende “Explore more” in plaats van zwarte blokken ==== */}
+      {/* ==== Lichte “Explore more” kaarten (vervanging voor de donkere blokken) ==== */}
       <section
         className="card"
         style={{
@@ -297,28 +289,6 @@ export default function DebtExplainer() {
           <Link href="/methodology" className="btn">Methodology</Link>
         </div>
       </section>
-
-      {/* Lokale styles voor kleine tweaks */}
-      <style jsx>{`
-        /* Op small screens: hero in één kolom */
-        @media (max-width: 900px) {
-          section.card[style*="grid-template-columns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        details {
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          background: #f9fafb;
-          padding: 10px 12px;
-          margin: 8px 0;
-        }
-        details summary {
-          cursor: pointer;
-          list-style: none;
-        }
-        details summary::-webkit-details-marker { display: none; }
-      `}</style>
     </main>
   );
 }
