@@ -20,7 +20,6 @@ export const metadata = {
   alternates: {
     canonical: "https://www.eudebtmap.com/",
   },
-  // ✅ Favicons & app icons (zorg dat de bestanden in /public staan)
   icons: {
     icon: [
       { url: "/eu_favicon_32.png", sizes: "32x32", type: "image/png" },
@@ -51,8 +50,12 @@ export default function RootLayout({ children }) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
 
-        {/* Manifest voor PWA/icons (optioneel maar aan te raden) */}
+        {/* Manifest voor PWA/icons */}
         <link rel="manifest" href="/manifest.webmanifest" />
+
+        {/* Performance: fonts sneller beschikbaar */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze (Funding Choices updatet dit) */}
         <Script id="consent-mode" strategy="beforeInteractive">
@@ -70,10 +73,7 @@ export default function RootLayout({ children }) {
         </Script>
 
         {/* 2) AdSense meta + preconnects */}
-        <meta
-          name="google-adsense-account"
-          content="ca-pub-9252617114074571"
-        />
+        <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
         <link
           rel="preconnect"
           href="https://pagead2.googlesyndication.com"
@@ -85,8 +85,12 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
-        {/* 3) Theme color (site is nu altijd licht) */}
+        {/* 3) Theme color (site is altijd licht) */}
         <meta name="theme-color" content="#ffffff" />
+
+        {/* Klein SEO/UX zetje */}
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="format-detection" content="telephone=no" />
 
         {/* 4) AdSense (Auto Ads). Consent Mode regelt opslag/consent. */}
         <Script
@@ -103,10 +107,19 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      {/* Kleuren/typografie via CSS-variabelen */}
       <body>
+        {/* Skip link voor toetsenbord/screenreaders (gestyled via .visually-hidden in globals.css) */}
+        <a href="#content" className="visually-hidden">
+          Skip to content
+        </a>
+
         <Header />
-        {children}
+
+        {/* Main landmark voor betere semantiek en navigatie */}
+        <main id="content" role="main">
+          {children}
+        </main>
+
         <Footer />
       </body>
     </html>

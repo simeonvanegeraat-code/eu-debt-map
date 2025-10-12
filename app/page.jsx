@@ -195,18 +195,30 @@ export default function HomePage() {
           <h1 id="page-title" className="hero-title">
             Live EU Government Debt Map
           </h1>
+
+          {/* ✨ SEO-verhaal onder de titel */}
           <p className="hero-lede">
-            Interactive EU-27 map with per-country ticking estimates based on the last two Eurostat
-            reference periods.
-          </p>
-          <p className="tag" style={{ marginTop: 6 }}>
-            Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educational
-            visualization, not an official statistic.
+            <strong>
+              If you combined every euro of government debt from all 27 EU countries into one figure,
+              you’d reach the number below — a live, ticking estimate that never stands still.
+            </strong>{" "}
+            The EU Debt Map visualizes the combined national debts of the European Union in real time.
+            Each country’s most recent Eurostat data point is used as a baseline, then projected
+            second by second to show how fast public debt continues to grow (or, in rare cases, shrink).
+            This isn’t just a statistic — it’s a pulse of Europe’s financial health. Whether you’re
+            comparing France to Germany, tracking Italy’s debt ratio, or exploring smaller economies
+            like Estonia and Malta, this map translates complex fiscal data into an intuitive visual
+            that updates every second.
           </p>
         </header>
 
         {/* EU-27 Total (live) */}
         <EUTotalTicker />
+
+        {/* 🔽 Bron verplaatst onder de teller */}
+        <p className="tag" style={{ marginTop: 8 }}>
+          Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educational visualization, not an official statistic.
+        </p>
       </section>
 
       {/* === MAP === */}
