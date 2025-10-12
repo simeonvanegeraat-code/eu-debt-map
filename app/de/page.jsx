@@ -1,67 +1,80 @@
 // app/de/page.jsx
 import Link from "next/link";
-import EuropeMap from "@/components/EuropeMap";
+import dynamic from "next/dynamic";
 import QuickList from "@/components/QuickList";
+import ArticleCard from "@/components/ArticleCard";
+import HighlightTicker from "@/components/HighlightTicker";
+import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
-import EUTotalTicker from "@/components/EUTotalTicker";
 
-// --- SEO / Metadata (DE) ---
-export const metadata = {
-  title: "EU Debt Map | Staatsverschuldung in der EU-27 erkunden",
-  description:
-    "Interaktive EU-Karte mit live aktualisierten Schätzungen der Staatsverschuldung pro Land. Basierend auf den letzten zwei Eurostat-Referenzquartalen.",
-  openGraph: {
-    title: "EU Debt Map",
-    description:
-      "Erkunde die Staatsverschuldung in der EU-27 mit einer live tickenden Schätzung pro Land.",
-    url: "https://eudebtmap.com/de",
-    siteName: "EU Debt Map",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "EU Debt Map",
-    description:
-      "Live-Schätzungen der EU-Staatsverschuldung auf Basis von Eurostat.",
-  },
-  metadataBase: new URL("https://eudebtmap.com"),
-  alternates: {
-    canonical: "https://eudebtmap.com/de",
-    languages: {
-      en: "https://eudebtmap.com/",
-      nl: "https://eudebtmap.com/nl",
-      de: "https://eudebtmap.com/de",
-      fr: "https://eudebtmap.com/fr",
-      "x-default": "https://eudebtmap.com/",
+// Nur Client-seitig rendern
+const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
+  ssr: false,
+  loading: () => (
+    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card">
+      Karte wird geladen…
+    </div>
+  ),
+});
+
+const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), { ssr: false });
+
+// --- SEO: generateMetadata (DE) ---
+export async function generateMetadata() {
+  const base = new URL("https://www.eudebtmap.com");
+  const title = "EU-Schuldenkarte – Live-Staatsschulden nach Land (EU-27, 2025)";
+  const description =
+    "Sehen Sie die aktuelle Staatsverschuldung der EU-Länder in Echtzeit. Interaktive EU-27-Karte mit laufenden Schätzungen und Vergleichen. Datenquelle: Eurostat.";
+
+  return {
+    metadataBase: base,
+    title,
+    description,
+    alternates: {
+      canonical: "https://www.eudebtmap.com/de",
+      languages: {
+        en: "https://www.eudebtmap.com/",
+        nl: "https://www.eudebtmap.com/nl",
+        de: "https://www.eudebtmap.com/de",
+        fr: "https://www.eudebtmap.com/fr",
+      },
     },
-  },
-};
-
-function formatEUR(v) {
-  return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 0 }).format(
-    Math.round(v)
-  );
+    openGraph: {
+      title,
+      description:
+        "Entdecken Sie die Staatsverschuldung der EU-Länder mit einer Live-Schätzung pro Land.",
+      url: "https://www.eudebtmap.com/de",
+      siteName: "EU Debt Map",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description:
+        "Live-Schätzungen der europäischen Staatsverschuldung basierend auf Eurostat-Daten.",
+    },
+  };
 }
 
-export default function HomePageDE() {
-  const valid = countries.filter(
-    (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
-  );
+// Wachstum pro Sekunde berechnen
+function perSecondForCountry(c) {
+  if (!c) return 0;
+  if (typeof c.per_second === "number") return c.per_second;
+  const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
+  if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
+    return delta / c.seconds_between;
+  }
+  const approxSeconds = 90 * 24 * 60 * 60;
+  return delta / approxSeconds;
+}
 
+export default function HomePage() {
+  const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
   const largestDebt =
-    valid.length > 0
-      ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b))
-      : null;
-
-  const withDelta = valid.map((c) => ({
-    ...c,
-    delta: c.last_value_eur - c.prev_value_eur,
-  }));
-
+    valid.length > 0 ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b)) : null;
+  const withDelta = valid.map((c) => ({ ...c, delta: c.last_value_eur - c.prev_value_eur }));
   const fastestGrowing =
-    withDelta.length > 0
-      ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b))
-      : null;
+    withDelta.length > 0 ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b)) : null;
 
   const quickItems = valid.map((c) => ({
     code: c.code,
@@ -70,144 +83,146 @@ export default function HomePageDE() {
     trend: trendFor(c),
   }));
 
+  const topArticles = listArticles().slice(0, 3);
+
   const s = {
     mapFooter: {
       marginTop: 12,
-      border: "1px solid #203044",
+      border: "1px solid var(--border)",
       borderRadius: 12,
       padding: 12,
-      background: "rgba(15,23,42,0.6)",
+      background: "#f9fafb",
+      boxShadow: "var(--shadow-sm)",
     },
-    legend: { fontSize: 14, lineHeight: 1.5 },
+    legend: { fontSize: 14, lineHeight: 1.5, color: "var(--fg)" },
     pill: {
       display: "inline-block",
       padding: "2px 8px",
       borderRadius: 999,
       fontWeight: 600,
       fontSize: 12,
-      border: "1px solid transparent",
-      marginRight: 4,
-      marginLeft: 4,
+      margin: "0 4px",
+      background: "#f3f4f6",
+      color: "#0b1220",
     },
-    pillOk: {
-      color: "var(--ok)",
-      borderColor: "#1f4d3a",
-      background: "rgba(34,197,94,.08)",
-    },
-    pillBad: {
-      color: "var(--bad)",
-      borderColor: "#5a1f2a",
-      background: "rgba(239,68,68,.08)",
-    },
-    sep: { margin: "0 8px", color: "#2b3444" },
-    muted: { color: "#9ca3af" },
-    cta: {
-      marginTop: 10,
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-      padding: "10px 12px",
-      borderRadius: 10,
-      background: "rgba(255,255,255,0.03)",
-      border: "1px dashed #2a3a4f",
-      textAlign: "center",
-      justifyContent: "center",
-      fontSize: 14,
-      lineHeight: 1.6,
-      fontWeight: 600,
-    },
-    ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
+    pillOk: { color: "var(--ok)", background: "#ecfdf5" },
+    pillBad: { color: "var(--bad)", background: "#fef2f2" },
   };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       {/* HERO */}
-      <section className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
-        <div style={{ display: "grid", gap: 6 }}>
-          <h2 style={{ margin: 0 }}>EU-Staatsverschuldung live sehen</h2>
-          <p className="tag" style={{ margin: 0 }}>
-            Interaktive Karte mit tickenden Schätzungen pro Land, basierend auf den letzten zwei Eurostat-Quartalen.
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+        <header style={{ maxWidth: 760 }}>
+          <h1
+            style={{
+              fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)",
+              background: "linear-gradient(90deg, #2563eb, #00875a)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: 8,
+            }}
+          >
+            Live EU-Schuldenkarte
+          </h1>
+          <p style={{ fontWeight: 600 }}>
+            Wenn man die gesamten Staatsschulden aller 27 EU-Länder zusammenrechnet, ergibt sich die Zahl unten — eine Live-Schätzung, die niemals stillsteht.
           </p>
-          <p className="tag" style={{ margin: 0 }}>
-            Quelle: Eurostat (gov_10q_ggdebt). Bildungsvisualisierung, keine offizielle Statistik.
-          </p>
+        </header>
+
+        <div style={{ marginTop: 16 }}>
+          <EUTotalTicker />
         </div>
-        <EUTotalTicker />
+
+        <p style={{ marginTop: 18 }}>
+          Die EU-Schuldenkarte zeigt die kombinierten nationalen Schulden der Europäischen Union in Echtzeit.
+          Die neuesten Eurostat-Daten dienen als Ausgangspunkt und werden pro Sekunde fortgeschrieben, um zu
+          zeigen, wie schnell sich die Verschuldung verändert. Dies ist mehr als nur eine Statistik — es ist
+          der Puls der europäischen Finanzlage. Ob Sie Frankreich mit Deutschland vergleichen, Italiens
+          Schuldenquote verfolgen oder kleine Volkswirtschaften wie Estland und Malta untersuchen — diese Karte
+          macht komplexe fiskalische Daten visuell erfahrbar.
+        </p>
+
+        <p
+          className="tag"
+          style={{
+            marginTop: 14,
+            paddingTop: 10,
+            borderTop: "1px solid var(--border)",
+            color: "#4b5563",
+          }}
+        >
+          Quelle: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Pädagogische Visualisierung, keine offizielle Statistik.
+        </p>
       </section>
 
       {/* MAP */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU-Übersicht</h3>
-        <div className="mapWrap" role="region" aria-label="Interaktive EU-Karte">
-          <EuropeMap />
-        </div>
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+        <h2>EU-Überblick</h2>
+        <EuropeMap />
 
-        {/* Legend + CTA */}
-        <div role="note" aria-label="Legende und Aktion" style={s.mapFooter}>
-          <div style={s.legend}>
-            <strong>Legende:</strong>
-            <span style={{ ...s.pill, ...s.pillOk }}>Grün</span>= sinkende Schulden
-            <span style={s.sep}>•</span>
-            <span style={{ ...s.pill, ...s.pillBad }}>Rot</span>= steigende Schulden
-            <span style={s.sep}>•</span>
-            <span style={s.muted}>Basiert auf den letzten zwei Referenzdaten.</span>
-          </div>
-
-          <div style={s.cta}>
-            <span aria-hidden style={s.ctaIcon}>➜</span>
-            <span>
-              <strong>Klicke auf ein Land</strong> auf der Karte, um den Live-Schuldenzähler zu sehen.
-            </span>
-          </div>
+        <div style={s.mapFooter}>
+          <strong>Legende:</strong>{" "}
+          <span style={{ ...s.pill, ...s.pillOk }}>Grün</span> = Schulden sinken •{" "}
+          <span style={{ ...s.pill, ...s.pillBad }}>Rot</span> = Schulden steigen
         </div>
       </section>
 
       {/* HIGHLIGHTS */}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginTop: 0 }}>EU-Schulden-Highlights</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginTop: 8 }}>
-          {/* Höchste Verschuldung */}
-          <div style={{ background: "#0f172a", border: "1px solid #1f2b3a", borderRadius: 12, padding: 12 }} aria-label="Höchste Verschuldung">
-            <div className="tag">Höchste Verschuldung</div>
-            {largestDebt ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>{largestDebt.flag} {largestDebt.name}</strong>
-                <div className="mono" aria-live="polite">€{formatEUR(largestDebt.last_value_eur)}</div>
-              </div>
-            ) : <div className="tag">—</div>}
-          </div>
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+        <h2>Höhepunkte</h2>
 
-          {/* Schnellstes Wachstum */}
-          <div style={{ background: "#0f172a", border: "1px solid #1f2b3a", borderRadius: 12, padding: 12 }} aria-label="Schnellstes Schuldenwachstum">
-            <div className="tag">Schnellstes Wachstum</div>
-            {fastestGrowing ? (
-              <div style={{ marginTop: 6 }}>
-                <strong>{fastestGrowing.flag} {fastestGrowing.name}</strong>
-                <div className="mono" style={{ color: "var(--bad)" }}>↑ +€{formatEUR(fastestGrowing.delta)}</div>
-              </div>
-            ) : <div className="tag">—</div>}
-          </div>
-        </div>
-
-        <div style={{ marginTop: 12 }} className="tag">
-          Warum sind Schulden wichtig? Staatsverschuldung beeinflusst Zinsen, Inflation und die Stabilität der EU-Wirtschaft.
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 12,
+          }}
+        >
+          {largestDebt && (
+            <HighlightTicker
+              label="Größte Verschuldung"
+              flag={largestDebt.flag}
+              name={largestDebt.name}
+              start={largestDebt.last_value_eur}
+              perSecond={perSecondForCountry(largestDebt)}
+            />
+          )}
+          {fastestGrowing && (
+            <HighlightTicker
+              label="Schnellst wachsender Schuldenstand"
+              flag={fastestGrowing.flag}
+              name={fastestGrowing.name}
+              start={fastestGrowing.last_value_eur}
+              perSecond={perSecondForCountry(fastestGrowing)}
+              accent="var(--bad)"
+            />
+          )}
         </div>
       </section>
 
       {/* QUICK LIST */}
-      <QuickList
-        items={quickItems}
-        initialCount={8}
-        strings={{
-          title: "Schnellübersicht",
-          showAll: "Alle anzeigen",
-          showLess: "Weniger anzeigen",
-          rising: "↑ steigend",
-          falling: "↓ fallend",
-          flat: "→ stabil",
-          more: "mehr",
-        }}
-      />
+      <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
+        <QuickList
+          items={quickItems}
+          initialCount={quickItems.length}
+          strings={{
+            title: "Schnellübersicht",
+            showAll: "Alle zeigen",
+            showLess: "Weniger zeigen",
+            rising: "↑ steigend",
+            falling: "↓ sinkend",
+            flat: "→ stabil",
+            more: "mehr",
+          }}
+        />
+        <div className="card section">
+          <h2>Neueste Artikel</h2>
+          {topArticles.map((a) => (
+            <ArticleCard key={a.slug} article={a} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
