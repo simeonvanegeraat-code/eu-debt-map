@@ -58,9 +58,8 @@ export default function DebtExplainer() {
     <main className="container grid" style={{ alignItems: "start" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
 
-      {/* ==== HERO (tekst + optionele afbeelding) ==== */}
-      <section className="card debt-hero" style={{ gridColumn: "1 / -1" }}>
-        {/* Tekstkolom */}
+      {/* ==== HERO (alleen tekst) ==== */}
+      <section className="card" style={{ gridColumn: "1 / -1" }}>
         <header style={{ maxWidth: 760 }}>
           <h1
             className="hero-title"
@@ -108,26 +107,6 @@ export default function DebtExplainer() {
             </Link>
           </div>
         </header>
-
-        {/* Afbeeldingskolom (vervang bron door je asset in /public) */}
-        <figure
-          style={{
-            display: "grid",
-            placeItems: "center",
-            background: "#f3f4f6",
-            border: "1px solid var(--border)",
-            borderRadius: 12,
-            padding: 12,
-            aspectRatio: "16/10",
-            overflow: "hidden",
-          }}
-        >
-          <img
-            src="/images/debt-hero.jpg"
-            alt="Illustration: debt, GDP and interest over time"
-            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }}
-          />
-        </figure>
       </section>
 
       {/* ==== UITLEG ==== */}
@@ -149,6 +128,15 @@ export default function DebtExplainer() {
               <strong>Smooth timing.</strong> Spending is lumpy; tax flows are steady. Debt bridges the gap.
             </li>
           </ul>
+
+          {/* ▶︎ Illustratie verplaatst naar hier */}
+          <figure className="figure" style={{ marginTop: 10 }}>
+            <img
+              src="/images/debt-hero.jpg"
+              alt="Illustration: how governments use borrowing to invest and absorb shocks"
+            />
+            <figcaption>Illustration: borrowing helps finance investment and absorb shocks.</figcaption>
+          </figure>
         </section>
 
         <section>
@@ -247,7 +235,7 @@ export default function DebtExplainer() {
         </section>
       </article>
 
-      {/* ==== Lichte “Explore more” kaarten (vervanging voor de donkere blokken) ==== */}
+      {/* ==== Lichte “Explore more” kaarten ==== */}
       <section
         className="card"
         style={{
