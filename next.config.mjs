@@ -5,36 +5,27 @@ const nextConfig = {
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: false },
 
-  // ✅ i18n alleen voor locale-detectie/hreflang; géén /en/ prefix gebruiken
-  i18n: {
-    locales: ["en", "nl", "fr", "de"],
-    defaultLocale: "en",
-  },
-
-  images: { formats: ["image/avif", "image/webp"] },
-
-  // ✅ Vang per ongeluk /en/... en stuur terug naar root-equivalent
-  async redirects() {
-    return [
-      { source: "/en", destination: "/", permanent: true },
-      { source: "/en/:path*", destination: "/:path*", permanent: true },
-      // niets anders redirecten — /nl, /fr, /de blijven zoals ze zijn
-    ];
+  images: {
+    formats: ["image/avif", "image/webp"],
   },
 
   async headers() {
     const securityHeaders = [
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-      { key: "X-Frame-Options", value: "DENY" },
+      { key: "X-Frame-Options", value: "DENY" }, // voorkomt dat JOUW site wordt ingebed
       { key: "X-Content-Type-Options", value: "nosniff" },
       {
         key: "Permissions-Policy",
-        value: "geolocation=(), microphone=(), camera=(), interest-cohort=()",
+        value:
+          "geolocation=(), microphone=(), camera=(), interest-cohort=()",
       },
       {
         key: "Content-Security-Policy",
         value: [
+          // Basis
           "default-src 'self'",
+
+          // Scripts (Consent Mode, CMP, GTM/GA4, AdSense/DoubleClick, Funding Choices, ATQ/Sodar)
           "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
             "https://cdn.cookie-script.com " +
             "https://report.cookie-script.com " +
@@ -46,22 +37,32 @@ const nextConfig = {
             "https://www.googletagservices.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://ep2.adtrafficquality.google",
+
+          // Styles (CMP + Google consent/Fonts)
           "style-src 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
+
+          // Sommige browsers checken expliciet style-src-elem
           "style-src-elem 'self' 'unsafe-inline' " +
             "https://cdn.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://tpc.googlesyndication.com " +
             "https://fonts.googleapis.com",
+
+          // Afbeeldingen (voeg hier ATQ image host toe)
           "img-src 'self' data: blob: " +
             "https://*.googlesyndication.com " +
             "https://*.doubleclick.net " +
             "https://www.google-analytics.com " +
-            "https://*.adtrafficquality.google",
+            "https://*.adtrafficquality.google", // ⬅️ nieuw (de fout was ep1.adtrafficquality.google)
+
+          // Fonts (Google Fonts)
           "font-src 'self' data: https://fonts.gstatic.com",
+
+          // Iframes (ads, GTM, Funding Choices, ATQ & google.com containers)
           "frame-src " +
             "https://tpc.googlesyndication.com " +
             "https://googleads.g.doubleclick.net " +
@@ -70,6 +71,8 @@ const nextConfig = {
             "https://fundingchoicesmessages.google.com " +
             "https://ep2.adtrafficquality.google " +
             "https://www.google.com",
+
+          // Netwerkverkeer (XHR/fetch/beacons)
           "connect-src 'self' https: wss: " +
             "https://*.doubleclick.net " +
             "https://*.googlesyndication.com " +
@@ -82,6 +85,8 @@ const nextConfig = {
             "https://report.cookie-script.com " +
             "https://fundingchoicesmessages.google.com " +
             "https://ep2.adtrafficquality.google",
+
+          // Overige
           "manifest-src 'self'",
           "base-uri 'self'",
           "form-action 'self'",
@@ -89,6 +94,7 @@ const nextConfig = {
         ].join("; "),
       },
     ];
+
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
 };
