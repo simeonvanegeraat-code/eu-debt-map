@@ -4,32 +4,46 @@ import Link from "next/link";
 
 function clamp(txt, n = 2) {
   return (
-    <span style={{
-      display: "-webkit-box",
-      WebkitLineClamp: n,
-      WebkitBoxOrient: "vertical",
-      overflow: "hidden"
-    }}>{txt}</span>
+    <span
+      style={{
+        display: "-webkit-box",
+        WebkitLineClamp: n,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+      }}
+    >
+      {txt}
+    </span>
   );
+}
+
+// Bepaalt de juiste href op basis van artikeldata
+function articleHref(article) {
+  if (!article) return "#";
+
+  // 1) Als je lib/articles.js al een 'url' meegeeft, gebruik die.
+  if (article.url) return article.url;
+
+  // 2) Anders bouw 'm uit lang + slug.
+  const slug = article.slug || "";
+  const lang = article.lang && article.lang !== "en" ? `/${article.lang}` : "";
+  return `${lang}/articles/${slug}`;
 }
 
 export default function ArticleCard({ article }) {
   const {
-    slug,
     title,
     summary,
     image,
     imageAlt,
     date,
-    tags = []
+    tags = [],
   } = article || {};
 
+  const href = articleHref(article);
+
   return (
-    <Link
-      href={`/articles/${slug}`}
-      className="article-card"
-      aria-label={title}
-    >
+    <Link href={href} className="article-card" aria-label={title} rel="bookmark">
       {image ? (
         <div className="thumb">
           <img
@@ -43,12 +57,19 @@ export default function ArticleCard({ article }) {
 
       <div className="body">
         <div className="meta">
-          <time dateTime={date}>
-            {new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" })
-              .format(new Date(date))}
-          </time>
-          {tags.slice(0,2).map((t) => (
-            <span key={t} className="pill">{t}</span>
+          {date && (
+            <time dateTime={date}>
+              {new Intl.DateTimeFormat("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }).format(new Date(date))}
+            </time>
+          )}
+          {tags.slice(0, 2).map((t) => (
+            <span key={t} className="pill">
+              {t}
+            </span>
           ))}
         </div>
 
@@ -69,7 +90,6 @@ export default function ArticleCard({ article }) {
         }
         .article-card:hover{ box-shadow:var(--shadow-sm); transform:translateY(-1px); }
 
-        /* Thumb: altijd 16:9, vult breedte, geen rare hoogtes */
         .thumb{
           width:100%;
           aspect-ratio:16/9;
@@ -124,7 +144,6 @@ export default function ArticleCard({ article }) {
           font-weight:600;
         }
 
-        /* Compactere layout op heel kleine schermen */
         @media (max-width: 380px){
           .title{ font-size:15px; }
           .excerpt{ font-size:13px; }
