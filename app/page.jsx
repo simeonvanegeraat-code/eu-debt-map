@@ -11,7 +11,7 @@ import { countries, trendFor } from "@/lib/data";
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
   loading: () => (
-    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card">
+    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card" aria-busy="true">
       Loading map…
     </div>
   ),
@@ -112,24 +112,47 @@ export default function HomePage() {
   `;
 
   // --- JSON-LD (Website + Organization) ---
+  // Verwijderd: SearchAction met target "/country/{country}" (veroorzaakte crawl naar /country/%7Bcountry%7D)
   const websiteLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     url: "https://www.eudebtmap.com/",
     name: "EU Debt Map",
-    inLanguage: "en",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://www.eudebtmap.com/country/{country}",
-      "query-input": "required name=country",
-    },
+    inLanguage: "en"
   };
+
   const orgLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "EU Debt Map",
     url: "https://www.eudebtmap.com/",
     sameAs: ["https://www.eudebtmap.com/"],
+  };
+
+  // Extra: FAQ schema (non-breaking SEO enhancement)
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How is the live estimate calculated?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "We interpolate between the last two Eurostat reference periods and extrapolate per second. Country pages include the baseline and trend indicator."
+        }
+      },
+      {
+        "@type": "Question",
+        name: "Is this an official statistic?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "No. It’s an educational visualization based on official data to improve understanding and spark discussion."
+        }
+      }
+    ]
   };
 
   // Light-styles
@@ -183,6 +206,7 @@ export default function HomePage() {
       {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       {/* === HERO === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
@@ -204,7 +228,7 @@ export default function HomePage() {
           {/* Korte intro met semibold eerste zin */}
           <p className="hero-lede" style={{ maxWidth: 760 }}>
             <span style={{ fontWeight: 600 }}>
-              If you added together every euro of public debt from all 27 EU countries, you’d get the number shown below — a live, ticking estimate that never stands still.
+              If you added together every euro of public debt from all 27 EU countries, you’d get the number shown below, a live, ticking estimate that never stands still.
             </span>
           </p>
         </header>
@@ -219,7 +243,7 @@ export default function HomePage() {
           The EU Debt Map visualizes the combined national debts of the European Union in real time.
           Each country’s most recent Eurostat data point is used as a baseline, then projected second by
           second to show how fast public debt continues to grow (or, in rare cases, shrink). This isn’t
-          just a statistic — it’s a pulse of Europe’s financial health. Whether you’re comparing France
+          just a statistic, it’s a pulse of Europe’s financial health. Whether you’re comparing France
           to Germany, tracking Italy’s debt ratio, or exploring smaller economies like Estonia and Malta,
           this map translates complex fiscal data into an intuitive visual that updates every second.
         </p>
@@ -351,8 +375,8 @@ export default function HomePage() {
       </section>
 
       {/* Mini-FAQ (extra SEO) */}
-      <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0 }}>FAQ: EU government debt</h2>
+      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="faq-title">
+        <h2 id="faq-title" style={{ marginTop: 0 }}>FAQ: EU government debt</h2>
 
         <h3 style={{ marginBottom: 6 }}>How is the live estimate calculated?</h3>
         <p className="tag" style={{ marginTop: 0 }}>
