@@ -60,9 +60,19 @@ function SquareThumb({ src, alt }) {
   );
 }
 
+// Locale-bewuste href helper
+function articleHref(a) {
+  if (!a) return "#";
+  if (a.url) return a.url; // lib/articles zet dit al goed indien aanwezig
+  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${langPrefix}/articles/${a.slug}`;
+}
+
 export default function ArticlesShell({ articles = [] }) {
   const featured = articles[0];
   const rest = articles.slice(1);
+
+  const featuredHref = featured ? articleHref(featured) : "#";
 
   return (
     <main className="container" style={{ display: "grid", gap: 16 }}>
@@ -91,7 +101,7 @@ export default function ArticlesShell({ articles = [] }) {
               Featured · {formatDate(featured.date)}
             </div>
             <h2 style={{ margin: 0, lineHeight: 1.25 }}>
-              <Link href={`/articles/${featured.slug}`}>{featured.title}</Link>
+              <Link href={featuredHref}>{featured.title}</Link>
             </h2>
 
             {featured.summary && (
@@ -107,7 +117,7 @@ export default function ArticlesShell({ articles = [] }) {
             </div>
 
             <div style={{ marginTop: 8 }}>
-              <Link href={`/articles/${featured.slug}`} className="tag">
+              <Link href={featuredHref} className="tag">
                 Read more →
               </Link>
             </div>
@@ -128,7 +138,6 @@ export default function ArticlesShell({ articles = [] }) {
 
       {/* Page-scoped CSS */}
       <style>{`
-        /* Responsive grid – netjes op mobiel */
         .articles-grid{
           display:grid;
           gap:12px;
