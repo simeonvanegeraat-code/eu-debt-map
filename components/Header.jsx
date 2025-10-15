@@ -6,30 +6,65 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 
-// Nav-items (Articles blijft ENG/root)
+/**
+ * NAV-items (labels kun je later vertalen per taal).
+ * href's zijn "basisroutes" zonder locale-prefix; we voegen die dynamisch toe.
+ */
 const NAV = [
   { href: "/", label: "Home" },
-  { href: "/debt-to-gdp", label: "Debt-to-GDP" },    // ← NIEUW (tussen Home en What is Debt?)
+  { href: "/debt-to-gdp", label: "Debt-to-GDP" },
   { href: "/debt", label: "What is Debt?" },
-  { href: "/articles", label: "Articles" }, // <-- root only (no locale)
+  { href: "/articles", label: "Articles" },        // nu WÉL meertalig
   { href: "/about", label: "About" },
   { href: "/methodology", label: "Methodology" },
 ];
 
-// Routes die NIET gelokaliseerd worden
-const NO_LOCALE = new Set(["/articles"]);
+/**
+ * Routes die NOOIT een taalprefix krijgen.
+ * Laat deze voorlopig leeg. Wil je iets uitsluiten, zet hier het EERSTE padsegment in (zonder slash),
+ * bv: new Set(["ads-test"])
+ */
+const NO_LOCALE = new Set([]);
 
+/** Ondersteunde talen */
 const LOCALES = [
-  { code: "", label: "English", short: "EN", flag: "🇬🇧" },
+  { code: "",   label: "English",   short: "EN", flag: "🇬🇧" },
   { code: "nl", label: "Nederlands", short: "NL", flag: "🇳🇱" },
-  { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
-  { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
+  { code: "de", label: "Deutsch",   short: "DE", flag: "🇩🇪" },
+  { code: "fr", label: "Français",  short: "FR", flag: "🇫🇷" },
 ];
 
-function localeAwareHref(hrefBase, locale) {
-  return NO_LOCALE.has(hrefBase) ? hrefBase : withLocale(hrefBase, locale);
+/** Helpers */
+function firstSegment(pathname) {
+  const seg = pathname.replace(/^\/+/, "").split("/")[0] || "";
+  return seg;
+}
+function isExternal(href) {
+  return /^https?:\/\//i.test(href);
 }
 
+/** Bouw locale-afhankelijke href (voegt /nl, /de, /fr toe behalve voor en/NO_LOCALE/externe URL) */
+function localeAwareHref(hrefBase, locale) {
+  if (!hrefBase) return "/";
+  if (isExternal(hrefBase)) return hrefBase;
+
+  // Normaliseer
+  const clean = hrefBase.startsWith("/") ? hrefBase : `/${hrefBase}`;
+
+  // routes die nooit gelokaliseerd worden (per eerste segment)
+  const seg = firstSegment(clean);
+  if (NO_LOCALE.has(seg)) return clean;
+
+  // en = geen prefix
+  if (!locale || locale === "en" || locale === "") return clean;
+
+  // root
+  if (clean === "/") return `/${locale}`;
+
+  return `/${locale}${clean}`;
+}
+
+/** Active-state: exact of child-pad */
 function isActivePath(pathname, hrefBase, locale) {
   const target = localeAwareHref(hrefBase, locale);
   return pathname === target || pathname.startsWith(target + "/");
@@ -38,7 +73,7 @@ function isActivePath(pathname, hrefBase, locale) {
 function LanguageDropdown() {
   const pathname = usePathname() || "/";
   const router = useRouter();
-  const current = getLocaleFromPathname(pathname);
+  const current = getLocaleFromPathname(pathname); // "", "nl", "de", "fr"
 
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -55,18 +90,34 @@ function LanguageDropdown() {
   const currentLocale = LOCALES.find((l) => l.code === current) || LOCALES[0];
 
   function onSelect(next) {
-    const parts = pathname.split("?")[0].split("#")[0];
+    const url = new URL(window.location.href);
+    const pathOnly = url.pathname; // behoud query/hash later
 
-    // strip bestaande locale segment
-    const base = (() => {
-      const seg = parts.replace(/^\/+/, "").split("/")[0] || "";
-      const rest = LOCALES.some((l) => l.code === seg)
-        ? parts.replace(new RegExp(`^/${seg}`), "")
-        : parts;
-      return rest || "/";
-    })();
+    // 1) strip bestaande locale segment
+    let withoutLocale = pathOnly;
+    const seg = firstSegment(pathOnly);
+    if (LOCALES.some((l) => l.code && l.code === seg)) {
+      withoutLocale = pathOnly.replace(new RegExp(`^/${seg}`), "") || "/";
+    }
 
-    const target = NO_LOCALE.has(base) ? base : withLocale(base, next.code);
+    // 2) check NO_LOCALE op basis van EERSTE segment van het pad zonder locale
+    const baseSeg = firstSegment(withoutLocale);
+    const keepRoot = NO_LOCALE.has(baseSeg);
+
+    // 3) bouw target met nieuwe locale
+    let nextPath;
+    if (keepRoot || !next.code) {
+      // geen locale (en) of expliciet uitgesloten
+      nextPath = withoutLocale;
+    } else {
+      nextPath = withoutLocale === "/"
+        ? `/${next.code}`
+        : `/${next.code}${withoutLocale}`;
+    }
+
+    // 4) behoud query + hash
+    const target = nextPath + url.search + url.hash;
+
     setOpen(false);
     router.push(target);
   }
@@ -187,8 +238,7 @@ export default function Header() {
               key={item.href}
               href={localeAwareHref(item.href, locale)}
               className={
-                "nav-link" +
-                (isActivePath(pathname, item.href, locale) ? " nav-link--active" : "")
+                "nav-link" + (isActivePath(pathname, item.href, locale) ? " nav-link--active" : "")
               }
             >
               {item.label}
@@ -216,8 +266,7 @@ export default function Header() {
             key={item.href}
             href={localeAwareHref(item.href, locale)}
             className={
-              "drawer-link" +
-              (isActivePath(pathname, item.href, locale) ? " drawer-link--active" : "")
+              "drawer-link" + (isActivePath(pathname, item.href, locale) ? " drawer-link--active" : "")
             }
           >
             {item.label}
