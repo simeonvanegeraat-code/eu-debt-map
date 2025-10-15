@@ -93,7 +93,7 @@ export default function HomePage() {
     trend: trendFor(c),
   }));
 
-  const topArticles = listArticles().slice(0, 3);
+  const topArticles = listArticles({ lang: "nl" }).slice(0, 3);
 
   const responsiveCss = `
     .ql-articles{
