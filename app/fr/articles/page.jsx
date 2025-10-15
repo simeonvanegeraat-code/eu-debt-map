@@ -4,7 +4,7 @@ import ArticlesShell from "@/components/ArticlesShell";
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
-const LANG = "en";
+const LANG = "fr";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 

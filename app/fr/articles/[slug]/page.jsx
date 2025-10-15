@@ -7,7 +7,7 @@ import { articleOgImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
 
 const SITE = "https://www.eudebtmap.com";
-const LANG = "en";
+const LANG = "fr";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 
