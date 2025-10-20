@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 import { getArticle, getTranslations } from "@/lib/articles";
 import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
-import { articleOgImage } from "@/lib/media";
+import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
 
 const SITE = "https://www.eudebtmap.com";
@@ -11,15 +11,15 @@ const LANG = "nl";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 
+/* ---------- SEO ---------- */
 export async function generateMetadata({ params }) {
   const slug = params.slug;
   const a = getArticle({ slug, lang: LANG });
   const url = `${SITE}${prefix}/articles/${slug}`;
 
   if (!a) {
-    return { title: "Article • EU Debt Map", alternates: { canonical: url }, openGraph: { url } };
+    return { title: "Artikel • EU Debt Map", alternates: { canonical: url }, openGraph: { url } };
   }
-
   const translations = getTranslations(slug);
   const languages = Object.fromEntries(
     translations.map(t => {
@@ -52,22 +52,38 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/* ---------- helpers ---------- */
+function stripDuplicateHero(html, heroSrc) {
+  if (!html || !heroSrc) return html;
+  const head = html.slice(0, 1500);
+  const imgRe = new RegExp(
+    `<figure[^>]*>[^]*?<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>[^]*?</figure>`,
+    "i"
+  );
+  const imgSoloRe = new RegExp(`<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>`, "i");
+  if (imgRe.test(head)) return html.replace(imgRe, "");
+  if (imgSoloRe.test(head)) return html.replace(imgSoloRe, "");
+  return html;
+}
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/* ---------- page ---------- */
 export default function ArticleDetailPage({ params }) {
   const article = getArticle({ slug: params.slug, lang: LANG });
   if (!article) return notFound();
 
   const url = `${SITE}${prefix}/articles/${params.slug}`;
-  const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
+  const dateFmt = new Intl.DateTimeFormat("nl-NL", { dateStyle: "long" });
 
-  const proseCss = `
-    .articleProse h2{ margin: 1rem 0 .5rem; }
-    .articleProse h3{ margin: .75rem 0 .4rem; }
-    .articleProse p{ line-height: 1.6; margin: .5rem 0; }
-    .articleProse ul{ margin: .5rem 0 .75rem 1.2rem; }
-    .articleProse li{ margin: .25rem 0; }
-    .articleProse .tag{ color:#9ca3af; }
-    .articleProse code{ background:#0b1220; padding:.1rem .3rem; border-radius:6px; }
-  `;
+  const heroSrc =
+    articleImage(article, "hero") ||
+    articleImage(article, "cover") ||
+    article.image ||
+    null;
+
+  const cleanBody = stripDuplicateHero(article.body || "", heroSrc || "");
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,33 +100,42 @@ export default function ArticleDetailPage({ params }) {
       name: "EU Debt Map",
       logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 }
     },
-    image: article.image ? [`${SITE}${article.image}`] : undefined
+    image: heroSrc ? [`${SITE}${heroSrc}`] : article.image ? [`${SITE}${article.image}`] : undefined
   };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
         <header style={{ display: "grid", gap: 8 }}>
-          <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div className="tag metaRow">
             <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
             {article.tags?.length ? <span aria-hidden>•</span> : null}
-            {article.tags?.map((t) => (<span key={t} className="tag">{t}</span>))}
+            {article.tags?.map((t) => <span key={t} className="tag">{t}</span>)}
           </div>
-          <h1 style={{ margin: 0 }}>{article.title}</h1>
-          {article.summary && (<p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>)}
-          <ShareBar url={url} title={article.title} summary={article.summary} />
+          <h1 className="pageTitle">{article.title}</h1>
+          {article.summary && <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>}
         </header>
 
-        <style>{proseCss}</style>
+        {heroSrc && (
+          <figure style={{ margin: 0 }}>
+            <img src={heroSrc} alt={article.imageAlt || article.title} width={1200} height={675} loading="eager" decoding="async" className="hero" />
+          </figure>
+        )}
 
-        <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body }} />
+        <ShareBar url={url} title={article.title} summary={article.summary} />
+        <hr className="divider" />
 
-        <ArticleRailServer lang={article.lang} exceptSlug={article.slug} limit={4} title="More articles" />
+        <div className="articleProse" dangerouslySetInnerHTML={{ __html: cleanBody }} />
+
+        <ArticleRailServer lang={article.lang} exceptSlug={article.slug} limit={4} title="Meer artikelen" />
 
         <footer style={{ display: "grid", gap: 10 }}>
           <ShareBar url={url} title={article.title} summary={article.summary} />
-          <div className="tag">Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.</div>
+          <div className="tag">
+            Bron: Eurostat (gov_10q_ggdebt). Educatieve visualisatie, geen officiële statistiek.
+          </div>
         </footer>
       </article>
     </main>
