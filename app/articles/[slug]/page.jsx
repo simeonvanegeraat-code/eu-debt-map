@@ -1,9 +1,10 @@
+// app/articles/[slug]/page.jsx
 export const runtime = "nodejs";
 
 import { getArticle, getTranslations } from "@/lib/articles";
 import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
-import { articleOgImage } from "@/lib/media";
+import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
 
 const SITE = "https://www.eudebtmap.com";
@@ -17,12 +18,16 @@ export async function generateMetadata({ params }) {
   const url = `${SITE}${prefix}/articles/${slug}`;
 
   if (!a) {
-    return { title: "Article • EU Debt Map", alternates: { canonical: url }, openGraph: { url } };
+    return {
+      title: "Article • EU Debt Map",
+      alternates: { canonical: url },
+      openGraph: { url },
+    };
   }
 
   const translations = getTranslations(slug);
   const languages = Object.fromEntries(
-    translations.map(t => {
+    translations.map((t) => {
       const pfx = ROUTE_PREFIX[t.lang] ?? "";
       return [t.lang, `${SITE}${pfx}/articles/${t.slug}`];
     })
@@ -59,7 +64,14 @@ export default function ArticleDetailPage({ params }) {
   const url = `${SITE}${prefix}/articles/${params.slug}`;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
-  const proseCss = `
+  // Kies hero: hero > cover > article.image
+  const heroSrc =
+    articleImage(article, "hero") ||
+    articleImage(article, "cover") ||
+    article.image ||
+    null;
+
+  const css = `
     .articleProse h2{ margin: 1rem 0 .5rem; }
     .articleProse h3{ margin: .75rem 0 .4rem; }
     .articleProse p{ line-height: 1.6; margin: .5rem 0; }
@@ -67,6 +79,28 @@ export default function ArticleDetailPage({ params }) {
     .articleProse li{ margin: .25rem 0; }
     .articleProse .tag{ color:#9ca3af; }
     .articleProse code{ background:#0b1220; padding:.1rem .3rem; border-radius:6px; }
+
+    /* Home-achtige titel (zelfde look & spacing) */
+    .pageTitle{
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .heroImg{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#f3f4f6;
+    }
+
+    .divider{
+      height:1px;
+      border:0;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 8px 0 2px;
+    }
   `;
 
   const jsonLd = {
@@ -82,35 +116,89 @@ export default function ArticleDetailPage({ params }) {
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 }
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/icons/icon-512.png`,
+        width: 512,
+        height: 512,
+      },
     },
-    image: article.image ? [`${SITE}${article.image}`] : undefined
+    image: heroSrc ? [`${SITE}${heroSrc}`] : article.image ? [`${SITE}${article.image}`] : undefined,
   };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <article
+        className="card"
+        style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}
+      >
+        <style>{css}</style>
+
+        {/* Meta + titel (home-stijl h1) */}
         <header style={{ display: "grid", gap: 8 }}>
           <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
+            <time dateTime={article.date}>
+              {dateFmt.format(new Date(article.date))}
+            </time>
             {article.tags?.length ? <span aria-hidden>•</span> : null}
-            {article.tags?.map((t) => (<span key={t} className="tag">{t}</span>))}
+            {article.tags?.map((t) => (
+              <span key={t} className="tag">
+                {t}
+              </span>
+            ))}
           </div>
-          <h1 style={{ margin: 0 }}>{article.title}</h1>
-          {article.summary && (<p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>)}
-          <ShareBar url={url} title={article.title} summary={article.summary} />
+          <h1 className="pageTitle">{article.title}</h1>
+          {article.summary && (
+            <p className="tag" style={{ margin: 0, opacity: 0.9 }}>
+              {article.summary}
+            </p>
+          )}
         </header>
 
-        <style>{proseCss}</style>
+        {/* HERO IMAGE */}
+        {heroSrc && (
+          <figure style={{ margin: 0 }}>
+            <img
+              src={heroSrc}
+              alt={article.imageAlt || article.title}
+              loading="eager"
+              decoding="async"
+              className="heroImg"
+            />
+          </figure>
+        )}
 
-        <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body }} />
+        {/* SHARE BUTTONS */}
+        <ShareBar url={url} title={article.title} summary={article.summary} />
 
-        <ArticleRailServer lang={article.lang} exceptSlug={article.slug} limit={4} title="More articles" />
+        {/* Divider zoals op home vibe */}
+        <hr className="divider" />
 
+        {/* BODY */}
+        <div
+          className="articleProse"
+          dangerouslySetInnerHTML={{ __html: article.body }}
+        />
+
+        {/* Verder lezen */}
+        <ArticleRailServer
+          lang={article.lang}
+          exceptSlug={article.slug}
+          limit={4}
+          title="More articles"
+        />
+
+        {/* Footer */}
         <footer style={{ display: "grid", gap: 10 }}>
           <ShareBar url={url} title={article.title} summary={article.summary} />
-          <div className="tag">Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.</div>
+          <div className="tag">
+            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an
+            official statistic.
+          </div>
         </footer>
       </article>
     </main>
