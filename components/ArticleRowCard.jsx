@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 
-function hrefFor(a){
+function hrefFor(a) {
   if (!a) return "#";
   if (a.url) return a.url;
-  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${lang}/articles/${a.slug}`;
+  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${langPrefix}/articles/${a.slug}`;
 }
 
 export default function ArticleRowCard({ article }) {
@@ -15,59 +15,68 @@ export default function ArticleRowCard({ article }) {
     title,
     summary,
     image = "/articles/placeholder-600.jpg",
-    imageAlt = title || "Article image",
-    date,
-    tags = [],
   } = article;
 
   const href = hrefFor(article);
 
   return (
-    <article className="row">
-      <Link href={href} className="thumb" aria-label={title} prefetch={false}>
-        <Image
-          src={image}
-          alt={imageAlt}
-          fill
-          sizes="(max-width: 640px) 40vw, (max-width: 1024px) 25vw, 320px"
-          priority={false}
-          loading="lazy"
-          style={{ objectFit: "cover" }}
-        />
+    <article className="flex gap-4 items-start border border-slate-200 rounded-2xl p-4 hover:shadow-sm transition">
+      <Link
+        href={href}
+        prefetch={false}
+        className="shrink-0 rounded-xl overflow-hidden border border-slate-200 bg-slate-100"
+        aria-label={title}
+      >
+        <div className="relative w-[160px] h-[100px] sm:w-[220px] sm:h-[132px]">
+          <Image
+            src={image}
+            alt={article.imageAlt || title || "Article image"}
+            fill
+            priority={false}
+            loading="lazy"
+            sizes="(max-width:640px) 40vw, (max-width:1024px) 25vw, 220px"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
       </Link>
 
-      <div className="content">
-        <h3 className="h"><Link href={href} className="link">{title}</Link></h3>
+      <div className="min-w-0">
+        <h3 className="text-base sm:text-lg font-semibold leading-tight mb-1">
+          <Link href={href} prefetch={false} className="hover:underline">
+            {title}
+          </Link>
+        </h3>
 
-        {date && (
-          <time dateTime={date} className="date">
-            {new Intl.DateTimeFormat("en-GB",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(date))}
+        {article.date && (
+          <time
+            dateTime={article.date}
+            className="text-xs text-slate-500 block mb-2"
+          >
+            {new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }).format(new Date(article.date))}
           </time>
         )}
 
-        {summary && <p className="sum">{summary}</p>}
+        {summary && (
+          <p className="text-sm text-slate-600 mb-2 line-clamp-3">{summary}</p>
+        )}
 
-        {tags.length > 0 && (
-          <ul className="tags">
-            {tags.slice(0, 5).map((t) => (<li key={t}>#{t}</li>))}
+        {article.tags?.length > 0 && (
+          <ul className="flex flex-wrap gap-2">
+            {article.tags.slice(0, 5).map((t) => (
+              <li
+                key={t}
+                className="text-[11px] px-2 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200"
+              >
+                #{t}
+              </li>
+            ))}
           </ul>
         )}
       </div>
-
-      <style jsx>{`
-        .row{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);
-          border-radius:12px;padding:10px;background:#fff}
-        .thumb{position:relative;flex:0 0 160px;height:100px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
-        .content{min-width:0}
-        .h{margin:0 0 4px;font-size:16px;line-height:1.25}
-        .link:hover{text-decoration:underline}
-        .date{display:block;font-size:12px;color:#64748b;margin-bottom:6px}
-        .sum{margin:0 0 8px;color:#475569;font-size:14px;line-height:1.5;
-          display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-        .tags{display:flex;gap:6px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
-        .tags li{font-size:11px;padding:2px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0}
-        @media (max-width:640px){.thumb{flex-basis:128px;height:84px}}
-      `}</style>
     </article>
   );
 }
