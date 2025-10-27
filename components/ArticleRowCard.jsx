@@ -1,11 +1,12 @@
-import Link from "next/link";
-import Image from "next/image";
+"use client";
 
-function hrefFor(a) {
+import Link from "next/link";
+
+function articleHref(a) {
   if (!a) return "#";
   if (a.url) return a.url;
-  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${langPrefix}/articles/${a.slug}`;
+  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${lang}/articles/${a.slug}`;
 }
 
 export default function ArticleRowCard({ article }) {
@@ -15,58 +16,60 @@ export default function ArticleRowCard({ article }) {
     title,
     summary,
     image = "/articles/placeholder-600.jpg",
+    imageAlt = title || "Article image",
+    date,
+    tags = [],
   } = article;
 
-  const href = hrefFor(article);
+  const href = articleHref(article);
 
   return (
-    <article className="flex gap-4 items-start border border-slate-200 rounded-2xl p-4 hover:shadow-sm transition">
+    <article className="flex gap-4 items-start rounded-2xl border border-slate-200 p-4 hover:shadow-sm transition">
       <Link
         href={href}
-        prefetch={false}
-        className="shrink-0 rounded-xl overflow-hidden border border-slate-200 bg-slate-100"
+        className="shrink-0 overflow-hidden rounded-xl border border-slate-200"
         aria-label={title}
+        rel="bookmark"
       >
-        <div className="relative w-[160px] h-[100px] sm:w-[220px] sm:h-[132px]">
-          <Image
-            src={image}
-            alt={article.imageAlt || title || "Article image"}
-            fill
-            priority={false}
-            loading="lazy"
-            sizes="(max-width:640px) 40vw, (max-width:1024px) 25vw, 220px"
-            style={{ objectFit: "cover" }}
-          />
-        </div>
+        <img
+          src={image}
+          alt={imageAlt}
+          width={320}
+          height={180}
+          loading="lazy"
+          decoding="async"
+          className="block w-[160px] h-[90px] md:w-[200px] md:h-[112px] object-cover"
+        />
       </Link>
 
       <div className="min-w-0">
-        <h3 className="text-base sm:text-lg font-semibold leading-tight mb-1">
-          <Link href={href} prefetch={false} className="hover:underline">
+        <h3 className="mb-1 text-lg font-semibold leading-tight">
+          <Link href={href} className="hover:underline" rel="bookmark">
             {title}
           </Link>
         </h3>
 
-        {article.date && (
+        {date ? (
           <time
-            dateTime={article.date}
-            className="text-xs text-slate-500 block mb-2"
+            dateTime={date}
+            className="block mb-2 text-xs text-slate-500"
+            aria-label={`Published on ${date}`}
           >
             {new Intl.DateTimeFormat("en-GB", {
               day: "2-digit",
               month: "short",
               year: "numeric",
-            }).format(new Date(article.date))}
+            }).format(new Date(date))}
           </time>
-        )}
+        ) : null}
 
-        {summary && (
-          <p className="text-sm text-slate-600 mb-2 line-clamp-3">{summary}</p>
-        )}
+        {summary ? (
+          <p className="mb-3 text-sm text-slate-600 line-clamp-3">{summary}</p>
+        ) : null}
 
-        {article.tags?.length > 0 && (
+        {tags?.length > 0 && (
           <ul className="flex flex-wrap gap-2">
-            {article.tags.slice(0, 5).map((t) => (
+            {tags.slice(0, 5).map((t) => (
               <li
                 key={t}
                 className="text-[11px] px-2 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200"

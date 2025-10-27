@@ -1,16 +1,16 @@
-import Link from "next/link";
-import Image from "next/image";
+"use client";
 
-// Bepaal de juiste href op basis van data (taalprefix of expliciete url)
+import Link from "next/link";
+
 function hrefFor(a) {
   if (!a) return "#";
-  if (a.url) return a.url; // loader kan zelf url aanleveren
-  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${langPrefix}/articles/${a.slug}`;
+  if (a.url) return a.url;
+  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${lang}/articles/${a.slug}`;
 }
 
 export default function LatestArticles({ articles = [] }) {
-  if (!articles?.length) return null;
+  if (!articles.length) return null;
 
   return (
     <section aria-labelledby="latest-articles-heading" className="space-y-4">
@@ -25,26 +25,22 @@ export default function LatestArticles({ articles = [] }) {
             <Link
               key={a.slug}
               href={href}
-              prefetch={false}
-              className="block rounded-xl border border-slate-200 bg-white p-3 hover:shadow-md transition"
+              className="block rounded-xl border border-slate-200 p-3 hover:shadow-sm transition"
               aria-label={a.title}
               rel="bookmark"
             >
-              {a.image && (
-                <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden mb-2 bg-slate-100">
-                  <Image
-                    src={a.image}
-                    alt={a.imageAlt || a.title}
-                    fill
-                    priority={false}
-                    loading="lazy"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              )}
-
-              <h3 className="font-medium leading-snug">{a.title}</h3>
+              {a.image ? (
+                <img
+                  src={a.image}
+                  alt={a.imageAlt || a.title}
+                  width={800}
+                  height={450}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-40 object-cover rounded-md mb-2"
+                />
+              ) : null}
+              <h3 className="font-medium leading-tight">{a.title}</h3>
               {a.summary ? (
                 <p className="text-sm opacity-80 mt-1 line-clamp-3">{a.summary}</p>
               ) : null}

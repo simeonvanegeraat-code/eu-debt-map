@@ -72,11 +72,12 @@ export default function ArticleDetailPage({ params }) {
     }
     .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
 
-    /* Alleen de EERSTE media in de body compact maken
-       (figure of p>img), zodat er geen reusachtige header-foto staat */
-    .articleProse > :is(figure,p):first-child img{
+    /* Compacteer ALLEEN de eerste visuele afbeelding in de body,
+       ook als er whitespace of comments boven staan */
+    .articleProse figure:first-of-type img,
+    .articleProse p:first-of-type > img{
       width:100%;
-      max-height: 320px;
+      max-height: 340px;
       object-fit: cover;
       display:block;
       border-radius:12px;
@@ -84,10 +85,10 @@ export default function ArticleDetailPage({ params }) {
       background:#f3f4f6;
     }
     @media (min-width: 640px){
-      .articleProse > :is(figure,p):first-child img{ max-height: 380px; }
+      .articleProse figure:first-of-type img,
+      .articleProse p:first-of-type > img{ max-height: 400px; }
     }
 
-    /* Algemene opmaak */
     .divider{
       height:1px; border:0;
       background:linear-gradient(90deg, transparent, var(--border), transparent);
@@ -145,7 +146,7 @@ export default function ArticleDetailPage({ params }) {
 
         <hr className="divider" />
 
-        {/* Body (ongewijzigd, alleen CSS knijpt de 1e afbeelding) */}
+        {/* Body (geen extra hero-injectie) */}
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
 
         {/* Verder lezen */}

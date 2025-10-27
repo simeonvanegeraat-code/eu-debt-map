@@ -1,74 +1,54 @@
-// components/ArticleCard.jsx  (server component)
+"use client";
+
 import Link from "next/link";
 
-// Build the href from lang + slug unless a.url is provided by your loader
-function hrefFor(a) {
+// Bepaal veilige href (eerst expliciete url, anders /{lang?}/articles/{slug})
+function articleHref(a) {
   if (!a) return "#";
   if (a.url) return a.url;
-  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${langPrefix}/articles/${a.slug}`;
+  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${lang}/articles/${a.slug}`;
 }
 
 export default function ArticleCard({ article }) {
   if (!article) return null;
 
-  const { title, summary, image, imageAlt, date, tags = [] } = article;
-  const href = hrefFor(article);
+  const {
+    title,
+    summary,
+    image,
+    imageAlt,
+    date,
+    tags = [],
+  } = article;
 
-  const cardStyle = {
-    display: "flex",
-    flexDirection: "column",
-    border: "1px solid var(--border)",
-    borderRadius: 12,
-    overflow: "hidden",
-    background: "#fff",
-    textDecoration: "none",
-  };
-
-  const thumbWrapStyle = {
-    width: "100%",
-    height: 160, // <<< fixed, reliable on every setup
-    background: "#eef3ff",
-    overflow: "hidden",
-    borderBottom: "1px solid var(--border)",
-  };
-
-  const imgStyle = {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-  };
-
-  const bodyStyle = { display: "grid", gap: 6, padding: 10 };
-  const metaStyle = {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 6,
-    alignItems: "center",
-    fontSize: 12,
-    color: "#334155",
-    opacity: 0.9,
-  };
-  const pillStyle = {
-    padding: "2px 8px",
-    borderRadius: 999,
-    border: "1px solid #e5e7eb",
-    background: "#f8fafc",
-    fontWeight: 600,
-  };
+  const href = articleHref(article);
 
   return (
-    <Link href={href} prefetch={false} aria-label={title} rel="bookmark" style={cardStyle}>
-      {image && (
-        <div style={thumbWrapStyle}>
-          <img src={image} alt={imageAlt || title} loading="lazy" decoding="async" style={imgStyle} />
+    <Link
+      href={href}
+      className="block rounded-xl border border-slate-200 bg-white hover:shadow-sm transition-shadow"
+      aria-label={title}
+      rel="bookmark"
+    >
+      {image ? (
+        <div className="w-full overflow-hidden rounded-t-xl">
+          {/* kleine, vaste thumbnail om CLS te voorkomen */}
+          <img
+            src={image}
+            alt={imageAlt || title}
+            width={800}
+            height={450}
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-40 object-cover"
+          />
         </div>
-      )}
+      ) : null}
 
-      <div style={bodyStyle}>
-        <div style={metaStyle}>
-          {date && (
+      <div className="grid gap-2 p-3">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
+          {date ? (
             <time dateTime={date}>
               {new Intl.DateTimeFormat("en-GB", {
                 day: "2-digit",
@@ -76,34 +56,24 @@ export default function ArticleCard({ article }) {
                 year: "numeric",
               }).format(new Date(date))}
             </time>
-          )}
+          ) : null}
           {tags.slice(0, 2).map((t) => (
-            <span key={t} style={pillStyle}>
+            <span
+              key={t}
+              className="px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 font-semibold"
+            >
               {t}
             </span>
           ))}
         </div>
 
-        <h3 style={{ margin: 0, fontSize: 16, lineHeight: 1.25, color: "inherit" }}>{title}</h3>
+        <h3 className="m-0 text-[16px] leading-tight font-semibold">{title}</h3>
 
-        {summary && (
-          <p
-            style={{
-              margin: 0,
-              color: "#475569",
-              fontSize: 14,
-              lineHeight: 1.5,
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {summary}
-          </p>
-        )}
+        {summary ? (
+          <p className="m-0 text-[14px] text-slate-600 line-clamp-3">{summary}</p>
+        ) : null}
 
-        <span style={{ marginTop: 4, fontSize: 13, color: "#1d4ed8", fontWeight: 600 }}>Read more →</span>
+        <span className="mt-1 text-[13px] font-semibold text-blue-700">Read more →</span>
       </div>
     </Link>
   );
