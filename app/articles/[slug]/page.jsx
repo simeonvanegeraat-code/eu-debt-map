@@ -54,20 +54,40 @@ export async function generateMetadata({ params }) {
 }
 
 /* ---------- helpers ---------- */
-function stripDuplicateHero(html, heroSrc) {
-  if (!html || !heroSrc) return html;
-  // heel simpel: als de eerste 1.5k chars een <img> of <figure> met dezelfde src bevatten, strip die block
-  const head = html.slice(0, 1500);
-  const imgRe = new RegExp(
-    `<figure[^>]*>[^]*?<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>[^]*?</figure>`,
-    "i"
-  );
-  const imgSoloRe = new RegExp(`<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>`, "i");
+// Remove a duplicate hero OR any *leading* media block (<figure>…</figure> or <img …>)
+// so you never get a giant second image under the title.
+function stripDuplicateHeroOrLeadingMedia(html, heroSrc) {
+  if (!html) return html;
 
-  if (imgRe.test(head)) return html.replace(imgRe, "");
-  if (imgSoloRe.test(head)) return html.replace(imgSoloRe, "");
-  return html;
+  const trimmed = html.replace(/^\s+/, "");
+
+  // 1) If first non-whitespace tag is a <figure>…</figure>, drop it.
+  const startsWithFigure = /^<figure\b[^>]*>[^]*?<\/figure>/i;
+  if (startsWithFigure.test(trimmed)) {
+    return trimmed.replace(startsWithFigure, "");
+  }
+
+  // 2) If first non-whitespace tag is a bare <img …>, drop that single tag
+  //    (optionally wrapped in a <p>…</p> with only the img inside).
+  const startsWithImg = /^<img\b[^>]*>/i;
+  const startsWithPImg = /^<p\b[^>]*>\s*<img\b[^>]*>\s*<\/p>/i;
+
+  if (startsWithPImg.test(trimmed)) return trimmed.replace(startsWithPImg, "");
+  if (startsWithImg.test(trimmed)) return trimmed.replace(startsWithImg, "");
+
+  // 3) Back-compat: if the same heroSrc appears near the top as a figure/img, drop it.
+  if (heroSrc) {
+    const head = trimmed.slice(0, 1800);
+    const esc = escapeRegExp(heroSrc);
+    const sameFigure = new RegExp(`<figure[^>]*>[^]*?<img[^>]*src=["']${esc}["'][^>]*>[^]*?</figure>`, "i");
+    const sameImg = new RegExp(`<img[^>]*src=["']${esc}["'][^>]*>`, "i");
+    if (sameFigure.test(head)) return trimmed.replace(sameFigure, "");
+    if (sameImg.test(head)) return trimmed.replace(sameImg, "");
+  }
+
+  return trimmed;
 }
+
 function escapeRegExp(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -87,11 +107,10 @@ export default function ArticleDetailPage({ params }) {
     article.image ||
     null;
 
-  // Body zonder dubbele hero
-  const cleanBody = stripDuplicateHero(article.body || "", heroSrc || "");
+  // Body zonder (dubbele) leading hero / afbeelding
+  const cleanBody = stripDuplicateHeroOrLeadingMedia(article.body || "", heroSrc || "");
 
   const css = `
-    /* Titel in home-stijl, responsief */
     .pageTitle{
       margin:0;
       line-height:1.15;
@@ -101,18 +120,18 @@ export default function ArticleDetailPage({ params }) {
     }
     .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
 
-    /* Compacte hero: nooit schermvullend, altijd bijgesneden indien te hoog */
+    /* Compacte hero */
     .hero{
       width:100%;
-      height:380px;                 /* cap hoogte desktop */
+      height:380px;
       display:block;
-      object-fit:cover;             /* crop i.p.v. reusachtig worden */
+      object-fit:cover;
       border-radius:12px;
       border:1px solid var(--border);
       background:#f3f4f6;
     }
     @media (max-width: 640px){
-      .hero{ height:260px; }        /* cap hoogte mobiel */
+      .hero{ height:260px; }
     }
 
     .divider{
