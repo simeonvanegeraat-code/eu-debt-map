@@ -100,19 +100,27 @@ export default function ArticleDetailPage({ params }) {
       letter-spacing:-0.015em;
     }
     .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    /* Compacte hero: nooit schermvullend, altijd bijgesneden indien te hoog */
     .hero{
       width:100%;
-      height:auto;
+      height:380px;                 /* cap hoogte desktop */
       display:block;
+      object-fit:cover;             /* crop i.p.v. reusachtig worden */
       border-radius:12px;
       border:1px solid var(--border);
       background:#f3f4f6;
     }
+    @media (max-width: 640px){
+      .hero{ height:260px; }        /* cap hoogte mobiel */
+    }
+
     .divider{
       height:1px; border:0;
       background:linear-gradient(90deg, transparent, var(--border), transparent);
       margin: 8px 0 2px;
     }
+
     .articleProse h2{ margin: 1rem 0 .5rem; }
     .articleProse h3{ margin: .75rem 0 .4rem; }
     .articleProse p{ line-height: 1.65; margin:.6rem 0; }
@@ -162,7 +170,7 @@ export default function ArticleDetailPage({ params }) {
           )}
         </header>
 
-        {/* Hero (één keer) */}
+        {/* Hero (één keer, compact) */}
         {heroSrc && (
           <figure style={{ margin: 0 }}>
             <img
