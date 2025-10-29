@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
-import AdSlot from "@/components/AdSlot"; // ⬅️ toegevoegd
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "en";
@@ -68,7 +67,6 @@ export default function ArticleDetailPage({ params }) {
   const url = `${SITE}${prefix}/articles/${params.slug}`;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
-  // Optionele hero (alleen tonen als het artikel NIET al opent met een image/figure)
   const candidateHero =
     articleImage(article, "hero") ||
     articleImage(article, "cover") ||
@@ -78,7 +76,6 @@ export default function ArticleDetailPage({ params }) {
   const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
 
   const css = `
-    /* Titel in home-stijl */
     .pageTitle{
       margin:0;
       line-height:1.15;
@@ -88,7 +85,6 @@ export default function ArticleDetailPage({ params }) {
     }
     .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
 
-    /* Hero */
     .heroWrap{
       width:100%;
       border:1px solid var(--border);
@@ -110,7 +106,6 @@ export default function ArticleDetailPage({ params }) {
       margin: 8px 0 2px;
     }
 
-    /* Prose */
     .articleProse h2{ margin:1rem 0 .5rem; }
     .articleProse h3{ margin:.75rem 0 .4rem; }
     .articleProse p{ line-height:1.65; margin:.6rem 0; }
@@ -148,9 +143,9 @@ export default function ArticleDetailPage({ params }) {
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 }
+      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 },
     },
-    image: candidateHero ? [`${SITE}${candidateHero}`] : article.image ? [`${SITE}${article.image}`] : undefined
+    image: candidateHero ? [`${SITE}${candidateHero}`] : article.image ? [`${SITE}${article.image}`] : undefined,
   };
 
   return (
@@ -174,7 +169,7 @@ export default function ArticleDetailPage({ params }) {
           )}
         </header>
 
-        {/* Hero alleen als body niet al met image/figure start */}
+        {/* Hero */}
         {shouldRenderHero && (
           <figure className="heroWrap" style={{ margin: 0 }}>
             <img
@@ -192,14 +187,8 @@ export default function ArticleDetailPage({ params }) {
         <ShareBar url={url} title={article.title} summary={article.summary} />
         <hr className="divider" />
 
-        {/* Ad slot #1 – boven de body */}
-        <AdSlot slot="YOUR_SLOT_TOP_ARTICLE" minH={270} />
-
         {/* Artikeltekst */}
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
-
-        {/* Ad slot #2 – onder de body */}
-        <AdSlot slot="YOUR_SLOT_BOTTOM_ARTICLE" minH={270} />
 
         {/* Verder lezen */}
         <ArticleRailServer
