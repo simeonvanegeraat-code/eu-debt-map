@@ -2,154 +2,172 @@
 "use client";
 
 import Link from "next/link";
-import ArticleCard from "@/components/ArticleCard";
+import Image from "next/image";
 
-const THUMB = 120; // formaat van de thumbnail in de featured-kaart
+const THUMB_W_MOBILE = 116;
+const THUMB_H_MOBILE = 87; // ~4:3 look
+
+function articleHref(a) {
+  if (!a) return "#";
+  if (a.url) return a.url; // als lib/articles url meegeeft
+  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
+  return `${langPrefix}/articles/${a.slug}`;
+}
 
 function formatDate(iso) {
   try {
-    return new Intl.DateTimeFormat("en-GB", {
-      day: "numeric",
+    const d = new Date(iso);
+    const today = new Date();
+    const isToday =
+      d.getFullYear() === today.getFullYear() &&
+      d.getMonth() === today.getMonth() &&
+      d.getDate() === today.getDate();
+
+    const time = new Intl.DateTimeFormat("nl-NL", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
+
+    if (isToday) return `Vandaag, ${time}`;
+    return new Intl.DateTimeFormat("nl-NL", {
+      day: "2-digit",
       month: "short",
       year: "numeric",
-    }).format(new Date(iso));
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
   } catch {
     return iso || "";
   }
 }
 
-function SquareThumb({ src, alt }) {
-  if (!src) {
-    return (
-      <div
-        aria-hidden
-        title={alt}
-        style={{
-          width: THUMB,
-          height: THUMB,
-          borderRadius: 12,
-          border: "1px solid #e5e7eb",
-          background:
-            "linear-gradient(135deg, rgba(37,99,235,.12), rgba(99,102,241,.10))",
-          display: "grid",
-          placeItems: "center",
-          fontSize: 24,
-        }}
-      >
-        📊
-      </div>
-    );
-  }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      width={THUMB}
-      height={THUMB}
-      loading="lazy"
-      decoding="async"
-      style={{
-        width: THUMB,
-        height: THUMB,
-        objectFit: "cover",
-        borderRadius: 12,
-        border: "1px solid #e5e7eb",
-        background: "#f8fafc",
-      }}
-    />
-  );
-}
-
-// Locale-bewuste href helper
-function articleHref(a) {
-  if (!a) return "#";
-  if (a.url) return a.url; // lib/articles zet dit al goed indien aanwezig
-  const langPrefix = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${langPrefix}/articles/${a.slug}`;
-}
-
 export default function ArticlesShell({ articles = [] }) {
-  const featured = articles[0];
-  const rest = articles.slice(1);
-
-  const featuredHref = featured ? articleHref(featured) : "#";
+  if (!articles?.length) return null;
 
   return (
-    <main className="container" style={{ display: "grid", gap: 16 }}>
-      {/* HERO */}
-      <section className="card" style={{ paddingTop: 18, paddingBottom: 18 }}>
-        <h1 style={{ margin: 0 }}>EU Debt Articles & Analysis</h1>
-        <p className="tag" style={{ marginTop: 6 }}>
-          Explainers and insights built on the same Eurostat data as our live map.
-        </p>
-      </section>
+    <section aria-labelledby="articles-heading" className="news-wrap">
+      <h1 id="articles-heading" className="visually-hidden">
+        Articles & Analysis
+      </h1>
 
-      {/* FEATURED */}
-      {featured && (
-        <section
-          className="card"
-          style={{
-            display: "grid",
-            gridTemplateColumns: `${THUMB}px 1fr`,
-            gap: 12,
-            alignItems: "start",
-          }}
-        >
-          <SquareThumb src={featured.image} alt={featured.imageAlt || featured.title} />
-          <div style={{ display: "grid", gap: 8, alignContent: "start" }}>
-            <div className="tag" style={{ opacity: 0.9 }}>
-              Featured · {formatDate(featured.date)}
-            </div>
-            <h2 style={{ margin: 0, lineHeight: 1.25 }}>
-              <Link href={featuredHref}>{featured.title}</Link>
-            </h2>
+      <ul role="list" className="list">
+        {articles.map((a) => {
+          const href = articleHref(a);
+          const imgSrc = a.image || "/images/articles/placeholder.jpg";
+          const imgAlt = a.imageAlt || a.title;
 
-            {featured.summary && (
-              <div style={{ color: "#475569" }}>{featured.summary}</div>
-            )}
+          return (
+            <li key={a.slug} className="item">
+              <Link href={href} className="row" aria-label={a.title} rel="bookmark">
+                {/* Thumb (mobiel links) */}
+                <div className="thumb">
+                  <Image
+                    src={imgSrc}
+                    alt={imgAlt}
+                    width={THUMB_W_MOBILE}
+                    height={THUMB_H_MOBILE}
+                    sizes="(max-width: 960px) 34vw, 320px"
+                    priority={false}
+                  />
+                </div>
 
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
-              {(featured.tags || []).slice(0, 4).map((t) => (
-                <span key={t} className="tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-
-            <div style={{ marginTop: 8 }}>
-              <Link href={featuredHref} className="tag">
-                Read more →
+                {/* Body */}
+                <div className="body">
+                  <div className="meta">{formatDate(a.date)}</div>
+                  <h3 className="title">{a.title}</h3>
+                  {a.summary ? <p className="summary">{a.summary}</p> : null}
+                </div>
               </Link>
-            </div>
-          </div>
-        </section>
-      )}
 
-      {/* GRID */}
-      <section className="card">
-        <div className="articles-grid">
-          {rest.length > 0 ? (
-            rest.map((a) => <ArticleCard key={a.slug} article={a} />)
-          ) : (
-            <div className="tag">No other articles yet.</div>
-          )}
-        </div>
-      </section>
+              <hr className="divider" />
+            </li>
+          );
+        })}
+      </ul>
 
-      {/* Page-scoped CSS */}
-      <style>{`
-        .articles-grid{
-          display:grid;
-          gap:12px;
-          grid-template-columns: 1fr; /* mobiel: 1 kolom */
+      <style jsx>{`
+        .list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
         }
-        @media (min-width: 640px){
-          .articles-grid{ grid-template-columns: 1fr 1fr; } /* tablet: 2 kolommen */
+        .item {
+          margin: 0;
         }
-        @media (min-width: 1024px){
-          .articles-grid{ grid-template-columns: 1fr 1fr 1fr; } /* desktop: 3 kolommen */
+        .row {
+          display: grid;
+          grid-template-columns: ${THUMB_W_MOBILE}px 1fr;
+          gap: 12px;
+          text-decoration: none;
+          align-items: start;
+        }
+        .thumb {
+          width: ${THUMB_W_MOBILE}px;
+          height: ${THUMB_H_MOBILE}px;
+          overflow: hidden;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: #eef3ff;
+        }
+        .thumb :global(img) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .meta {
+          color: var(--muted);
+          font-size: var(--fs-sm);
+          margin-bottom: 4px;
+        }
+        .title {
+          margin: 0 0 4px 0;
+          font-family: var(--font-display);
+          font-weight: 700;
+          line-height: 1.2;
+          font-size: clamp(18px, 1.6vw + 14px, 22px);
+          color: inherit;
+        }
+        .summary {
+          margin: 0;
+          color: var(--muted);
+          font-size: var(--fs-sm);
+        }
+        .divider {
+          border: 0;
+          height: 1px;
+          background: var(--border);
+          margin: 12px 0;
+        }
+
+        /* Desktop: kaart-tegels (BNR voelt list, maar wij geven grid boven 960px) */
+        @media (min-width: 960px) {
+          .list {
+            display: grid;
+            gap: var(--sp-6);
+            grid-template-columns: repeat(3, 1fr);
+          }
+          .item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--sp-4);
+            box-shadow: var(--shadow-sm);
+          }
+          .row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .thumb {
+            width: 100%;
+            height: 160px; /* nette crop op desktop */
+            border-radius: 12px;
+          }
+          .divider {
+            display: none;
+          }
         }
       `}</style>
-    </main>
+    </section>
   );
 }
