@@ -432,3 +432,39 @@ p{ margin: var(--sp-3) 0; }
   text-decoration: none;
 }
 .nav-link:hover{ background:#f8fafc; border-color:#cbd5e1; }
+
+/* ===========================
+   Site-wide desktop side rails
+   =========================== */
+
+/* Rails alleen op >=1280px */
+@media (min-width: 1280px) {
+  .rail {
+    position: fixed;
+    top: 90px; /* onder je sticky header */
+    z-index: 30;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .rail-gap {
+    height: 16px;
+  }
+
+  /* Plaats rails net buiten de centrale container (max-width:1140px) */
+  .rail--left {
+    left: max(0px, calc((100vw - 1140px) / 2 - 340px));
+  }
+  .rail--right {
+    right: max(0px, calc((100vw - 1140px) / 2 - 340px));
+  }
+}
+
+/* Verberg rails onder desktop-breedte */
+@media (max-width: 1279px) {
+  .rail {
+    display: none !important;
+  }
+}

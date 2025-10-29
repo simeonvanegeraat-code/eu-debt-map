@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Script from "next/script";
+import SideRails from "@/components/SideRails"; // ⬅️ NIEUW: site-wide desktop zijrails
 
 export const metadata = {
   title: "EU Debt Map",
@@ -92,7 +93,7 @@ export default function RootLayout({ children }) {
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="format-detection" content="telephone=no" />
 
-        {/* 4) AdSense (Auto Ads). Consent Mode regelt opslag/consent. */}
+        {/* 4) AdSense loader voor handmatige slots (Auto Ads staat uit) */}
         <Script
           id="adsense"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
@@ -121,6 +122,9 @@ export default function RootLayout({ children }) {
         </main>
 
         <Footer />
+
+        {/* Site-wide desktop rails (verstopt op <1280px via CSS) */}
+        <SideRails />
       </body>
     </html>
   );
