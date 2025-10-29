@@ -3,7 +3,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Script from "next/script";
-import SideRails from "@/components/SideRails"; // ⬅️ NIEUW: site-wide desktop zijrails
 
 export const metadata = {
   title: "EU Debt Map",
@@ -18,9 +17,7 @@ export const metadata = {
     siteName: "EU Debt Map",
     type: "website",
   },
-  alternates: {
-    canonical: "https://www.eudebtmap.com/",
-  },
+  alternates: { canonical: "https://www.eudebtmap.com/" },
   icons: {
     icon: [
       { url: "/eu_favicon_32.png", sizes: "32x32", type: "image/png" },
@@ -45,20 +42,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Viewport: volle breedte (ook in in-app browsers) */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
-
-        {/* Manifest voor PWA/icons */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="manifest" href="/manifest.webmanifest" />
 
-        {/* Performance: fonts sneller beschikbaar */}
+        {/* Performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* 1) Consent Mode v2 defaults: alles DENIED tot keuze (Funding Choices updatet dit) */}
+        {/* Consent Mode defaults (alles denied tot keuze) */}
         <Script id="consent-mode" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -73,27 +64,16 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* 2) AdSense meta + preconnects */}
+        {/* AdSense meta + preconnects */}
         <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
-        <link
-          rel="preconnect"
-          href="https://pagead2.googlesyndication.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://googleads.g.doubleclick.net"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
 
-        {/* 3) Theme color (site is altijd licht) */}
         <meta name="theme-color" content="#ffffff" />
-
-        {/* Klein SEO/UX zetje */}
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="format-detection" content="telephone=no" />
 
-        {/* 4) AdSense loader voor handmatige slots (Auto Ads staat uit) */}
+        {/* AdSense Auto Ads loader (één keer, site-wide) */}
         <Script
           id="adsense"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
@@ -101,30 +81,15 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
-        {/* Structured data: merklogo (helpt favicon/brand in SERP) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
+        {/* Structured data */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       </head>
 
       <body>
-        {/* Skip link voor toetsenbord/screenreaders (gestyled via .visually-hidden in globals.css) */}
-        <a href="#content" className="visually-hidden">
-          Skip to content
-        </a>
-
+        <a href="#content" className="visually-hidden">Skip to content</a>
         <Header />
-
-        {/* Main landmark voor betere semantiek en navigatie */}
-        <main id="content" role="main">
-          {children}
-        </main>
-
+        <main id="content" role="main">{children}</main>
         <Footer />
-
-        {/* Site-wide desktop rails (verstopt op <1280px via CSS) */}
-        <SideRails />
       </body>
     </html>
   );
