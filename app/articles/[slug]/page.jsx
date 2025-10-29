@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
+import AdSlot from "@/components/AdSlot"; // ⬅️ toegevoegd
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "en";
@@ -55,7 +56,6 @@ export async function generateMetadata({ params }) {
 
 /* ---------- helpers ---------- */
 function bodyStartsWithImage(html = "") {
-  // check alleen de eerste ~500 chars: begint het met <img> of <figure>?
   const head = html.trim().slice(0, 500).toLowerCase();
   return head.startsWith("<img") || head.startsWith("<figure");
 }
@@ -88,19 +88,19 @@ export default function ArticleDetailPage({ params }) {
     }
     .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
 
-    /* Hero: nette crop zonder gigantisch te worden */
+    /* Hero */
     .heroWrap{
       width:100%;
       border:1px solid var(--border);
       border-radius:12px;
       overflow:hidden;
       background:#f3f4f6;
-      aspect-ratio:16/9;            /* houdt hoogte in toom */
+      aspect-ratio:16/9;
     }
     .heroWrap img{
       width:100%;
       height:100%;
-      object-fit:cover;             /* vul kader, geen enorme hoogte */
+      object-fit:cover;
       display:block;
     }
 
@@ -118,7 +118,6 @@ export default function ArticleDetailPage({ params }) {
     .articleProse li{ margin:.25rem 0; }
     .articleProse .tag{ color:#9ca3af; }
 
-    /* In-article images netjes, maar niet fullscreen hoog */
     .articleProse figure{ margin:1.25rem 0; }
     .articleProse img{
       max-width:100%;
@@ -193,8 +192,14 @@ export default function ArticleDetailPage({ params }) {
         <ShareBar url={url} title={article.title} summary={article.summary} />
         <hr className="divider" />
 
-        {/* Artikeltekst (ongewijzigd, zodat inline afbeeldingen blijven) */}
+        {/* Ad slot #1 – boven de body */}
+        <AdSlot slot="YOUR_SLOT_TOP_ARTICLE" minH={270} />
+
+        {/* Artikeltekst */}
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
+
+        {/* Ad slot #2 – onder de body */}
+        <AdSlot slot="YOUR_SLOT_BOTTOM_ARTICLE" minH={270} />
 
         {/* Verder lezen */}
         <ArticleRailServer
