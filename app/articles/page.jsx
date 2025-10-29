@@ -1,7 +1,6 @@
 // app/articles/page.jsx
 import { listArticles } from "@/lib/articles";
 import ArticlesShell from "@/components/ArticlesShell";
-import AdSlot from "@/components/AdSlot";
 
 export const runtime = "nodejs";
 
@@ -36,13 +35,7 @@ export default function ArticlesPage() {
   const all = listArticles({ lang: LANG }); // newest-first
   return (
     <main className="container" style={{ display: "grid", gap: 12 }}>
-      {/* Ad boven de lijst */}
-      <AdSlot slot="YOUR_SLOT_TOP_LIST" minH={270} />
-
       <ArticlesShell articles={all} />
-
-      {/* Ad onder de lijst */}
-      <AdSlot slot="YOUR_SLOT_BOTTOM_LIST" minH={270} />
     </main>
   );
 }
