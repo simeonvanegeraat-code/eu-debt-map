@@ -53,7 +53,7 @@ export default function ArticlesPage() {
           Analysen & Einblicke zu EU-Staatsschulden
         </h1>
         <p className="hero-lede" style={{ margin: "0 auto", maxWidth: 760 }}>
-          Aktuelle Analysen und Berichte zu den öffentlichen Finanzen Europas — wie
+          Aktuelle Analysen und Berichte zu den öffentlichen Finanzen Europas, wie
           Staatsschulden Politik, Wachstum und den Alltag in der EU-27 prägen.
         </p>
       </section>

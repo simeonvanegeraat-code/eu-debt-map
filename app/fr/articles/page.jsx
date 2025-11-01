@@ -53,7 +53,7 @@ export default function ArticlesPage() {
           Analyses et éclairages sur la dette de l’UE
         </h1>
         <p className="hero-lede" style={{ margin: "0 auto", maxWidth: 760 }}>
-          Les dernières analyses des finances publiques en Europe — comment la dette
+          Les dernières analyses des finances publiques en Europe, comment la dette
           publique influence les politiques, la croissance et la vie quotidienne dans l’UE-27.
         </p>
       </section>

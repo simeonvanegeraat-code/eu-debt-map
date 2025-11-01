@@ -53,7 +53,7 @@ export default function ArticlesPage() {
           Analyse & inzichten over EU-schulden
         </h1>
         <p className="hero-lede" style={{ margin: "0 auto", maxWidth: 760 }}>
-          De nieuwste analyses en rapporten over Europa’s overheidsfinanciën — hoe
+          De nieuwste analyses en rapporten over Europa’s overheidsfinanciën, hoe
           staatsschuld beleid, groei en het dagelijks leven in de EU-27 beïnvloedt.
         </p>
       </section>
