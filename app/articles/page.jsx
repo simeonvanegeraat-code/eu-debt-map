@@ -56,7 +56,7 @@ export default function ArticlesPage() {
           EU Debt Analysis & Insights
         </h1>
         <p className="hero-lede" style={{ margin: "0 auto", maxWidth: 760 }}>
-          The latest analyses and reports on Europe’s public finances — exploring how national
+          The latest analyses and reports on Europe’s public finances, exploring how national
           debt shapes policy, growth, and everyday life across the EU-27.
         </p>
       </section>
