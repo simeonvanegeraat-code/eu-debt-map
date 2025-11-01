@@ -337,7 +337,10 @@ p{ margin: var(--sp-3) 0; }
   background: #fff;
   padding: 20px;
   transition: background .2s ease, box-shadow .2s ease, border-color .2s ease, transform .08s ease;
+  margin-bottom: 16px; /* ruimte tussen kaarten */
 }
+.articles-item:last-child{ margin-bottom: 0; }
+
 .articles-item:hover{
   background:#f8fafc;
   border-color:#dbe3ea;
