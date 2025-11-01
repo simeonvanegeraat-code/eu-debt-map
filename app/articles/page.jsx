@@ -1,6 +1,5 @@
 // app/articles/page.jsx
 import Link from "next/link";
-// Gebruik hier bewust <img> i.p.v. next/image om elk mogelijke 'fill' of remote domain issue te vermijden
 import { listArticles } from "@/lib/articles";
 
 export const runtime = "nodejs";
@@ -52,7 +51,7 @@ export default function ArticlesPage() {
 
   return (
     <main className="w-full">
-      {/* Header */}
+      {/* Hero/sectietitel */}
       <section className="text-center py-10 border-b border-gray-200 mb-8 bg-gradient-to-b from-blue-50/30 to-white">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3">
           EU Debt Analysis & Insights
@@ -63,28 +62,30 @@ export default function ArticlesPage() {
         </p>
       </section>
 
-      {/* Artikellijst: 1 per rij, rustige hover */}
-      <section className="max-w-4xl mx-auto px-4 md:px-0 space-y-6 mb-16">
+      {/* Artikellijst in BNR-stijl */}
+      <section className="articles-list max-w-4xl mx-auto px-4 md:px-0 space-y-6 mb-16">
         {articles.map((a) => (
           <Link
             key={a.slug}
             href={`${prefix}/articles/${a.slug}`}
-            className="block"
+            className="group block rounded-xl border border-gray-200 bg-white p-5 hover:bg-gray-50 hover:shadow-md transition"
           >
-            <div className="flex flex-col sm:flex-row items-start gap-5 p-5 rounded-xl border border-gray-200 hover:bg-gray-50 hover:shadow-sm transition">
-              {/* VASTE AFMETING thumbnail -> voorkomt '1 grote afbeelding' */}
-              <div className="w-full sm:w-44">
+            <div className="flex flex-col sm:flex-row gap-5 items-start">
+              {/* Thumbnail wrapper met vaste aspect-ratio 4:3 */}
+              <div className="relative w-full sm:w-48 overflow-hidden rounded-md bg-gray-100"
+                   style={{ aspectRatio: "4 / 3" }}>
                 <img
                   src={a.image || "/images/articles/placeholder.jpg"}
                   alt={a.imageAlt || a.title}
-                  className="w-full h-32 sm:h-32 object-cover rounded-md"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                   loading="lazy"
                 />
               </div>
 
+              {/* Tekst */}
               <div className="min-w-0">
                 <p className="text-sm text-gray-500 mb-1">{formatDate(a.date)}</p>
-                <h2 className="text-lg md:text-xl font-semibold text-gray-900 hover:text-blue-700">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900 group-hover:text-blue-700">
                   {a.title}
                 </h2>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
@@ -95,6 +96,19 @@ export default function ArticlesPage() {
           </Link>
         ))}
       </section>
+
+      {/* Defensieve overrides tegen globale img/prose regels die alles 'vol-breedte' maken */}
+      <style jsx global>{`
+        .articles-list img {
+          max-width: 100%;
+          height: 100% !important;   /* forceer de crop-hoogte binnen de wrapper */
+        }
+        .articles-list figure,
+        .articles-list .prose img,
+        .articles-list .prose figure {
+          margin: 0 !important;
+        }
+      `}</style>
     </main>
   );
 }
