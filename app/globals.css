@@ -1,13 +1,14 @@
 /* ===========================
    Fonts (UI + Numbers)
    =========================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap');
 
 /* ===========================
    Global tokens & resets
    =========================== */
 :root{
-  /* Light theme (altijd) */
+  /* Light theme */
   --bg:#f7fafc;
   --fg:#0b1220;
   --muted:#4a617b;
@@ -20,24 +21,24 @@
   --accent-weak:#cfe0ff;
 
   --ok:#22c55e;
-  --warn:#f59e0b; /* 60–90% */
+  --warn:#f59e0b;
   --bad:#ef4444;
 
   /* layout */
   --radius: 16px;
   --radius-sm: 10px;
 
-  /* schaduwen (licht) – iets subtieler, strakker */
+  /* shadows */
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 12px rgba(15, 23, 42, .05);
   --shadow-md: 0 10px 24px rgba(15, 23, 42, .10);
 
-  /* typografie */
+  /* type */
   --font-display: "Space Grotesk", Inter, system-ui, Arial, sans-serif;
   --font-system: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
   --leading: 1.65;
   --leading-tight: 1.2;
 
-  /* schaal met clamp(): prettige responsiviteit */
+  /* fluid sizes */
   --fs-body: clamp(15px, 0.35vw + 14px, 18px);
   --fs-sm: clamp(13px, 0.25vw + 12px, 15px);
   --fs-h3: clamp(18px, 0.8vw + 16px, 22px);
@@ -45,7 +46,7 @@
   --fs-h1: clamp(28px, 2vw + 20px, 40px);
   --fs-hero: clamp(36px, 4vw + 14px, 56px);
 
-  /* spacing scale (8pt-ish) */
+  /* spacing */
   --sp-1: 6px;
   --sp-2: 10px;
   --sp-3: 14px;
@@ -55,20 +56,12 @@
   --sp-7: 32px;
   --sp-8: 40px;
 
-  /* Header theming (licht) */
+  /* header */
   --header-bg: rgba(249, 250, 251, .92);
   --header-fg: #0b1220;
   --header-border: #e5e7eb;
   --header-border-strong: #cbd5e1;
-  --header-chip-bg: #ffffff;
-  --header-chip-bg-hover: #f8fafc;
-  --header-chip-active-bg: rgba(96,165,250,.12);
-  --header-menu-bg: #ffffff;
-  --header-active-tag-bg: #eefdf5;
-  --header-active-tag-border: #bbf7d0;
-  --header-active-tag-fg: #065f46;
 
-  /* altijd light */
   color-scheme: light;
 }
 
@@ -86,7 +79,9 @@ html,body{
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
 }
-img{ max-width:100%; height:auto; display:block; }
+
+/* Belangrijk: maak <img> voorspelbaar en NIET fullscreen */
+img{ display:block; max-width:100%; height:auto; }
 
 /* Links */
 a{
@@ -98,22 +93,17 @@ a{
 a:hover{ text-decoration-color: var(--accent); }
 ::selection{ background: color-mix(in oklab, var(--accent) 25%, transparent); }
 
-/* Toegankelijke focusring */
+/* Focus */
 :focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Scrollbar (subtiel, modern) */
-*{
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
+/* Scrollbar */
+*{ scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
 ::-webkit-scrollbar{ height:10px; width:10px; }
-::-webkit-scrollbar-thumb{
-  background:#cbd5e1; border-radius:999px; border:2px solid transparent; background-clip:content-box;
-}
+::-webkit-scrollbar-thumb{ background:#cbd5e1; border-radius:999px; border:2px solid transparent; background-clip:content-box; }
 ::-webkit-scrollbar-track{ background:transparent; }
 
 /* ===========================
@@ -133,7 +123,7 @@ p{ margin: var(--sp-3) 0; }
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .num{ font-variant-numeric: tabular-nums; }
 
-/* Hero varianten voor de home */
+/* Hero varianten */
 .hero-title{
   font-family: var(--font-display);
   font-weight: 700;
@@ -152,21 +142,10 @@ p{ margin: var(--sp-3) 0; }
 }
 
 /* Tickers */
-.ticker-hero{
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.2rem, 4.8vw, 3.4rem);
-  letter-spacing: -0.5px;
-  color: var(--accent);
-}
-.ticker-xl{
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.4rem, 3.2vw, 2rem);
-  letter-spacing: -0.25px;
-}
+.ticker-hero{ font-family: var(--font-display); font-weight:700; font-size: clamp(2.2rem, 4.8vw, 3.4rem); letter-spacing:-0.5px; color:var(--accent); }
+.ticker-xl{ font-family: var(--font-display); font-weight:700; font-size: clamp(1.4rem, 3.2vw, 2rem); letter-spacing:-0.25px; }
 
-/* Kleine typografische utilities */
+/* Kleine utilities */
 .eyebrow{
   font-family: var(--font-display);
   font-weight: 700;
@@ -223,19 +202,16 @@ p{ margin: var(--sp-3) 0; }
   background: #fff;
 }
 
-/* Advertentiekaart */
+/* Advertentie (placeholder styles – Auto Ads blijft leidend) */
 .ad-card{
   background: #f9fafb; color:#0b1220;
   border-radius: 14px; padding: var(--sp-6);
   border: 1px solid #e5e7eb;
 }
 .ad-slot{
-  display:block;
-  min-height: 280px;
-  width: 100%;
+  display:block; min-height: 280px; width: 100%;
   background: repeating-linear-gradient(45deg,#f3f4f6, #f3f4f6 10px,#ffffff 10px, #ffffff 20px);
-  border: 1px dashed #e5e7eb;
-  border-radius: 12px;
+  border: 1px dashed #e5e7eb; border-radius: 12px;
 }
 
 /* ===========================
@@ -246,10 +222,7 @@ p{ margin: var(--sp-3) 0; }
   backdrop-filter: saturate(1.1) blur(8px);
   border-bottom: 1px solid var(--header-border);
 }
-.site-header--light{
-  background: var(--header-bg);
-  color: var(--header-fg);
-}
+.site-header--light{ background: var(--header-bg); color: var(--header-fg); }
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap: var(--sp-4); }
 
 .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
@@ -295,32 +268,29 @@ p{ margin: var(--sp-3) 0; }
 }
 
 /* ===========================
-   Article layout
+   ARTICLE PAGES
    =========================== */
+
+/* Artikel header / meta */
 .article-header{ margin:8px 0 12px 0; }
 .article-title{ margin:0 0 6px 0; line-height:1.2; }
 .article-meta{ margin:0; color:var(--muted); font-size:var(--fs-sm); }
-
 .article-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 14px 0; }
 
 .article-body{ margin-top:8px; line-height:1.75; }
 .article-body h2{ margin:18px 0 8px; }
 .article-body p{ margin:8px 0; }
-
 .article-body code{
   background:#f3f4f6; border:1px solid #e5e7eb;
-  color:#0b1220;
-  padding:2px 6px; border-radius:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color:#0b1220; padding:2px 6px; border-radius:6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
-
 .article-body img{ max-width:100%; height:auto; display:block; border-radius:10px; }
 .article-body .caption{
   font-size:var(--fs-sm); opacity:0.85; text-align:center; margin-top:6px; color:var(--muted);
 }
 
-/* ===========================
-   Figures
-   =========================== */
+/* Figures */
 .figure{ margin:0 0 1rem 0; }
 .figure img{
   width:100%; height:auto; border-radius:10px;
@@ -338,6 +308,89 @@ p{ margin: var(--sp-3) 0; }
   .figure--left{ float:left; width:340px; max-width:40%; margin:0 1rem 1rem 0; }
 }
 .clearfix::after{ content:""; display:table; clear:both; }
+
+/* ===========================
+   ARTICLES INDEX (BNR-stijl)
+   =========================== */
+
+/* Hero boven de lijst (zoals home) */
+.articles-hero{
+  text-align:center;
+  padding: 40px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  background: linear-gradient(180deg, rgba(59,130,246,0.08), rgba(255,255,255,1));
+}
+
+/* Lijst container */
+.articles-list{
+  max-width: 960px; /* rustiger leesbreedte */
+  margin: 0 auto 64px auto;
+  padding: 0 16px;
+}
+
+/* Card per artikel */
+.articles-item{
+  display:block;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  padding: 20px;
+  transition: background .2s ease, box-shadow .2s ease, border-color .2s ease, transform .08s ease;
+}
+.articles-item:hover{
+  background:#f8fafc;
+  border-color:#dbe3ea;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Binnenlay-out: thumbnail + tekst */
+.articles-row{
+  display:flex; gap:20px; align-items:flex-start;
+  flex-direction: column;
+}
+@media (min-width: 640px){
+  .articles-row{ flex-direction: row; }
+}
+
+/* Thumbnail wrapper — vaste 4:3 ratio, crop mooi gecentreerd */
+.articles-thumb{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+@media (min-width: 640px){
+  .articles-thumb{ width: 190px; } /* ~sm:w-48 */
+}
+.articles-thumb img{
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Tekstkolom */
+.articles-content{ min-width: 0; }
+.articles-date{ font-size: var(--fs-sm); color: #6b7280; margin: 0 0 6px 0; }
+.articles-title{
+  font-size: clamp(18px, 1.2vw + 16px, 22px);
+  font-weight: 700; color:#0b1220;
+  margin: 0;
+}
+.articles-item:hover .articles-title{ color:#1d4ed8; }
+.articles-excerpt{
+  color:#4b5563; font-size: var(--fs-sm); margin-top: 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* Defensieve overrides tegen globale regels van markdown/prose */
+.articles-list figure,
+.articles-list .prose img,
+.articles-list .prose figure{ margin:0 !important; }
 
 /* ===========================
    Tabellen / charts
@@ -382,19 +435,11 @@ p{ margin: var(--sp-3) 0; }
 /* ===========================
    Debt page helpers
    =========================== */
-
-/* Hero grid (tekst + afbeelding) */
 .debt-hero{
-  display:grid;
-  gap:16px;
-  align-items:center;
-  grid-template-columns: 1.2fr .8fr;
+  display:grid; gap:16px; align-items:center; grid-template-columns: 1.2fr .8fr;
 }
-@media (max-width: 900px){
-  .debt-hero{ grid-template-columns: 1fr; }
-}
+@media (max-width: 900px){ .debt-hero{ grid-template-columns: 1fr; } }
 
-/* FAQ accordions */
 .debt-faq{
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -402,25 +447,16 @@ p{ margin: var(--sp-3) 0; }
   padding: 10px 12px;
   margin: 8px 0;
 }
-.debt-faq summary{
-  cursor: pointer;
-  list-style: none;
-  font-weight: 600;
-}
+.debt-faq summary{ cursor: pointer; list-style: none; font-weight: 600; }
 .debt-faq summary::-webkit-details-marker{ display:none; }
 
-/* Witte, zachte divider */
 .divider-soft{
-  height: 8px;
-  background: #ffffff;
-  border-radius: 6px;
-  margin: 8px 0 6px;
+  height: 8px; background: #ffffff; border-radius: 6px; margin: 8px 0 6px;
   box-shadow: inset 0 0 0 1px var(--border);
 }
 
 /* Minder harde bold in body-copy */
-.article-body strong,
-.tag strong{ font-weight: 600; }
+.article-body strong, .tag strong{ font-weight: 600; }
 
 /* Lichte “chip” links (bijv. in Explore more) */
 .nav-link{
@@ -434,37 +470,20 @@ p{ margin: var(--sp-3) 0; }
 .nav-link:hover{ background:#f8fafc; border-color:#cbd5e1; }
 
 /* ===========================
-   Site-wide desktop side rails
+   Desktop side rails (>=1280px)
    =========================== */
-
-/* Rails alleen op >=1280px */
 @media (min-width: 1280px) {
   .rail {
     position: fixed;
-    top: 90px; /* onder je sticky header */
+    top: 90px;
     z-index: 30;
     width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-
-  .rail-gap {
-    height: 16px;
-  }
-
-  /* Plaats rails net buiten de centrale container (max-width:1140px) */
-  .rail--left {
-    left: max(0px, calc((100vw - 1140px) / 2 - 340px));
-  }
-  .rail--right {
-    right: max(0px, calc((100vw - 1140px) / 2 - 340px));
-  }
+  .rail-gap { height: 16px; }
+  .rail--left { left: max(0px, calc((100vw - 1140px) / 2 - 340px)); }
+  .rail--right { right: max(0px, calc((100vw - 1140px) / 2 - 340px)); }
 }
-
-/* Verberg rails onder desktop-breedte */
-@media (max-width: 1279px) {
-  .rail {
-    display: none !important;
-  }
-}
+@media (max-width: 1279px) { .rail { display: none !important; } }
