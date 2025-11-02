@@ -175,7 +175,7 @@ export default function SgpExplainerEN() {
           </p>
           <p className="tag" style={{ marginTop: 8 }}>
             New to these concepts? Read the primers:{" "}
-            <Link href="/debt">What is Debt?</Link> · <Link href="/nl/debt-vs-deficit">Debt vs Deficit (NL)</Link> ·{" "}
+            <Link href="/debt">What is Debt?</Link> · <Link href="/debt-vs-deficit">Debt vs Deficit</Link> ·{" "}
             <Link href="/debt-to-gdp">Debt-to-GDP explained</Link>.
           </p>
         </section>
