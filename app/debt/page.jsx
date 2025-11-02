@@ -1,6 +1,5 @@
 // app/debt/page.jsx
 import Link from "next/link";
-import Image from "next/image";
 
 /** -----------------------------
  * SEO METADATA
@@ -9,9 +8,9 @@ export async function generateMetadata() {
   const base = new URL("https://www.eudebtmap.com");
   const path = "/debt";
   const title =
-    "What is Government Debt? Definition, Debt-to-GDP & Deficit Explained • EU Debt Map";
+    "What is Government Debt? A Plain-English Guide to Public Debt, Debt-to-GDP & Deficits • EU Debt Map";
   const description =
-    "Learn what government/public debt means, how the debt-to-GDP ratio works, and the difference between debt and deficit — with clear examples, inline SVG visuals and FAQs.";
+    "Definition of public debt in simple terms. Debt-to-GDP explained, the difference between debt and deficit, why governments borrow, and how it affects citizens — with clear visuals and FAQs.";
 
   return {
     metadataBase: base,
@@ -53,7 +52,7 @@ export async function generateMetadata() {
 }
 
 /** -----------------------------
- * UI HELPERS
+ * SMALL UI HELPERS
  * ----------------------------- */
 function Term({ children, title }) {
   return (
@@ -102,7 +101,7 @@ function DebtMeter({ value = 50 }) {
         </text>
       </svg>
       <figcaption className="tag" style={{ marginTop: 6 }}>
-        Illustration: a 50% debt-to-GDP ratio means debt equals half of annual output.
+        A 50% debt-to-GDP ratio means government debt equals half of annual economic output.
       </figcaption>
     </figure>
   );
@@ -152,7 +151,7 @@ function RGDiagram() {
           g
         </text>
 
-        {/* shaded outcome zones */}
+        {/* soft gradient field */}
         <rect
           x="41"
           y="11"
@@ -203,7 +202,13 @@ export default function DebtExplainer() {
     inLanguage: "en",
     isPartOf: { "@type": "WebSite", name: "EU Debt Map", url: "https://www.eudebtmap.com/" },
     mainEntityOfPage: "https://www.eudebtmap.com/debt",
-    about: ["government debt", "public debt", "sovereign debt", "debt-to-GDP", "deficit vs debt"],
+    about: [
+      "government debt",
+      "public debt",
+      "sovereign debt",
+      "debt-to-GDP",
+      "difference between debt and deficit",
+    ],
   };
 
   const webPageLd = {
@@ -212,7 +217,7 @@ export default function DebtExplainer() {
     name: "What is Government Debt?",
     url: "https://www.eudebtmap.com/debt",
     description:
-      "Learn what government/public debt means, debt-to-GDP explained, and the difference between debt and deficit.",
+      "Definition of public debt, debt-to-GDP explained, and the difference between debt and deficit in plain English.",
     inLanguage: "en",
   };
 
@@ -267,18 +272,9 @@ export default function DebtExplainer() {
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       {/* ================= HERO ================= */}
@@ -299,26 +295,23 @@ export default function DebtExplainer() {
 
           <div style={{ maxWidth: "68ch" }}>
             <p className="hero-lede" style={{ marginTop: 8 }}>
-              <span style={{ fontWeight: 600 }}>
-                Government debt is the price of big, long-term decisions spread over time — the roads we
-                drive on, the hospitals we rely on, and a buffer during crises.
-              </span>
+              Picture a country like a household — not because they are the same, but because the idea is familiar.
+              Big decisions arrive before the money does. Rail lines, hospitals, clean energy. Borrowing spreads the
+              cost over time so people can use what is built today, while the bill is paid gradually.
             </p>
 
             <div className="divider-soft" aria-hidden />
 
             <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
-              Countries borrow for similar reasons families do: invest today and pay back gradually. This
-              page explains the{" "}
-              <Term title="Government debt as a percentage of annual economic output">debt-to-GDP ratio</Term>, the{" "}
-              difference between <Term title="When annual spending exceeds annual revenue">deficit</Term> and{" "}
-              <Term title="Outstanding stock of past borrowing">debt</Term>, and why it matters.
+              This guide gives a plain-English <strong>definition of public debt</strong>, a clear{" "}
+              <strong>debt-to-GDP explained</strong> section, and the <strong>difference between debt and deficit</strong>.
+              Along the way, we show how policy and the economy move the numbers — and where to find live figures.
             </p>
 
             <p className="tag" style={{ marginTop: 8 }}>
-              Prefer the map?{" "}
+              Prefer the visual overview?{" "}
               <Link href="/" className="btn" style={{ padding: "6px 10px", marginLeft: 6 }}>
-                See the EU map →
+                Explore the EU live map →
               </Link>
             </p>
           </div>
@@ -327,106 +320,156 @@ export default function DebtExplainer() {
 
       {/* ================= ARTICLE ================= */}
       <article className="card section" style={{ gridColumn: "1 / -1" }}>
-        {/* Definition */}
+        {/* Section: Definition */}
         <section>
           <h2 className="article-title">Definition of Public Debt</h2>
           <p className="article-body">
-            Public debt (also called <em>government debt</em> or <em>sovereign debt</em>) is the total
-            amount a government owes to creditors as a result of past borrowing. It is usually expressed
-            in currency terms and as a share of the economy via the{" "}
-            <Term title="Debt divided by annual economic output">debt-to-GDP ratio</Term>.
+            Public debt (also called <em>government debt</em> or <em>sovereign debt</em>) is the running
+            total of what a government owes because of past borrowing. Think of it as a balance that changes
+            every year: when the budget runs a deficit, debt grows; when there is a surplus, debt can shrink.
           </p>
 
-        {/* Debt-to-GDP inline SVG */}
-          <h3 className="article-subtitle">Debt-to-GDP explained</h3>
+          <div className="tag" role="note" style={{ marginTop: 8 }}>
+            <strong>Plain-English definition.</strong> Government debt is money that a state has borrowed
+            and still needs to repay, usually by issuing bonds to investors.
+          </div>
+
+          <h3 className="article-subtitle" style={{ marginTop: 14 }}>Debt-to-GDP explained</h3>
           <p>
-            The ratio puts debt in context by comparing it with what the economy produces in a year. If
-            GDP is <strong>€1 trillion</strong> and government debt is <strong>€500 billion</strong>, the
-            ratio is <strong>50%</strong>.
+            We measure debt in currency and as a share of the economy via the{" "}
+            <Term title="Government debt as a percentage of annual economic output">debt-to-GDP ratio</Term>.
+            The ratio puts large numbers into context.
+          </p>
+          <p>
+            If GDP is <strong>€1 trillion</strong> and government debt is <strong>€500 billion</strong>,
+            debt-to-GDP is <strong>50%</strong>.
           </p>
           <DebtMeter value={50} />
+
+          <div className="tag" style={{ marginTop: 10 }}>
+            <strong>Key takeaway.</strong> The same debt level can be sustainable in a large, growing
+            economy and risky in a small, shrinking one. Context matters.
+          </div>
         </section>
 
-        {/* Difference debt vs deficit */}
+        {/* Section: Debt vs Deficit */}
         <section>
           <h2 className="article-title">Debt vs Deficit: What’s the Difference?</h2>
           <p>
-            <strong>Debt</strong> is the outstanding stock from past borrowing. A{" "}
-            <strong>deficit</strong> is a yearly shortfall when spending exceeds revenue. Deficits add to
-            debt; surpluses can reduce it.
+            <strong>Debt</strong> is the stock — the total outstanding amount. A{" "}
+            <strong>deficit</strong> is the flow — the yearly shortfall when spending exceeds revenue.
+            Deficits add to debt; surpluses can reduce it.
           </p>
-          <p className="tag">
-            See also: <Link href="/debt-vs-deficit">Debt vs Deficit explainer</Link>.
+
+          <div className="card" style={{ marginTop: 10 }}>
+            <h3 style={{ marginTop: 8, marginBottom: 6 }}>Myth vs fact</h3>
+            <ul className="tag" style={{ display: "grid", gap: 6 }}>
+              <li><strong>Myth:</strong> Debt and deficit are the same thing.</li>
+              <li><strong>Fact:</strong> The deficit is one year of budget balance; debt is the running total.</li>
+            </ul>
+          </div>
+
+          <p className="tag" style={{ marginTop: 8 }}>
+            Want a deeper dive? Read our short explainer:{" "}
+            <Link href="/debt-vs-deficit">Debt vs Deficit</Link>.
           </p>
         </section>
 
-        {/* Reasons to borrow */}
+        {/* Section: Why governments borrow */}
         <section>
           <h2 className="article-title">Reasons Governments Borrow</h2>
           <p className="article-body">
-            Borrowing finances projects that outlast a single budget and helps stabilise the economy when
-            shocks hit.
+            Borrowing isn’t only plugging holes. It is how countries finance projects that outlast a single
+            budget and how they cushion shocks when the economy stumbles.
           </p>
-          <h3>Investment & infrastructure</h3>
+          <h3>Investment that pays out over decades</h3>
           <ul>
-            <li>Transport networks, schools, hospitals, clean energy, defence</li>
-            <li>Projects with benefits over decades match long-term financing</li>
+            <li>Transport, schools, hospitals, digital and energy networks</li>
+            <li>Benefits arrive for years, so long-term finance fits the timeline</li>
           </ul>
-          <h3>Stabilising shocks</h3>
+          <h3>Stabilising when shocks hit</h3>
           <ul>
-            <li>Recessions, disasters or pandemics can cut revenue while costs rise</li>
-            <li>Debt smooths temporary gaps between spending and tax income</li>
+            <li>Recessions or disasters can cut revenue while costs rise</li>
+            <li>Debt smooths the gap so essential services continue</li>
           </ul>
+
+          <div className="tag" style={{ marginTop: 8 }}>
+            <strong>Quick example.</strong> During a downturn, tax income falls but unemployment support rises.
+            Borrowing bridges the timing gap so support arrives when it is needed most.
+          </div>
         </section>
 
-        {/* Dynamics over time with r-g diagram */}
+        {/* Section: How debt changes over time */}
         <section>
           <h2 className="article-title">How Debt Changes Over Time</h2>
-          <p>Three forces shape the debt-to-GDP path:</p>
+          <p>
+            Three forces drive the path of the <strong>debt-to-GDP ratio</strong>. You can think of them as
+            levers policy makers can push or pull — some directly, some only partly.
+          </p>
           <ol>
             <li>
               <strong>Primary balance</strong> — the budget before interest. Surpluses push debt down;
               deficits push it up.
             </li>
             <li>
-              <strong>Growth vs interest (r–g)</strong> — if growth outpaces the interest rate on debt,
-              the ratio can stabilise or fall.
+              <strong>Growth vs interest (r–g)</strong> — when{" "}
+              <Term title="Nominal GDP growth (g)">g</Term> outpaces{" "}
+              <Term title="Average effective interest rate on public debt (r)">r</Term>, the ratio tends to stabilise or fall.
             </li>
             <li>
               <strong>One-off measures</strong> — bank rescues, asset sales, inflation shocks or FX moves.
             </li>
           </ol>
+
           <RGDiagram />
-          <p className="tag">
+
+          <div className="tag" style={{ marginTop: 10 }}>
+            <strong>Rule of thumb.</strong> Healthy growth and manageable interest costs make it easier
+            to keep debt on a stable path.
+          </div>
+
+          <p className="tag" style={{ marginTop: 10 }}>
             Methodological details: <Link href="/methodology">how we estimate and update figures</Link>.
           </p>
         </section>
 
-        {/* Impact on citizens */}
+        {/* Section: Impact on citizens */}
         <section>
           <h2 className="article-title">How Government Debt Impacts Citizens</h2>
+          <p className="article-body">
+            Debt affects everyday life less through the headline number and more through its side effects.
+          </p>
           <h3>Interest costs and fiscal space</h3>
           <ul>
-            <li>Money spent on interest cannot fund schools or healthcare</li>
-            <li>Lower interest bills leave more room to invest or respond to shocks</li>
+            <li>Money paid in interest cannot fund schools, healthcare or tax cuts</li>
+            <li>Lower interest bills mean more room to invest or respond to shocks</li>
           </ul>
-          <h3>EU rules and sustainability</h3>
+          <h3>Rules that aim for stability</h3>
           <ul>
             <li>
-              The EU monitors debt and deficits to keep public finances sustainable. Read the{" "}
-              <Link href="/stability-and-growth-pact">Stability and Growth Pact overview</Link>.
+              In the EU, debt and deficits are monitored to keep public finances sustainable. See the{" "}
+              <Link href="/stability-and-growth-pact">Stability and Growth Pact</Link>.
             </li>
           </ul>
+
+          <div className="card" style={{ marginTop: 10 }}>
+            <h3 style={{ marginTop: 8, marginBottom: 6 }}>In one minute</h3>
+            <ul className="tag" style={{ display: "grid", gap: 6 }}>
+              <li>Debt is the stock; deficit is the yearly flow</li>
+              <li>Debt-to-GDP helps compare countries of different size</li>
+              <li>Path depends on the primary balance, growth and interest, plus one-offs</li>
+            </ul>
+          </div>
         </section>
 
-        {/* FAQ */}
+        {/* Section: FAQ */}
         <section>
           <h2 className="article-title">FAQ</h2>
 
           <details className="debt-faq">
             <summary>Who lends to governments?</summary>
             <p className="tag" style={{ marginTop: 8 }}>
-              Mainly investors who buy government bonds: banks, pension funds, insurers and sometimes
+              Mostly investors who buy government bonds — banks, pension funds, insurers — and sometimes
               other countries or institutions.
             </p>
           </details>
@@ -434,8 +477,8 @@ export default function DebtExplainer() {
           <details className="debt-faq">
             <summary>Is there a safe level of debt?</summary>
             <p className="tag" style={{ marginTop: 8 }}>
-              No single number fits all. In the EU, <strong>60% of GDP</strong> is a guide, but
-              sustainability depends on growth, interest rates, demographics and policy.
+              No single number fits all. In the EU, <strong>60% of GDP</strong> is often used as a guide,
+              but the right level depends on growth, interest rates, demographics and policy.
             </p>
           </details>
 
@@ -444,30 +487,20 @@ export default function DebtExplainer() {
             <p className="tag" style={{ marginTop: 8 }}>
               Use the{" "}
               <Link href="/" className="btn" style={{ padding: "2px 8px" }}>
-                EU map
-              </Link>{" "}
-              and click a country for a live estimate based on the latest reference dates.
+                EU live map
+              </Link>
+              {" "}and click a country for a ticking estimate based on the latest reference dates.
             </p>
           </details>
 
           <p className="tag" style={{ marginTop: 10 }}>
-            Sources: Eurostat (government finance statistics) and national finance ministries. Educational
-            overview; not investment advice.
+            Sources: Eurostat (government finance statistics) and national finance ministries. Educational overview; not investment advice.
           </p>
 
-          <div
-            className="cta card"
-            style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}
-          >
-            <Link href="/" className="btn">
-              View the live EU debt map →
-            </Link>
-            <Link href="/debt-to-gdp" className="btn">
-              Debt-to-GDP explained →
-            </Link>
-            <Link href="/methodology" className="btn">
-              Methodology →
-            </Link>
+          <div className="cta card" style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link href="/" className="btn">View the live EU debt map →</Link>
+            <Link href="/debt-to-gdp" className="btn">Debt-to-GDP explained →</Link>
+            <Link href="/methodology" className="btn">Methodology →</Link>
           </div>
         </section>
       </article>
@@ -485,53 +518,29 @@ export default function DebtExplainer() {
         <div className="card" style={{ margin: 0 }}>
           <h3 style={{ marginTop: 0 }}>Related explainers</h3>
           <ul className="tag" style={{ marginTop: 6 }}>
-            <li>
-              <Link href="/debt-to-gdp">Debt-to-GDP ratio explained</Link>
-            </li>
-            <li>
-              <Link href="/debt-vs-deficit">Debt vs Deficit</Link>
-            </li>
-            <li>
-              <Link href="/stability-and-growth-pact">The EU Stability and Growth Pact</Link>
-            </li>
-            <li>
-              <Link href="/methodology">Methodology</Link>
-            </li>
+            <li><Link href="/debt-to-gdp">Debt-to-GDP ratio explained</Link></li>
+            <li><Link href="/debt-vs-deficit">Debt vs Deficit</Link></li>
+            <li><Link href="/stability-and-growth-pact">The EU Stability and Growth Pact</Link></li>
+            <li><Link href="/methodology">Methodology</Link></li>
           </ul>
         </div>
 
         <div className="card" style={{ margin: 0 }}>
           <h3 style={{ marginTop: 0 }}>Popular country pages</h3>
-          <p className="tag" style={{ marginTop: 6 }}>
-            Explore the live ticker and trend for each country.
-          </p>
+          <p className="tag" style={{ marginTop: 6 }}>Explore the live ticker and trend for each country.</p>
           <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link href="/country/DE" className="nav-link">
-              DE Germany
-            </Link>
-            <Link href="/country/FR" className="nav-link">
-              FR France
-            </Link>
-            <Link href="/country/IT" className="nav-link">
-              IT Italy
-            </Link>
-            <Link href="/country/ES" className="nav-link">
-              ES Spain
-            </Link>
-            <Link href="/country/NL" className="nav-link">
-              NL Netherlands
-            </Link>
+            <Link href="/country/DE" className="nav-link">DE Germany</Link>
+            <Link href="/country/FR" className="nav-link">FR France</Link>
+            <Link href="/country/IT" className="nav-link">IT Italy</Link>
+            <Link href="/country/ES" className="nav-link">ES Spain</Link>
+            <Link href="/country/NL" className="nav-link">NL Netherlands</Link>
           </div>
         </div>
 
         <div className="card" style={{ margin: 0, display: "grid", gap: 8, alignContent: "start" }}>
           <h3 style={{ marginTop: 0 }}>Quick actions</h3>
-          <Link href="/" className="btn">
-            See the EU map
-          </Link>
-          <Link href="/methodology" className="btn">
-            Methodology
-          </Link>
+          <Link href="/" className="btn">See the EU map</Link>
+          <Link href="/methodology" className="btn">Methodology</Link>
         </div>
       </section>
     </main>
