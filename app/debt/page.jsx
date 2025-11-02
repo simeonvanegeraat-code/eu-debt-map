@@ -8,9 +8,9 @@ export async function generateMetadata() {
   const base = new URL("https://www.eudebtmap.com");
   const path = "/debt";
   const title =
-    "What is Government Debt? A Plain-English Guide to Public Debt, Debt-to-GDP & Deficits • EU Debt Map";
+    "What is Debt? A Simple Guide to Personal and Government Debt • EU Debt Map";
   const description =
-    "Definition of public debt in simple terms. Debt-to-GDP explained, the difference between debt and deficit, why governments borrow, and how it affects citizens — with clear visuals and FAQs.";
+    "Definition of debt in plain English. Personal debt (good vs bad), what is government debt, the difference between debt and deficit, how bonds work, who holds public debt, and debt-to-GDP explained with clear visuals and FAQs.";
 
   return {
     metadataBase: base,
@@ -198,15 +198,16 @@ export default function DebtExplainer() {
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "What is Government Debt?",
+    headline: "What is Debt? A Simple Guide to Personal and Government Debt",
     inLanguage: "en",
     isPartOf: { "@type": "WebSite", name: "EU Debt Map", url: "https://www.eudebtmap.com/" },
     mainEntityOfPage: "https://www.eudebtmap.com/debt",
     about: [
+      "debt definition",
+      "personal debt",
       "government debt",
       "public debt",
-      "sovereign debt",
-      "debt-to-GDP",
+      "debt-to-GDP explained",
       "difference between debt and deficit",
     ],
   };
@@ -214,10 +215,10 @@ export default function DebtExplainer() {
   const webPageLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "What is Government Debt?",
+    name: "What is Debt? A Simple Guide to Personal and Government Debt",
     url: "https://www.eudebtmap.com/debt",
     description:
-      "Definition of public debt, debt-to-GDP explained, and the difference between debt and deficit in plain English.",
+      "Debt explained simply: personal debt (good vs bad), government debt and deficits, bonds, who holds public debt, and debt-to-GDP.",
     inLanguage: "en",
   };
 
@@ -226,7 +227,7 @@ export default function DebtExplainer() {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://www.eudebtmap.com/" },
-      { "@type": "ListItem", position: 2, name: "Debt Explainer", item: "https://www.eudebtmap.com/debt" },
+      { "@type": "ListItem", position: 2, name: "Debt Guide", item: "https://www.eudebtmap.com/debt" },
     ],
   };
 
@@ -239,31 +240,23 @@ export default function DebtExplainer() {
         name: "What is the difference between debt and deficit?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Debt is the outstanding stock from past borrowing. A deficit is a yearly shortfall when spending exceeds revenue. Deficits add to debt; surpluses can reduce it.",
+          text: "A deficit is the one-year shortfall when spending exceeds revenue. Debt is the total outstanding amount built up over time from past deficits and surpluses.",
         },
       },
       {
         "@type": "Question",
-        name: "Is there a safe level of government debt?",
+        name: "Can a country ever pay off its debt?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "No single number fits all. In the EU, 60% of GDP is a guide, but sustainability depends on growth, interest rates, demographics and policy.",
+          text: "While possible, most large economies roll over their debt by issuing new bonds to replace maturing ones. The goal is not zero debt but a sustainable path where debt grows more slowly than the economy.",
         },
       },
       {
         "@type": "Question",
-        name: "Who lends to governments?",
+        name: "Is all personal debt bad?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Mainly investors who buy government bonds: banks, pension funds, insurers and sometimes other countries or institutions.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Where can I see current figures?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Use the EU map on EU Debt Map and click a country to view a live ticking estimate based on the latest reference dates.",
+          text: "No. Good debt can build wealth or income potential (e.g., mortgages, student loans, business loans). Bad debt finances consumption that loses value quickly (e.g., high-interest credit card balances).",
         },
       },
     ],
@@ -290,22 +283,24 @@ export default function DebtExplainer() {
               margin: 0,
             }}
           >
-            What is Government Debt?
+            What is Debt? A Simple Guide to Personal and Government Debt
           </h1>
 
           <div style={{ maxWidth: "68ch" }}>
             <p className="hero-lede" style={{ marginTop: 8 }}>
-              Picture a country like a household — not because they are the same, but because the idea is familiar.
-              Big decisions arrive before the money does. Rail lines, hospitals, clean energy. Borrowing spreads the
-              cost over time so people can use what is built today, while the bill is paid gradually.
+              Ever felt overwhelmed by the word <em>debt</em>? You’re not alone. We hear it in the news,
+              at the kitchen table, and when planning our future. At its simplest, debt is a promise:
+              owing something — usually money — to someone else.
             </p>
 
             <div className="divider-soft" aria-hidden />
 
             <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
-              This guide gives a plain-English <strong>definition of public debt</strong>, a clear{" "}
-              <strong>debt-to-GDP explained</strong> section, and the <strong>difference between debt and deficit</strong>.
-              Along the way, we show how policy and the economy move the numbers — and where to find live figures.
+              This page starts with <strong>personal debt</strong> you might recognise (like a student loan),
+              then scales up to <strong>government debt</strong> — the numbers you see on the news. Along
+              the way, we explain the <strong>difference between debt and deficit</strong>, how{" "}
+              <Term title="Government debt as a percentage of annual economic output">debt-to-GDP</Term> works,
+              and why some debt can be helpful while too much can be risky.
             </p>
 
             <p className="tag" style={{ marginTop: 8 }}>
@@ -320,91 +315,119 @@ export default function DebtExplainer() {
 
       {/* ================= ARTICLE ================= */}
       <article className="card section" style={{ gridColumn: "1 / -1" }}>
-        {/* Section: Definition */}
+        {/* Personal Debt */}
         <section>
-          <h2 className="article-title">Definition of Public Debt</h2>
+          <h2 className="article-title">The Basics: What is Personal Debt?</h2>
           <p className="article-body">
-            Public debt (also called <em>government debt</em> or <em>sovereign debt</em>) is the running
-            total of what a government owes because of past borrowing. Think of it as a balance that changes
-            every year: when the budget runs a deficit, debt grows; when there is a surplus, debt can shrink.
+            Personal debt is money an individual borrows and promises to pay back with{" "}
+            <Term title="The fee for using borrowed money, usually a percentage per year">interest</Term>.
+            The <strong>borrower</strong> (debtor) receives money now; the <strong>lender</strong> (creditor)
+            provides it and charges a fee for the convenience.
           </p>
-
           <div className="tag" role="note" style={{ marginTop: 8 }}>
-            <strong>Plain-English definition.</strong> Government debt is money that a state has borrowed
-            and still needs to repay, usually by issuing bonds to investors.
+            <strong>Everyday example.</strong> Buy a $5 coffee on a credit card and don’t pay the bill on time:
+            that $5 can become $6 or more after interest and fees.
           </div>
 
-          <h3 className="article-subtitle" style={{ marginTop: 14 }}>Debt-to-GDP explained</h3>
+          <h3 className="article-subtitle" style={{ marginTop: 14 }}>Good Debt vs Bad Debt</h3>
           <p>
-            We measure debt in currency and as a share of the economy via the{" "}
-            <Term title="Government debt as a percentage of annual economic output">debt-to-GDP ratio</Term>.
-            The ratio puts large numbers into context.
+            Not all debt is created equal. A common rule-of-thumb splits personal borrowing into two types.
+          </p>
+          <div className="card" style={{ display: "grid", gap: 8, marginTop: 8 }}>
+            <div>
+              <strong>Good debt (investment)</strong> — finances something that can grow in value or
+              raise future income: <em>mortgages</em>, <em>student loans</em>, <em>business loans</em>.
+            </div>
+            <div>
+              <strong>Bad debt (consumption)</strong> — finances things that lose value quickly and
+              don’t earn income: revolving <em>credit card balances</em>, <em>payday loans</em>.
+            </div>
+          </div>
+          <div className="tag" style={{ marginTop: 8 }}>
+            <strong>Takeaway.</strong> Good debt helps build wealth; bad debt drains it.
+          </div>
+        </section>
+
+        {/* Government Debt */}
+        <section>
+          <h2 className="article-title">Shifting Gears: What is Government Debt?</h2>
+          <p className="article-body">
+            Government debt (also called <em>public</em> or <em>national</em> debt) is the total amount a
+            state owes to its creditors. Governments have <strong>income</strong> (mainly taxes) and{" "}
+            <strong>expenses</strong> (infrastructure, healthcare, education, defence, public salaries).
+            When expenses exceed income, borrowing fills the gap.
+          </p>
+
+          <h3 className="article-subtitle">Debt vs Deficit: the Crucial Difference</h3>
+          <p>
+            The <strong>deficit</strong> is a one-year snapshot: spending minus revenue. The{" "}
+            <strong>debt</strong> is the accumulated total from previous years. A handy analogy:
+            the deficit is what you add to your card <em>this month</em>; the debt is your{" "}
+            <em>total outstanding balance</em>.
+          </p>
+
+          <h3 className="article-subtitle">How Does a Government Borrow?</h3>
+          <p>
+            Mostly by issuing <strong>bonds</strong> — a formal IOU. Investors buy a bond (say $1,000),
+            receive regular interest, and get the $1,000 back at maturity. Investors can be households,
+            banks, pension funds, other countries, or — in some cases — the central bank.
+          </p>
+
+          <h3 className="article-subtitle">Who Does the Government Owe?</h3>
+          <ul>
+            <li><strong>Domestic investors</strong>: households, banks, insurers, pension funds</li>
+            <li><strong>Foreign investors</strong>: other countries, global funds</li>
+            <li><strong>Central bank</strong>: sometimes holds bonds to manage the economy</li>
+          </ul>
+        </section>
+
+        {/* Is debt always bad? */}
+        <section>
+          <h2 className="article-title">Is Government Debt Always a Bad Thing?</h2>
+          <p className="article-body">
+            Unlike a household, a government doesn’t need to reduce debt to zero. Most economists agree
+            that some debt is useful — and sometimes necessary.
+          </p>
+          <div className="card" style={{ display: "grid", gap: 8, marginTop: 8 }}>
+            <div>
+              <strong>The Good.</strong> Borrowing funds long-lived investments (broadband, clean energy,
+              universities) and helps during recessions by sustaining jobs and demand.
+            </div>
+            <div>
+              <strong>The Bad.</strong> If debt gets too high, interest costs consume tax revenue, squeezing
+              budgets for schools or healthcare.
+            </div>
+            <div>
+              <strong>The Ugly.</strong> If investors lose confidence, demanded interest rates jump, making
+              the problem worse — a potential crisis.
+            </div>
+          </div>
+        </section>
+
+        {/* Debt-to-GDP */}
+        <section>
+          <h2 className="article-title">The Key Metric: Debt-to-GDP Ratio</h2>
+          <p>
+            To judge scale, economists compare total debt to the size of the economy:
+            the <Term title="Government debt divided by annual economic output">debt-to-GDP ratio</Term>.
+            Think of GDP as a country’s yearly “salary.”
           </p>
           <p>
-            If GDP is <strong>€1 trillion</strong> and government debt is <strong>€500 billion</strong>,
-            debt-to-GDP is <strong>50%</strong>.
+            Example: earning $50,000 with $25,000 debt is a <strong>50%</strong> ratio. Earning $50,000
+            with $200,000 debt is <strong>400%</strong>. The same logic helps compare countries.
           </p>
           <DebtMeter value={50} />
-
           <div className="tag" style={{ marginTop: 10 }}>
-            <strong>Key takeaway.</strong> The same debt level can be sustainable in a large, growing
-            economy and risky in a small, shrinking one. Context matters.
+            <strong>Context matters.</strong> A large, growing economy can carry more debt than a small,
+            shrinking one.
           </div>
         </section>
 
-        {/* Section: Debt vs Deficit */}
+        {/* Dynamics over time */}
         <section>
-          <h2 className="article-title">Debt vs Deficit: What’s the Difference?</h2>
+          <h2 className="article-title">What Moves the Debt Ratio Over Time?</h2>
           <p>
-            <strong>Debt</strong> is the stock — the total outstanding amount. A{" "}
-            <strong>deficit</strong> is the flow — the yearly shortfall when spending exceeds revenue.
-            Deficits add to debt; surpluses can reduce it.
-          </p>
-
-          <div className="card" style={{ marginTop: 10 }}>
-            <h3 style={{ marginTop: 8, marginBottom: 6 }}>Myth vs fact</h3>
-            <ul className="tag" style={{ display: "grid", gap: 6 }}>
-              <li><strong>Myth:</strong> Debt and deficit are the same thing.</li>
-              <li><strong>Fact:</strong> The deficit is one year of budget balance; debt is the running total.</li>
-            </ul>
-          </div>
-
-          <p className="tag" style={{ marginTop: 8 }}>
-            Want a deeper dive? Read our short explainer:{" "}
-            <Link href="/debt-vs-deficit">Debt vs Deficit</Link>.
-          </p>
-        </section>
-
-        {/* Section: Why governments borrow */}
-        <section>
-          <h2 className="article-title">Reasons Governments Borrow</h2>
-          <p className="article-body">
-            Borrowing isn’t only plugging holes. It is how countries finance projects that outlast a single
-            budget and how they cushion shocks when the economy stumbles.
-          </p>
-          <h3>Investment that pays out over decades</h3>
-          <ul>
-            <li>Transport, schools, hospitals, digital and energy networks</li>
-            <li>Benefits arrive for years, so long-term finance fits the timeline</li>
-          </ul>
-          <h3>Stabilising when shocks hit</h3>
-          <ul>
-            <li>Recessions or disasters can cut revenue while costs rise</li>
-            <li>Debt smooths the gap so essential services continue</li>
-          </ul>
-
-          <div className="tag" style={{ marginTop: 8 }}>
-            <strong>Quick example.</strong> During a downturn, tax income falls but unemployment support rises.
-            Borrowing bridges the timing gap so support arrives when it is needed most.
-          </div>
-        </section>
-
-        {/* Section: How debt changes over time */}
-        <section>
-          <h2 className="article-title">How Debt Changes Over Time</h2>
-          <p>
-            Three forces drive the path of the <strong>debt-to-GDP ratio</strong>. You can think of them as
-            levers policy makers can push or pull — some directly, some only partly.
+            Three forces shape the path of debt-to-GDP:
           </p>
           <ol>
             <li>
@@ -420,76 +443,37 @@ export default function DebtExplainer() {
               <strong>One-off measures</strong> — bank rescues, asset sales, inflation shocks or FX moves.
             </li>
           </ol>
-
           <RGDiagram />
-
-          <div className="tag" style={{ marginTop: 10 }}>
-            <strong>Rule of thumb.</strong> Healthy growth and manageable interest costs make it easier
-            to keep debt on a stable path.
-          </div>
-
           <p className="tag" style={{ marginTop: 10 }}>
             Methodological details: <Link href="/methodology">how we estimate and update figures</Link>.
           </p>
         </section>
 
-        {/* Section: Impact on citizens */}
+        {/* FAQ */}
         <section>
-          <h2 className="article-title">How Government Debt Impacts Citizens</h2>
-          <p className="article-body">
-            Debt affects everyday life less through the headline number and more through its side effects.
-          </p>
-          <h3>Interest costs and fiscal space</h3>
-          <ul>
-            <li>Money paid in interest cannot fund schools, healthcare or tax cuts</li>
-            <li>Lower interest bills mean more room to invest or respond to shocks</li>
-          </ul>
-          <h3>Rules that aim for stability</h3>
-          <ul>
-            <li>
-              In the EU, debt and deficits are monitored to keep public finances sustainable. See the{" "}
-              <Link href="/stability-and-growth-pact">Stability and Growth Pact</Link>.
-            </li>
-          </ul>
-
-          <div className="card" style={{ marginTop: 10 }}>
-            <h3 style={{ marginTop: 8, marginBottom: 6 }}>In one minute</h3>
-            <ul className="tag" style={{ display: "grid", gap: 6 }}>
-              <li>Debt is the stock; deficit is the yearly flow</li>
-              <li>Debt-to-GDP helps compare countries of different size</li>
-              <li>Path depends on the primary balance, growth and interest, plus one-offs</li>
-            </ul>
-          </div>
-        </section>
-
-        {/* Section: FAQ */}
-        <section>
-          <h2 className="article-title">FAQ</h2>
+          <h2 className="article-title">Frequently Asked Questions (FAQs)</h2>
 
           <details className="debt-faq">
-            <summary>Who lends to governments?</summary>
+            <summary>What is the difference between debt and deficit?</summary>
             <p className="tag" style={{ marginTop: 8 }}>
-              Mostly investors who buy government bonds — banks, pension funds, insurers — and sometimes
-              other countries or institutions.
+              A deficit is the one-year shortfall when spending exceeds revenue. Debt is the total outstanding
+              amount built up over time from past deficits and surpluses.
             </p>
           </details>
 
           <details className="debt-faq">
-            <summary>Is there a safe level of debt?</summary>
+            <summary>Can a country ever pay off its debt?</summary>
             <p className="tag" style={{ marginTop: 8 }}>
-              No single number fits all. In the EU, <strong>60% of GDP</strong> is often used as a guide,
-              but the right level depends on growth, interest rates, demographics and policy.
+              Possible, but uncommon. Most large economies roll over their debt by issuing new bonds to repay
+              maturing ones. The aim is sustainability, not zero.
             </p>
           </details>
 
           <details className="debt-faq">
-            <summary>Where can I see current figures?</summary>
+            <summary>Is all personal debt bad?</summary>
             <p className="tag" style={{ marginTop: 8 }}>
-              Use the{" "}
-              <Link href="/" className="btn" style={{ padding: "2px 8px" }}>
-                EU live map
-              </Link>
-              {" "}and click a country for a ticking estimate based on the latest reference dates.
+              No. Debt that builds assets or income potential (mortgage, education, business) can be helpful;
+              high-interest consumption debt is usually harmful.
             </p>
           </details>
 
@@ -500,6 +484,8 @@ export default function DebtExplainer() {
           <div className="cta card" style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Link href="/" className="btn">View the live EU debt map →</Link>
             <Link href="/debt-to-gdp" className="btn">Debt-to-GDP explained →</Link>
+            <Link href="/debt-vs-deficit" className="btn">Debt vs Deficit →</Link>
+            <Link href="/stability-and-growth-pact" className="btn">Stability & Growth Pact →</Link>
             <Link href="/methodology" className="btn">Methodology →</Link>
           </div>
         </section>
