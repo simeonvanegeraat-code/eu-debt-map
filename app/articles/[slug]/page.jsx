@@ -194,7 +194,7 @@ export default function ArticleDetailPage({ params }) {
         <ArticleRailServer
           lang={article.lang}
           exceptSlug={article.slug}
-          limit={4}
+          limit={6}
           title="More articles"
         />
 
