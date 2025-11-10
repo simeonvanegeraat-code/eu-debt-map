@@ -1,6 +1,6 @@
 // app/articles/page.jsx
-import Link from "next/link";
 import { listArticles } from "@/lib/articles";
+import ArticlesListClient from "@/components/ArticlesListClient";
 
 export const runtime = "nodejs";
 
@@ -9,10 +9,12 @@ const LANG = "en";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 
+const PAGE_SIZE = 12;
+
 /* ---------- SEO ---------- */
 export const metadata = {
-  // Gericht op jouw niche: EU national debt, debt-to-GDP, fiscal rules
-  title: "EU Debt Articles & Insights on National Debt, Debt-to-GDP & Fiscal Rules • EU Debt Map",
+  title:
+    "EU Debt Articles & Insights on National Debt, Debt-to-GDP & Fiscal Rules • EU Debt Map",
   description:
     "Data-driven explainers and analyses on EU-27 national debt, debt-to-GDP ratios, deficits and fiscal rules — based on Eurostat and live trackers.",
   alternates: {
@@ -36,18 +38,6 @@ export const metadata = {
   },
 };
 
-function formatDate(iso) {
-  try {
-    return new Date(iso).toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return iso;
-  }
-}
-
 export default function ArticlesPage() {
   const articles = listArticles({ lang: LANG }); // newest-first
 
@@ -63,7 +53,7 @@ export default function ArticlesPage() {
 
   return (
     <main>
-      {/* Local styles specifiek voor deze pagina */}
+      {/* Styles specifiek voor deze pagina */}
       <style>{`
         .articles-hero {
           padding: 40px 16px 24px;
@@ -85,8 +75,8 @@ export default function ArticlesPage() {
 
         .articles-list {
           max-width: 1120px;
-          margin: 0 auto 40px;
-          padding: 0 16px 8px;
+          margin: 0 auto 32px;
+          padding: 0 16px;
           display: grid;
           gap: 16px;
         }
@@ -151,7 +141,7 @@ export default function ArticlesPage() {
 
         .articles-title {
           margin: 0;
-          font-size: 1.3rem; /* ~20-21px */
+          font-size: 1.3rem;
           font-weight: 600;
           line-height: 1.4;
           letter-spacing: -0.01em;
@@ -169,10 +159,40 @@ export default function ArticlesPage() {
           text-overflow: ellipsis;
         }
 
-        /* SEO / uitleg blok onderaan */
+        .loadmore-wrap {
+          display: flex;
+          justify-content: center;
+          margin: 8px 0 24px;
+        }
+
+        .loadmore-btn {
+          padding: 8px 18px;
+          border-radius: 999px;
+          border: 1px solid #d1d5db;
+          background: #ffffff;
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: #374151;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+          transition: all 0.16s ease;
+        }
+        .loadmore-btn:hover {
+          background: #f3f4ff;
+          box-shadow: 0 8px 18px rgba(15,23,42,0.12);
+        }
+        .loadmore-btn[disabled]{
+          opacity:.45;
+          cursor:default;
+          box-shadow:none;
+        }
+
         .articles-seo {
           max-width: 1120px;
-          margin: 8px auto 40px;
+          margin: 0 auto 40px;
           padding: 0 16px;
           font-size: 0.9rem;
           line-height: 1.6;
@@ -210,7 +230,7 @@ export default function ArticlesPage() {
         }
       `}</style>
 
-      {/* ItemList structured data voor Google */}
+      {/* ItemList structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -228,40 +248,17 @@ export default function ArticlesPage() {
         </p>
       </section>
 
-      {/* Artikellijst */}
-      <section className="articles-list">
-        {articles.map((a) => (
-          <Link
-            key={a.slug}
-            href={`${prefix}/articles/${a.slug}`}
-            className="articles-item"
-          >
-            <div className="articles-row">
-              <div className="articles-thumb">
-                <img
-                  src={a.image || "/images/articles/placeholder.jpg"}
-                  alt={a.imageAlt || a.title}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-
-              <div className="articles-content">
-                <p className="articles-date">{formatDate(a.date)}</p>
-                <h2 className="articles-title">{a.title}</h2>
-                <p className="articles-excerpt">{a.excerpt}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </section>
+      {/* Artikels met lazy load / load more */}
+      <ArticlesListClient
+        articles={articles}
+        pageSize={PAGE_SIZE}
+      />
 
       {/* SEO / context-blok */}
       <section className="articles-seo">
         EU Debt Map publishes independent, data-driven articles on EU-27 government debt,
-        debt-to-GDP ratios, deficit rules and fiscal frameworks. All insights are built on
-        transparent Eurostat data and linked to our live national debt trackers, helping
-        readers understand how Europe’s debt shapes its economic future.
+        debt-to-GDP ratios, deficit rules and fiscal frameworks. All insights are based on
+        transparent Eurostat data and linked to our live national debt trackers.
       </section>
     </main>
   );
