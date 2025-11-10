@@ -1,4 +1,3 @@
-// components/ArticleRail.jsx
 "use client";
 
 import Link from "next/link";
@@ -35,6 +34,7 @@ export default function ArticleRail({
         Related EU debt and fiscal insights to explore next.
       </p>
 
+      {/* Mobile: horizontal scroll, Desktop: grid */}
       <div
         className="
           flex gap-3 overflow-x-auto pb-2
@@ -51,26 +51,33 @@ export default function ArticleRail({
               group
               w-[260px] shrink-0
               md:w-auto md:shrink
-              rounded-2xl border border-slate-200/80
+              flex flex-col
+              rounded-2xl
+              border border-slate-200/80
               bg-white
               shadow-[0_6px_16px_rgba(15,23,42,0.06)]
               hover:shadow-[0_14px_32px_rgba(15,23,42,0.14)]
               hover:bg-slate-50/80
               transition-all duration-150
               overflow-hidden
-              flex flex-col
             "
           >
+            {/* 16:9 thumbnail */}
             <div className="w-full aspect-[16/9] bg-slate-100 overflow-hidden">
               <img
                 src={a.image || "/images/articles/placeholder.jpg"}
                 alt={a.imageAlt || a.title}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-150"
+                className="
+                  h-full w-full object-cover
+                  group-hover:scale-[1.03]
+                  transition-transform duration-150
+                "
               />
             </div>
 
+            {/* Tekst */}
             <div className="flex flex-col gap-1.5 p-3">
               {a.date && (
                 <p className="text-[0.68rem] font-medium uppercase tracking-[0.16em] text-slate-400">
