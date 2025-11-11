@@ -3,10 +3,15 @@
   "title": "Your title here",
   "summary": "Short summary (1–2 sentences).",
   "excerpt": "Same as summary, used in some components.",
-  "tags": [],
-  "date": "2025-10-10",
-  "lang": "en",
+  "tags": ["debt-to-GDP", "EU debt", "economics"],
+  "datePublished": "2025-10-10T08:00:00+00:00",
+  "dateModified": "2025-10-10T08:00:00+00:00",
+  "author": {
+    "name": "Simeon",
+    "url": "https://www.eudebtmap.com/authors/author-name"
+  },
   "image": "/images/articles/placeholder.jpg",
   "imageAlt": "Describe the image for accessibility",
+  "lang": "en",
   "body": "<h2>Intro</h2><p>Write your article body as HTML or minimal markup here.</p>"
 }
