@@ -1,17 +1,19 @@
-import Link from "next/link";
 import { listArticles } from "@/lib/articles";
+import ArticlesListClient from "@/components/ArticlesListClient";
 
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "nl";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
-const prefix = ROUTE_PREFIX[LANG] ?? "/nl";
+const prefix = ROUTE_PREFIX[LANG] ?? "";
+
+const PAGE_SIZE = 12;
 
 export const metadata = {
-  title: "EU-schulden: Analyse & Inzichten • EU Debt Map",
+  title: "EU Schuld Artikelen & Inzichten over Staatsschuld en Begrotingsregels • EU Debt Map",
   description:
-    "Uitleg en analyses over de staatsschuld in de EU — data-gedreven verhalen op basis van Eurostat.",
+    "Data-gedreven artikelen over de staatsschuld van EU-landen, schuld-tot-bbp-verhoudingen, tekorten en begrotingsregels — gebaseerd op Eurostat en live trackers.",
   alternates: {
     canonical: `${SITE}${prefix}/articles`,
     languages: {
@@ -23,56 +25,54 @@ export const metadata = {
     },
   },
   openGraph: {
-    title: "EU-schulden: Analyse & Inzichten • EU Debt Map",
+    title:
+      "EU Schuld Artikelen & Inzichten over Staatsschuld en Begrotingsregels • EU Debt Map",
     description:
-      "Uitleg en analyses over de staatsschuld in de EU — data-gedreven verhalen op basis van Eurostat.",
+      "Ontdek diepgaande, data-onderbouwde artikelen over Europese overheidsschuld, schuld-tot-bbp, tekorten en het begrotingskader dat de toekomst van Europa vormt.",
     url: `${SITE}${prefix}/articles`,
     siteName: "EU Debt Map",
     type: "website",
   },
 };
 
-function formatDate(iso) {
-  try {
-    return new Date(iso).toLocaleDateString("nl-NL", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return iso;
-  }
-}
-
 export default function ArticlesPage() {
-  const articles = listArticles({ lang: LANG }); // newest-first
+  const articles = listArticles({ lang: LANG });
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: articles.map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${SITE}${prefix}/articles/${a.slug}`,
+    })),
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="articles-hero" aria-labelledby="articles-title">
-        <h1 id="articles-title" className="hero-title" style={{ marginBottom: 6 }}>
-          Analyse & inzichten over EU-schulden
+        <h1 id="articles-title" className="hero-title">
+          Artikelen & Inzichten over Staatsschuld
         </h1>
-        <p className="hero-lede" style={{ margin: "0 auto", maxWidth: 760 }}>
-          De nieuwste analyses en rapporten over Europa’s overheidsfinanciën, hoe
-          staatsschuld beleid, groei en het dagelijks leven in de EU-27 beïnvloedt.
+        <p className="hero-lede">
+          Data-gedreven verhalen over de Europese overheidsfinanciën: staatsschuld,
+          schuld-tot-bbp, tekorten en begrotingsregels die beleid, markten en het dagelijks
+          leven in de EU-27 beïnvloeden.
         </p>
       </section>
 
-      <section className="articles-list">
-        {articles.map((a) => (
-          <Link key={a.slug} href={`${prefix}/articles/${a.slug}`} className="articles-item">
-            <div className="articles-row">
-              <div className="articles-thumb">
-                <img src={a.image || "/images/articles/placeholder.jpg"} alt={a.imageAlt || a.title} loading="lazy" />
-              </div>
-              <div className="articles-content">
-                <p className="articles-date">{formatDate(a.date)}</p>
-                <h2 className="articles-title">{a.title}</h2>
-                <p className="articles-excerpt">{a.excerpt}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
+      <ArticlesListClient articles={articles} pageSize={PAGE_SIZE} />
+
+      <section className="articles-seo">
+        EU Debt Map publiceert onafhankelijke, data-gedreven artikelen over de staatsschuld
+        van EU-lidstaten, schuld-tot-bbp-verhoudingen, tekorten en begrotingskaders.
+        Alle inzichten zijn gebaseerd op transparante Eurostat-data en gekoppeld aan onze
+        live schuldtrackers per land.
       </section>
     </main>
   );
