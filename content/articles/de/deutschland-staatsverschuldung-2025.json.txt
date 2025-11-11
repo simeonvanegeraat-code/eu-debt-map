@@ -4,14 +4,9 @@
   "summary": "Sehen Sie die aktuelle Staatsverschuldung Deutschlands im Jahr 2025 – mit Live-Anzeige pro Sekunde, Schuldenquote und EU-Vergleich.",
   "excerpt": "Sehen Sie die aktuelle Staatsverschuldung Deutschlands im Jahr 2025 – mit Live-Anzeige pro Sekunde, Schuldenquote und EU-Vergleich.",
   "tags": ["Deutschland", "Staatsverschuldung", "EU Debt Map", "Wirtschaft", "Schuldenquote"],
-  "datePublished": "2025-11-11T08:00:00+00:00",
-  "dateModified": "2025-11-11T08:00:00+00:00",
-  "author": {
-    "name": "Simeon",
-    "url": "https://www.eudebtmap.com/about"
-  },
+  "date": "2025-11-11",
+  "lang": "de",
   "image": "/images/articles/germany-debt-2025.jpg",
   "imageAlt": "Deutschlandkarte mit steigenden Finanzdaten, die die Staatsverschuldung 2025 darstellen",
-  "lang": "de",
   "body": "<h2>Deutschlands Schuldenstand im Überblick</h2>\n<p>Ende 2025 wird Deutschlands Staatsverschuldung voraussichtlich bei rund <strong>62 % des BIP</strong> liegen. Damit bleibt die größte Volkswirtschaft Europas stabil unter der 90-Prozent-Marke, die oft als kritische Grenze gilt – dennoch steigt die absolute Schuldensumme täglich.</p>\n\n<h2>Sehen Sie die Live-Staatsverschuldung</h2>\n<p>Auf unserer interaktiven Seite können Sie in Echtzeit verfolgen, wie schnell die deutsche Staatsverschuldung wächst, wie hoch sie pro Einwohner ist und wie sie sich im europäischen Vergleich entwickelt.</p>\n<p><a href=\"https://www.eudebtmap.com/de/country/de\">👉 Jetzt Deutschlands <strong>Live-Staatsverschuldung</strong> ansehen</a></p>\n\n<h2>Warum diese Zahlen wichtig sind</h2>\n<p>Die Schuldenquote zeigt, wie solide die öffentlichen Finanzen eines Landes sind. Deutschland gilt als finanziell stabil, doch Zinsanstieg, Energiewende und höhere Verteidigungsausgaben erhöhen den Druck auf den Haushalt.</p>\n\n<h2>Vergleich mit anderen EU-Staaten</h2>\n<p>EU Debt Map bietet eine europaweite Übersicht über die Verschuldung aller Mitgliedsstaaten – basierend auf Daten von Eurostat und dem IWF. Vergleichen Sie Deutschlands Position im EU-Kontext und sehen Sie, wie sich die Schulden seit 2020 entwickelt haben.</p>\n<p><a href=\"https://www.eudebtmap.com/debt-to-gdp\">Alle EU-Länder im Live-Vergleich ansehen</a></p>\n\n<h2>Bleiben Sie informiert</h2>\n<p>Verfolgen Sie die neuesten Zahlen und Trends der deutschen Staatsfinanzen. Unsere Live-Anzeige aktualisiert sich automatisch – transparent, datenbasiert und jederzeit abrufbar.</p>"
 }
