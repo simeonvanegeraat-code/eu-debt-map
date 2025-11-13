@@ -169,7 +169,9 @@ export default function CountryClient({
 
     return () => {
       cancelled = true;
-      try { ctrl.abort(); } catch {}
+      try {
+        ctrl.abort();
+      } catch {}
     };
   }, [safeCountry, gdpAbsFromServer]);
 
@@ -179,9 +181,13 @@ export default function CountryClient({
   const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
 
   const backHref =
-    effLang === "nl" ? "/nl" :
-    effLang === "de" ? "/de" :
-    effLang === "fr" ? "/fr" : "/";
+    effLang === "nl"
+      ? "/nl"
+      : effLang === "de"
+      ? "/de"
+      : effLang === "fr"
+      ? "/fr"
+      : "/";
 
   const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
@@ -201,7 +207,9 @@ export default function CountryClient({
 
       {/* Landtitel */}
       <h1 style={{ margin: 0 }}>
-        {safeCountry.flag ? <span style={{ marginRight: 8 }}>{safeCountry.flag}</span> : null}
+        {safeCountry.flag ? (
+          <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
+        ) : null}
         {displayName}
       </h1>
 
@@ -219,7 +227,7 @@ export default function CountryClient({
         <DebtToGDPPill ratioPct={ratioPct} />
       </div>
 
-      {/* Live bedrag - GEEN zichtbaar label ervoor, wel a11y */}
+      {/* Live bedrag */}
       <div
         className="mono"
         style={{
@@ -239,33 +247,37 @@ export default function CountryClient({
             display: "inline-block",
             lineHeight: 1.1,
             fontWeight: 800,
-            fontSize: "clamp(32px, 7.2vw, 56px)", // groter & responsief
+            // ~20% grotere teller
+            fontSize: "clamp(38px, 8.8vw, 68px)",
             letterSpacing: "0.2px",
+            // subtiele schaduw voor extra focus
+            textShadow: "0 1px 0 rgba(15,23,42,0.18)",
           }}
         >
           €{nf.format(Math.round(current))}
         </span>
       </div>
 
-      {/* Infobox onder de teller */}
+      {/* Infobox onder de teller - volle breedte, links uitgelijnd, zonder jaartal */}
       <div
         style={{
-          marginTop: 10,
-          marginInline: "auto",
-          maxWidth: 640,
+          marginTop: 12,
+          width: "100%",
           border: "1px solid rgba(15,23,42,0.08)",
           background: "rgba(241,245,249,0.6)",
           borderRadius: 12,
-          padding: "8px 12px",
+          padding: "10px 16px",
           fontSize: 13.5,
           color: "rgb(71,85,105)",
+          textAlign: "left",
         }}
         id={rateBoxId}
       >
-        Based on latest Eurostat release{gdpPeriod ? ` (${gdpPeriod})` : ""}. Live estimate using linearized growth between releases.
+        Based on the latest Eurostat data. Live estimate using linearized
+        growth between releases.
       </div>
 
-      {/* Nette scheiding vóór auto-ads */}
+      {/* Nette scheiding vóór auto-ads / volgende blokken */}
       <hr
         aria-hidden="true"
         style={{
