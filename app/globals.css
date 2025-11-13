@@ -218,50 +218,120 @@ p{ margin: var(--sp-3) 0; }
    Header / Nav
    =========================== */
 .site-header{
-  position: sticky; top: 0; z-index: 50;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   backdrop-filter: saturate(1.1) blur(8px);
   border-bottom: 1px solid var(--header-border);
 }
-.site-header--light{ background: var(--header-bg); color: var(--header-fg); }
-.header-inner{ display:flex; align-items:center; justify-content:space-between; gap: var(--sp-4); }
+.site-header--light{
+  background: var(--header-bg);
+  color: var(--header-fg);
+}
 
-.brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: var(--sp-4);
+}
+
+/* Logo */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+}
 .brand:hover{ text-decoration:none; }
 .brand-logo{
-  display:inline-grid; place-items:center; width:36px; height:36px;
+  display:inline-grid;
+  place-items:center;
+  width:36px;
+  height:36px;
   border-radius:12px;
   background: conic-gradient(from 140deg at 50% 50%, #1d4ed8, #60a5fa 60%, #1d4ed8);
-  font-weight:800; color:white; letter-spacing:.25px;
+  font-weight:800;
+  color:white;
+  letter-spacing:.25px;
   box-shadow: 0 6px 16px rgba(59,130,246,.25);
 }
-.brand-text{ font-weight:800; font-size:clamp(18px,2.5vw,24px); color:var(--header-fg); }
+.brand-text{
+  font-weight:800;
+  font-size:clamp(18px,2.5vw,24px);
+  color:var(--header-fg);
+}
 
-.nav-desktop{ display:none; gap:8px; }
+/* Desktop nav */
+.nav-desktop{
+  display:none;
+  gap:8px;
+  align-items:center;
+}
 .nav-link{
-  padding:8px 10px; border-radius:10px; border:1px solid var(--header-border);
-  text-decoration:none; color:var(--header-fg); font-weight:500;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--header-border);
+  text-decoration:none;
+  color:var(--header-fg);
+  font-weight:500;
   background:#fff;
   transition: background .2s ease, border-color .2s ease;
 }
-.nav-link:hover{ background:#f8fafc; border-color:var(--header-border-strong); }
-.nav-link--active{ border-color:#c7d2fe; background:#eef2ff; }
-
-.hamburger{
-  width:42px; height:42px; border-radius:10px; border:1px solid var(--header-border);
-  background:#ffffff; display:grid; place-items:center; padding:8px; cursor:pointer;
+.nav-link:hover{
+  background:#f8fafc;
+  border-color:var(--header-border-strong);
 }
-.hamburger span{ width:20px; height:2px; background:#334155; display:block; border-radius:2px; }
+.nav-link--active{
+  border-color:#c7d2fe;
+  background:#eef2ff;
+}
 
-.nav-drawer{ display:none; border-top:1px solid var(--header-border); background:#ffffff; color:#0b1220; }
-.nav-drawer--open{ display:block; }
+/* Hamburger */
+.hamburger{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  border:1px solid var(--header-border);
+  background:#ffffff;
+  display:grid;
+  place-items:center;
+  padding:8px;
+  cursor:pointer;
+}
+.hamburger span{
+  width:20px;
+  height:2px;
+  background:#334155;
+  display:block;
+  border-radius:2px;
+}
+
+/* Mobile drawer (paneel onder de header) */
+.nav-drawer{
+  display:none;
+  border-top:1px solid var(--header-border);
+  background:#ffffff;
+  color:#0b1220;
+}
+.nav-drawer--open{
+  display:block;
+}
 .drawer-link{
-  display:block; padding:14px 24px; border-bottom:1px solid var(--header-border);
-  color:#0b1220; text-decoration:none;
+  display:block;
+  padding:14px 24px;
+  border-bottom:1px solid var(--header-border);
+  color:#0b1220;
+  text-decoration:none;
 }
 .drawer-link:hover{ background:#f8fafc; }
-.drawer-link--active{ background:#eef2ff; border-left:3px solid #3b82f6; }
+.drawer-link--active{
+  background:#eef2ff;
+  border-left:3px solid #3b82f6;
+}
 
-@media (min-width: 860px){
+/* Desktop breakpoint */
+@media (min-width: 960px){
   .nav-desktop{ display:flex; }
   .hamburger{ display:none; }
   .nav-drawer{ display:none!important; }
@@ -462,7 +532,7 @@ p{ margin: var(--sp-3) 0; }
 .article-body strong, .tag strong{ font-weight: 600; }
 
 /* Lichte “chip” links (bijv. in Explore more) */
-.nav-link{
+.chip-link{
   display:inline-block;
   padding: 6px 10px;
   border: 1px solid var(--border);
@@ -470,7 +540,7 @@ p{ margin: var(--sp-3) 0; }
   background: #fff;
   text-decoration: none;
 }
-.nav-link:hover{ background:#f8fafc; border-color:#cbd5e1; }
+.chip-link:hover{ background:#f8fafc; border-color:#cbd5e1; }
 
 /* ===========================
    Desktop side rails (>=1280px)
