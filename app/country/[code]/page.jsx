@@ -39,6 +39,7 @@ export async function generateMetadata({ params }) {
     alternates: {
       canonical: `${base}${path}`,
       languages: {
+        "x-default": `${base}${path}`,
         en: `${base}${withLocale(path, "")}`,
         nl: `${base}${withLocale(path, "nl")}`,
         de: `${base}${withLocale(path, "de")}`,
@@ -49,7 +50,24 @@ export async function generateMetadata({ params }) {
       title: titleMap[lang] || titleMap.en,
       description: descMap[lang] || descMap.en,
       url: `${base}${withLocale(path, lang)}`,
-      type: "article",
+      type: "website",
+      images: [
+        {
+          url: `${base}/og/country-${code.toLowerCase()}.png`,
+          width: 1200,
+          height: 630,
+          alt: `${name} public debt live`,
+        },
+        {
+          url: `${base}/og/eu-debt-map.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "EU Debt Map",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
     },
   };
 }

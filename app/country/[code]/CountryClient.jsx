@@ -68,6 +68,19 @@ function writeGDPCache(iso2, value, period) {
   }
 }
 
+// Visually hidden style (val niet terug op sr-only class)
+const SR_ONLY = {
+  position: "absolute",
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
 export default function CountryClient({
   country,
   lang = "en",
@@ -206,20 +219,62 @@ export default function CountryClient({
         <DebtToGDPPill ratioPct={ratioPct} />
       </div>
 
-      {/* Live bedrag */}
+      {/* Live bedrag - GEEN zichtbaar label ervoor, wel a11y */}
       <div
         className="mono"
-        style={{ marginTop: 10, display: "flex", alignItems: "baseline", gap: 10 }}
+        style={{
+          marginTop: 14,
+          textAlign: "center",
+        }}
         aria-live="polite"
         aria-describedby={rateBoxId}
       >
-        <span className="tag" style={{ whiteSpace: "nowrap" }}>
-          {liveLabel}
-        </span>
-        <span className="ticker-hero num" suppressHydrationWarning>
+        {/* visueel verbergen, wel voor screenreaders */}
+        <span style={SR_ONLY}>{liveLabel}</span>
+
+        <span
+          className="ticker-hero num"
+          suppressHydrationWarning
+          style={{
+            display: "inline-block",
+            lineHeight: 1.1,
+            fontWeight: 800,
+            fontSize: "clamp(32px, 7.2vw, 56px)", // groter & responsief
+            letterSpacing: "0.2px",
+          }}
+        >
           €{nf.format(Math.round(current))}
         </span>
       </div>
+
+      {/* Infobox onder de teller */}
+      <div
+        style={{
+          marginTop: 10,
+          marginInline: "auto",
+          maxWidth: 640,
+          border: "1px solid rgba(15,23,42,0.08)",
+          background: "rgba(241,245,249,0.6)",
+          borderRadius: 12,
+          padding: "8px 12px",
+          fontSize: 13.5,
+          color: "rgb(71,85,105)",
+        }}
+        id={rateBoxId}
+      >
+        Based on latest Eurostat release{gdpPeriod ? ` (${gdpPeriod})` : ""}. Live estimate using linearized growth between releases.
+      </div>
+
+      {/* Nette scheiding vóór auto-ads */}
+      <hr
+        aria-hidden="true"
+        style={{
+          marginTop: 12,
+          marginBottom: 6,
+          border: 0,
+          borderTop: "1px solid rgba(15,23,42,0.08)",
+        }}
+      />
 
       {/* Delen */}
       <div style={{ marginTop: 8 }}>
@@ -227,17 +282,12 @@ export default function CountryClient({
       </div>
 
       {/* Feitenblok — toont Debt-to-GDP zodra gdpAbs bekend is */}
-      <div id={rateBoxId} style={{ marginTop: 8 }}>
+      <div style={{ marginTop: 8 }}>
         <CountryFacts
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={yearLabel}
         />
-        {/* Debug:
-        {Number.isFinite(gdpAbs) && (
-          <div className="tag">GDP: €{nf.format(Math.round(gdpAbs))} ({gdpPeriod || "—"})</div>
-        )}
-        */}
       </div>
 
       {/* Taal-specifieke SEO-intro */}
