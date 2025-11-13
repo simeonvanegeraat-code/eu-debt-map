@@ -38,8 +38,10 @@ function isExternal(href) {
 function localeAwareHref(hrefBase, locale) {
   if (!hrefBase) return "/";
   if (isExternal(hrefBase)) return hrefBase;
+
   const clean = hrefBase.startsWith("/") ? hrefBase : `/${hrefBase}`;
   const seg = firstSegment(clean);
+
   if (NO_LOCALE.has(seg)) return clean;
   if (!locale || locale === "en" || locale === "") return clean;
   if (clean === "/") return `/${locale}`;
@@ -84,14 +86,17 @@ function LanguageDropdown() {
     let nextPath;
 
     if (isArticleDetail) {
+      // Artikel vertaling via mapping
       nextPath = getArticleTranslationHref({
         currentPath: pathOnly,
         fromLang,
         toLang,
       });
     } else {
+      // Standaard-logica voor andere pagina's
       let withoutLocale = pathOnly;
       const seg = firstSegment(pathOnly);
+
       if (LOCALES.some((l) => l.code && l.code === seg)) {
         withoutLocale = pathOnly.replace(new RegExp(`^/${seg}`), "") || "/";
       }
@@ -224,11 +229,13 @@ export default function Header() {
   const pathname = usePathname() || "/";
   const locale = getLocaleFromPathname(pathname);
 
+  // Sluit menu bij navigatie
   useEffect(() => setOpen(false), [pathname]);
 
   return (
     <header className="site-header site-header--light">
       <div className="container header-inner">
+        {/* Logo => locale home (dus /, /nl, /de, /fr) */}
         <Link
           href={localeAwareHref("/", locale)}
           className="brand"

@@ -262,9 +262,9 @@ p{ margin: var(--sp-3) 0; }
   color:var(--header-fg);
 }
 
-/* Desktop nav */
+/* Desktop nav (default) */
 .nav-desktop{
-  display:none;
+  display:flex;
   gap:8px;
   align-items:center;
 }
@@ -294,7 +294,7 @@ p{ margin: var(--sp-3) 0; }
   border-radius:10px;
   border:1px solid var(--header-border);
   background:#ffffff;
-  display:grid;
+  display:none; /* desktop: verborgen */
   place-items:center;
   padding:8px;
   cursor:pointer;
@@ -307,7 +307,7 @@ p{ margin: var(--sp-3) 0; }
   border-radius:2px;
 }
 
-/* Mobile drawer (paneel onder de header) */
+/* Mobile drawer */
 .nav-drawer{
   display:none;
   border-top:1px solid var(--header-border);
@@ -315,7 +315,8 @@ p{ margin: var(--sp-3) 0; }
   color:#0b1220;
 }
 .nav-drawer--open{
-  display:block;
+  display:flex;
+  flex-direction:column;
 }
 .drawer-link{
   display:block;
@@ -330,11 +331,31 @@ p{ margin: var(--sp-3) 0; }
   border-left:3px solid #3b82f6;
 }
 
-/* Desktop breakpoint */
+/* MOBIEL: alleen logo + hamburger, menu in drawer */
+@media (max-width: 959px){
+  .nav-desktop{
+    display:none !important;
+  }
+  .hamburger{
+    display:grid !important;
+  }
+  .nav-drawer{
+    position:fixed;
+    top:64px;              /* gelijk aan header-inner hoogte */
+    left:0;
+    right:0;
+    bottom:0;
+    padding:12px 16px 16px;
+    overflow-y:auto;
+    z-index:49;
+  }
+}
+
+/* DESKTOP: pill-nav, geen drawer */
 @media (min-width: 960px){
-  .nav-desktop{ display:flex; }
-  .hamburger{ display:none; }
-  .nav-drawer{ display:none!important; }
+  .nav-desktop{ display:flex !important; }
+  .hamburger{ display:none !important; }
+  .nav-drawer{ display:none !important; }
 }
 
 /* ===========================
