@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { getLocaleFromPathname } from "@/lib/locale";
 import { getArticleTranslationHref } from "@/lib/articleTranslations";
 
@@ -223,7 +224,43 @@ function LanguageDropdown() {
   );
 }
 
+/* ---------------- MOBILE DRAWER VIA PORTAL ---------------- */
+
+function MobileDrawer({ open, onClose, children }) {
+  const [mounted, setMounted] = useState(false);
+  const [el, setEl] = useState(null);
+
+  useEffect(() => {
+    const div = document.createElement("div");
+    document.body.appendChild(div);
+    setEl(div);
+    setMounted(true);
+
+    return () => {
+      document.body.removeChild(div);
+    };
+  }, []);
+
+  if (!mounted || !el) return null;
+
+  return createPortal(
+    <div
+      className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}
+      onClick={onClose} // klik op grijze achtergrond sluit menu
+    >
+      <div
+        className="nav-drawer-inner"
+        onClick={(e) => e.stopPropagation()} // klik binnen panel niet sluiten
+      >
+        {children}
+      </div>
+    </div>,
+    el
+  );
+}
+
 /* ---------------- HEADER ---------------- */
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() || "/";
@@ -233,77 +270,77 @@ export default function Header() {
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="site-header site-header--light">
-      <div className="container header-inner">
-        {/* Logo => locale home (dus /, /nl, /de, /fr) */}
-        <Link
-          href={localeAwareHref("/", locale)}
-          className="brand"
-          aria-label="EU Debt Map – Home"
-        >
-          <span className="brand-logo">EU</span>
-          <span className="brand-text">Debt Map</span>
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="nav-desktop">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={localeAwareHref(item.href, locale)}
-              className={
-                "nav-link" +
-                (isActivePath(pathname, item.href, locale)
-                  ? " nav-link--active"
-                  : "")
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-          <LanguageDropdown />
-        </nav>
-
-        {/* Mobile hamburger */}
-        <button
-          className="hamburger"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
-
-      {/* Mobile drawer */}
-      <div className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}>
-        <div className="nav-drawer-inner">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={localeAwareHref(item.href, locale)}
-              className={
-                "drawer-link" +
-                (isActivePath(pathname, item.href, locale)
-                  ? " drawer-link--active"
-                  : "")
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div
-            style={{
-              padding: "12px 16px",
-              borderTop: "1px solid var(--header-border)",
-            }}
+    <>
+      <header className="site-header site-header--light">
+        <div className="container header-inner">
+          {/* Logo => locale home (dus /, /nl, /de, /fr) */}
+          <Link
+            href={localeAwareHref("/", locale)}
+            className="brand"
+            aria-label="EU Debt Map – Home"
           >
+            <span className="brand-logo">EU</span>
+            <span className="brand-text">Debt Map</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="nav-desktop">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={localeAwareHref(item.href, locale)}
+                className={
+                  "nav-link" +
+                  (isActivePath(pathname, item.href, locale)
+                    ? " nav-link--active"
+                    : "")
+                }
+              >
+                {item.label}
+              </Link>
+            ))}
             <LanguageDropdown />
-          </div>
+          </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            className="hamburger"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile drawer wordt nu in document.body gerenderd */}
+      <MobileDrawer open={open} onClose={() => setOpen(false)}>
+        {NAV.map((item) => (
+          <Link
+            key={item.href}
+            href={localeAwareHref(item.href, locale)}
+            className={
+              "drawer-link" +
+              (isActivePath(pathname, item.href, locale)
+                ? " drawer-link--active"
+                : "")
+            }
+          >
+            {item.label}
+          </Link>
+        ))}
+        <div
+          style={{
+            padding: "12px 16px",
+            borderTop: "1px solid var(--header-border)",
+          }}
+        >
+          <LanguageDropdown />
+        </div>
+      </MobileDrawer>
+    </>
   );
 }
