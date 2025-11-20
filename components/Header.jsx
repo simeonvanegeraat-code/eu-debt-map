@@ -279,27 +279,29 @@ export default function Header() {
 
       {/* Mobile drawer */}
       <div className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}>
-        {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={localeAwareHref(item.href, locale)}
-            className={
-              "drawer-link" +
-              (isActivePath(pathname, item.href, locale)
-                ? " drawer-link--active"
-                : "")
-            }
+        <div className="nav-drawer-inner">
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={localeAwareHref(item.href, locale)}
+              className={
+                "drawer-link" +
+                (isActivePath(pathname, item.href, locale)
+                  ? " drawer-link--active"
+                  : "")
+              }
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div
+            style={{
+              padding: "12px 16px",
+              borderTop: "1px solid var(--header-border)",
+            }}
           >
-            {item.label}
-          </Link>
-        ))}
-        <div
-          style={{
-            padding: "12px 16px",
-            borderTop: "1px solid var(--header-border)",
-          }}
-        >
-          <LanguageDropdown />
+            <LanguageDropdown />
+          </div>
         </div>
       </div>
     </header>
