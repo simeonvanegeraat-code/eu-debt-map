@@ -153,7 +153,7 @@ function LanguageDropdown() {
             borderRadius: 12,
             padding: 6,
             boxShadow: "var(--shadow-md)",
-            zIndex: 50,
+            zIndex: 120,
           }}
         >
           {LOCALES.map((opt) => {
@@ -268,6 +268,7 @@ export default function Header() {
         <button
           className="hamburger"
           aria-label="Toggle menu"
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
           <span />

@@ -220,7 +220,7 @@ p{ margin: var(--sp-3) 0; }
 .site-header{
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 200;
   backdrop-filter: saturate(1.1) blur(8px);
   border-bottom: 1px solid var(--header-border);
 }
@@ -313,6 +313,7 @@ p{ margin: var(--sp-3) 0; }
   border-top:1px solid var(--header-border);
   background:#ffffff;
   color:#0b1220;
+  z-index: 150;
 }
 .nav-drawer--open{
   display:flex;
@@ -331,8 +332,8 @@ p{ margin: var(--sp-3) 0; }
   border-left:3px solid #3b82f6;
 }
 
-/* MOBIEL: alleen logo + hamburger, menu in drawer */
-@media (max-width: 959px){
+/* MOBIEL: alleen logo + hamburger, menu als overlay drawer */
+@media (max-width: 1023px){
   .nav-desktop{
     display:none !important;
   }
@@ -341,18 +342,19 @@ p{ margin: var(--sp-3) 0; }
   }
   .nav-drawer{
     position:fixed;
-    top:64px;              /* gelijk aan header-inner hoogte */
+    top:64px;              /* ongeveer header-hoogte */
     left:0;
     right:0;
     bottom:0;
     padding:12px 16px 16px;
     overflow-y:auto;
-    z-index:49;
+    z-index:150;
+    background:#ffffff;
   }
 }
 
 /* DESKTOP: pill-nav, geen drawer */
-@media (min-width: 960px){
+@media (min-width: 1024px){
   .nav-desktop{ display:flex !important; }
   .hamburger{ display:none !important; }
   .nav-drawer{ display:none !important; }
