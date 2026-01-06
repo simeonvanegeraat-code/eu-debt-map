@@ -1,0 +1,17 @@
+{
+  "slug": "actuele-staatsschuld-nederland-live-inzicht",
+  "title": "Actuele Staatsschuld Nederland: Bekijk de Live Stand (2026)",
+  "summary": "Hoe hoog is de staatsschuld van Nederland op dit exacte moment? Bekijk onze live schatting op basis van officiële Eurostat-data en zie de groei of krimp per seconde.",
+  "excerpt": "Hoe hoog is de staatsschuld van Nederland op dit exacte moment? Bekijk onze live schatting op basis van officiële Eurostat-data.",
+  "tags": ["staatsschuld", "nederland", "economie", "eurostat", "financiën"],
+  "datePublished": "2026-01-06T09:00:00+00:00",
+  "dateModified": "2026-01-06T09:00:00+00:00",
+  "author": {
+    "name": "Simeon",
+    "url": "https://www.eudebtmap.com/authors/simeon"
+  },
+  "image": "/images/articles/netherlands-debt-overview.jpg",
+  "imageAlt": "Grafiek van de actuele staatsschuld van Nederland in verloop van tijd",
+  "lang": "nl",
+  "body": "<h2>Hoe hoog is de staatsschuld van Nederland nu?</h2><p>Wie zoekt naar de <strong>actuele staatsschuld van Nederland</strong>, vindt vaak verouderde jaarcijfers. Economieën staan echter nooit stil. Op Eudebtmap.com brengen we de statische cijfers tot leven.</p><p>Op basis van de laatste kwartaalcijfers van Eurostat berekenen wij een real-time schatting. Hierdoor zie je niet alleen het totaalbedrag, maar ook het tempo waarmee de schuld toeneemt of afneemt per seconde.</p><h3>Live inzicht in de Nederlandse schuldenlast</h3><p>Nederland staat in Europa bekend om een relatief streng begrotingsbeleid. Toch gaat het om enorme bedragen. Op onze gedetailleerde landenpagina zie je direct:</p><ul><li>De totale <strong>bruto overheidsschuld</strong> (Maastricht-definitie).</li><li>Het actuele schuldpercentage ten opzichte van het BBP.</li><li>De trend van de afgelopen kwartalen.</li></ul><p><a href=\"https://www.eudebtmap.com/country/nl\" title=\"Bekijk de live staatsschuld van Nederland\"><strong>Bekijk hier de live staatsschuld van Nederland &rarr;</strong></a></p><h3>Betrouwbare Data: Hoe wij rekenen</h3><p>Transparantie is cruciaal bij financiële data. Onze cijfers zijn geen wilde gok, maar een nauwkeurige interpolatie van officiële bronnen:</p><ol><li><strong>Bron:</strong> Wij gebruiken de dataset <em>gov_10q_ggdebt</em> van Eurostat (S.13 algemene overheid).</li><li><strong>Methode:</strong> We analyseren het verschil tussen de twee meest recente kwartalen.</li><li><strong>Resultaat:</strong> Dit rekenen we om naar een tempo per seconde, wat resulteert in de live teller die je op de kaart ziet.</li></ol><p>Wil je zien hoe Nederland presteert ten opzichte van andere EU-lidstaten? Ga dan naar onze <a href=\"/\">interactieve EU-schuldenkaart</a> voor het volledige overzicht.</p>"
+}
