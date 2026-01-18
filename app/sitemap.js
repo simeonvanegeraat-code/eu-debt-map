@@ -118,15 +118,28 @@ export default async function sitemap() {
 
   if (Array.isArray(articles) && articles.length) {
     for (const a of articles) {
-      // Verwacht: { slug, date }
+      // Verwacht: { slug, date, dateModified, image }
       const slug = a?.slug ? String(a.slug) : null;
       if (!slug) continue;
-      const lm = a?.date ? new Date(a.date) : DATA_LASTMOD;
+
+      // Datum logica: dateModified > datePublished > date > DATA_LASTMOD
+      const published = a.datePublished || a.date;
+      const modified = a.dateModified || published;
+      const lm = modified ? new Date(modified) : DATA_LASTMOD;
+
+      // Afbeelding logica voor Google Discover/Images sitemap
+      let images = undefined;
+      if (a.image) {
+        const imgUrl = a.image.startsWith("http") ? a.image : `${SITE}${a.image}`;
+        images = [imgUrl];
+      }
+
       pushUrl({
         url: `${SITE}/articles/${slug}`,
         lastModified: lm,
         changeFrequency: "monthly",
         priority: 0.7,
+        images: images, // Voegt image sitemap data toe
       });
     }
   }

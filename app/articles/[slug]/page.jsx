@@ -19,8 +19,14 @@ export async function generateMetadata({ params }) {
   const url = `${SITE}${prefix}/articles/${slug}`;
 
   if (!a) {
-    return { title: "Article • EU Debt Map", alternates: { canonical: url }, openGraph: { url } };
+    return { 
+      title: "Article • EU Debt Map", 
+      alternates: { canonical: url }, 
+      openGraph: { url },
+      robots: { index: false } // Don't index 404s
+    };
   }
+
   const translations = getTranslations(slug);
   const languages = Object.fromEntries(
     translations.map((t) => {
@@ -31,16 +37,28 @@ export async function generateMetadata({ params }) {
   languages["x-default"] = languages.en || url;
 
   const og = articleOgImage(a);
+  
   return {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
     alternates: { canonical: url, languages },
+    // CRITICAL FOR DISCOVER: max-image-preview: large
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
     openGraph: {
       title: a.title,
       description: a.summary,
       url,
       siteName: "EU Debt Map",
       type: "article",
+      publishedTime: a.datePublished || a.date,
+      modifiedTime: a.dateModified || a.date,
+      authors: a.author?.name ? [a.author.name] : ["EU Debt Map"],
       images: og ? [{ url: og, width: 1200, height: 630 }] : undefined,
       locale: LANG,
     },
@@ -65,6 +83,11 @@ export default function ArticleDetailPage({ params }) {
   if (!article) return notFound();
 
   const url = `${SITE}${prefix}/articles/${params.slug}`;
+  
+  // Use specific published date if available, fallback to generic date
+  const publishDate = article.datePublished || article.date;
+  const modifyDate = article.dateModified || publishDate;
+  
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
   const candidateHero =
@@ -130,22 +153,42 @@ export default function ArticleDetailPage({ params }) {
     }
   `;
 
+  // Construct Author Object safely
+  let authorObj;
+  if (article.author) {
+    if (typeof article.author === 'string') {
+       authorObj = { "@type": "Person", name: article.author };
+    } else {
+       authorObj = { 
+         "@type": "Person", 
+         name: article.author.name, 
+         url: article.author.url 
+       };
+    }
+  } else {
+    authorObj = { "@type": "Organization", name: "EU Debt Map" };
+  }
+
+  // Enhanced JSON-LD for Google Discover
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: article.title,
     description: article.summary || undefined,
-    datePublished: new Date(article.date).toISOString(),
-    dateModified: new Date(article.date).toISOString(),
+    datePublished: new Date(publishDate).toISOString(),
+    dateModified: new Date(modifyDate).toISOString(),
     inLanguage: article.lang || LANG,
-    mainEntityOfPage: url,
-    author: { "@type": "Organization", name: "EU Debt Map" },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url
+    },
+    author: authorObj,
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
       logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 },
     },
-    image: candidateHero ? [`${SITE}${candidateHero}`] : article.image ? [`${SITE}${article.image}`] : undefined,
+    image: candidateHero ? [`${SITE}${candidateHero}`] : undefined,
   };
 
   return (
@@ -157,7 +200,7 @@ export default function ArticleDetailPage({ params }) {
         {/* Meta + titel */}
         <header style={{ display: "grid", gap: 8 }}>
           <div className="tag metaRow">
-            <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
+            <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
             {article.tags?.length ? <span aria-hidden>•</span> : null}
             {article.tags?.map((t) => (
               <span key={t} className="tag">{t}</span>
@@ -175,7 +218,7 @@ export default function ArticleDetailPage({ params }) {
             <img
               src={candidateHero}
               alt={article.imageAlt || article.title}
-              loading="lazy"
+              loading="eager" // Hero images should load instantly for LCP score
               decoding="async"
               width={1200}
               height={675}
