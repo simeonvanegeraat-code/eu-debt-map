@@ -42,7 +42,7 @@ const SHARE_TITLES = {
   fr: (name) => `${name} dette publique`,
 };
 
-// Kleine client cache voor GDP-API
+// Kleine client cache voor GDP-API (fallback, wordt nu minder gebruikt)
 const GDP_TTL_MS = 6 * 60 * 60 * 1000; // 6 uur
 function readGDPCache(iso2) {
   try {
@@ -86,14 +86,14 @@ export default function CountryClient({
   lang = "en",
   introSlot = null,
 
-  // Optioneel: kan via SSR worden meegegeven, maar is niet vereist
-  gdpAbs: gdpAbsFromServer = null,
-  gdpPeriod: gdpPeriodFromServer = null,
-  yearLabel = "Latest",
+  // Optioneel: kan via SSR worden meegegeven
+  gdpAbs: gdpAbsProp = null,
+  gdpPeriod: gdpPeriodProp = null,
+  yearLabel = "Latest", // Fallback label
 }) {
   const safeCountry = country ?? null;
 
-  // 1) Taal bepalen: prop > URL > EN
+  // 1) Taal bepalen
   const pathname = usePathname() || "/";
   const fromUrl = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
   const effLang = useMemo(() => {
@@ -128,15 +128,25 @@ export default function CountryClient({
     return interpolateDebt(safeCountry, nowMs);
   }, [safeCountry, nowMs]);
 
-  // ---------- GDP ophalen (met sessionStorage cache) ----------
+  // ---------- GDP Logic (FIXED) ----------
+  // We geven prioriteit aan data die al in het 'country' object zit (van de server)
+  // Dit zorgt dat de "5.5% fix" behouden blijft.
+  const serverGdp = safeCountry?.gdp || gdpAbsProp;
+  const serverPeriod = safeCountry?.gdpPeriod || gdpPeriodProp;
+
   const [gdpAbs, setGdpAbs] = useState(
-    Number.isFinite(gdpAbsFromServer) ? gdpAbsFromServer : null
+    Number.isFinite(serverGdp) ? serverGdp : null
   );
-  const [gdpPeriod, setGdpPeriod] = useState(gdpPeriodFromServer || null);
+  const [gdpPeriod, setGdpPeriod] = useState(serverPeriod || null);
 
   useEffect(() => {
     if (!safeCountry) return;
-    if (Number.isFinite(gdpAbsFromServer)) return; // al via SSR
+    
+    // BELANGRIJK: Als de server al GDP data heeft meegegeven (onze fix),
+    // dan hoeven we NIET te fetchen. Dit voorkomt dat we oude data laden.
+    if (Number.isFinite(serverGdp)) {
+        return; 
+    }
 
     const geo = String(safeCountry.code || "").toUpperCase();
     const cached = typeof window !== "undefined" ? readGDPCache(geo) : null;
@@ -163,17 +173,15 @@ export default function CountryClient({
           writeGDPCache(geo, json.gdp_eur, json.period || null);
         }
       } catch {
-        // stil falen; UI blijft werken zonder GDP
+        // stil falen
       }
     })();
 
     return () => {
       cancelled = true;
-      try {
-        ctrl.abort();
-      } catch {}
+      try { ctrl.abort(); } catch {}
     };
-  }, [safeCountry, gdpAbsFromServer]);
+  }, [safeCountry, serverGdp]);
 
   if (!safeCountry) return <div className="container card">Unknown country</div>;
 
@@ -195,6 +203,9 @@ export default function CountryClient({
   // Live Debt/GDP (alleen als GDP bekend is)
   const ratioPct =
     Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
+
+  // Bepaal het label voor de tabel: Gebruik de periode (Live Estimate) indien beschikbaar
+  const finalYearLabel = gdpPeriod || yearLabel;
 
   return (
     <>
@@ -237,7 +248,6 @@ export default function CountryClient({
         aria-live="polite"
         aria-describedby={rateBoxId}
       >
-        {/* visueel verbergen, wel voor screenreaders */}
         <span style={SR_ONLY}>{liveLabel}</span>
 
         <span
@@ -247,10 +257,8 @@ export default function CountryClient({
             display: "inline-block",
             lineHeight: 1.1,
             fontWeight: 800,
-            // ~20% grotere teller
             fontSize: "clamp(38px, 8.8vw, 68px)",
             letterSpacing: "0.2px",
-            // subtiele schaduw voor extra focus
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
           }}
         >
@@ -258,7 +266,7 @@ export default function CountryClient({
         </span>
       </div>
 
-      {/* Infobox onder de teller - volle breedte, links uitgelijnd, zonder jaartal */}
+      {/* Infobox */}
       <div
         style={{
           marginTop: 12,
@@ -277,7 +285,6 @@ export default function CountryClient({
         growth between releases.
       </div>
 
-      {/* Nette scheiding vóór auto-ads / volgende blokken */}
       <hr
         aria-hidden="true"
         style={{
@@ -293,16 +300,15 @@ export default function CountryClient({
         <ShareBar title={shareTitle} />
       </div>
 
-      {/* Feitenblok — toont Debt-to-GDP zodra gdpAbs bekend is */}
+      {/* Feitenblok — Hier geven we het correcte label door! */}
       <div style={{ marginTop: 8 }}>
         <CountryFacts
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
-          yearLabel={yearLabel}
+          yearLabel={finalYearLabel}
         />
       </div>
 
-      {/* Taal-specifieke SEO-intro */}
       {introSlot}
 
       {/* CTA + artikel */}
