@@ -1,4 +1,3 @@
-// components/DebtToGDPBlock.jsx
 "use client";
 
 function classifyBucket(pct) {
@@ -15,27 +14,48 @@ function formatMoneyEUR(n) {
   return `€ ${n.toLocaleString("en-US")}`;
 }
 
+/**
+ * Formatteert de "YearLabel" naar een logische zin.
+ * "2025-Q3" -> "Based on annualized Q3 2025 figures,"
+ * "2024"    -> "As of 2024,"
+ */
+function getIntroPhrase(label) {
+  const safeLabel = String(label || "");
+  
+  // Check op kwartaal formaat (YYYY-Q#)
+  if (safeLabel.match(/^\d{4}-Q\d$/)) {
+    const [year, q] = safeLabel.split("-Q");
+    return `Based on annualized Q${q} ${year} figures,`;
+  }
+
+  // Standaard fallback
+  return `As of ${safeLabel},`;
+}
+
 export default function DebtToGDPBlock({
   countryName = "Country",
   yearLabel = "2024",
-  debt, // absolute in EUR (e.g., 516_000_000_000)
-  gdp,  // absolute in EUR (e.g., 1_030_000_000_000)
+  debt, // absolute in EUR
+  gdp,  // absolute in EUR
 }) {
   const ratio = Number.isFinite(debt) && Number.isFinite(gdp) && gdp > 0
     ? (debt / gdp) * 100
     : NaN;
 
-  const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0)); // cap op 300% voor layout
+  const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0)); // cap op 300%
   const bucket = classifyBucket(pct);
 
   // Bereken bar widths
   const filledWidth = Math.min(100, pct); // 0..100%
   const overflow = Math.max(0, pct - 100); // 0..200% (we tonen subtiel)
 
-  // SEO-tekst (Option D)
+  // SEO-tekst formatting
   const debtStr = formatMoneyEUR(debt);
   const gdpStr = formatMoneyEUR(gdp);
   const pctStr = Number.isFinite(pct) ? `${pct.toFixed(0)}%` : "—";
+  
+  // Dynamische introzin (smart parsing van period)
+  const introText = getIntroPhrase(yearLabel);
 
   // Licht advieslabel
   const advisory =
@@ -83,14 +103,14 @@ export default function DebtToGDPBlock({
 
       <div className="debtgdp-text">
         <p>
-          As of {yearLabel}, <strong>{countryName}</strong> has an estimated government debt of{" "}
+          {introText} <strong>{countryName}</strong> has an estimated government debt of{" "}
           <strong>{debtStr}</strong> and a nominal GDP of <strong>{gdpStr}</strong>. That implies a{" "}
           <strong>debt-to-GDP ratio of {pctStr}</strong>, which is considered{" "}
           <strong>{bucket.label}</strong> compared with typical EU reference values.
         </p>
         <p>{advisory}</p>
         <p className="source">
-          Source: Eurostat (government debt & GDP, latest available period).
+          Source: Eurostat (Quarterly Debt & Annualized GDP).
         </p>
       </div>
 

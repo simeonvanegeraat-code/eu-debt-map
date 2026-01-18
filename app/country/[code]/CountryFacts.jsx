@@ -12,13 +12,12 @@ const nf2 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 2 });
  * ------------
  * Props:
  * - code (string, vereist): landcode (bv. "NL", "FR")
- * - gdpAbs (number, optioneel): GDP in euro (absolute waarde)
- * - yearLabel (string, optioneel): bv. "2024" of "Latest"
+ * - gdpAbs (number, optioneel): Live GDP in euro (kwartaal run-rate of jaarlijks)
+ * - yearLabel (string, optioneel): De bronperiode, bv "2025-Q3"
  *
  * Werking:
  * - Toont trend en per-seconde-schatting op basis van countries[] uit lib/data.
- * - Toont Debt-to-GDP-balk + SEO-tekst (Optie D) ALS er een GDP-waarde beschikbaar is
- *   (via prop gdpAbs of via c.gdp_eur / c.gdp_meur in je data).
+ * - Rendert Debt-to-GDP-balk + SEO-tekst.
  */
 export default function CountryFacts({ code, gdpAbs: gdpAbsProp, yearLabel: yearLabelProp }) {
   const c = useMemo(() => {
@@ -28,7 +27,7 @@ export default function CountryFacts({ code, gdpAbs: gdpAbsProp, yearLabel: year
 
   if (!c) return null;
 
-  // Debt en trend
+  // 1. Debt en trend (uit lib/data, altijd beschikbaar)
   const v0 = Number(c.prev_value_eur) || 0;
   const v1 = Number(c.last_value_eur) || 0;
   const delta = v1 - v0;
@@ -43,10 +42,8 @@ export default function CountryFacts({ code, gdpAbs: gdpAbsProp, yearLabel: year
 
   const rateText = Math.abs(perSec) < 0.005 ? "≈ €0.00 / s" : `€${nf2.format(perSec)} / s`;
 
-  // Probeer GDP te vinden:
-  // 1) Prop gdpAbs (voorrang)
-  // 2) c.gdp_eur (rechtstreeks in euro’s)
-  // 3) c.gdp_meur (miljoen euro) → * 1e6
+  // 2. GDP Bepaling
+  // Prioriteit: 1. Live Prop (vers van Eurostat), 2. Fallback data (lib/data)
   const gdpFromDataEUR =
     Number.isFinite(Number(c?.gdp_eur))
       ? Number(c.gdp_eur)
@@ -57,11 +54,12 @@ export default function CountryFacts({ code, gdpAbs: gdpAbsProp, yearLabel: year
   const gdpAbs = Number.isFinite(Number(gdpAbsProp)) ? Number(gdpAbsProp) : gdpFromDataEUR;
   const showDebtToGDP = Number.isFinite(gdpAbs) && gdpAbs > 0;
 
-  // Yearlabel (optioneel, nice voor SEO-tekst)
+  // 3. Label Bepaling (Cruciaal voor de tekst)
+  // Als we prop data hebben (bv "2025-Q3"), gebruiken we die.
+  // Anders vallen we terug op een generieke term zodat we niet per ongeluk "2024" zeggen bij 2025 data.
   const yearLabel =
     yearLabelProp ||
-    c?.last_date?.slice(0, 4) || // bv. "2024"
-    "Latest";
+    (c?.last_date ? `FY ${c.last_date.slice(0, 4)}` : "Latest Est.");
 
   return (
     <aside
@@ -100,16 +98,16 @@ export default function CountryFacts({ code, gdpAbs: gdpAbsProp, yearLabel: year
       </div>
 
       <div className="tag" style={{ marginTop: 10 }}>
-        Source: Eurostat (last two quarters, {c.prev_date} → {c.last_date})
+        Source: Eurostat (Debt: {c.prev_date} → {c.last_date})
       </div>
 
-      {/* Debt-to-GDP blok + SEO-tekst (Optie B + C + D) */}
+      {/* Debt-to-GDP blok + SEO-tekst */}
       {showDebtToGDP && (
         <section className="card" style={{ marginTop: 16 }}>
           <DebtToGDPBlock
             countryName={c?.name || c?.code?.toUpperCase() || "Country"}
             yearLabel={yearLabel}
-            debt={v1 /* laatste peildatum, consistent met je teller */}
+            debt={v1} 
             gdp={gdpAbs}
           />
         </section>
