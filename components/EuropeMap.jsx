@@ -95,61 +95,121 @@ export default function EuropeMap() {
   };
 
   return (
-    <div className="card" style={{ overflow: "hidden" }}>
-      <ComposableMap projection="geoAzimuthalEqualArea" projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}>
-        <Geographies geography={GEO_URL}>
-          {({ geographies }) => {
-            // DEV-only logging: laat zien welke EU-namen niet matchen
-            if (process.env.NODE_ENV !== "production") {
-              const seen = new Set();
-              const misses = [];
-              geographies.forEach((g) => {
-                const props = g.properties || {};
-                const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
-                const iso = nameToIso2(rawName);
-                if (iso && !seen.has(iso)) seen.add(iso);
-                if (!iso && rawName) {
-                  // log alleen kandidaten die op EU kunnen lijken
-                  const lower = String(rawName).toLowerCase();
-                  const maybeEU = ["czech", "nether", "germ", "fran", "ital", "spain", "portu", "roman", "slov", "slove", "croa", "gree", "irl", "irel", "austr", "belg", "bulg", "est", "latv", "lithu", "lux", "malt", "pol", "den", "swed", "fin"].some(k => lower.includes(k));
-                  if (maybeEU) misses.push(rawName);
+    // We voegen 'position: relative' toe voor de swipe-hint
+    <div className="card" style={{ overflow: "hidden", position: "relative" }}>
+      
+      {/* Scroll Hint voor mobiel */}
+      <div className="mobile-swipe-hint">
+        <span>↔ Swipe</span>
+      </div>
+
+      {/* Wrapper voor horizontaal scrollen op mobiel */}
+      <div className="map-scroll-container">
+        {/* Inner div forceert breedte op mobiel */}
+        <div className="map-width-enforcer">
+          <ComposableMap projection="geoAzimuthalEqualArea" projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}>
+            <Geographies geography={GEO_URL}>
+              {({ geographies }) => {
+                // DEV-only logging logic
+                if (process.env.NODE_ENV !== "production") {
+                    const seen = new Set();
+                    const misses = [];
+                    geographies.forEach((g) => {
+                      const props = g.properties || {};
+                      const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
+                      const iso = nameToIso2(rawName);
+                      if (iso && !seen.has(iso)) seen.add(iso);
+                      if (!iso && rawName) {
+                        const lower = String(rawName).toLowerCase();
+                        const maybeEU = ["czech", "nether", "germ", "fran", "ital", "spain", "portu", "roman", "slov", "slove", "croa", "gree", "irl", "irel", "austr", "belg", "bulg", "est", "latv", "lithu", "lux", "malt", "pol", "den", "swed", "fin"].some(k => lower.includes(k));
+                        if (maybeEU) misses.push(rawName);
+                      }
+                    });
+                    if (misses.length) {
+                       // eslint-disable-next-line no-console
+                       console.warn("Unmatched potential EU names:", Array.from(new Set(misses)).slice(0, 12));
+                    }
                 }
-              });
-              if (misses.length) {
-                // Eén keer loggen is genoeg
-                // eslint-disable-next-line no-console
-                console.warn("Unmatched potential EU names from TopoJSON:", Array.from(new Set(misses)).slice(0, 12));
-              }
-            }
 
-            return geographies
-              .map((geo) => {
-                const props = geo.properties || {};
-                const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
-                const iso2 = nameToIso2(rawName);
-                if (!iso2) return null;
+                return geographies
+                  .map((geo) => {
+                    const props = geo.properties || {};
+                    const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
+                    const iso2 = nameToIso2(rawName);
+                    if (!iso2) return null;
 
-                const clickable = hasData(iso2);
+                    const clickable = hasData(iso2);
 
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    style={{
-                      default: { fill: fillFor(iso2), outline: "none" },
-                      hover: { fill: clickable ? "#60a5fa" : "#9ca3af", outline: "none" },
-                      pressed: { outline: "none" },
-                    }}
-                    onClick={() => {
-                      if (clickable) window.location.href = `/country/${iso2.toLowerCase()}`;
-                    }}
-                  />
-                );
-              })
-              .filter(Boolean);
-          }}
-        </Geographies>
-      </ComposableMap>
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        style={{
+                          default: { fill: fillFor(iso2), outline: "none" },
+                          hover: { fill: clickable ? "#60a5fa" : "#9ca3af", outline: "none", cursor: clickable ? "pointer" : "default" },
+                          pressed: { outline: "none" },
+                        }}
+                        onClick={() => {
+                          if (clickable) window.location.href = `/country/${iso2.toLowerCase()}`;
+                        }}
+                      />
+                    );
+                  })
+                  .filter(Boolean);
+              }}
+            </Geographies>
+          </ComposableMap>
+        </div>
+      </div>
+
+      {/* Ingebouwde CSS om mobiele weergave te fixen */}
+      <style jsx>{`
+        .map-scroll-container {
+          width: 100%;
+          overflow-x: hidden;
+          overflow-y: hidden;
+        }
+        .map-width-enforcer {
+          width: 100%;
+        }
+        .mobile-swipe-hint {
+          display: none;
+        }
+
+        @media (max-width: 768px) {
+          .map-scroll-container {
+            overflow-x: auto; /* Sta scrollen toe */
+            -webkit-overflow-scrolling: touch; /* Smooth scroll op iOS */
+            /* Verberg scrollbar voor strakke look */
+            scrollbar-width: none; 
+          }
+          .map-scroll-container::-webkit-scrollbar {
+            display: none;
+          }
+
+          /* Forceer de kaart breder dan het scherm zodat landen klikbaar blijven */
+          .map-width-enforcer {
+            min-width: 700px; 
+          }
+
+          /* Toon de hint */
+          .mobile-swipe-hint {
+            display: block;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #333;
+            font-weight: 600;
+            pointer-events: none; /* Klik er doorheen */
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
