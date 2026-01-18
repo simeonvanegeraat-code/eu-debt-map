@@ -1,4 +1,3 @@
-// app/page.jsx (NL-versie)
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import QuickList from "@/components/QuickList";
@@ -7,11 +6,10 @@ import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor } from "@/lib/data";
 
-// Kaart & Ticker alleen client-side (ssr:false)
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
   loading: () => (
-    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card">
+    <div style={{ height: 420, display: "grid", placeItems: "center" }} className="card" aria-busy="true">
       Kaart laden…
     </div>
   ),
@@ -19,12 +17,11 @@ const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
 
 const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), { ssr: false });
 
-// --- SEO: generateMetadata (NL) ---
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
-  const title = "EU Schuldenkaart – Live nationale schuld per land (EU-27, 2025)";
+  const base = new URL("https://www.eudebtmap.com/nl");
+  const title = "EU Schuldenkaart – Live Staatsschuld per Land (EU-27, 2025)";
   const description =
-    "Bekijk de live staatsschuld van EU-landen. Interactieve EU-27 kaart met realtime schattingen, schuldgroei en vergelijkingen. Gebaseerd op Eurostat-data.";
+    "Bekijk de overheidsschuld van de EU live, land per land. Interactieve kaart van de EU-27 met real-time schattingen, schuldgroei en vergelijkingen. Gebaseerd op Eurostat data.";
 
   return {
     metadataBase: base,
@@ -37,12 +34,12 @@ export async function generateMetadata() {
         nl: "https://www.eudebtmap.com/nl",
         de: "https://www.eudebtmap.com/de",
         fr: "https://www.eudebtmap.com/fr",
+        "x-default": "https://www.eudebtmap.com/",
       },
     },
     openGraph: {
       title,
-      description:
-        "Ontdek de staatsschuld van EU-landen met een live, per seconde bijwerkende schatting per land.",
+      description,
       url: "https://www.eudebtmap.com/nl",
       siteName: "EU Debt Map",
       type: "website",
@@ -50,19 +47,11 @@ export async function generateMetadata() {
     twitter: {
       card: "summary_large_image",
       title,
-      description: "Live bijwerkende schattingen van de staatsschuld in de EU, gebaseerd op Eurostat.",
-    },
-    robots: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+      description,
     },
   };
 }
 
-// Bereken groei per seconde
 function perSecondForCountry(c) {
   if (!c) return 0;
   if (typeof c.per_second === "number") return c.per_second;
@@ -71,28 +60,24 @@ function perSecondForCountry(c) {
   if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
     return delta / c.seconds_between;
   }
-  const approxSeconds = 90 * 24 * 60 * 60; // ~90 dagen tussen kwartalen
+  const approxSeconds = 90 * 24 * 60 * 60;
   return delta / approxSeconds;
 }
 
-export default function HomePage() {
+export default function HomePageNL() {
   const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
-
-  const largestDebt =
-    valid.length > 0 ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b)) : null;
-
+  const largestDebt = valid.length > 0 ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b)) : null;
   const withDelta = valid.map((c) => ({ ...c, delta: c.last_value_eur - c.prev_value_eur }));
-
-  const fastestGrowing =
-    withDelta.length > 0 ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b)) : null;
+  const fastestGrowing = withDelta.length > 0 ? withDelta.reduce((a, b) => (a.delta > b.delta ? a : b)) : null;
 
   const quickItems = valid.map((c) => ({
     code: c.code,
-    name: c.name,
+    name: c.name, // Zorg dat je data eventueel NL namen heeft, anders blijft dit Engels
     flag: c.flag,
     trend: trendFor(c),
   }));
 
+  // LET OP: articles laden voor NL
   const topArticles = listArticles({ lang: "nl" }).slice(0, 3);
 
   const responsiveCss = `
@@ -104,22 +89,19 @@ export default function HomePage() {
     @media (max-width: 920px){
       .ql-articles{ grid-template-columns: 1fr !important; }
     }
+    .hero-lede, .tag, .hero-title {
+       width: 100%;
+       max-width: 760px;
+       display: block;
+       clear: both;
+    }
+    .card-content-wrapper {
+       width: 100%;
+       display: flex;
+       flex-direction: column;
+       box-sizing: border-box; 
+    }
   `;
-
-  // --- JSON-LD ---
-  const websiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    url: "https://www.eudebtmap.com/nl",
-    name: "EU Schuldenkaart",
-    inLanguage: "nl",
-  };
-  const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "EU Schuldenkaart",
-    url: "https://www.eudebtmap.com/nl",
-  };
 
   const s = {
     mapFooter: {
@@ -168,188 +150,167 @@ export default function HomePage() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
-
+      {/* JSON-LD mag hier eventueel ook vertaald, maar Engels is vaak standaard voor Schema.org */}
+      
       {/* === HERO === */}
-      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
-        <header style={{ maxWidth: 760 }}>
-          <h1
-            id="page-title"
-            className="hero-title"
-            style={{
-              fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)",
-              background: "linear-gradient(90deg, #2563eb, #00875a)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              marginBottom: 8,
-            }}
-          >
-            Live EU-schuldenkaart
-          </h1>
+      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+        <div className="card-content-wrapper">
+          <header style={{ maxWidth: 760, width: "100%" }}>
+            <h1
+              className="hero-title"
+              style={{
+                fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)",
+                background: "linear-gradient(90deg, #2563eb, #00875a)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                marginBottom: 8,
+                display: "block",
+                width: "100%"
+              }}
+            >
+              Live EU Staatsschuld Kaart
+            </h1>
+            <p className="hero-lede" style={{ maxWidth: 760 }}>
+              <span style={{ fontWeight: 600 }}>
+                Als je elke euro overheidsschuld van alle 27 EU-landen bij elkaar optelt, krijg je het onderstaande getal: een live schatting die nooit stilstaat.
+              </span>
+            </p>
+          </header>
 
-          <p className="hero-lede" style={{ maxWidth: 760 }}>
-            <span style={{ fontWeight: 600 }}>
-              Als je alle euro’s aan staatsschuld van de 27 EU-landen bij elkaar zou optellen, kom je uit op het bedrag hieronder — een live, voortdurend tikkende schatting die nooit stilstaat.
-            </span>
+          <div style={{ marginTop: 16, width: "100%", clear: "both" }}>
+            <EUTotalTicker />
+          </div>
+
+          <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
+            De EU Debt Map visualiseert de gecombineerde staatsschulden van de Europese Unie in real-time.
+            Het meest recente datapunt van Eurostat wordt per land gebruikt als basis en vervolgens seconde per seconde geëxtrapoleerd.
+            Dit is niet zomaar een statistiek, het is de hartslag van de financiële gezondheid van Europa. Of je nu Frankrijk met Duitsland vergelijkt,
+            de schuld van Italië volgt of kleinere economieën zoals Estland bekijkt: deze kaart vertaalt complexe fiscale data naar een begrijpelijk beeld.
           </p>
-        </header>
 
-        <div style={{ marginTop: 16 }}>
-          <EUTotalTicker />
+          <p className="tag" style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid var(--border)", color: "#4b5563" }}>
+            Bron: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educatieve visualisatie, geen officiële statistiek.
+          </p>
         </div>
-
-        <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
-          De EU-Schuldenkaart visualiseert de gezamenlijke staatsschuld van de Europese Unie in realtime.
-          De meest recente Eurostat-cijfers per land vormen het vertrekpunt, waarna de groei per seconde
-          wordt doorgerekend. Zo zie je direct hoe snel de schuld toeneemt (of in zeldzame gevallen afneemt).
-          Dit is meer dan een getal — het is de hartslag van de Europese economie. Of je nu Frankrijk met
-          Duitsland vergelijkt, Italië’s schuld-/bbp-ratio volgt, of kleinere economieën als Estland en Malta
-          bekijkt: deze kaart maakt complexe financiële data visueel en begrijpelijk.
-        </p>
-
-        <p
-          className="tag"
-          style={{
-            marginTop: 14,
-            paddingTop: 10,
-            borderTop: "1px solid var(--border)",
-            color: "#4b5563",
-          }}
-        >
-          Bron: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educatieve visualisatie, geen officiële statistiek.
-        </p>
       </section>
 
       {/* === MAP === */}
       <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }}>
-        <h2 style={{ marginTop: 4 }}>Overzicht EU</h2>
+        <div className="card-content-wrapper">
+          <h2 style={{ marginTop: 4 }}>EU overzicht</h2>
 
-        <div className="mapWrap" role="region" aria-label="Interactieve EU-kaart">
-          <EuropeMap />
-        </div>
-
-        <div role="note" aria-label="Kaartlegenda en uitleg" style={s.mapFooter}>
-          <div style={s.legend}>
-            <strong>Legenda:</strong>
-            <span style={{ ...s.pill, ...s.pillOk }}>Groen</span>= schuld daalt
-            <span style={s.sep}>•</span>
-            <span style={{ ...s.pill, ...s.pillBad }}>Rood</span>= schuld stijgt
-            <span style={s.sep}>•</span>
-            <span style={s.muted}>Gebaseerd op de laatste twee referentieperiodes.</span>
+          <div className="mapWrap" role="region" aria-label="Interactieve EU kaart" style={{ width: "100%", clear: "both" }}>
+            <EuropeMap />
           </div>
 
-          <div style={s.cta}>
-            <span aria-hidden style={s.ctaIcon}>➜</span>
-            <span>
-              <strong>Klik op een land</strong> om de live-schuldteller te bekijken.
-            </span>
+          <div style={s.mapFooter}>
+            <div style={s.legend}>
+              <strong>Legenda:</strong>
+              <span style={{ ...s.pill, ...s.pillOk }}>Groen</span>= schuld daalt
+              <span style={s.sep}>•</span>
+              <span style={{ ...s.pill, ...s.pillBad }}>Rood</span>= schuld stijgt
+              <span style={s.sep}>•</span>
+              <span style={s.muted}>Gebaseerd op de laatste twee referentiedata.</span>
+            </div>
+            <div style={s.cta}>
+              <span aria-hidden style={s.ctaIcon}>➜</span>
+              <span>
+                <strong>Klik op een land</strong> op de kaart voor de live schuldteller.
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="tag" style={{ marginTop: 6, lineHeight: 1.7 }}>
-          <h3 style={{ margin: "8px 0" }}>Uitleg in eenvoudige woorden</h3>
-          <p style={{ margin: 0 }}>
-            Deze EU-schuldenkaart toont de nationale schuld van alle EU-27-landen in realtime. Op basis van
-            Eurostat-data wordt voor elk land de meest recente officiële waarde per seconde geëxtrapoleerd.
-            Klik op een land om te zien of de schuld stijgt of daalt. Dit is een educatieve visualisatie —
-            geen officiële statistiek.
-          </p>
+          <div className="tag" style={{ marginTop: 6, lineHeight: 1.7 }}>
+            <h3 style={{ margin: "8px 0" }}>EU-schuld eenvoudig uitgelegd</h3>
+            <p style={{ margin: 0 }}>
+              Deze kaart toont de staatsschuld van alle EU-27 landen in real-time. Met Eurostat als basis wordt het laatste officiële cijfer per seconde doorberekend om een live schatting te maken. Klik op een land om de cijfers in te duiken en te zien of de schuld stijgt of daalt.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* === HIGHLIGHTS === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0 }}>Hoogtepunten</h2>
+        <div className="card-content-wrapper">
+          <h2 style={{ marginTop: 0 }}>Hoogtepunten</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginTop: 8 }}>
+            {largestDebt ? (
+              <HighlightTicker
+                label="Grootste schuld"
+                flag={largestDebt.flag}
+                name={largestDebt.name}
+                start={largestDebt.last_value_eur}
+                perSecond={perSecondForCountry(largestDebt)}
+              />
+            ) : <div className="tag">—</div>}
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 12,
-            marginTop: 8,
-          }}
-        >
-          {largestDebt ? (
-            <HighlightTicker
-              label="Grootste schuld"
-              flag={largestDebt.flag}
-              name={largestDebt.name}
-              start={largestDebt.last_value_eur}
-              perSecond={perSecondForCountry(largestDebt)}
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
+            {fastestGrowing ? (
+              <HighlightTicker
+                label="Snelst groeiend"
+                flag={fastestGrowing.flag}
+                name={fastestGrowing.name}
+                start={fastestGrowing.last_value_eur}
+                perSecond={perSecondForCountry(fastestGrowing)}
+                accent="var(--bad)"
+              />
+            ) : <div className="tag">—</div>}
+          </div>
 
-          {fastestGrowing ? (
-            <HighlightTicker
-              label="Snelst stijgende schuld"
-              flag={fastestGrowing.flag}
-              name={fastestGrowing.name}
-              start={fastestGrowing.last_value_eur}
-              perSecond={perSecondForCountry(fastestGrowing)}
-              accent="var(--bad)"
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
+          <p className="tag" style={{ marginTop: 12 }}>
+            Overheidsschuld beïnvloedt rentes, inflatie en de economie. Deze live tellers tonen de grootste bewegingen in één oogopslag.
+          </p>
         </div>
-
-        <p className="tag" style={{ marginTop: 12 }}>
-          Staatsschuld beïnvloedt rente, inflatie, begrotingsbeleid en de stabiliteit van de Europese economie.
-          Deze live-tellers tonen in één oogopslag de grootste bewegingen.
-        </p>
       </section>
 
-      {/* === QUICK LIST + LATEST ARTICLES === */}
+      {/* === QUICK LIST + ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
-        <div>
-          <QuickList
-            items={quickItems}
-            initialCount={quickItems.length}
-            strings={{
-              title: "Snelle lijst",
-              showAll: "Alles tonen",
-              showLess: "Minder tonen",
-              rising: "↑ stijgend",
-              falling: "↓ dalend",
-              flat: "→ stabiel",
-              more: "meer",
-            }}
-          />
-        </div>
+        <section className="card section">
+            <div className="card-content-wrapper">
+                <QuickList
+                    items={quickItems}
+                    initialCount={quickItems.length}
+                    strings={{
+                    title: "Snel overzicht",
+                    showAll: "Toon alles",
+                    showLess: "Toon minder",
+                    rising: "↑ stijgt",
+                    falling: "↓ daalt",
+                    flat: "→ vlak",
+                    more: "meer",
+                    }}
+                />
+            </div>
+        </section>
 
-        <div className="card section" style={{ alignContent: "start" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h2 style={{ margin: 0, flex: 1 }}>Laatste artikelen</h2>
-            <Link href="/articles" className="tag">Bekijk alle →</Link>
+        <section className="card section" style={{ alignContent: "start" }}>
+          <div className="card-content-wrapper">
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <h2 style={{ margin: 0, flex: 1 }}>Laatste artikelen</h2>
+                <Link href="/nl/articles" className="tag">Bekijk alles →</Link>
+            </div>
+            <div style={{ display: "grid", gap: 12 }}>
+                {topArticles.map((a) => (
+                <ArticleCard key={a.slug} article={a} />
+                ))}
+                {topArticles.length === 0 && <div className="tag">Nog geen artikelen. Binnenkort meer.</div>}
+            </div>
           </div>
-
-          <div style={{ display: "grid", gap: 12 }}>
-            {topArticles.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
-            ))}
-            {topArticles.length === 0 && <div className="tag">Nog geen artikelen. Binnenkort beschikbaar.</div>}
-          </div>
-        </div>
+        </section>
       </section>
 
-      {/* FAQ */}
+      {/* === FAQ === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0 }}>Veelgestelde vragen</h2>
-
-        <h3 style={{ marginBottom: 6 }}>Hoe wordt de live-schatting berekend?</h3>
-        <p className="tag" style={{ marginTop: 0 }}>
-          We interpoleren tussen de laatste twee referentieperiodes van Eurostat en rekenen de waarde per seconde door.
-          Op de landpagina’s vind je de uitgangswaarde en trendindicator.
-        </p>
-
-        <h3 style={{ marginBottom: 6 }}>Is dit een officiële statistiek?</h3>
-        <p className="tag" style={{ marginTop: 0 }}>
-          Nee. Dit is een educatieve visualisatie gebaseerd op officiële data, bedoeld om inzicht en discussie te stimuleren.
-        </p>
+        <div className="card-content-wrapper">
+            <h2 style={{ marginTop: 0 }}>FAQ: EU overheidsschuld</h2>
+            <h3 style={{ marginBottom: 6 }}>Hoe wordt de live schatting berekend?</h3>
+            <p className="tag" style={{ marginTop: 0 }}>
+            We interpoleren tussen de laatste twee referentieperiodes van Eurostat en extrapoleren dit per seconde. Op de landenpagina's vind je de exacte basiswaarden.
+            </p>
+            <h3 style={{ marginBottom: 6 }}>Is dit een officiële statistiek?</h3>
+            <p className="tag" style={{ marginTop: 0 }}>
+            Nee. Het is een educatieve visualisatie gebaseerd op officiële data, bedoeld om inzicht te geven en discussie te stimuleren.
+            </p>
+        </div>
       </section>
 
       <style>{responsiveCss}</style>
