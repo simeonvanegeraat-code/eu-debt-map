@@ -1,7 +1,9 @@
+// app/components/ArticleRail.jsx
 "use client";
 
 import Link from "next/link";
 
+/* Helper voor URL opbouw */
 function hrefFor(a) {
   if (!a) return "#";
   if (a.url) return a.url;
@@ -9,201 +11,185 @@ function hrefFor(a) {
   return `${lang}/articles/${a.slug}`;
 }
 
+/* Helper voor datum */
+function formatDate(iso, lang = "en") {
+  if (!iso) return "";
+  try {
+    return new Date(iso).toLocaleDateString(lang === "en" ? "en-GB" : lang, {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
 export default function ArticleRail({ articles = [], title = "More articles" }) {
   if (!articles.length) return null;
 
-  const headingId =
-    "rail-heading-" + (title || "more").toLowerCase().replace(/\s+/g, "-");
-
   return (
-    <section className="article-rail" aria-labelledby={headingId}>
+    <section className="rail-wrapper">
       <style jsx>{`
-        .article-rail {
-          margin-top: 24px;
-          display: grid;
-          gap: 6px;
+        .rail-wrapper {
+          margin-top: 48px;
+          padding-top: 32px;
+          border-top: 1px solid #e5e7eb;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
         }
 
-        .rail-heading {
-          margin: 0;
-          font-size: 1rem;
-          font-weight: 600;
-          letter-spacing: -0.01em;
-          color: #0f172a;
+        .rail-header {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
         }
 
-        .rail-sub {
+        .rail-title {
           margin: 0;
-          font-size: 0.75rem;
+          font-size: 1.4rem; /* Groter = Duidelijker */
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          color: #111827;
+        }
+
+        .rail-subtitle {
+          margin: 0;
+          font-size: 0.95rem;
           color: #6b7280;
         }
 
-        .rail-list {
-          display: flex;
-          gap: 12px;
-          overflow-x: auto;
-          padding: 4px 0 4px;
-          scroll-behavior: smooth;
+        .rail-grid {
+          display: grid;
+          gap: 24px;
+          /* Mobile first: 1 kolom */
+          grid-template-columns: 1fr; 
         }
 
-        .rail-item {
-          flex: 0 0 260px;
+        @media (min-width: 640px) {
+          .rail-grid {
+            /* Tablet: 2 kolommen */
+            grid-template-columns: repeat(2, 1fr); 
+          }
+        }
+        @media (min-width: 1024px) {
+          .rail-grid {
+            /* Desktop: 3 kolommen */
+            grid-template-columns: repeat(3, 1fr); 
+          }
+        }
+
+        /* CARD */
+        .card {
+          display: flex;
+          flex-direction: column;
           text-decoration: none;
           color: inherit;
-        }
-
-        .card {
-          display: grid;
-          grid-template-rows: auto 1fr;
-          gap: 6px;
-          border-radius: 18px;
-          background: #ffffff;
-          border: 1px solid rgba(148, 163, 253, 0.18);
-          box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+          background: #fff;
+          border-radius: 12px;
           overflow: hidden;
-          transition: all 0.16s ease;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border: 1px solid rgba(0,0,0,0.06);
+          height: 100%; /* Gelijke hoogte */
         }
 
-        .card:hover,
-        .card:focus-visible {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
-          background: #f9fafb;
+        .card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+          border-color: rgba(0,0,0,0.0);
         }
 
-        .thumb {
-          width: 100%;
-          aspect-ratio: 16 / 9;
-          background: #e5e7eb;
+        .thumb-wrap {
+          position: relative;
+          aspect-ratio: 16/9;
+          background: #f3f4f6;
           overflow: hidden;
         }
-
-        .thumb img {
+        
+        .thumb-wrap img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
-          transition: transform 0.18s ease;
+          transition: transform 0.5s ease;
         }
 
-        .card:hover .thumb img,
-        .card:focus-visible .thumb img {
-          transform: scale(1.03);
+        .card:hover .thumb-wrap img {
+          transform: scale(1.05);
         }
 
-        .body {
-          padding: 8px 10px 9px;
-          display: grid;
-          gap: 4px;
+        .content {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          flex-grow: 1;
         }
 
-        .date {
-          font-size: 0.68rem;
+        .meta {
+          font-size: 0.75rem;
           text-transform: uppercase;
-          letter-spacing: 0.16em;
+          letter-spacing: 0.05em;
+          font-weight: 600;
           color: #9ca3af;
-          margin: 0;
         }
 
-        .title {
+        .card-title {
           margin: 0;
-          font-size: 0.9rem;
-          font-weight: 600;
-          line-height: 1.35;
+          font-size: 1.15rem; /* Leesbaarder */
+          font-weight: 700;
+          line-height: 1.4;
           color: #111827;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
+        }
+        
+        .card:hover .card-title {
+          color: #2563eb; /* Blauw accent bij hover */
+          text-decoration: underline;
+          text-decoration-thickness: 2px;
         }
 
         .excerpt {
+          font-size: 0.9rem;
+          line-height: 1.6;
+          color: #4b5563;
           margin: 0;
-          font-size: 0.78rem;
-          line-height: 1.4;
-          color: #6b7280;
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-
-        @media (min-width: 768px) {
-          .article-rail {
-            margin-top: 28px;
-            gap: 8px;
-          }
-
-          .rail-list {
-            overflow-x: visible;
-            padding-bottom: 0;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
-          }
-
-          .rail-item {
-            flex: initial;
-          }
-        }
       `}</style>
 
-      <h3 id={headingId} className="rail-heading">
-        {title}
-      </h3>
-      <p className="rail-sub">
-        Related EU debt and fiscal insights to explore next.
-      </p>
+      <div className="rail-header">
+        <h3 className="rail-title">{title}</h3>
+        <p className="rail-subtitle">Analysis & data you might have missed</p>
+      </div>
 
-      <div className="rail-list">
+      <div className="rail-grid">
         {articles.map((a) => (
-          <Link
-            key={a.slug}
-            href={hrefFor(a)}
-            className="rail-item"
-            aria-label={a.title}
-            rel="bookmark"
+          <Link 
+            key={a.slug} 
+            href={hrefFor(a)} 
+            className="card"
+            title={a.title}
           >
-            <div className="card">
-              <div className="thumb">
-                <img
-                  src={a.image || "/images/articles/placeholder.jpg"}
-                  alt={a.imageAlt || a.title}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div className="body">
-                {a.date && (
-                  <p className="date">{formatDate(a.date, a.lang)}</p>
-                )}
-                <h4 className="title">{a.title}</h4>
-                {(a.summary || a.excerpt) && (
-                  <p className="excerpt">
-                    {a.summary || a.excerpt}
-                  </p>
-                )}
-              </div>
+            <div className="thumb-wrap">
+              <img
+                src={a.image || "/images/articles/placeholder.jpg"}
+                alt={a.title}
+                loading="lazy"
+              />
+            </div>
+            <div className="content">
+              {a.date && <span className="meta">{formatDate(a.date, a.lang)}</span>}
+              <h4 className="card-title">{a.title}</h4>
+              {/* Excerpt is optioneel, zet uit als het te druk wordt */}
+              {a.summary && <p className="excerpt">{a.summary}</p>}
             </div>
           </Link>
         ))}
       </div>
     </section>
   );
-}
-
-function formatDate(iso, lang = "en") {
-  if (!iso) return "";
-  try {
-    return new Date(iso).toLocaleDateString(
-      lang && lang !== "en" ? lang : "en-GB",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }
-    );
-  } catch {
-    return iso;
-  }
 }
