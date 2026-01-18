@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
       title: "Article • EU Debt Map", 
       alternates: { canonical: url }, 
       openGraph: { url },
-      robots: { index: false } // Don't index 404s
+      robots: { index: false }
     };
   }
 
@@ -42,7 +42,6 @@ export async function generateMetadata({ params }) {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
     alternates: { canonical: url, languages },
-    // CRITICAL FOR DISCOVER: max-image-preview: large
     robots: {
       index: true,
       follow: true,
@@ -84,10 +83,8 @@ export default function ArticleDetailPage({ params }) {
 
   const url = `${SITE}${prefix}/articles/${params.slug}`;
   
-  // Use specific published date if available, fallback to generic date
   const publishDate = article.datePublished || article.date;
   const modifyDate = article.dateModified || publishDate;
-  
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
   const candidateHero =
@@ -98,62 +95,162 @@ export default function ArticleDetailPage({ params }) {
 
   const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
 
+  // --- PREMIUM EDITORIAL STYLING ---
   const css = `
-    .pageTitle{
-      margin:0;
-      line-height:1.15;
-      font-weight:800;
-      font-size:clamp(1.75rem,1.1rem + 2.4vw,2.25rem);
-      letter-spacing:-0.015em;
-    }
-    .metaRow{ display:flex; gap:8px; flex-wrap:wrap; }
-
-    .heroWrap{
-      width:100%;
-      border:1px solid var(--border);
-      border-radius:12px;
-      overflow:hidden;
-      background:#f3f4f6;
-      aspect-ratio:16/9;
-    }
-    .heroWrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+    /* Layout Container */
+    .article-container {
+      max-width: 740px; /* Optimale leesbreedte */
+      margin: 0 auto;
+      padding: 0 16px;
     }
 
-    .divider{
-      height:1px; border:0;
-      background:linear-gradient(90deg, transparent, var(--border), transparent);
-      margin: 8px 0 2px;
+    /* Typography Hierarchy */
+    .pageTitle {
+      margin: 1rem 0 0.5rem;
+      line-height: 1.1;
+      font-weight: 800;
+      font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+      letter-spacing: -0.02em;
+      color: #111827;
+      font-family: var(--font-sans, sans-serif); /* Koppen blijven strak */
     }
 
-    .articleProse h2{ margin:1rem 0 .5rem; }
-    .articleProse h3{ margin:.75rem 0 .4rem; }
-    .articleProse p{ line-height:1.65; margin:.6rem 0; }
-    .articleProse ul,.articleProse ol{ margin:.5rem 0 .8rem 1.2rem; }
-    .articleProse li{ margin:.25rem 0; }
-    .articleProse .tag{ color:#9ca3af; }
-
-    .articleProse figure{ margin:1.25rem 0; }
-    .articleProse img{
-      max-width:100%;
-      height:auto;
-      border-radius:12px;
-      border:1px solid var(--border);
-      display:block;
-      margin-inline:auto;
+    .metaRow { 
+      display: flex; 
+      gap: 12px; 
+      flex-wrap: wrap; 
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 24px;
+      font-weight: 500;
+      align-items: center;
     }
-    .articleProse figcaption{
-      color:#7d8da5;
-      font-size:.9rem;
-      margin-top:.45rem;
-      text-align:center;
+    .metaRow .tag {
+      color: #2563eb;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-lead {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      color: #4b5563;
+      margin-bottom: 24px;
+      font-weight: 400;
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 24px;
+    }
+
+    .heroWrap {
+      width: 100%; /* Hero mag breder */
+      max-width: 100%;
+      margin: 0 0 32px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f3f4f6;
+      aspect-ratio: 16/9;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .heroWrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* THE ARTICLE BODY - "The Economist" style */
+    .articleProse {
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.8;
+      color: #1f2937; /* Donkergrijs, niet zwart */
+    }
+
+    .articleProse p {
+      margin-bottom: 1.5rem;
+    }
+
+    /* Headings in article body */
+    .articleProse h2 {
+      font-family: var(--font-sans, sans-serif);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 2.5rem 0 1rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .articleProse h3 {
+      font-family: var(--font-sans, sans-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 2rem 0 0.75rem;
+    }
+
+    /* Links */
+    .articleProse a {
+      color: #2563eb;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .articleProse a:hover {
+      color: #1d4ed8;
+      text-decoration-thickness: 2px;
+    }
+
+    /* Lists */
+    .articleProse ul, .articleProse ol {
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+    .articleProse li {
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+    }
+    .articleProse ul li::marker {
+      color: #9ca3af;
+    }
+
+    /* Blockquotes */
+    .articleProse blockquote {
+      border-left: 4px solid #2563eb;
+      margin: 2rem 0;
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      font-style: italic;
+      color: #374151;
+      font-size: 1.2rem;
+      background: #f9fafb;
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* Images in text */
+    .articleProse figure {
+      margin: 2.5rem -16px; /* Iets breder dan tekst op mobiel */
+    }
+    @media (min-width: 640px) {
+      .articleProse figure { margin: 2.5rem 0; }
+    }
+    .articleProse img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+    .articleProse figcaption {
+      font-family: var(--font-sans, sans-serif);
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      text-align: center;
     }
   `;
 
-  // Construct Author Object safely
+  // Author Object
   let authorObj;
   if (article.author) {
     if (typeof article.author === 'string') {
@@ -169,7 +266,6 @@ export default function ArticleDetailPage({ params }) {
     authorObj = { "@type": "Organization", name: "EU Debt Map" };
   }
 
-  // Enhanced JSON-LD for Google Discover
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -178,10 +274,7 @@ export default function ArticleDetailPage({ params }) {
     datePublished: new Date(publishDate).toISOString(),
     dateModified: new Date(modifyDate).toISOString(),
     inLanguage: article.lang || LANG,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": url
-    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     author: authorObj,
     publisher: {
       "@type": "Organization",
@@ -192,33 +285,42 @@ export default function ArticleDetailPage({ params }) {
   };
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
+    <main style={{ paddingBottom: 60 }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
-        <style>{css}</style>
+      <style>{css}</style>
 
-        {/* Meta + titel */}
-        <header style={{ display: "grid", gap: 8 }}>
-          <div className="tag metaRow">
+      <article className="article-container">
+        {/* Header Section */}
+        <header>
+          <div className="metaRow">
+            {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
             <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
-            {article.tags?.length ? <span aria-hidden>•</span> : null}
-            {article.tags?.map((t) => (
-              <span key={t} className="tag">{t}</span>
-            ))}
+            {article.author && (
+               <span>by {typeof article.author === 'string' ? article.author : article.author.name}</span>
+            )}
           </div>
+          
           <h1 className="pageTitle">{article.title}</h1>
+          
           {article.summary && (
-            <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>
+            <div className="summary-lead">
+              {article.summary}
+            </div>
           )}
         </header>
 
-        {/* Hero */}
+        {/* Share buttons */}
+        <div style={{ margin: "20px 0" }}>
+          <ShareBar url={url} title={article.title} />
+        </div>
+
+        {/* Hero Image */}
         {shouldRenderHero && (
-          <figure className="heroWrap" style={{ margin: 0 }}>
+          <figure className="heroWrap">
             <img
               src={candidateHero}
               alt={article.imageAlt || article.title}
-              loading="eager" // Hero images should load instantly for LCP score
+              loading="eager"
               decoding="async"
               width={1200}
               height={675}
@@ -226,28 +328,23 @@ export default function ArticleDetailPage({ params }) {
           </figure>
         )}
 
-        {/* Share + divider */}
-        <ShareBar url={url} title={article.title} summary={article.summary} />
-        <hr className="divider" />
-
-        {/* Artikeltekst */}
+        {/* The Content */}
         <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
 
-        {/* Verder lezen */}
+        {/* Footer Area */}
+        <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
+        
+        <div style={{ marginBottom: 40 }}>
+            <ShareBar url={url} title={article.title} />
+        </div>
+
+        {/* Read More */}
         <ArticleRailServer
           lang={article.lang}
           exceptSlug={article.slug}
           limit={6}
-          title="More articles"
+          title="Further Reading"
         />
-
-        {/* Footer */}
-        <footer style={{ display: "grid", gap: 10 }}>
-          <ShareBar url={url} title={article.title} summary={article.summary} />
-          <div className="tag">
-            Source: Eurostat (gov_10q_ggdebt). Educational visualization, not an official statistic.
-          </div>
-        </footer>
       </article>
     </main>
   );
