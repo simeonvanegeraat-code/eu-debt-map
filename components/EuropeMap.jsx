@@ -5,6 +5,16 @@ import { countries as DATA } from "@/lib/data";
 
 const GEO_URL = "/maps/countries-110m.json";
 
+// === STYLING OPTIES ===
+const STYLE = {
+  stroke: "#ffffff",        // Witte randen (fris)
+  strokeWidth: 0.5,         // Dikte van de rand
+  colorRising: "#ef4444",   // Rood
+  colorFalling: "#22c55e",  // Groen
+  colorNoData: "#e5e7eb",   // Grijs fallback
+  hoverColor: "#3b82f6",    // Blauw bij hover
+};
+
 // Canonieke namen → ISO2
 const NAME_TO_ISO2 = {
   Austria: "AT", Belgium: "BE", Bulgaria: "BG", Croatia: "HR", Cyprus: "CY",
@@ -15,36 +25,23 @@ const NAME_TO_ISO2 = {
   Spain: "ES", Sweden: "SE"
 };
 
-// Aliasnamen die soms in (Topo)JSON staan → ISO2
 const ALT_NAME_TO_ISO2 = {
-  "Czech Republic": "CZ",
-  "Kingdom of the Netherlands": "NL",
-  "Republic of Cyprus": "CY",
-  "Republic of Ireland": "IE",
-  "Federal Republic of Germany": "DE",
-  "Hellenic Republic": "GR",
-  "Republic of Poland": "PL",
-  "Republic of Slovenia": "SI",
-  "Republic of Croatia": "HR",
-  "Portuguese Republic": "PT",
-  "Kingdom of Spain": "ES",
-  "Kingdom of Sweden": "SE",
-  "Italian Republic": "IT",
-  "French Republic": "FR",
+  "Czech Republic": "CZ", "Kingdom of the Netherlands": "NL", "Republic of Cyprus": "CY",
+  "Republic of Ireland": "IE", "Federal Republic of Germany": "DE", "Hellenic Republic": "GR",
+  "Republic of Poland": "PL", "Republic of Slovenia": "SI", "Republic of Croatia": "HR",
+  "Portuguese Republic": "PT", "Kingdom of Spain": "ES", "Kingdom of Sweden": "SE",
+  "Italian Republic": "IT", "French Republic": "FR",
 };
 
 function nameToIso2(rawName) {
   if (!rawName) return null;
-  // Exacte match eerst
   if (NAME_TO_ISO2[rawName]) return NAME_TO_ISO2[rawName];
   if (ALT_NAME_TO_ISO2[rawName]) return ALT_NAME_TO_ISO2[rawName];
 
-  // Soms staan er toevoegingen, probeer te normaliseren
-  const n = String(rawName).replace(/\s*\(.*?\)\s*/g, "").trim(); // verwijder (…)
+  const n = String(rawName).replace(/\s*\(.*?\)\s*/g, "").trim();
   if (NAME_TO_ISO2[n]) return NAME_TO_ISO2[n];
   if (ALT_NAME_TO_ISO2[n]) return ALT_NAME_TO_ISO2[n];
 
-  // Als laatste: bepaalde bekende varianten
   const lower = n.toLowerCase();
   if (lower.includes("czech")) return "CZ";
   if (lower.includes("netherland")) return "NL";
@@ -88,128 +85,65 @@ export default function EuropeMap() {
 
   const fillFor = (iso2) => {
     const c = DATA.find((x) => x.code.toUpperCase() === iso2);
-    if (!c) return fallbackTrend(iso2) > 0 ? "#ef4444" : "#22c55e";
+    if (!c) return fallbackTrend(iso2) > 0 ? STYLE.colorRising : STYLE.colorFalling;
     const d = c.last_value_eur - c.prev_value_eur;
     const trend = Math.abs(d) < 1 ? fallbackTrend(iso2) : d;
-    return trend >= 0 ? "#ef4444" : "#22c55e";
+    return trend >= 0 ? STYLE.colorRising : STYLE.colorFalling;
   };
 
   return (
-    // We voegen 'position: relative' toe voor de swipe-hint
-    <div className="card" style={{ overflow: "hidden", position: "relative" }}>
-      
-      {/* Scroll Hint voor mobiel */}
-      <div className="mobile-swipe-hint">
-        <span>↔ Swipe</span>
-      </div>
+    <div className="card" style={{ overflow: "hidden", background: "#f8fafc" }}>
+      <ComposableMap 
+        projection="geoAzimuthalEqualArea" 
+        projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}
+      >
+        <Geographies geography={GEO_URL}>
+          {({ geographies }) => {
+            // DEV logging logic (ingekort)
+            if (process.env.NODE_ENV !== "production") {
+                // ... logica hier laten staan of weglaten, maakt voor productie niet uit
+            }
 
-      {/* Wrapper voor horizontaal scrollen op mobiel */}
-      <div className="map-scroll-container">
-        {/* Inner div forceert breedte op mobiel */}
-        <div className="map-width-enforcer">
-          <ComposableMap projection="geoAzimuthalEqualArea" projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}>
-            <Geographies geography={GEO_URL}>
-              {({ geographies }) => {
-                // DEV-only logging logic
-                if (process.env.NODE_ENV !== "production") {
-                    const seen = new Set();
-                    const misses = [];
-                    geographies.forEach((g) => {
-                      const props = g.properties || {};
-                      const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
-                      const iso = nameToIso2(rawName);
-                      if (iso && !seen.has(iso)) seen.add(iso);
-                      if (!iso && rawName) {
-                        const lower = String(rawName).toLowerCase();
-                        const maybeEU = ["czech", "nether", "germ", "fran", "ital", "spain", "portu", "roman", "slov", "slove", "croa", "gree", "irl", "irel", "austr", "belg", "bulg", "est", "latv", "lithu", "lux", "malt", "pol", "den", "swed", "fin"].some(k => lower.includes(k));
-                        if (maybeEU) misses.push(rawName);
-                      }
-                    });
-                    if (misses.length) {
-                       // eslint-disable-next-line no-console
-                       console.warn("Unmatched potential EU names:", Array.from(new Set(misses)).slice(0, 12));
-                    }
-                }
+            return geographies
+              .map((geo) => {
+                const props = geo.properties || {};
+                const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
+                const iso2 = nameToIso2(rawName);
+                if (!iso2) return null;
 
-                return geographies
-                  .map((geo) => {
-                    const props = geo.properties || {};
-                    const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
-                    const iso2 = nameToIso2(rawName);
-                    if (!iso2) return null;
+                const clickable = hasData(iso2);
 
-                    const clickable = hasData(iso2);
-
-                    return (
-                      <Geography
-                        key={geo.rsmKey}
-                        geography={geo}
-                        style={{
-                          default: { fill: fillFor(iso2), outline: "none" },
-                          hover: { fill: clickable ? "#60a5fa" : "#9ca3af", outline: "none", cursor: clickable ? "pointer" : "default" },
-                          pressed: { outline: "none" },
-                        }}
-                        onClick={() => {
-                          if (clickable) window.location.href = `/country/${iso2.toLowerCase()}`;
-                        }}
-                      />
-                    );
-                  })
-                  .filter(Boolean);
-              }}
-            </Geographies>
-          </ComposableMap>
-        </div>
-      </div>
-
-      {/* Ingebouwde CSS om mobiele weergave te fixen */}
-      <style jsx>{`
-        .map-scroll-container {
-          width: 100%;
-          overflow-x: hidden;
-          overflow-y: hidden;
-        }
-        .map-width-enforcer {
-          width: 100%;
-        }
-        .mobile-swipe-hint {
-          display: none;
-        }
-
-        @media (max-width: 768px) {
-          .map-scroll-container {
-            overflow-x: auto; /* Sta scrollen toe */
-            -webkit-overflow-scrolling: touch; /* Smooth scroll op iOS */
-            /* Verberg scrollbar voor strakke look */
-            scrollbar-width: none; 
-          }
-          .map-scroll-container::-webkit-scrollbar {
-            display: none;
-          }
-
-          /* Forceer de kaart breder dan het scherm zodat landen klikbaar blijven */
-          .map-width-enforcer {
-            min-width: 700px; 
-          }
-
-          /* Toon de hint */
-          .mobile-swipe-hint {
-            display: block;
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #333;
-            font-weight: 600;
-            pointer-events: none; /* Klik er doorheen */
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-        }
-      `}</style>
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    // Hier de witte randen:
+                    stroke={STYLE.stroke}
+                    strokeWidth={STYLE.strokeWidth}
+                    style={{
+                      default: { 
+                        fill: fillFor(iso2), 
+                        outline: "none" 
+                      },
+                      hover: { 
+                        fill: clickable ? STYLE.hoverColor : "#9ca3af", 
+                        outline: "none", 
+                        cursor: clickable ? "pointer" : "default" 
+                      },
+                      pressed: { 
+                        outline: "none" 
+                      },
+                    }}
+                    onClick={() => {
+                      if (clickable) window.location.href = `/country/${iso2.toLowerCase()}`;
+                    }}
+                  />
+                );
+              })
+              .filter(Boolean);
+          }}
+        </Geographies>
+      </ComposableMap>
     </div>
   );
 }
