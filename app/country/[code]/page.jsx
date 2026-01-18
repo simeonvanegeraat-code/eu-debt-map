@@ -1,11 +1,10 @@
-// app/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
-import { t } from "@/lib/i18n";
+import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live"; // <--- UNIFORM: Alles via live.js
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -72,14 +71,17 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export const dynamic = "error";
+export const dynamic = "force-dynamic";
 
-export default function CountryPage({ params: { code } }) {
+export default async function CountryPage({ params: { code } }) {
   const want = String(code).toLowerCase();
   const country = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === want
   );
   if (!country) return notFound();
+
+  // 1. Haal LIVE de correcte GDP data op (Quarterly Run Rate)
+  const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
   const rawLang = getLocaleFromPathname?.() || "en";
   const lang = ["en", "nl", "de", "fr"].includes(rawLang) ? rawLang : "en";
@@ -92,6 +94,9 @@ export default function CountryPage({ params: { code } }) {
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+          // 2. Geef data door aan SSR, client ziet meteen Q3 2025
+          gdpAbs={valueEUR}
+          gdpPeriod={period}
         />
       </section>
     </main>

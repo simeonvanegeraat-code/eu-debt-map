@@ -1,6 +1,5 @@
-// app/api/gdp/route.js
 import { NextResponse } from "next/server";
-import * as Eurostat from "@/lib/eurostat.live";
+import * as Eurostat from "@/lib/eurostat.live"; // Check: Gebruik de LIVE file
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
