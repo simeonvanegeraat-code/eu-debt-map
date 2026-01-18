@@ -5,7 +5,7 @@ import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
-import { t } from "@/lib/i18n";
+import { getLatestGDPForGeoEUR } from "@/lib/eurostat.gen"; // <--- NIEUW: Live data functie
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -72,14 +72,30 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export const dynamic = "error";
+export const dynamic = "force-dynamic"; // <--- BELANGRIJK: Zorgt dat hij de data live ophaalt, niet cached!
 
-export default function CountryPage({ params: { code } }) {
+export default async function CountryPage({ params: { code } }) {
   const want = String(code).toLowerCase();
-  const country = (Array.isArray(countries) ? countries : []).find(
+  
+  // 1. Haal de basisdata uit de statische lijst
+  const staticCountry = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === want
   );
-  if (!country) return notFound();
+  if (!staticCountry) return notFound();
+
+  // 2. Haal LIVE de 'gecorrigeerde' GDP op (met jouw 5.5% fix)
+  const gdpData = await getLatestGDPForGeoEUR(staticCountry.code);
+  
+  // 3. Maak een "Enriched" object met de nieuwe GDP
+  // We overschrijven de statische 'gdp' waarde met de nieuwe berekende waarde.
+  const country = {
+    ...staticCountry,
+    gdp: gdpData.valueEUR || staticCountry.gdp, // De nieuwe, hogere GDP
+    // We geven ook de periode mee voor de UI (hopelijk pakt CountryClient dit op)
+    gdpPeriod: gdpData.period 
+      ? `${gdpData.period} (Live Estimate)` 
+      : "Live Estimate" 
+  };
 
   const rawLang = getLocaleFromPathname?.() || "en";
   const lang = ["en", "nl", "de", "fr"].includes(rawLang) ? rawLang : "en";
