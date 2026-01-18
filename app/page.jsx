@@ -122,6 +122,8 @@ export default function HomePage() {
        width: 100%;
        display: flex;
        flex-direction: column;
+       /* Zorgt dat padding overal consistent is binnen de card */
+       box-sizing: border-box; 
     }
   `;
 
@@ -321,78 +323,87 @@ export default function HomePage() {
 
       {/* === HIGHLIGHTS === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        <h2 style={{ marginTop: 0 }}>Highlights</h2>
+        {/* Wrapper added here too for consistency and ad-protection */}
+        <div className="card-content-wrapper">
+            <h2 style={{ marginTop: 0 }}>Highlights</h2>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 12,
-            marginTop: 8,
-          }}
-        >
-          {largestDebt ? (
-            <HighlightTicker
-              label="Largest debt"
-              flag={largestDebt.flag}
-              name={largestDebt.name}
-              start={largestDebt.last_value_eur}
-              perSecond={perSecondForCountry(largestDebt)}
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
+            <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                gap: 12,
+                marginTop: 8,
+            }}
+            >
+            {largestDebt ? (
+                <HighlightTicker
+                label="Largest debt"
+                flag={largestDebt.flag}
+                name={largestDebt.name}
+                start={largestDebt.last_value_eur}
+                perSecond={perSecondForCountry(largestDebt)}
+                />
+            ) : (
+                <div className="tag">—</div>
+            )}
 
-          {fastestGrowing ? (
-            <HighlightTicker
-              label="Fastest growing"
-              flag={fastestGrowing.flag}
-              name={fastestGrowing.name}
-              start={fastestGrowing.last_value_eur}
-              perSecond={perSecondForCountry(fastestGrowing)}
-              accent="var(--bad)"
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
+            {fastestGrowing ? (
+                <HighlightTicker
+                label="Fastest growing"
+                flag={fastestGrowing.flag}
+                name={fastestGrowing.name}
+                start={fastestGrowing.last_value_eur}
+                perSecond={perSecondForCountry(fastestGrowing)}
+                accent="var(--bad)"
+                />
+            ) : (
+                <div className="tag">—</div>
+            )}
+            </div>
+
+            <p className="tag" style={{ marginTop: 12 }}>
+            Government debt shapes interest rates, inflation, fiscal policy, and the broader EU economy. These live tickers surface the biggest movements at a glance.
+            </p>
         </div>
-
-        <p className="tag" style={{ marginTop: 12 }}>
-          Government debt shapes interest rates, inflation, fiscal policy, and the broader EU economy. These live tickers surface the biggest movements at a glance.
-        </p>
       </section>
 
       {/* === QUICK LIST + LATEST ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
-        <div>
-          <QuickList
-            items={quickItems}
-            initialCount={quickItems.length} // toon alles standaard
-            strings={{
-              title: "Quick list",
-              showAll: "Show all",
-              showLess: "Show less",
-              rising: "↑ rising",
-              falling: "↓ falling",
-              flat: "→ flat",
-              more: "more",
-            }}
-          />
-        </div>
+        {/* Quick List: Wrapped in card section + card-content-wrapper for consistent padding */}
+        <section className="card section">
+            <div className="card-content-wrapper">
+                <QuickList
+                    items={quickItems}
+                    initialCount={quickItems.length} // toon alles standaard
+                    strings={{
+                    title: "Quick list",
+                    showAll: "Show all",
+                    showLess: "Show less",
+                    rising: "↑ rising",
+                    falling: "↓ falling",
+                    flat: "→ flat",
+                    more: "more",
+                    }}
+                />
+            </div>
+        </section>
 
-        <div className="card section" style={{ alignContent: "start" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
-            <Link href="/articles" className="tag">View all →</Link>
-          </div>
+        {/* Latest Articles: Wrapped content in card-content-wrapper to fix padding issues */}
+        <section className="card section" style={{ alignContent: "start" }}>
+          <div className="card-content-wrapper">
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
+                <Link href="/articles" className="tag">View all →</Link>
+            </div>
 
-          <div style={{ display: "grid", gap: 12 }}>
-            {topArticles.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
-            ))}
-            {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
+            <div style={{ display: "grid", gap: 12 }}>
+                {topArticles.map((a) => (
+                <ArticleCard key={a.slug} article={a} />
+                ))}
+                {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
+            </div>
           </div>
-        </div>
+        </section>
       </section>
 
       {/* Mini-FAQ (extra SEO) */}
