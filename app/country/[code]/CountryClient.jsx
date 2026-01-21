@@ -1,4 +1,3 @@
-// app/country/[code]/CountryClient.jsx
 "use client";
 
 import Link from "next/link";
@@ -80,6 +79,44 @@ const SR_ONLY = {
   whiteSpace: "nowrap",
   border: 0,
 };
+
+// --- NIEUW: De Handmatige Advertentie Component ---
+function ManualAd() {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error("AdSense error:", err);
+    }
+  }, []);
+
+  return (
+    <div
+      style={{
+        margin: "24px 0",
+        textAlign: "center",
+        minHeight: "100px", // Reserveer ruimte om verspringen te voorkomen
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "transparent",
+      }}
+    >
+      <span style={{ fontSize: "10px", color: "#cbd5e1", marginBottom: "4px", textTransform: "uppercase" }}>
+        Advertisement
+      </span>
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-9252617114074571"
+        data-ad-slot="8705915822"
+        data-ad-format="horizontal"
+        data-full-width-responsive="true"
+      ></ins>
+    </div>
+  );
+}
 
 export default function CountryClient({
   country,
@@ -300,7 +337,7 @@ export default function CountryClient({
         <ShareBar title={shareTitle} />
       </div>
 
-      {/* Feitenblok — Hier geven we het correcte label door! */}
+      {/* Feitenblok */}
       <div style={{ marginTop: 8 }}>
         <CountryFacts
           code={safeCountry.code}
@@ -308,6 +345,9 @@ export default function CountryClient({
           yearLabel={finalYearLabel}
         />
       </div>
+
+      {/* --- JOUW NIEUWE HORIZONTALE ADVERTENTIE --- */}
+      <ManualAd />
 
       {introSlot}
 
