@@ -87,7 +87,7 @@ const SR_ONLY = {
   border: 0,
 };
 
-// --- De Handmatige Advertentie Component ---
+// --- De Handmatige Advertentie Component (MET FIX VOOR WIDTH) ---
 function ManualAd() {
   useEffect(() => {
     try {
@@ -103,11 +103,13 @@ function ManualAd() {
         margin: "24px 0",
         textAlign: "center",
         minHeight: "100px",
+        width: "100%",      // <--- CRUCIAAL: Voorkomt availableWidth=0 error
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         background: "transparent",
+        overflow: "hidden"  // <--- Voorkomt layout shift buiten de container
       }}
     >
       <span style={{ fontSize: "10px", color: "#cbd5e1", marginBottom: "4px", textTransform: "uppercase" }}>
@@ -115,7 +117,7 @@ function ManualAd() {
       </span>
       <ins
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: "block", width: "100%" }} // <--- Ook hier width toegevoegd
         data-ad-client="ca-pub-9252617114074571"
         data-ad-slot="8705915822"
         data-ad-format="horizontal"
@@ -356,12 +358,12 @@ export default function CountryClient({
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={finalYearLabel}
-          // HIERONDER DE TOEGEVOEGDE REGEL DIE MISTE:
+          // BELANGRIJK: Zorgt dat de statistieken ook Duits praten
           lang={effLang}
         />
       </div>
 
-      {/* Advertentie */}
+      {/* Advertentie (met width fix) */}
       <ManualAd />
 
       {introSlot}
