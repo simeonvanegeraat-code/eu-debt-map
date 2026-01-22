@@ -48,7 +48,7 @@ const SHARE_TITLES = {
   fr: (name) => `${name} dette publique`,
 };
 
-// Kleine client cache voor GDP-API (fallback, wordt nu minder gebruikt)
+// Kleine client cache voor GDP-API
 const GDP_TTL_MS = 6 * 60 * 60 * 1000; // 6 uur
 function readGDPCache(iso2) {
   try {
@@ -74,7 +74,7 @@ function writeGDPCache(iso2, value, period) {
   }
 }
 
-// Visually hidden style (val niet terug op sr-only class)
+// Visually hidden style
 const SR_ONLY = {
   position: "absolute",
   width: 1,
@@ -87,7 +87,7 @@ const SR_ONLY = {
   border: 0,
 };
 
-// --- NIEUW: De Handmatige Advertentie Component ---
+// --- De Handmatige Advertentie Component ---
 function ManualAd() {
   useEffect(() => {
     try {
@@ -102,7 +102,7 @@ function ManualAd() {
       style={{
         margin: "24px 0",
         textAlign: "center",
-        minHeight: "100px", // Reserveer ruimte om verspringen te voorkomen
+        minHeight: "100px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -166,7 +166,7 @@ export default function CountryClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
 
-  // --- AANGEPAST: Slimme formatter voor DE (punten) en EN (komma's) ---
+  // --- Slimme formatter voor DE (punten) en EN (komma's) ---
   const nf = useMemo(() => {
     const localeMap = {
       nl: "nl-NL", // Punten (1.000)
@@ -174,19 +174,15 @@ export default function CountryClient({
       fr: "fr-FR", // Spaties (1 000)
       en: "en-GB", // Komma's (1,000)
     };
-    // Kies de juiste locale op basis van effLang, of val terug op Engels
     return new Intl.NumberFormat(localeMap[effLang] || "en-GB");
   }, [effLang]);
-  // --------------------------------------------------------------------
 
   const current = useMemo(() => {
     if (!safeCountry) return 0;
     return interpolateDebt(safeCountry, nowMs);
   }, [safeCountry, nowMs]);
 
-  // ---------- GDP Logic (FIXED) ----------
-  // We geven prioriteit aan data die al in het 'country' object zit (van de server)
-  // Dit zorgt dat de "5.5% fix" behouden blijft.
+  // ---------- GDP Logic ----------
   const serverGdp = safeCountry?.gdp || gdpAbsProp;
   const serverPeriod = safeCountry?.gdpPeriod || gdpPeriodProp;
 
@@ -198,8 +194,7 @@ export default function CountryClient({
   useEffect(() => {
     if (!safeCountry) return;
     
-    // BELANGRIJK: Als de server al GDP data heeft meegegeven (onze fix),
-    // dan hoeven we NIET te fetchen. Dit voorkomt dat we oude data laden.
+    // Als server data al aanwezig is, niet opnieuw fetchen
     if (Number.isFinite(serverGdp)) {
         return; 
     }
@@ -243,7 +238,6 @@ export default function CountryClient({
 
   const rateBoxId = "country-rate-desc";
   const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
-  // --- AANGEPAST: Haal de juiste info tekst op ---
   const infoLabel = INFO_LABELS[effLang] || INFO_LABELS.en;
 
   const backHref =
@@ -262,7 +256,6 @@ export default function CountryClient({
   const ratioPct =
     Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
 
-  // Bepaal het label voor de tabel: Gebruik de periode (Live Estimate) indien beschikbaar
   const finalYearLabel = gdpPeriod || yearLabel;
 
   return (
@@ -320,12 +313,11 @@ export default function CountryClient({
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
           }}
         >
-          {/* De nf (NumberFormat) doet hier nu het werk voor punten/komma's obv taal */}
           €{nf.format(Math.round(current))}
         </span>
       </div>
 
-      {/* Infobox - NU VERTAALD */}
+      {/* Infobox */}
       <div
         style={{
           marginTop: 12,
@@ -364,10 +356,12 @@ export default function CountryClient({
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={finalYearLabel}
+          // HIERONDER DE TOEGEVOEGDE REGEL DIE MISTE:
+          lang={effLang}
         />
       </div>
 
-      {/* --- JOUW NIEUWE HORIZONTALE ADVERTENTIE --- */}
+      {/* Advertentie */}
       <ManualAd />
 
       {introSlot}
