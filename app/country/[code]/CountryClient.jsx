@@ -19,7 +19,7 @@ import { getLocaleFromPathname } from "@/lib/locale";
 const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
 const norm = (x) => (x === "" ? "en" : x);
 
-// UI labels (al meertalig)
+// UI labels (Vertaald)
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
@@ -32,6 +32,13 @@ const BACK_LABELS = {
   nl: "← Terug",
   de: "← Zurück",
   fr: "← Retour",
+};
+
+const INFO_LABELS = {
+  en: "Based on the latest Eurostat data. Live estimate using linearized growth between releases.",
+  nl: "Gebaseerd op de laatste Eurostat-data. Live schatting op basis van lineaire groei tussen publicaties.",
+  de: "Basierend auf den neuesten Eurostat-Daten. Live-Schätzung mittels linearisiertem Wachstum zwischen den Veröffentlichungen.",
+  fr: "Basé sur les dernières données d'Eurostat. Estimation en direct utilisant la croissance linéarisée entre les publications.",
 };
 
 const SHARE_TITLES = {
@@ -236,6 +243,8 @@ export default function CountryClient({
 
   const rateBoxId = "country-rate-desc";
   const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
+  // --- AANGEPAST: Haal de juiste info tekst op ---
+  const infoLabel = INFO_LABELS[effLang] || INFO_LABELS.en;
 
   const backHref =
     effLang === "nl"
@@ -311,11 +320,12 @@ export default function CountryClient({
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
           }}
         >
+          {/* De nf (NumberFormat) doet hier nu het werk voor punten/komma's obv taal */}
           €{nf.format(Math.round(current))}
         </span>
       </div>
 
-      {/* Infobox */}
+      {/* Infobox - NU VERTAALD */}
       <div
         style={{
           marginTop: 12,
@@ -330,8 +340,7 @@ export default function CountryClient({
         }}
         id={rateBoxId}
       >
-        Based on the latest Eurostat data. Live estimate using linearized
-        growth between releases.
+        {infoLabel}
       </div>
 
       <hr

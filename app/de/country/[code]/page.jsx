@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
+// Let op de import pad: we verwijzen nu naar de component in de bovenliggende map
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
-
-const SITE = "https://www.eudebtmap.com";
+import { countryName } from "@/lib/countries";
+import { withLocale } from "@/lib/locale";
+import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live";
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -11,42 +13,85 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const code = String(params.code).toLowerCase();
-  const c = (Array.isArray(countries) ? countries : []).find(x => String(x.code).toLowerCase() === code);
-  const name = c?.name || code.toUpperCase();
-  const url = `${SITE}/de/country/${code}`;
+  const code = params.code?.toUpperCase() || "";
+  // We forceren hier 'de' omdat we in de Duitse map zitten
+  const lang = "de";
+  const name = countryName(code, lang);
+
+  const base = "https://www.eudebtmap.com";
+  // Basis pad zonder taal prefix voor canonicals
+  const path = `/country/${code.toLowerCase()}`;
+
+  // Hier specifiek de Duitse titels als default, maar fallback logica behouden
+  const title = `${name} Staatsverschuldung & BIP-Verhältnis (live) | EU Debt Map`;
+  const desc = `Verfolge die geschätzte Staatsverschuldung von ${name} und das Schulden-zu-BIP-Verhältnis, live von Eurostat.`;
 
   return {
-    // AANGEPAST: 'Schuldenuhr' is het gouden zoekwoord in Duitsland
-    title: `Schuldenuhr ${name} (Live) • EU Debt Map`,
-    // AANGEPAST: Sterkere 'call to action' met 'in Echtzeit'
-    description: `Die Schuldenuhr von ${name} in Echtzeit. Sehen Sie, wie schnell die Staatsschulden pro Sekunde wachsen. Live-Berechnung basierend auf Eurostat-Daten.`,
+    title: title,
+    description: desc,
     alternates: {
-      canonical: url,
+      canonical: `${base}${withLocale(path, "de")}`,
       languages: {
-        en: `${SITE}/country/${code}`,
-        nl: `${SITE}/nl/country/${code}`,
-        de: `${SITE}/de/country/${code}`,
-        fr: `${SITE}/fr/country/${code}`,
+        "x-default": `${base}${path}`,
+        en: `${base}${withLocale(path, "")}`,
+        nl: `${base}${withLocale(path, "nl")}`,
+        de: `${base}${withLocale(path, "de")}`,
+        fr: `${base}${withLocale(path, "fr")}`,
       },
+    },
+    openGraph: {
+      title: title,
+      description: desc,
+      url: `${base}${withLocale(path, lang)}`,
+      type: "website",
+      images: [
+        {
+          url: `${base}/og/country-${code.toLowerCase()}.png`,
+          width: 1200,
+          height: 630,
+          alt: `${name} Staatsverschuldung live`,
+        },
+        {
+          url: `${base}/og/eu-debt-map.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "EU Debt Map",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
     },
   };
 }
 
-export const dynamic = "error";
+// BELANGRIJK: Force dynamic om de live data fetch te laten werken
+export const dynamic = "force-dynamic";
 
-export default function CountryPageDE({ params: { code } }) {
-  const cc = String(code).toLowerCase();
+export default async function CountryPageDE({ params: { code } }) {
+  const want = String(code).toLowerCase();
   const country = (Array.isArray(countries) ? countries : []).find(
-    (x) => String(x.code).toLowerCase() === cc
+    (x) => String(x.code).toLowerCase() === want
   );
   if (!country) return notFound();
+
+  // 1. Haal LIVE de correcte GDP data op (Quarterly Run Rate), net als in de Engelse versie
+  const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
+
+  const lang = "de";
+  const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        {/* We geven expliciet lang="de" mee, zodat CountryClient de punten/komma's goed zet */}
-        <CountryClient country={country} lang="de" introSlot={<CountryIntro country={country} lang="de" />} />
+        <CountryClient
+          country={localizedCountry}
+          lang={lang}
+          introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+          // 2. Geef data door aan SSR, zodat Google en gebruiker direct Q3 2025 zien
+          gdpAbs={valueEUR}
+          gdpPeriod={period}
+        />
       </section>
     </main>
   );
