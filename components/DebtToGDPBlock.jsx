@@ -1,35 +1,178 @@
 "use client";
 
+import { useMemo } from "react";
+
+// --- VERTALINGEN CONFIGURATIE ---
+const TRANSLATIONS = {
+  en: {
+    title: "Debt-to-GDP ratio",
+    low: "low",
+    elevated: "elevated",
+    high: "high",
+    legend: {
+      ok: "<60% (green)",
+      warn: "60–90% (amber)",
+      bad: ">90% (red)",
+    },
+    advisory: {
+      low: "This level is generally considered sustainable under EU fiscal guidelines.",
+      mid: "This level warrants attention compared to common fiscal thresholds (60% reference).",
+      high: "This level is high relative to common fiscal thresholds and may limit fiscal flexibility.",
+    },
+    text: {
+      intro_annualized: (q, y) => `Based on annualized Q${q} ${y} figures,`,
+      intro_asof: (y) => `As of ${y},`,
+      p1: "has an estimated government debt of",
+      p2: "and a nominal GDP of",
+      p3: "That implies a",
+      p4: "debt-to-GDP ratio of",
+      p5: "which is considered",
+      p6: "compared with typical EU reference values.",
+    },
+    units: {
+      t: "trillion", // 10^12
+      b: "billion",  // 10^9
+    },
+    source: "Source: Eurostat (Quarterly Debt & Annualized GDP).",
+  },
+  nl: {
+    title: "Schuldquote (Schuld/bbp)",
+    low: "laag",
+    elevated: "verhoogd",
+    high: "hoog",
+    legend: {
+      ok: "<60% (groen)",
+      warn: "60–90% (oranje)",
+      bad: ">90% (rood)",
+    },
+    advisory: {
+      low: "Dit niveau wordt volgens de EU-begrotingsregels over het algemeen als houdbaar beschouwd.",
+      mid: "Dit niveau vereist aandacht in vergelijking met de gebruikelijke drempelwaarden (referentie 60%).",
+      high: "Dit niveau is hoog in vergelijking met de normen en kan de fiscale flexibiliteit beperken.",
+    },
+    text: {
+      intro_annualized: (q, y) => `Op basis van geannualiseerde cijfers uit Q${q} ${y},`,
+      intro_asof: (y) => `Per ${y},`,
+      p1: "heeft een geschatte staatsschuld van",
+      p2: "en een nominaal bbp van",
+      p3: "Dat impliceert een",
+      p4: "schuldquote van",
+      p5: "die wordt beschouwd als",
+      p6: "in vergelijking met typische EU-referentiewaarden.",
+    },
+    units: {
+      t: "biljoen", // 10^12
+      b: "miljard", // 10^9
+    },
+    source: "Bron: Eurostat (Kwartaalschuld & geannualiseerd bbp).",
+  },
+  de: {
+    title: "Schulden-zu-BIP-Verhältnis",
+    low: "niedrig",
+    elevated: "erhöht",
+    high: "hoch",
+    legend: {
+      ok: "<60% (grün)",
+      warn: "60–90% (gelb)",
+      bad: ">90% (rot)",
+    },
+    advisory: {
+      low: "Dieses Niveau gilt nach EU-Richtlinien allgemein als nachhaltig.",
+      mid: "Dieses Niveau erfordert Aufmerksamkeit im Vergleich zu den üblichen Referenzwerten (60%).",
+      high: "Dieses Niveau ist im Vergleich zu den üblichen Referenzwerten hoch und könnte den finanziellen Spielraum einschränken.",
+    },
+    text: {
+      intro_annualized: (q, y) => `Basierend auf annualisierten Zahlen für Q${q} ${y},`,
+      intro_asof: (y) => `Stand ${y},`,
+      p1: "hat eine geschätzte Staatsverschuldung von",
+      p2: "und ein nominales BIP von",
+      p3: "Dies bedeutet eine",
+      p4: "Schuldenquote von",
+      p5: "die im Vergleich zu typischen EU-Referenzwerten als",
+      p6: "gilt.", // Duitse grammatica: zin eindigt anders
+    },
+    units: {
+      t: "Billionen", // 10^12 (Let op: False friend met English Trillion)
+      b: "Milliarden",// 10^9
+    },
+    source: "Quelle: Eurostat (Vierteljährliche Schulden & annualisiertes BIP).",
+  },
+  fr: {
+    title: "Ratio dette/PIB",
+    low: "faible",
+    elevated: "élevé",
+    high: "très élevé",
+    legend: {
+      ok: "<60% (vert)",
+      warn: "60–90% (ambre)",
+      bad: ">90% (rouge)",
+    },
+    advisory: {
+      low: "Ce niveau est généralement considéré comme soutenable selon les directives budgétaires de l'UE.",
+      mid: "Ce niveau mérite attention par rapport aux seuils budgétaires courants (référence 60%).",
+      high: "Ce niveau est élevé par rapport aux seuils courants et peut limiter la flexibilité budgétaire.",
+    },
+    text: {
+      intro_annualized: (q, y) => `Basé sur les chiffres annualisés du T${q} ${y},`,
+      intro_asof: (y) => `En ${y},`,
+      p1: "a une dette publique estimée à",
+      p2: "et un PIB nominal de",
+      p3: "Cela implique un",
+      p4: "ratio dette/PIB de",
+      p5: "qui est considéré comme",
+      p6: "par rapport aux valeurs de référence de l'UE.",
+    },
+    units: {
+      t: "billions", // 10^12
+      b: "milliards", // 10^9
+    },
+    source: "Source : Eurostat (Dette trimestrielle & PIB annualisé).",
+  },
+};
+
 function classifyBucket(pct) {
-  if (pct < 60) return { key: "low", label: "low", colorVar: "var(--ok)" };
-  if (pct < 90) return { key: "mid", label: "elevated", colorVar: "var(--warn)" };
-  return { key: "high", label: "high", colorVar: "var(--bad)" };
+  if (pct < 60) return { key: "low", colorVar: "var(--ok)" };
+  if (pct < 90) return { key: "mid", colorVar: "var(--warn)" };
+  return { key: "high", colorVar: "var(--bad)" };
 }
 
-function formatMoneyEUR(n) {
+// Helper voor formatting met juiste taal en eenheden (Trillion vs Billion vs Miljard)
+function formatMoneyEUR(n, lang = "en") {
   if (!Number.isFinite(n)) return "—";
+  
+  // Bepaal locale string (voor punten en komma's)
+  const loc = lang === "nl" || lang === "de" ? "de-DE" : lang === "fr" ? "fr-FR" : "en-US";
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
   const abs = Math.abs(n);
-  if (abs >= 1_000_000_000_000) return `€ ${(n / 1_000_000_000_000).toFixed(2)} trillion`;
-  if (abs >= 1_000_000_000) return `€ ${(n / 1_000_000_000).toFixed(0)} billion`;
-  return `€ ${n.toLocaleString("en-US")}`;
+
+  // 10^12 handling (Eng: Trillion, NL/DE: Biljoen/Billion)
+  if (abs >= 1_000_000_000_000) {
+    const val = (n / 1_000_000_000_000).toLocaleString(loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return `€ ${val} ${t.units.t}`;
+  }
+  
+  // 10^9 handling (Eng: Billion, NL/DE: Miljard/Milliarde)
+  if (abs >= 1_000_000_000) {
+    const val = (n / 1_000_000_000).toLocaleString(loc, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    return `€ ${val} ${t.units.b}`;
+  }
+  
+  return `€ ${n.toLocaleString(loc)}`;
 }
 
 /**
- * Formatteert de "YearLabel" naar een logische zin.
- * "2025-Q3" -> "Based on annualized Q3 2025 figures,"
- * "2024"    -> "As of 2024,"
+ * Bouwt de introzin ("Based on annualized Q3...")
  */
-function getIntroPhrase(label) {
+function getIntroPhrase(label, t) {
   const safeLabel = String(label || "");
-  
   // Check op kwartaal formaat (YYYY-Q#)
   if (safeLabel.match(/^\d{4}-Q\d$/)) {
     const [year, q] = safeLabel.split("-Q");
-    return `Based on annualized Q${q} ${year} figures,`;
+    return t.text.intro_annualized(q, year);
   }
-
   // Standaard fallback
-  return `As of ${safeLabel},`;
+  return t.text.intro_asof(safeLabel);
 }
 
 export default function DebtToGDPBlock({
@@ -37,39 +180,42 @@ export default function DebtToGDPBlock({
   yearLabel = "2024",
   debt, // absolute in EUR
   gdp,  // absolute in EUR
+  lang = "en", // Nieuwe prop voor taal
 }) {
+  // Selecteer vertalingen (fallback naar en)
+  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
+  const t = TRANSLATIONS[effLang];
+
   const ratio = Number.isFinite(debt) && Number.isFinite(gdp) && gdp > 0
     ? (debt / gdp) * 100
     : NaN;
 
   const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0)); // cap op 300%
-  const bucket = classifyBucket(pct);
+  const bucketInfo = classifyBucket(pct);
+
+  // Vertaal het label (low/elevated/high)
+  const bucketLabel = t[bucketInfo.key];
 
   // Bereken bar widths
   const filledWidth = Math.min(100, pct); // 0..100%
   const overflow = Math.max(0, pct - 100); // 0..200% (we tonen subtiel)
 
-  // SEO-tekst formatting
-  const debtStr = formatMoneyEUR(debt);
-  const gdpStr = formatMoneyEUR(gdp);
+  // SEO-tekst formatting met taal
+  const debtStr = formatMoneyEUR(debt, effLang);
+  const gdpStr = formatMoneyEUR(gdp, effLang);
   const pctStr = Number.isFinite(pct) ? `${pct.toFixed(0)}%` : "—";
   
-  // Dynamische introzin (smart parsing van period)
-  const introText = getIntroPhrase(yearLabel);
+  // Dynamische introzin
+  const introText = getIntroPhrase(yearLabel, t);
 
-  // Licht advieslabel
-  const advisory =
-    bucket.key === "low"
-      ? "This level is generally considered sustainable under EU fiscal guidelines."
-      : bucket.key === "mid"
-      ? "This level warrants attention compared to common fiscal thresholds (60% reference)."
-      : "This level is high relative to common fiscal thresholds and may limit fiscal flexibility.";
+  // Vertaald advies
+  const advisory = t.advisory[bucketInfo.key];
 
   return (
     <div className="debtgdp-block">
       <div className="debtgdp-header">
-        <div className="debtgdp-title">Debt-to-GDP ratio</div>
-        <div className="debtgdp-badge" style={{ background: bucket.colorVar }}>
+        <div className="debtgdp-title">{t.title}</div>
+        <div className="debtgdp-badge" style={{ background: bucketInfo.colorVar }}>
           {pctStr}
         </div>
       </div>
@@ -78,7 +224,7 @@ export default function DebtToGDPBlock({
         <div className="debtgdp-bar-bg" />
         <div
           className="debtgdp-bar-fill"
-          style={{ width: `${filledWidth}%`, background: bucket.colorVar }}
+          style={{ width: `${filledWidth}%`, background: bucketInfo.colorVar }}
         />
         {overflow > 0 && (
           <div
@@ -96,21 +242,21 @@ export default function DebtToGDPBlock({
       </div>
 
       <div className="debtgdp-legend">
-        <span><i className="dot ok" /> &lt;60% (green)</span>
-        <span><i className="dot warn" /> 60–90% (amber)</span>
-        <span><i className="dot bad" /> &gt;90% (red)</span>
+        <span><i className="dot ok" /> {t.legend.ok}</span>
+        <span><i className="dot warn" /> {t.legend.warn}</span>
+        <span><i className="dot bad" /> {t.legend.bad}</span>
       </div>
 
       <div className="debtgdp-text">
         <p>
-          {introText} <strong>{countryName}</strong> has an estimated government debt of{" "}
-          <strong>{debtStr}</strong> and a nominal GDP of <strong>{gdpStr}</strong>. That implies a{" "}
-          <strong>debt-to-GDP ratio of {pctStr}</strong>, which is considered{" "}
-          <strong>{bucket.label}</strong> compared with typical EU reference values.
+          {introText} <strong>{countryName}</strong> {t.text.p1}{" "}
+          <strong>{debtStr}</strong> {t.text.p2} <strong>{gdpStr}</strong>. {t.text.p3}{" "}
+          <strong>{t.text.p4} {pctStr}</strong>, {t.text.p5}{" "}
+          <strong>{bucketLabel}</strong> {t.text.p6}
         </p>
         <p>{advisory}</p>
         <p className="source">
-          Source: Eurostat (Quarterly Debt & Annualized GDP).
+          {t.source}
         </p>
       </div>
 
