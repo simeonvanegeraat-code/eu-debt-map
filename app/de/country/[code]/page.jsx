@@ -1,4 +1,3 @@
-// app/de/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "@/app/country/[code]/CountryClient";
@@ -18,8 +17,10 @@ export async function generateMetadata({ params }) {
   const url = `${SITE}/de/country/${code}`;
 
   return {
-    title: `Staatsschulden ${name} (Live-Zähler) • EU Debt Map`,
-    description: `Aktuelle Schätzung der Staatsschulden von ${name} (pro Sekunde), basierend auf Eurostat.`,
+    // AANGEPAST: 'Schuldenuhr' is het gouden zoekwoord in Duitsland
+    title: `Schuldenuhr ${name} (Live) • EU Debt Map`,
+    // AANGEPAST: Sterkere 'call to action' met 'in Echtzeit'
+    description: `Die Schuldenuhr von ${name} in Echtzeit. Sehen Sie, wie schnell die Staatsschulden pro Sekunde wachsen. Live-Berechnung basierend auf Eurostat-Daten.`,
     alternates: {
       canonical: url,
       languages: {
@@ -44,6 +45,7 @@ export default function CountryPageDE({ params: { code } }) {
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
+        {/* We geven expliciet lang="de" mee, zodat CountryClient de punten/komma's goed zet */}
         <CountryClient country={country} lang="de" introSlot={<CountryIntro country={country} lang="de" />} />
       </section>
     </main>

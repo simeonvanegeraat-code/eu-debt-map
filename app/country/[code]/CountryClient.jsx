@@ -159,7 +159,19 @@ export default function CountryClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
 
-  const nf = useMemo(() => new Intl.NumberFormat("en-GB"), []);
+  // --- AANGEPAST: Slimme formatter voor DE (punten) en EN (komma's) ---
+  const nf = useMemo(() => {
+    const localeMap = {
+      nl: "nl-NL", // Punten (1.000)
+      de: "de-DE", // Punten (1.000)
+      fr: "fr-FR", // Spaties (1 000)
+      en: "en-GB", // Komma's (1,000)
+    };
+    // Kies de juiste locale op basis van effLang, of val terug op Engels
+    return new Intl.NumberFormat(localeMap[effLang] || "en-GB");
+  }, [effLang]);
+  // --------------------------------------------------------------------
+
   const current = useMemo(() => {
     if (!safeCountry) return 0;
     return interpolateDebt(safeCountry, nowMs);
