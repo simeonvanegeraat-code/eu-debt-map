@@ -22,9 +22,10 @@ export async function generateMetadata({ params }) {
   // Basis pad zonder taal prefix voor canonicals
   const path = `/country/${code.toLowerCase()}`;
 
-  // Hier specifiek de Duitse titels als default, maar fallback logica behouden
-  const title = `${name} Staatsverschuldung & BIP-Verhältnis (live) | EU Debt Map`;
-  const desc = `Verfolge die geschätzte Staatsverschuldung von ${name} und das Schulden-zu-BIP-Verhältnis, live von Eurostat.`;
+  // --- AANPASSING VOOR SEO: Schuldenuhr ---
+  // Dit is wat Google leest voor de blauwe link in de zoekresultaten
+  const title = `${name} Schuldenuhr: Aktuelle Staatsverschuldung (Live) | EU Debt Map`;
+  const desc = `Verfolge die offizielle Schuldenuhr von ${name} live. Aktuelle Staatsverschuldung, Pro-Kopf-Verschuldung und BIP-Verhältnis in Echtzeit.`;
 
   return {
     title: title,
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }) {
           url: `${base}/og/country-${code.toLowerCase()}.png`,
           width: 1200,
           height: 630,
-          alt: `${name} Staatsverschuldung live`,
+          alt: `${name} Schuldenuhr Live`,
         },
         {
           url: `${base}/og/eu-debt-map.jpg`,
