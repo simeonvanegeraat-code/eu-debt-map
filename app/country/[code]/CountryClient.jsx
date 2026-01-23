@@ -23,7 +23,7 @@ const norm = (x) => (x === "" ? "en" : x);
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
-  de: "Schuldenuhr (live):", // <--- AANGEPAST: 'Staatsschulden' naar 'Schuldenuhr'
+  de: "Schuldenuhr (live):",
   fr: "Dette publique estimée (live) :",
 };
 
@@ -269,7 +269,7 @@ export default function CountryClient({
         </Link>
       </div>
 
-      {/* Landtitel - AANGEPAST VOOR DUITS: Schuldenuhr [Land]: Live */}
+      {/* Landtitel */}
       <h1 style={{ margin: 0 }}>
         {safeCountry.flag ? (
           <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
@@ -297,6 +297,7 @@ export default function CountryClient({
         style={{
           marginTop: 14,
           textAlign: "center",
+          width: "100%", // Zorgt dat de container de volle breedte pakt
         }}
         aria-live="polite"
         aria-describedby={rateBoxId}
@@ -310,9 +311,13 @@ export default function CountryClient({
             display: "inline-block",
             lineHeight: 1.1,
             fontWeight: 800,
-            fontSize: "clamp(38px, 8.8vw, 68px)",
+            // AANGEPAST: Minimaal 22px (ipv 38px) zodat het past op kleine schermen. 
+            // 6vw zorgt voor meeschalen op mobiel. Max 68px op desktop.
+            fontSize: "clamp(22px, 6vw, 68px)", 
             letterSpacing: "0.2px",
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
+            maxWidth: "100%", // Voorkomt uitbreken
+            wordBreak: "keep-all" // Voorkomt afbreken midden in het getal
           }}
         >
           €{nf.format(Math.round(current))}
