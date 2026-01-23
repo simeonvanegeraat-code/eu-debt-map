@@ -23,7 +23,7 @@ const norm = (x) => (x === "" ? "en" : x);
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
-  de: "Staatsschulden (live):",
+  de: "Schuldenuhr (live):", // <--- AANGEPAST: 'Staatsschulden' naar 'Schuldenuhr'
   fr: "Dette publique estimée (live) :",
 };
 
@@ -103,7 +103,7 @@ function ManualAd() {
         margin: "24px 0",
         textAlign: "center",
         minHeight: "100px",
-        width: "100%",      // <--- CRUCIAAL: Voorkomt availableWidth=0 error
+        width: "100%",       // <--- CRUCIAAL: Voorkomt availableWidth=0 error
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -269,12 +269,12 @@ export default function CountryClient({
         </Link>
       </div>
 
-      {/* Landtitel */}
+      {/* Landtitel - AANGEPAST VOOR DUITS: Schuldenuhr [Land]: Live */}
       <h1 style={{ margin: 0 }}>
         {safeCountry.flag ? (
           <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
         ) : null}
-        {displayName}
+        {effLang === "de" ? `Schuldenuhr ${displayName}: Live` : displayName}
       </h1>
 
       {/* Labels + subtiele Debt/GDP pill */}
