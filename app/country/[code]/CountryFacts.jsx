@@ -157,9 +157,9 @@ export default function CountryFacts({
         {c.prev_date} → {c.last_date})
       </div>
 
-      {/* Debt-to-GDP blok + SEO-tekst */}
+      {/* Debt-to-GDP blok + SEO-tekst (ZONDER extra 'card' wrapper) */}
       {showDebtToGDP && (
-        <section className="card" style={{ marginTop: 16 }}>
+        <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
           {/* We geven nu 'lang' door aan het child component */}
           <DebtToGDPBlock
             countryName={c?.name || c?.code?.toUpperCase() || "Country"}
@@ -168,7 +168,7 @@ export default function CountryFacts({
             gdp={gdpAbs}
             lang={effLang}
           />
-        </section>
+        </div>
       )}
     </aside>
   );

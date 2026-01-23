@@ -78,22 +78,6 @@ export default function ShareBar({ title, summary }) {
     return u.toString();
   }, [url, title]);
 
-  const btnBase = `
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 40px;
-    padding: 0 16px;
-    border-radius: 999px; /* Pill shape */
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-    cursor: pointer;
-  `;
-
   return (
     <div className="share-bar">
       <style jsx>{`
@@ -102,6 +86,24 @@ export default function ShareBar({ title, summary }) {
           flex-wrap: wrap;
           gap: 10px;
           margin: 16px 0;
+        }
+
+        /* Basis stijl voor ALLE knoppen */
+        .btn-base {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          height: 40px;
+          padding: 0 16px;
+          border-radius: 999px; /* Pill shape */
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          border: 1px solid transparent;
+          cursor: pointer;
+          line-height: 1; /* Fix voor verticale uitlijning */
         }
         
         .btn-copy {
@@ -154,8 +156,7 @@ export default function ShareBar({ title, summary }) {
       {/* Copy Link */}
       <button
         onClick={copy}
-        className="btn-copy"
-        style={{ cssText: btnBase }} // Inline style workaround for 'btnBase' usage in jsx
+        className="btn-base btn-copy"
         aria-label="Copy link to clipboard"
       >
         <Icon name="link" />
@@ -167,34 +168,31 @@ export default function ShareBar({ title, summary }) {
         href={xUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-x"
-        style={{ cssText: btnBase }}
+        className="btn-base btn-x"
         aria-label="Share on X"
       >
         <Icon name="x" />
         <span className="label">Post</span>
       </a>
 
-      {/* LinkedIn - BELANGRIJK voor jouw niche (economie) */}
+      {/* LinkedIn */}
       <a
         href={linkedInUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-linkedin"
-        style={{ cssText: btnBase }}
+        className="btn-base btn-linkedin"
         aria-label="Share on LinkedIn"
       >
         <Icon name="linkedin" />
         <span className="label">LinkedIn</span>
       </a>
 
-      {/* WhatsApp - BELANGRIJK voor mobiel */}
+      {/* WhatsApp */}
       <a
         href={whatsAppUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-whatsapp"
-        style={{ cssText: btnBase }}
+        className="btn-base btn-whatsapp"
         aria-label="Share on WhatsApp"
       >
         <Icon name="whatsapp" />
@@ -206,8 +204,7 @@ export default function ShareBar({ title, summary }) {
         href={redditUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-reddit"
-        style={{ cssText: btnBase }}
+        className="btn-base btn-reddit"
         aria-label="Share on Reddit"
       >
         <Icon name="reddit" />
