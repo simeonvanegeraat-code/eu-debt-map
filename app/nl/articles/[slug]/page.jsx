@@ -7,7 +7,7 @@ import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
 
 const SITE = "https://www.eudebtmap.com";
-const LANG = "nl";
+const LANG = "nl"; // Taal: Nederlands
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 
@@ -18,11 +18,17 @@ export async function generateMetadata({ params }) {
   const url = `${SITE}${prefix}/articles/${slug}`;
 
   if (!a) {
-    return { title: "Artikel • EU Debt Map", alternates: { canonical: url }, openGraph: { url } };
+    return {
+      title: "Artikel • EU Debt Map",
+      alternates: { canonical: url },
+      openGraph: { url },
+      robots: { index: false }
+    };
   }
+
   const translations = getTranslations(slug);
   const languages = Object.fromEntries(
-    translations.map(t => {
+    translations.map((t) => {
       const pfx = ROUTE_PREFIX[t.lang] ?? "";
       return [t.lang, `${SITE}${pfx}/articles/${t.slug}`];
     })
@@ -30,16 +36,27 @@ export async function generateMetadata({ params }) {
   languages["x-default"] = languages.en || url;
 
   const og = articleOgImage(a);
+  
   return {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
     alternates: { canonical: url, languages },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
     openGraph: {
       title: a.title,
       description: a.summary,
       url,
       siteName: "EU Debt Map",
       type: "article",
+      publishedTime: a.datePublished || a.date,
+      modifiedTime: a.dateModified || a.date,
+      authors: a.author?.name ? [a.author.name] : ["EU Debt Map"],
       images: og ? [{ url: og, width: 1200, height: 630 }] : undefined,
       locale: LANG,
     },
@@ -53,20 +70,10 @@ export async function generateMetadata({ params }) {
 }
 
 /* ---------- helpers ---------- */
-function stripDuplicateHero(html, heroSrc) {
-  if (!html || !heroSrc) return html;
-  const head = html.slice(0, 1500);
-  const imgRe = new RegExp(
-    `<figure[^>]*>[^]*?<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>[^]*?</figure>`,
-    "i"
-  );
-  const imgSoloRe = new RegExp(`<img[^>]*src=["']${escapeRegExp(heroSrc)}["'][^>]*>`, "i");
-  if (imgRe.test(head)) return html.replace(imgRe, "");
-  if (imgSoloRe.test(head)) return html.replace(imgSoloRe, "");
-  return html;
-}
-function escapeRegExp(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+// De veilige check (zoals in EN/DE versie)
+function bodyStartsWithImage(html = "") {
+  const head = html.trim().slice(0, 500).toLowerCase();
+  return head.startsWith("<img") || head.startsWith("<figure");
 }
 
 /* ---------- page ---------- */
@@ -75,68 +82,262 @@ export default function ArticleDetailPage({ params }) {
   if (!article) return notFound();
 
   const url = `${SITE}${prefix}/articles/${params.slug}`;
+  
+  const publishDate = article.datePublished || article.date;
+  const modifyDate = article.dateModified || publishDate;
+  // Nederlandse datum notatie
   const dateFmt = new Intl.DateTimeFormat("nl-NL", { dateStyle: "long" });
 
-  const heroSrc =
+  const candidateHero =
     articleImage(article, "hero") ||
     articleImage(article, "cover") ||
     article.image ||
     null;
 
-  const cleanBody = stripDuplicateHero(article.body || "", heroSrc || "");
+  const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
+
+  // --- PREMIUM EDITORIAL STYLING ---
+  const css = `
+    /* Layout Container */
+    .article-container {
+      max-width: 740px; 
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Typography Hierarchy */
+    .pageTitle {
+      margin: 1rem 0 0.5rem;
+      line-height: 1.1;
+      font-weight: 800;
+      font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+      letter-spacing: -0.02em;
+      color: #111827;
+      font-family: var(--font-sans, sans-serif);
+    }
+
+    .metaRow { 
+      display: flex; 
+      gap: 12px; 
+      flex-wrap: wrap; 
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 24px;
+      font-weight: 500;
+      align-items: center;
+    }
+    .metaRow .tag {
+      color: #2563eb;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-lead {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      color: #4b5563;
+      margin-bottom: 24px;
+      font-weight: 400;
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 24px;
+    }
+
+    .heroWrap {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 0 32px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f3f4f6;
+      aspect-ratio: 16/9;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .heroWrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* THE ARTICLE BODY */
+    .articleProse {
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: 1.125rem; 
+      line-height: 1.8;
+      color: #1f2937;
+    }
+
+    .articleProse p { margin-bottom: 1.5rem; }
+
+    .articleProse h2 {
+      font-family: var(--font-sans, sans-serif);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 2.5rem 0 1rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .articleProse h3 {
+      font-family: var(--font-sans, sans-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 2rem 0 0.75rem;
+    }
+
+    .articleProse a {
+      color: #2563eb;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .articleProse a:hover {
+      color: #1d4ed8;
+      text-decoration-thickness: 2px;
+    }
+
+    .articleProse ul, .articleProse ol {
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+    .articleProse li {
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+    }
+    .articleProse ul li::marker { color: #9ca3af; }
+
+    .articleProse blockquote {
+      border-left: 4px solid #2563eb;
+      margin: 2rem 0;
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      font-style: italic;
+      color: #374151;
+      font-size: 1.2rem;
+      background: #f9fafb;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .articleProse figure { margin: 2.5rem -16px; }
+    @media (min-width: 640px) {
+      .articleProse figure { margin: 2.5rem 0; }
+    }
+    .articleProse img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+    .articleProse figcaption {
+      font-family: var(--font-sans, sans-serif);
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+    
+    .source-note {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 16px;
+      font-style: italic;
+    }
+  `;
+
+  let authorObj;
+  if (article.author) {
+    if (typeof article.author === 'string') {
+       authorObj = { "@type": "Person", name: article.author };
+    } else {
+       authorObj = { 
+         "@type": "Person", 
+         name: article.author.name, 
+         url: article.author.url 
+       };
+    }
+  } else {
+    authorObj = { "@type": "Organization", name: "EU Debt Map" };
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: article.title,
     description: article.summary || undefined,
-    datePublished: new Date(article.date).toISOString(),
-    dateModified: new Date(article.date).toISOString(),
+    datePublished: new Date(publishDate).toISOString(),
+    dateModified: new Date(modifyDate).toISOString(),
     inLanguage: article.lang || LANG,
-    mainEntityOfPage: url,
-    author: { "@type": "Organization", name: "EU Debt Map" },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    author: authorObj,
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 }
+      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 },
     },
-    image: heroSrc ? [`${SITE}${heroSrc}`] : article.image ? [`${SITE}${article.image}`] : undefined
+    image: candidateHero ? [`${SITE}${candidateHero}`] : undefined,
   };
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
+    <main style={{ paddingBottom: 60 }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <style>{css}</style>
 
-      <article className="card" style={{ gridColumn: "1 / -1", display: "grid", gap: 12 }}>
-        <header style={{ display: "grid", gap: 8 }}>
-          <div className="tag metaRow">
-            <time dateTime={article.date}>{dateFmt.format(new Date(article.date))}</time>
-            {article.tags?.length ? <span aria-hidden>•</span> : null}
-            {article.tags?.map((t) => <span key={t} className="tag">{t}</span>)}
+      <article className="article-container">
+        <header>
+          <div className="metaRow">
+            {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
+            <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
+            {article.author && (
+               <span>door {typeof article.author === 'string' ? article.author : article.author.name}</span>
+            )}
           </div>
+          
           <h1 className="pageTitle">{article.title}</h1>
-          {article.summary && <p className="tag" style={{ margin: 0, opacity: 0.9 }}>{article.summary}</p>}
+          
+          {article.summary && (
+            <div className="summary-lead">
+              {article.summary}
+            </div>
+          )}
         </header>
 
-        {heroSrc && (
-          <figure style={{ margin: 0 }}>
-            <img src={heroSrc} alt={article.imageAlt || article.title} width={1200} height={675} loading="eager" decoding="async" className="hero" />
+        <div style={{ margin: "20px 0" }}>
+          <ShareBar url={url} title={article.title} summary={article.summary} />
+        </div>
+
+        {shouldRenderHero && (
+          <figure className="heroWrap">
+            <img
+              src={candidateHero}
+              alt={article.imageAlt || article.title}
+              loading="eager"
+              decoding="async"
+              width={1200}
+              height={675}
+            />
           </figure>
         )}
 
-        <ShareBar url={url} title={article.title} summary={article.summary} />
-        <hr className="divider" />
+        <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
 
-        <div className="articleProse" dangerouslySetInnerHTML={{ __html: cleanBody }} />
+        <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
+        
+        <div style={{ marginBottom: 40 }}>
+            <ShareBar url={url} title={article.title} summary={article.summary} />
+            <div className="source-note">
+              Bron: Eurostat (gov_10q_ggdebt). Educatieve visualisatie, geen officiële statistiek.
+            </div>
+        </div>
 
-        <ArticleRailServer lang={article.lang} exceptSlug={article.slug} limit={4} title="Meer artikelen" />
-
-        <footer style={{ display: "grid", gap: 10 }}>
-          <ShareBar url={url} title={article.title} summary={article.summary} />
-          <div className="tag">
-            Bron: Eurostat (gov_10q_ggdebt). Educatieve visualisatie, geen officiële statistiek.
-          </div>
-        </footer>
+        <ArticleRailServer
+          lang={article.lang}
+          exceptSlug={article.slug}
+          limit={6}
+          title="Meer artikelen" 
+        />
       </article>
     </main>
   );
