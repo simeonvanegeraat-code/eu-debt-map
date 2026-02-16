@@ -4,7 +4,7 @@ import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live"; // <--- UNIFORM: Alles via live.js
+import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live";
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -71,7 +71,10 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export const dynamic = "force-dynamic";
+// AANPASSING 1: Snelheid (LCP)
+// In plaats van 'force-dynamic' (traag), gebruiken we ISR.
+// De pagina wordt elke 3600 seconden (1 uur) op de achtergrond ververst met nieuwe Eurostat data.
+export const revalidate = 3600; 
 
 export default async function CountryPage({ params: { code } }) {
   const want = String(code).toLowerCase();
@@ -80,7 +83,7 @@ export default async function CountryPage({ params: { code } }) {
   );
   if (!country) return notFound();
 
-  // 1. Haal LIVE de correcte GDP data op (Quarterly Run Rate)
+  // Haal data op (dit gebeurt nu 1x per uur op de server, supersnel voor de bezoeker)
   const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
   const rawLang = getLocaleFromPathname?.() || "en";
@@ -89,12 +92,14 @@ export default async function CountryPage({ params: { code } }) {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
+      {/* AANPASSING 2: Stabiliteit (CLS)
+          minHeight toegevoegd zodat de footer niet verspringt tijdens het laden. 
+      */}
+      <section className="card" style={{ gridColumn: "1 / -1", minHeight: "600px" }}>
         <CountryClient
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
-          // 2. Geef data door aan SSR, client ziet meteen Q3 2025
           gdpAbs={valueEUR}
           gdpPeriod={period}
         />
