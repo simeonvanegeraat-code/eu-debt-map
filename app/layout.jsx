@@ -1,8 +1,27 @@
 // app/layout.jsx
 import "./globals.css";
+// 1. Importeer de fonts van Next.js
+import { Inter, Space_Grotesk } from "next/font/google";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Script from "next/script";
+
+// 2. Configureer Inter (voor broodtekst)
+// We koppelen deze aan jouw bestaande variabele: --font-system
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-system",
+  display: "swap",
+});
+
+// 3. Configureer Space Grotesk (voor koppen)
+// We koppelen deze aan jouw bestaande variabele: --font-display
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata = {
   title: "EU Debt Map",
@@ -45,10 +64,6 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="manifest" href="/manifest.webmanifest" />
 
-        {/* Performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         {/* Consent Mode defaults (alles denied tot keuze) */}
         <Script id="consent-mode" strategy="beforeInteractive">
           {`
@@ -85,7 +100,11 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       </head>
 
-      <body>
+      {/* Hier koppelen we de fonts aan de pagina.
+          inter.variable = de class die --font-system invult.
+          spaceGrotesk.variable = de class die --font-display invult.
+      */}
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <a href="#content" className="visually-hidden">Skip to content</a>
         <Header />
         <main id="content" role="main">{children}</main>
