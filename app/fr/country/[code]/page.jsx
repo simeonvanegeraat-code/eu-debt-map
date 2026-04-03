@@ -1,6 +1,7 @@
 // app/fr/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
+import { countryName } from "@/lib/countries";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 
@@ -13,13 +14,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const code = String(params.code).toLowerCase();
-  const c = (Array.isArray(countries) ? countries : []).find(x => String(x.code).toLowerCase() === code);
-  const name = c?.name || code.toUpperCase();
+  const c = (Array.isArray(countries) ? countries : []).find(
+    (x) => String(x.code).toLowerCase() === code
+  );
+
+  // Gebruik de gelokaliseerde Franse landnaam i.p.v. de Engelse naam uit lib/data
+  const name = countryName(code.toUpperCase(), "fr") || c?.name || code.toUpperCase();
   const url = `${SITE}/fr/country/${code}`;
 
   return {
-    title: `Dette publique de ${name} (compteur en direct) • EU Debt Map`,
-    description: `Estimation en direct de la dette publique de ${name} (€/s), basée sur les deux dernières références Eurostat.`,
+    title: `Dette publique ${name} (compteur en direct) • EU Debt Map`,
+    description: `Estimation en direct de la dette publique ${name} (€/s), basée sur les deux dernières références Eurostat.`,
     alternates: {
       canonical: url,
       languages: {
@@ -39,12 +44,17 @@ export default function CountryPageFR({ params: { code } }) {
   const country = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === cc
   );
+
   if (!country) return notFound();
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient country={country} lang="fr" introSlot={<CountryIntro country={country} lang="fr" />} />
+        <CountryClient
+          country={country}
+          lang="fr"
+          introSlot={<CountryIntro country={country} lang="fr" />}
+        />
       </section>
     </main>
   );

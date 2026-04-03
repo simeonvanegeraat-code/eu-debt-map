@@ -19,12 +19,12 @@ import { getLocaleFromPathname } from "@/lib/locale";
 const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
 const norm = (x) => (x === "" ? "en" : x);
 
-// UI labels (Vertaald)
+// UI labels
 const LIVE_LABELS = {
   en: "Estimated public debt (live):",
   nl: "Staatsschuld (live):",
   de: "Schuldenuhr (live):",
-  fr: "Dette publique estimée (live) :",
+  fr: "Dette publique estimée (en direct) :",
 };
 
 const BACK_LABELS = {
@@ -38,15 +38,35 @@ const INFO_LABELS = {
   en: "Based on the latest Eurostat data. Live estimate using linearized growth between releases.",
   nl: "Gebaseerd op de laatste Eurostat-data. Live schatting op basis van lineaire groei tussen publicaties.",
   de: "Basierend auf den neuesten Eurostat-Daten. Live-Schätzung mittels linearisiertem Wachstum zwischen den Veröffentlichungen.",
-  fr: "Basé sur les dernières données d'Eurostat. Estimation en direct utilisant la croissance linéarisée entre les publications.",
+  fr: "Basé sur les dernières données d’Eurostat. Estimation en direct fondée sur une croissance linéarisée entre les publications.",
 };
 
 const SHARE_TITLES = {
   en: (name) => `${name} public debt`,
   nl: (name) => `${name} staatsschuld`,
   de: (name) => `${name} Staatsschulden`,
-  fr: (name) => `${name} dette publique`,
+  fr: (name) => `Dette publique ${name}`,
 };
+
+const UNKNOWN_COUNTRY = {
+  en: "Unknown country",
+  nl: "Onbekend land",
+  de: "Unbekanntes Land",
+  fr: "Pays inconnu",
+};
+
+const AD_LABELS = {
+  en: "Advertisement",
+  nl: "Advertentie",
+  de: "Anzeige",
+  fr: "Publicité",
+};
+
+function pageTitleFor(lang, name) {
+  if (lang === "de") return `Schuldenuhr ${name}: Live`;
+  if (lang === "fr") return `Dette publique ${name} : compteur en direct`;
+  return name;
+}
 
 // Kleine client cache voor GDP-API
 const GDP_TTL_MS = 6 * 60 * 60 * 1000; // 6 uur
@@ -87,8 +107,8 @@ const SR_ONLY = {
   border: 0,
 };
 
-// --- De Handmatige Advertentie Component (MET FIX VOOR WIDTH) ---
-function ManualAd() {
+// Handmatige advertentie component
+function ManualAd({ lang = "en" }) {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -97,27 +117,37 @@ function ManualAd() {
     }
   }, []);
 
+  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
+  const adLabel = AD_LABELS[effLang] || AD_LABELS.en;
+
   return (
     <div
       style={{
         margin: "24px 0",
         textAlign: "center",
         minHeight: "100px",
-        width: "100%",       // <--- CRUCIAAL: Voorkomt availableWidth=0 error
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         background: "transparent",
-        overflow: "hidden"  // <--- Voorkomt layout shift buiten de container
+        overflow: "hidden",
       }}
     >
-      <span style={{ fontSize: "10px", color: "#cbd5e1", marginBottom: "4px", textTransform: "uppercase" }}>
-        Advertisement
+      <span
+        style={{
+          fontSize: "10px",
+          color: "#cbd5e1",
+          marginBottom: "4px",
+          textTransform: "uppercase",
+        }}
+      >
+        {adLabel}
       </span>
       <ins
         className="adsbygoogle"
-        style={{ display: "block", width: "100%" }} // <--- Ook hier width toegevoegd
+        style={{ display: "block", width: "100%" }}
         data-ad-client="ca-pub-9252617114074571"
         data-ad-slot="8705915822"
         data-ad-format="horizontal"
@@ -135,7 +165,7 @@ export default function CountryClient({
   // Optioneel: kan via SSR worden meegegeven
   gdpAbs: gdpAbsProp = null,
   gdpPeriod: gdpPeriodProp = null,
-  yearLabel = "Latest", // Fallback label
+  yearLabel = "Latest",
 }) {
   const safeCountry = country ?? null;
 
@@ -168,13 +198,13 @@ export default function CountryClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
 
-  // --- Slimme formatter voor DE (punten) en EN (komma's) ---
+  // Nummerformattering
   const nf = useMemo(() => {
     const localeMap = {
-      nl: "nl-NL", // Punten (1.000)
-      de: "de-DE", // Punten (1.000)
-      fr: "fr-FR", // Spaties (1 000)
-      en: "en-GB", // Komma's (1,000)
+      nl: "nl-NL",
+      de: "de-DE",
+      fr: "fr-FR",
+      en: "en-GB",
     };
     return new Intl.NumberFormat(localeMap[effLang] || "en-GB");
   }, [effLang]);
@@ -195,10 +225,10 @@ export default function CountryClient({
 
   useEffect(() => {
     if (!safeCountry) return;
-    
+
     // Als server data al aanwezig is, niet opnieuw fetchen
     if (Number.isFinite(serverGdp)) {
-        return; 
+      return;
     }
 
     const geo = String(safeCountry.code || "").toUpperCase();
@@ -232,11 +262,19 @@ export default function CountryClient({
 
     return () => {
       cancelled = true;
-      try { ctrl.abort(); } catch {}
+      try {
+        ctrl.abort();
+      } catch {}
     };
   }, [safeCountry, serverGdp]);
 
-  if (!safeCountry) return <div className="container card">Unknown country</div>;
+  if (!safeCountry) {
+    return (
+      <div className="container card">
+        {UNKNOWN_COUNTRY[effLang] || UNKNOWN_COUNTRY.en}
+      </div>
+    );
+  }
 
   const rateBoxId = "country-rate-desc";
   const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
@@ -254,11 +292,12 @@ export default function CountryClient({
   const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
-  // Live Debt/GDP (alleen als GDP bekend is)
+  // Live Debt/GDP
   const ratioPct =
     Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
 
   const finalYearLabel = gdpPeriod || yearLabel;
+  const pageTitle = pageTitleFor(effLang, displayName);
 
   return (
     <>
@@ -274,7 +313,7 @@ export default function CountryClient({
         {safeCountry.flag ? (
           <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
         ) : null}
-        {effLang === "de" ? `Schuldenuhr ${displayName}: Live` : displayName}
+        {pageTitle}
       </h1>
 
       {/* Labels + subtiele Debt/GDP pill */}
@@ -287,8 +326,8 @@ export default function CountryClient({
           marginTop: 6,
         }}
       >
-        <LabelsBar country={safeCountry} valueNow={current} />
-        <DebtToGDPPill ratioPct={ratioPct} />
+        <LabelsBar country={safeCountry} valueNow={current} lang={effLang} />
+        <DebtToGDPPill ratioPct={ratioPct} lang={effLang} />
       </div>
 
       {/* Live bedrag */}
@@ -297,7 +336,7 @@ export default function CountryClient({
         style={{
           marginTop: 14,
           textAlign: "center",
-          width: "100%", // Zorgt dat de container de volle breedte pakt
+          width: "100%",
         }}
         aria-live="polite"
         aria-describedby={rateBoxId}
@@ -311,13 +350,11 @@ export default function CountryClient({
             display: "inline-block",
             lineHeight: 1.1,
             fontWeight: 800,
-            // AANGEPAST: Minimaal 22px (ipv 38px) zodat het past op kleine schermen. 
-            // 6vw zorgt voor meeschalen op mobiel. Max 68px op desktop.
-            fontSize: "clamp(22px, 6vw, 68px)", 
+            fontSize: "clamp(22px, 6vw, 68px)",
             letterSpacing: "0.2px",
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
-            maxWidth: "100%", // Voorkomt uitbreken
-            wordBreak: "keep-all" // Voorkomt afbreken midden in het getal
+            maxWidth: "100%",
+            wordBreak: "keep-all",
           }}
         >
           €{nf.format(Math.round(current))}
@@ -354,7 +391,7 @@ export default function CountryClient({
 
       {/* Delen */}
       <div style={{ marginTop: 8 }}>
-        <ShareBar title={shareTitle} />
+        <ShareBar title={shareTitle} lang={effLang} />
       </div>
 
       {/* Feitenblok */}
@@ -363,13 +400,12 @@ export default function CountryClient({
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={finalYearLabel}
-          // BELANGRIJK: Zorgt dat de statistieken ook Duits praten
           lang={effLang}
         />
       </div>
 
-      {/* Advertentie (met width fix) */}
-      <ManualAd />
+      {/* Advertentie */}
+      <ManualAd lang={effLang} />
 
       {introSlot}
 
