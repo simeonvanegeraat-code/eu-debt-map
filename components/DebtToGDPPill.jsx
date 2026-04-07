@@ -1,8 +1,29 @@
-// components/DebtToGDPPill.jsx
 "use client";
 
-export default function DebtToGDPPill({ ratioPct }) {
+const TEXT = {
+  en: {
+    label: "Debt/GDP:",
+    title: "Debt as a share of GDP (live estimate)",
+  },
+  nl: {
+    label: "Schuld/bbp:",
+    title: "Schuld als aandeel van het bbp (live schatting)",
+  },
+  de: {
+    label: "Schulden/BIP:",
+    title: "Schulden als Anteil des BIP (Live-Schätzung)",
+  },
+  fr: {
+    label: "Dette/PIB :",
+    title: "Dette en pourcentage du PIB (estimation en direct)",
+  },
+};
+
+export default function DebtToGDPPill({ ratioPct, lang = "en" }) {
   if (!Number.isFinite(ratioPct) || ratioPct <= 0) return null;
+
+  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
+  const t = TEXT[effLang] || TEXT.en;
 
   const pct = Math.max(0, Math.min(300, ratioPct));
   const color =
@@ -10,7 +31,7 @@ export default function DebtToGDPPill({ ratioPct }) {
 
   return (
     <span
-      title="Debt as a share of GDP (live estimate)"
+      title={t.title}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -24,9 +45,18 @@ export default function DebtToGDPPill({ ratioPct }) {
         whiteSpace: "nowrap",
       }}
     >
-      <span style={{ width: 8, height: 8, borderRadius: 999, background: color }} />
-      <strong style={{ fontWeight: 700 }}>Debt/GDP:</strong>
-      <span style={{ fontVariantNumeric: "tabular-nums" }}>{pct.toFixed(0)}%</span>
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: 999,
+          background: color,
+        }}
+      />
+      <strong style={{ fontWeight: 700 }}>{t.label}</strong>
+      <span style={{ fontVariantNumeric: "tabular-nums" }}>
+        {pct.toFixed(0)}%
+      </span>
     </span>
   );
 }

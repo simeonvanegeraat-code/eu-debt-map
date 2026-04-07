@@ -1,31 +1,69 @@
-// components/LabelsBar.jsx
+"use client";
+
 import { useMemo } from "react";
 
-export default function LabelsBar({ country, valueNow }) {
+const LABELS = {
+  en: {
+    euRank: "EU rank",
+    debtToGdp: "Debt-to-GDP",
+    perPerson: "Per person",
+  },
+  nl: {
+    euRank: "EU-rang",
+    debtToGdp: "Schuld/bbp",
+    perPerson: "Per persoon",
+  },
+  de: {
+    euRank: "EU-Rang",
+    debtToGdp: "Schulden/BIP",
+    perPerson: "Pro Person",
+  },
+  fr: {
+    euRank: "Rang UE",
+    debtToGdp: "Dette/PIB",
+    perPerson: "Par habitant",
+  },
+};
+
+const LOCALES = {
+  en: "en-GB",
+  nl: "nl-NL",
+  de: "de-DE",
+  fr: "fr-FR",
+};
+
+export default function LabelsBar({ country, valueNow, lang = "en" }) {
+  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
+  const t = LABELS[effLang] || LABELS.en;
+  const numberLocale = LOCALES[effLang] || "en-GB";
+
   const items = useMemo(() => {
     const arr = [];
+    const nf0 = new Intl.NumberFormat(numberLocale, {
+      maximumFractionDigits: 0,
+    });
 
     // Rank (verwacht property 'rank' of 'rankEU')
     const rank = country?.rank ?? country?.rankEU;
     if (typeof rank === "number" || typeof rank === "string") {
-      arr.push({ label: `EU rank`, value: `#${rank}` });
+      arr.push({ label: t.euRank, value: `#${rank}` });
     }
 
     // Debt-to-GDP (verwacht property 'debtToGdp' als percentage 0..100)
     const dtg = country?.debtToGdp ?? country?.debt_to_gdp;
     if (typeof dtg === "number") {
-      arr.push({ label: "Debt-to-GDP", value: `${dtg.toFixed(1)}%` });
+      arr.push({ label: t.debtToGdp, value: `${dtg.toFixed(1)}%` });
     }
 
     // Per person (verwacht 'population')
     const pop = country?.population;
     if (typeof pop === "number" && pop > 0 && typeof valueNow === "number") {
       const per = Math.round(valueNow / pop);
-      arr.push({ label: "Per person", value: `€${per.toLocaleString("en-GB")}` });
+      arr.push({ label: t.perPerson, value: `€${nf0.format(per)}` });
     }
 
     return arr;
-  }, [country, valueNow]);
+  }, [country, valueNow, numberLocale, t]);
 
   if (!items.length) return null;
 

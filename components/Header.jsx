@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
@@ -9,13 +9,73 @@ import { getArticleTranslationHref } from "@/lib/articleTranslations";
 
 /* ---------------- NAVIGATIE ---------------- */
 const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/debt-to-gdp", label: "Debt-to-GDP" },
-  { href: "/debt", label: "What is Debt?" },
-  { href: "/articles", label: "Articles" },
-  { href: "/about", label: "About" },
-  { href: "/methodology", label: "Methodology" },
+  { href: "/", key: "home" },
+  { href: "/debt-to-gdp", key: "debtToGdp" },
+  { href: "/debt", key: "whatIsDebt" },
+  { href: "/articles", key: "articles" },
+  { href: "/about", key: "about" },
+  { href: "/methodology", key: "methodology" },
 ];
+
+/* ---------------- TEKSTEN ---------------- */
+const TEXT = {
+  en: {
+    nav: {
+      home: "Home",
+      debtToGdp: "Debt-to-GDP",
+      whatIsDebt: "What is Debt?",
+      articles: "Articles",
+      about: "About",
+      methodology: "Methodology",
+    },
+    changeLanguage: "Change language",
+    active: "Active",
+    brandHome: "EU Debt Map – Home",
+    toggleMenu: "Toggle menu",
+  },
+  nl: {
+    nav: {
+      home: "Home",
+      debtToGdp: "Schuld/bbp",
+      whatIsDebt: "Wat is schuld?",
+      articles: "Artikelen",
+      about: "Over",
+      methodology: "Methodologie",
+    },
+    changeLanguage: "Taal wijzigen",
+    active: "Actief",
+    brandHome: "EU Debt Map – Home",
+    toggleMenu: "Menu openen",
+  },
+  de: {
+    nav: {
+      home: "Startseite",
+      debtToGdp: "Schulden/BIP",
+      whatIsDebt: "Was sind Schulden?",
+      articles: "Artikel",
+      about: "Über",
+      methodology: "Methodik",
+    },
+    changeLanguage: "Sprache ändern",
+    active: "Aktiv",
+    brandHome: "EU Debt Map – Startseite",
+    toggleMenu: "Menü umschalten",
+  },
+  fr: {
+    nav: {
+      home: "Accueil",
+      debtToGdp: "Dette/PIB",
+      whatIsDebt: "Qu’est-ce que la dette ?",
+      articles: "Articles",
+      about: "À propos",
+      methodology: "Méthodologie",
+    },
+    changeLanguage: "Changer de langue",
+    active: "Actif",
+    brandHome: "EU Debt Map – Accueil",
+    toggleMenu: "Ouvrir le menu",
+  },
+};
 
 /* ---------------- CONSTANTEN ---------------- */
 const NO_LOCALE = new Set([]);
@@ -55,7 +115,7 @@ function isActivePath(pathname, hrefBase, locale) {
 }
 
 /* ---------------- LANGUAGE DROPDOWN ---------------- */
-function LanguageDropdown() {
+function LanguageDropdown({ t }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
   const current = getLocaleFromPathname(pathname); // "", "nl", "de", "fr"
@@ -87,14 +147,12 @@ function LanguageDropdown() {
     let nextPath;
 
     if (isArticleDetail) {
-      // Artikel vertaling via mapping
       nextPath = getArticleTranslationHref({
         currentPath: pathOnly,
         fromLang,
         toLang,
       });
     } else {
-      // Standaard-logica voor andere pagina's
       let withoutLocale = pathOnly;
       const seg = firstSegment(pathOnly);
 
@@ -123,10 +181,10 @@ function LanguageDropdown() {
       <button
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Change language"
+        aria-label={t.changeLanguage}
         onClick={() => setOpen((v) => !v)}
         className="lang-trigger"
-        title="Change language"
+        title={t.changeLanguage}
       >
         <span style={{ fontSize: 16, marginRight: 6 }}>{currentLocale.flag}</span>
         <span style={{ fontWeight: 600 }}>{currentLocale.label}</span>
@@ -135,6 +193,8 @@ function LanguageDropdown() {
           height="14"
           viewBox="0 0 20 20"
           style={{ marginLeft: 6, opacity: 0.8 }}
+          aria-hidden="true"
+          focusable="false"
         >
           <path d="M5 7l5 6 5-6H5z" fill="currentColor" />
         </svg>
@@ -183,7 +243,7 @@ function LanguageDropdown() {
                   <span style={{ fontSize: 16 }}>{opt.flag}</span>
                   <span style={{ flex: 1 }}>{opt.label}</span>
                   {active && (
-                    <span className="tag lang-active-tag">Active</span>
+                    <span className="tag lang-active-tag">{t.active}</span>
                   )}
                 </button>
               </li>
@@ -225,7 +285,6 @@ function LanguageDropdown() {
 }
 
 /* ---------------- MOBILE DRAWER VIA PORTAL ---------------- */
-
 function MobileDrawer({ open, onClose, children }) {
   const [mounted, setMounted] = useState(false);
   const [el, setEl] = useState(null);
@@ -246,11 +305,11 @@ function MobileDrawer({ open, onClose, children }) {
   return createPortal(
     <div
       className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}
-      onClick={onClose} // klik op grijze achtergrond sluit menu
+      onClick={onClose}
     >
       <div
         className="nav-drawer-inner"
-        onClick={(e) => e.stopPropagation()} // klik binnen panel niet sluiten
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
@@ -260,11 +319,12 @@ function MobileDrawer({ open, onClose, children }) {
 }
 
 /* ---------------- HEADER ---------------- */
-
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() || "/";
   const locale = getLocaleFromPathname(pathname);
+  const effLocale = locale || "en";
+  const t = useMemo(() => TEXT[effLocale] || TEXT.en, [effLocale]);
 
   // Sluit menu bij navigatie
   useEffect(() => setOpen(false), [pathname]);
@@ -277,7 +337,7 @@ export default function Header() {
           <Link
             href={localeAwareHref("/", locale)}
             className="brand"
-            aria-label="EU Debt Map – Home"
+            aria-label={t.brandHome}
           >
             <span className="brand-logo">EU</span>
             <span className="brand-text">Debt Map</span>
@@ -296,16 +356,16 @@ export default function Header() {
                     : "")
                 }
               >
-                {item.label}
+                {t.nav[item.key]}
               </Link>
             ))}
-            <LanguageDropdown />
+            <LanguageDropdown t={t} />
           </nav>
 
           {/* Mobile hamburger */}
           <button
             className="hamburger"
-            aria-label="Toggle menu"
+            aria-label={t.toggleMenu}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
@@ -329,7 +389,7 @@ export default function Header() {
                 : "")
             }
           >
-            {item.label}
+            {t.nav[item.key]}
           </Link>
         ))}
         <div
@@ -338,7 +398,7 @@ export default function Header() {
             borderTop: "1px solid var(--header-border)",
           }}
         >
-          <LanguageDropdown />
+          <LanguageDropdown t={t} />
         </div>
       </MobileDrawer>
     </>

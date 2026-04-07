@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import DebtToGDPBlock from "@/components/DebtToGDPBlock";
 import { countries } from "@/lib/data";
+import { countryName } from "@/lib/countries";
 
 // Vertaalde labels voor de statistieken
 const LABELS = {
@@ -12,6 +13,8 @@ const LABELS = {
     derived: "Derived from the last two reference dates.",
     source: "Source: Eurostat (Debt: ",
     perSec: "/ s",
+    factsAria: "Debt facts",
+    latest: "Latest Est.",
   },
   nl: {
     change: "Verandering sinds vorig kwartaal",
@@ -19,6 +22,8 @@ const LABELS = {
     derived: "Afgeleid van de laatste twee peildatums.",
     source: "Bron: Eurostat (Schuld: ",
     perSec: "/ s",
+    factsAria: "Schuldfeiten",
+    latest: "Laatste schatting",
   },
   de: {
     change: "Veränderung seit letztem Quartal",
@@ -26,6 +31,8 @@ const LABELS = {
     derived: "Basierend auf den letzten zwei Stichtagen.",
     source: "Quelle: Eurostat (Schulden: ",
     perSec: "/ s",
+    factsAria: "Schuldenfakten",
+    latest: "Neueste Schätzung",
   },
   fr: {
     change: "Variation depuis le dernier trimestre",
@@ -33,6 +40,8 @@ const LABELS = {
     derived: "Dérivé des deux dernières dates de référence.",
     source: "Source : Eurostat (Dette : ",
     perSec: "/ s",
+    factsAria: "Faits sur la dette",
+    latest: "Dernière estimation",
   },
 };
 
@@ -60,13 +69,13 @@ export default function CountryFacts({
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = LABELS[effLang];
 
-  // Dynamische nummer-formatting op basis van taal (Punten vs Komma's)
+  // Dynamische nummer-formatting op basis van taal
   const nfLocale =
     effLang === "nl" || effLang === "de"
-      ? "de-DE" // Punten als duizendtallen (1.000,00)
+      ? "de-DE"
       : effLang === "fr"
-      ? "fr-FR" // Spaties (1 000,00)
-      : "en-GB"; // Komma's (1,000.00)
+      ? "fr-FR"
+      : "en-GB";
 
   const nf0 = useMemo(
     () => new Intl.NumberFormat(nfLocale, { maximumFractionDigits: 0 }),
@@ -97,7 +106,7 @@ export default function CountryFacts({
       ? `≈ €0.00 ${t.perSec}`
       : `€${nf2.format(perSec)} ${t.perSec}`;
 
-  // 2. GDP Bepaling
+  // 2. GDP bepaling
   const gdpFromDataEUR = Number.isFinite(Number(c?.gdp_eur))
     ? Number(c.gdp_eur)
     : Number.isFinite(Number(c?.gdp_meur))
@@ -109,10 +118,14 @@ export default function CountryFacts({
     : gdpFromDataEUR;
   const showDebtToGDP = Number.isFinite(gdpAbs) && gdpAbs > 0;
 
-  // 3. Label Bepaling
+  // 3. Label bepaling
   const yearLabel =
     yearLabelProp ||
-    (c?.last_date ? `FY ${c.last_date.slice(0, 4)}` : "Latest Est.");
+    (c?.last_date ? `FY ${c.last_date.slice(0, 4)}` : t.latest);
+
+  // 4. Gelokaliseerde landnaam voor child component
+  const localizedCountryName =
+    countryName(c.code, effLang) || c?.code?.toUpperCase() || "Country";
 
   return (
     <aside
@@ -124,7 +137,7 @@ export default function CountryFacts({
         padding: 12,
         marginTop: 12,
       }}
-      aria-label="Debt facts"
+      aria-label={t.factsAria}
     >
       {/* Top: kernfeiten */}
       <div
@@ -157,12 +170,17 @@ export default function CountryFacts({
         {c.prev_date} → {c.last_date})
       </div>
 
-      {/* Debt-to-GDP blok + SEO-tekst (ZONDER extra 'card' wrapper) */}
+      {/* Debt-to-GDP blok + SEO-tekst */}
       {showDebtToGDP && (
-        <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
-          {/* We geven nu 'lang' door aan het child component */}
+        <div
+          style={{
+            marginTop: 24,
+            paddingTop: 16,
+            borderTop: "1px solid var(--border)",
+          }}
+        >
           <DebtToGDPBlock
-            countryName={c?.name || c?.code?.toUpperCase() || "Country"}
+            countryName={localizedCountryName}
             yearLabel={yearLabel}
             debt={v1}
             gdp={gdpAbs}

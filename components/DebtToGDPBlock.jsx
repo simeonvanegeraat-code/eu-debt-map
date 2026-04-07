@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
-
 // --- VERTALINGEN CONFIGURATIE ---
 const TRANSLATIONS = {
   en: {
     title: "Debt-to-GDP ratio",
     low: "low",
-    elevated: "elevated",
+    mid: "elevated",
     high: "high",
     legend: {
       ok: "<60% (green)",
@@ -30,15 +28,19 @@ const TRANSLATIONS = {
       p6: "compared with typical EU reference values.",
     },
     units: {
-      t: "trillion", // 10^12
-      b: "billion",  // 10^9
+      t: "trillion",
+      b: "billion",
     },
     source: "Source: Eurostat (Quarterly Debt & Annualized GDP).",
+    aria: {
+      bar: (name) => `${name} debt to GDP`,
+      overflow: "Exceeds 100% of GDP",
+    },
   },
   nl: {
     title: "Schuldquote (Schuld/bbp)",
     low: "laag",
-    elevated: "verhoogd",
+    mid: "verhoogd",
     high: "hoog",
     legend: {
       ok: "<60% (groen)",
@@ -61,15 +63,19 @@ const TRANSLATIONS = {
       p6: "in vergelijking met typische EU-referentiewaarden.",
     },
     units: {
-      t: "biljoen", // 10^12
-      b: "miljard", // 10^9
+      t: "biljoen",
+      b: "miljard",
     },
     source: "Bron: Eurostat (Kwartaalschuld & geannualiseerd bbp).",
+    aria: {
+      bar: (name) => `${name} schuldquote`,
+      overflow: "Overschrijdt 100% van het bbp",
+    },
   },
   de: {
     title: "Schulden-zu-BIP-Verhältnis",
     low: "niedrig",
-    elevated: "erhöht",
+    mid: "erhöht",
     high: "hoch",
     legend: {
       ok: "<60% (grün)",
@@ -89,18 +95,22 @@ const TRANSLATIONS = {
       p3: "Dies bedeutet eine",
       p4: "Schuldenquote von",
       p5: "die im Vergleich zu typischen EU-Referenzwerten als",
-      p6: "gilt.", // Duitse grammatica: zin eindigt anders
+      p6: "gilt.",
     },
     units: {
-      t: "Billionen", // 10^12 (Let op: False friend met English Trillion)
-      b: "Milliarden",// 10^9
+      t: "Billionen",
+      b: "Milliarden",
     },
     source: "Quelle: Eurostat (Vierteljährliche Schulden & annualisiertes BIP).",
+    aria: {
+      bar: (name) => `${name} Schuldenquote`,
+      overflow: "Überschreitet 100% des BIP",
+    },
   },
   fr: {
     title: "Ratio dette/PIB",
     low: "faible",
-    elevated: "élevé",
+    mid: "élevé",
     high: "très élevé",
     legend: {
       ok: "<60% (vert)",
@@ -123,10 +133,14 @@ const TRANSLATIONS = {
       p6: "par rapport aux valeurs de référence de l'UE.",
     },
     units: {
-      t: "billions", // 10^12
-      b: "milliards", // 10^9
+      t: "billions",
+      b: "milliards",
     },
     source: "Source : Eurostat (Dette trimestrielle & PIB annualisé).",
+    aria: {
+      bar: (name) => `Ratio dette/PIB pour ${name}`,
+      overflow: "Dépasse 100% du PIB",
+    },
   },
 };
 
@@ -136,28 +150,36 @@ function classifyBucket(pct) {
   return { key: "high", colorVar: "var(--bad)" };
 }
 
-// Helper voor formatting met juiste taal en eenheden (Trillion vs Billion vs Miljard)
+// Helper voor formatting met juiste taal en eenheden
 function formatMoneyEUR(n, lang = "en") {
   if (!Number.isFinite(n)) return "—";
-  
-  // Bepaal locale string (voor punten en komma's)
-  const loc = lang === "nl" || lang === "de" ? "de-DE" : lang === "fr" ? "fr-FR" : "en-US";
-  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
+  const loc =
+    lang === "nl" || lang === "de"
+      ? "de-DE"
+      : lang === "fr"
+      ? "fr-FR"
+      : "en-US";
+
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const abs = Math.abs(n);
 
-  // 10^12 handling (Eng: Trillion, NL/DE: Biljoen/Billion)
   if (abs >= 1_000_000_000_000) {
-    const val = (n / 1_000_000_000_000).toLocaleString(loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const val = (n / 1_000_000_000_000).toLocaleString(loc, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     return `€ ${val} ${t.units.t}`;
   }
-  
-  // 10^9 handling (Eng: Billion, NL/DE: Miljard/Milliarde)
+
   if (abs >= 1_000_000_000) {
-    const val = (n / 1_000_000_000).toLocaleString(loc, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const val = (n / 1_000_000_000).toLocaleString(loc, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
     return `€ ${val} ${t.units.b}`;
   }
-  
+
   return `€ ${n.toLocaleString(loc)}`;
 }
 
@@ -166,49 +188,41 @@ function formatMoneyEUR(n, lang = "en") {
  */
 function getIntroPhrase(label, t) {
   const safeLabel = String(label || "");
-  // Check op kwartaal formaat (YYYY-Q#)
   if (safeLabel.match(/^\d{4}-Q\d$/)) {
     const [year, q] = safeLabel.split("-Q");
     return t.text.intro_annualized(q, year);
   }
-  // Standaard fallback
   return t.text.intro_asof(safeLabel);
 }
 
 export default function DebtToGDPBlock({
   countryName = "Country",
   yearLabel = "2024",
-  debt, // absolute in EUR
-  gdp,  // absolute in EUR
-  lang = "en", // Nieuwe prop voor taal
+  debt,
+  gdp,
+  lang = "en",
 }) {
-  // Selecteer vertalingen (fallback naar en)
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = TRANSLATIONS[effLang];
 
-  const ratio = Number.isFinite(debt) && Number.isFinite(gdp) && gdp > 0
-    ? (debt / gdp) * 100
-    : NaN;
+  const ratio =
+    Number.isFinite(debt) && Number.isFinite(gdp) && gdp > 0
+      ? (debt / gdp) * 100
+      : NaN;
 
-  const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0)); // cap op 300%
+  const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0));
   const bucketInfo = classifyBucket(pct);
 
-  // Vertaal het label (low/elevated/high)
   const bucketLabel = t[bucketInfo.key];
 
-  // Bereken bar widths
-  const filledWidth = Math.min(100, pct); // 0..100%
-  const overflow = Math.max(0, pct - 100); // 0..200% (we tonen subtiel)
+  const filledWidth = Math.min(100, pct);
+  const overflow = Math.max(0, pct - 100);
 
-  // SEO-tekst formatting met taal
   const debtStr = formatMoneyEUR(debt, effLang);
   const gdpStr = formatMoneyEUR(gdp, effLang);
   const pctStr = Number.isFinite(pct) ? `${pct.toFixed(0)}%` : "—";
-  
-  // Dynamische introzin
-  const introText = getIntroPhrase(yearLabel, t);
 
-  // Vertaald advies
+  const introText = getIntroPhrase(yearLabel, t);
   const advisory = t.advisory[bucketInfo.key];
 
   return (
@@ -220,7 +234,7 @@ export default function DebtToGDPBlock({
         </div>
       </div>
 
-      <div className="debtgdp-bar" aria-label={`${countryName} debt to GDP`}>
+      <div className="debtgdp-bar" aria-label={t.aria.bar(countryName)}>
         <div className="debtgdp-bar-bg" />
         <div
           className="debtgdp-bar-fill"
@@ -229,7 +243,7 @@ export default function DebtToGDPBlock({
         {overflow > 0 && (
           <div
             className="debtgdp-bar-overflow"
-            title="Exceeds 100% of GDP"
+            title={t.aria.overflow}
             style={{ width: `${Math.min(100, overflow)}%` }}
           />
         )}
@@ -250,8 +264,8 @@ export default function DebtToGDPBlock({
       <div className="debtgdp-text">
         <p>
           {introText} <strong>{countryName}</strong> {t.text.p1}{" "}
-          <strong>{debtStr}</strong> {t.text.p2} <strong>{gdpStr}</strong>. {t.text.p3}{" "}
-          <strong>{t.text.p4} {pctStr}</strong>, {t.text.p5}{" "}
+          <strong>{debtStr}</strong> {t.text.p2} <strong>{gdpStr}</strong>.{" "}
+          {t.text.p3} <strong>{t.text.p4} {pctStr}</strong>, {t.text.p5}{" "}
           <strong>{bucketLabel}</strong> {t.text.p6}
         </p>
         <p>{advisory}</p>
