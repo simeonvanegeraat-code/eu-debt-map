@@ -68,7 +68,7 @@ const TEXT = {
     nav: {
       home: "Accueil",
       debtToGdp: "Dette/PIB",
-      whatIsDebt: "Qu’est-ce que la dette ?",
+      whatIsDebt: "La dette",
       articles: "Articles",
       about: "À propos",
       methodology: "Méthodologie",
@@ -180,7 +180,7 @@ function isActivePath(pathname, hrefBase, locale) {
 function LanguageDropdown({ t }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
-  const current = getLocaleFromPathname(pathname); // "", "nl", "de", "fr"
+  const current = getLocaleFromPathname(pathname);
 
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -262,7 +262,6 @@ function LanguageDropdown({ t }) {
           <GlobeIcon size={16} />
         </span>
         <span className="lang-trigger-code">{currentLocale.short}</span>
-        <span className="lang-trigger-label">{currentLocale.label}</span>
         <ChevronIcon open={open} />
       </button>
 
@@ -328,12 +327,12 @@ function LanguageDropdown({ t }) {
           height: 42px;
           padding: 0 14px;
           border-radius: 999px;
-          border: 1px solid rgba(15, 23, 42, 0.10);
+          border: 1px solid rgba(15, 23, 42, 0.1);
           background: rgba(255, 255, 255, 0.9);
           color: var(--header-fg);
           box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
           transition: border-color 0.18s ease, background 0.18s ease,
-            box-shadow 0.18s ease, transform 0.18s ease;
+            box-shadow 0.18s ease;
           backdrop-filter: blur(8px);
         }
         .lang-trigger:hover {
@@ -368,24 +367,19 @@ function LanguageDropdown({ t }) {
           letter-spacing: 0.04em;
         }
 
-        .lang-trigger-label {
-          font-weight: 600;
-          color: rgba(15, 23, 42, 0.92);
-        }
-
         .lang-item {
           width: 100%;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 12px;
-          padding: 12px 12px;
+          padding: 12px;
           border: none;
           border-radius: 12px;
           background: #ffffff;
           color: inherit;
           cursor: pointer;
-          transition: background 0.16s ease, transform 0.16s ease;
+          transition: background 0.16s ease;
         }
 
         .lang-item:hover {
@@ -412,7 +406,7 @@ function LanguageDropdown({ t }) {
           padding: 0 8px;
           border-radius: 999px;
           background: rgba(15, 23, 42, 0.06);
-          color: rgba(15, 23, 42, 0.80);
+          color: rgba(15, 23, 42, 0.8);
           font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.04em;
@@ -436,7 +430,7 @@ function LanguageDropdown({ t }) {
           font-size: 11px;
           font-weight: 700;
           color: #1d4ed8;
-          background: rgba(37, 99, 235, 0.10);
+          background: rgba(37, 99, 235, 0.1);
           border: 1px solid rgba(37, 99, 235, 0.14);
           padding: 3px 8px;
           border-radius: 999px;
@@ -447,12 +441,6 @@ function LanguageDropdown({ t }) {
           align-items: center;
           justify-content: center;
           color: #1d4ed8;
-        }
-
-        @media (max-width: 900px) {
-          .lang-trigger-label {
-            display: none;
-          }
         }
       `}</style>
     </div>
@@ -574,6 +562,22 @@ export default function Header() {
           <LanguageDropdown t={t} />
         </div>
       </MobileDrawer>
+
+      <style jsx>{`
+        @media (min-width: 901px) {
+          .brand {
+            flex-shrink: 0;
+          }
+
+          .brand-text {
+            white-space: nowrap;
+          }
+
+          .nav-link {
+            white-space: nowrap;
+          }
+        }
+      `}</style>
     </>
   );
 }
