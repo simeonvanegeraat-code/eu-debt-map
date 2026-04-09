@@ -392,11 +392,6 @@ export default function CountryClient({
         }}
       />
 
-      {/* Delen */}
-      <div style={{ marginTop: 8 }}>
-        <ShareBar title={shareTitle} lang={effLang} />
-      </div>
-
       {/* Feitenblok */}
       <div style={{ marginTop: 8 }}>
         <CountryFacts
@@ -411,6 +406,11 @@ export default function CountryClient({
       <ManualAd lang={effLang} />
 
       {introSlot}
+
+      {/* Delen */}
+      <div style={{ marginTop: 8 }}>
+        <ShareBar title={shareTitle} lang={effLang} />
+      </div>
 
       {/* CTA + artikel */}
       <div
