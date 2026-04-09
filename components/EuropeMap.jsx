@@ -1,7 +1,9 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { countries as DATA } from "@/lib/data";
+import { getLocaleFromPathname, withLocale } from "@/lib/locale";
 
 const GEO_URL = "/maps/countries-110m.json";
 
@@ -81,6 +83,10 @@ function fallbackTrend(iso2) {
 }
 
 export default function EuropeMap() {
+  const router = useRouter();
+  const pathname = usePathname() || "/";
+  const locale = getLocaleFromPathname(pathname);
+
   const hasData = (iso2) => DATA.some((c) => c.code.toUpperCase() === iso2);
 
   const fillFor = (iso2) => {
@@ -91,23 +97,30 @@ export default function EuropeMap() {
     return trend >= 0 ? STYLE.colorRising : STYLE.colorFalling;
   };
 
+  const handleCountryClick = (iso2, clickable) => {
+    if (!clickable) return;
+    const href = withLocale(`/country/${iso2.toLowerCase()}`, locale);
+    router.push(href);
+  };
+
   return (
     <div className="card" style={{ overflow: "hidden", background: "#f8fafc" }}>
-      <ComposableMap 
-        projection="geoAzimuthalEqualArea" 
+      <ComposableMap
+        projection="geoAzimuthalEqualArea"
         projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}
       >
         <Geographies geography={GEO_URL}>
           {({ geographies }) => {
             // DEV logging logic (ingekort)
             if (process.env.NODE_ENV !== "production") {
-                // ... logica hier laten staan of weglaten, maakt voor productie niet uit
+              // ... logica hier laten staan of weglaten, maakt voor productie niet uit
             }
 
             return geographies
               .map((geo) => {
                 const props = geo.properties || {};
-                const rawName = props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
+                const rawName =
+                  props.name || props.NAME || props.NAME_EN || props.admin || props.ADMIN;
                 const iso2 = nameToIso2(rawName);
                 if (!iso2) return null;
 
@@ -121,22 +134,20 @@ export default function EuropeMap() {
                     stroke={STYLE.stroke}
                     strokeWidth={STYLE.strokeWidth}
                     style={{
-                      default: { 
-                        fill: fillFor(iso2), 
-                        outline: "none" 
+                      default: {
+                        fill: fillFor(iso2),
+                        outline: "none",
                       },
-                      hover: { 
-                        fill: clickable ? STYLE.hoverColor : "#9ca3af", 
-                        outline: "none", 
-                        cursor: clickable ? "pointer" : "default" 
+                      hover: {
+                        fill: clickable ? STYLE.hoverColor : "#9ca3af",
+                        outline: "none",
+                        cursor: clickable ? "pointer" : "default",
                       },
-                      pressed: { 
-                        outline: "none" 
+                      pressed: {
+                        outline: "none",
                       },
                     }}
-                    onClick={() => {
-                      if (clickable) window.location.href = `/country/${iso2.toLowerCase()}`;
-                    }}
+                    onClick={() => handleCountryClick(iso2, clickable)}
                   />
                 );
               })
