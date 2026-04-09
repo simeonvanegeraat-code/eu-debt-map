@@ -9,6 +9,7 @@ import MapCTA from "@/components/MapCTA";
 import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
+import CountryExploreStrip from "@/components/CountryExploreStrip";
 import CountryFacts from "./CountryFacts";
 import DebtToGDPPill from "@/components/DebtToGDPPill";
 
@@ -329,6 +330,8 @@ export default function CountryClient({
         <LabelsBar country={safeCountry} valueNow={current} lang={effLang} />
         <DebtToGDPPill ratioPct={ratioPct} lang={effLang} />
       </div>
+
+      <CountryExploreStrip code={safeCountry.code} lang={effLang} />
 
       {/* Live bedrag */}
       <div
