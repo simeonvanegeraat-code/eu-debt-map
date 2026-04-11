@@ -13,25 +13,19 @@ const TRANSLATIONS = {
       bad: ">90% (red)",
     },
     advisory: {
-      low: "This level is generally considered sustainable under EU fiscal guidelines.",
-      mid: "This level warrants attention compared to common fiscal thresholds (60% reference).",
-      high: "This level is high relative to common fiscal thresholds and may limit fiscal flexibility.",
+      low: "This is below the EU's 60% reference value.",
+      mid: "This is above the EU's 60% reference value.",
+      high: "This is well above the EU's 60% reference value.",
     },
     text: {
-      intro_annualized: (q, y) => `Based on annualized Q${q} ${y} figures,`,
-      intro_asof: (y) => `As of ${y},`,
-      p1: "has an estimated government debt of",
-      p2: "and a nominal GDP of",
-      p3: "That implies a",
-      p4: "debt-to-GDP ratio of",
-      p5: "which is considered",
-      p6: "compared with typical EU reference values.",
+      summary: (country, debtStr, gdpStr, pctStr, bucketLabel) =>
+        `Using the latest official debt figure and the current GDP estimate, ${country} has an estimated government debt of ${debtStr} and a nominal GDP of ${gdpStr}. That implies a debt-to-GDP ratio of ${pctStr}, which is ${bucketLabel} relative to common EU reference levels.`,
     },
     units: {
       t: "trillion",
       b: "billion",
     },
-    source: "Source: Eurostat (Quarterly Debt & Annualized GDP).",
+    source: "Source: Eurostat debt and GDP data used for this estimate.",
     aria: {
       bar: (name) => `${name} debt to GDP`,
       overflow: "Exceeds 100% of GDP",
@@ -48,25 +42,19 @@ const TRANSLATIONS = {
       bad: ">90% (rood)",
     },
     advisory: {
-      low: "Dit niveau wordt volgens de EU-begrotingsregels over het algemeen als houdbaar beschouwd.",
-      mid: "Dit niveau vereist aandacht in vergelijking met de gebruikelijke drempelwaarden (referentie 60%).",
-      high: "Dit niveau is hoog in vergelijking met de normen en kan de fiscale flexibiliteit beperken.",
+      low: "Dit ligt onder de EU-referentiewaarde van 60%.",
+      mid: "Dit ligt boven de EU-referentiewaarde van 60%.",
+      high: "Dit ligt ruim boven de EU-referentiewaarde van 60%.",
     },
     text: {
-      intro_annualized: (q, y) => `Op basis van geannualiseerde cijfers uit Q${q} ${y},`,
-      intro_asof: (y) => `Per ${y},`,
-      p1: "heeft een geschatte staatsschuld van",
-      p2: "en een nominaal bbp van",
-      p3: "Dat impliceert een",
-      p4: "schuldquote van",
-      p5: "die wordt beschouwd als",
-      p6: "in vergelijking met typische EU-referentiewaarden.",
+      summary: (country, debtStr, gdpStr, pctStr, bucketLabel) =>
+        `Op basis van het meest recente officiële schuldcijfer en de huidige bbp-schatting heeft ${country} een geschatte staatsschuld van ${debtStr} en een nominaal bbp van ${gdpStr}. Dat impliceert een schuldquote van ${pctStr}, wat ${bucketLabel} is ten opzichte van gangbare EU-referentiewaarden.`,
     },
     units: {
       t: "biljoen",
       b: "miljard",
     },
-    source: "Bron: Eurostat (Kwartaalschuld & geannualiseerd bbp).",
+    source: "Bron: Eurostat-schuld- en bbp-data gebruikt voor deze schatting.",
     aria: {
       bar: (name) => `${name} schuldquote`,
       overflow: "Overschrijdt 100% van het bbp",
@@ -83,25 +71,19 @@ const TRANSLATIONS = {
       bad: ">90% (rot)",
     },
     advisory: {
-      low: "Dieses Niveau gilt nach EU-Richtlinien allgemein als nachhaltig.",
-      mid: "Dieses Niveau erfordert Aufmerksamkeit im Vergleich zu den üblichen Referenzwerten (60%).",
-      high: "Dieses Niveau ist im Vergleich zu den üblichen Referenzwerten hoch und könnte den finanziellen Spielraum einschränken.",
+      low: "Dies liegt unter dem EU-Referenzwert von 60%.",
+      mid: "Dies liegt über dem EU-Referenzwert von 60%.",
+      high: "Dies liegt deutlich über dem EU-Referenzwert von 60%.",
     },
     text: {
-      intro_annualized: (q, y) => `Basierend auf annualisierten Zahlen für Q${q} ${y},`,
-      intro_asof: (y) => `Stand ${y},`,
-      p1: "hat eine geschätzte Staatsverschuldung von",
-      p2: "und ein nominales BIP von",
-      p3: "Dies bedeutet eine",
-      p4: "Schuldenquote von",
-      p5: "die im Vergleich zu typischen EU-Referenzwerten als",
-      p6: "gilt.",
+      summary: (country, debtStr, gdpStr, pctStr, bucketLabel) =>
+        `Auf Basis des neuesten offiziellen Schuldenstands und der aktuellen BIP-Schätzung hat ${country} eine geschätzte Staatsverschuldung von ${debtStr} und ein nominales BIP von ${gdpStr}. Das impliziert eine Schuldenquote von ${pctStr}, die im Vergleich zu gängigen EU-Referenzwerten als ${bucketLabel} gilt.`,
     },
     units: {
       t: "Billionen",
       b: "Milliarden",
     },
-    source: "Quelle: Eurostat (Vierteljährliche Schulden & annualisiertes BIP).",
+    source: "Quelle: Eurostat-Schulden- und BIP-Daten für diese Schätzung.",
     aria: {
       bar: (name) => `${name} Schuldenquote`,
       overflow: "Überschreitet 100% des BIP",
@@ -118,25 +100,19 @@ const TRANSLATIONS = {
       bad: ">90% (rouge)",
     },
     advisory: {
-      low: "Ce niveau est généralement considéré comme soutenable selon les directives budgétaires de l'UE.",
-      mid: "Ce niveau mérite attention par rapport aux seuils budgétaires courants (référence 60%).",
-      high: "Ce niveau est élevé par rapport aux seuils courants et peut limiter la flexibilité budgétaire.",
+      low: "Ce niveau est inférieur à la valeur de référence de 60% dans l’UE.",
+      mid: "Ce niveau est supérieur à la valeur de référence de 60% dans l’UE.",
+      high: "Ce niveau est nettement supérieur à la valeur de référence de 60% dans l’UE.",
     },
     text: {
-      intro_annualized: (q, y) => `Basé sur les chiffres annualisés du T${q} ${y},`,
-      intro_asof: (y) => `En ${y},`,
-      p1: "a une dette publique estimée à",
-      p2: "et un PIB nominal de",
-      p3: "Cela implique un",
-      p4: "ratio dette/PIB de",
-      p5: "qui est considéré comme",
-      p6: "par rapport aux valeurs de référence de l'UE.",
+      summary: (country, debtStr, gdpStr, pctStr, bucketLabel) =>
+        `Sur la base du dernier niveau officiel de dette et de l’estimation actuelle du PIB, ${country} a une dette publique estimée à ${debtStr} et un PIB nominal de ${gdpStr}. Cela implique un ratio dette/PIB de ${pctStr}, considéré comme ${bucketLabel} par rapport aux niveaux de référence courants de l’UE.`,
     },
     units: {
       t: "billions",
       b: "milliards",
     },
-    source: "Source : Eurostat (Dette trimestrielle & PIB annualisé).",
+    source: "Source : données de dette et de PIB d’Eurostat utilisées pour cette estimation.",
     aria: {
       bar: (name) => `Ratio dette/PIB pour ${name}`,
       overflow: "Dépasse 100% du PIB",
@@ -183,21 +159,13 @@ function formatMoneyEUR(n, lang = "en") {
   return `€ ${n.toLocaleString(loc)}`;
 }
 
-/**
- * Bouwt de introzin ("Based on annualized Q3...")
- */
-function getIntroPhrase(label, t) {
-  const safeLabel = String(label || "");
-  if (safeLabel.match(/^\d{4}-Q\d$/)) {
-    const [year, q] = safeLabel.split("-Q");
-    return t.text.intro_annualized(q, year);
-  }
-  return t.text.intro_asof(safeLabel);
+function normalizeCountryNameForSentence(name, lang) {
+  if (lang === "en" && name === "Netherlands") return "the Netherlands";
+  return name;
 }
 
 export default function DebtToGDPBlock({
   countryName = "Country",
-  yearLabel = "2024",
   debt,
   gdp,
   lang = "en",
@@ -221,8 +189,15 @@ export default function DebtToGDPBlock({
   const debtStr = formatMoneyEUR(debt, effLang);
   const gdpStr = formatMoneyEUR(gdp, effLang);
   const pctStr = Number.isFinite(pct) ? `${pct.toFixed(0)}%` : "—";
+  const sentenceCountry = normalizeCountryNameForSentence(countryName, effLang);
 
-  const introText = getIntroPhrase(yearLabel, t);
+  const summaryText = t.text.summary(
+    sentenceCountry,
+    debtStr,
+    gdpStr,
+    pctStr,
+    bucketLabel
+  );
   const advisory = t.advisory[bucketInfo.key];
 
   return (
@@ -262,12 +237,7 @@ export default function DebtToGDPBlock({
       </div>
 
       <div className="debtgdp-text">
-        <p>
-          {introText} <strong>{countryName}</strong> {t.text.p1}{" "}
-          <strong>{debtStr}</strong> {t.text.p2} <strong>{gdpStr}</strong>.{" "}
-          {t.text.p3} <strong>{t.text.p4} {pctStr}</strong>, {t.text.p5}{" "}
-          <strong>{bucketLabel}</strong> {t.text.p6}
-        </p>
+        <p>{summaryText}</p>
         <p>{advisory}</p>
         <p className="source">
           {t.source}
