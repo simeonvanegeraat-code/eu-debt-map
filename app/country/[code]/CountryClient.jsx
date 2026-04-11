@@ -6,12 +6,10 @@ import { usePathname } from "next/navigation";
 import { interpolateDebt } from "@/lib/data";
 
 import MapCTA from "@/components/MapCTA";
-import LabelsBar from "@/components/LabelsBar";
 import ShareBar from "@/components/ShareBar";
 import LatestArticles from "@/components/LatestArticles";
 import CountryExploreStrip from "@/components/CountryExploreStrip";
 import CountryFacts from "./CountryFacts";
-import DebtToGDPPill from "@/components/DebtToGDPPill";
 
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname } from "@/lib/locale";
@@ -36,10 +34,10 @@ const BACK_LABELS = {
 };
 
 const INFO_LABELS = {
-  en: "Based on the latest Eurostat data. Live estimate using linearized growth between releases.",
-  nl: "Gebaseerd op de laatste Eurostat-data. Live schatting op basis van lineaire groei tussen publicaties.",
-  de: "Basierend auf den neuesten Eurostat-Daten. Live-Schätzung mittels linearisiertem Wachstum zwischen den Veröffentlichungen.",
-  fr: "Basé sur les dernières données d’Eurostat. Estimation en direct fondée sur une croissance linéarisée entre les publications.",
+  en: "Live estimate based on the latest Eurostat debt data and the change between the last two official reference periods.",
+  nl: "Live schatting op basis van de laatste Eurostat-schulddata en de verandering tussen de laatste twee officiële referentieperiodes.",
+  de: "Live-Schätzung auf Basis der neuesten Eurostat-Schuldendaten und der Veränderung zwischen den letzten zwei offiziellen Referenzperioden.",
+  fr: "Estimation en direct fondée sur les dernières données de dette d’Eurostat et l’évolution entre les deux dernières périodes officielles.",
 };
 
 const SHARE_TITLES = {
@@ -278,7 +276,7 @@ export default function CountryClient({
     );
   }
 
-  const rateBoxId = "country-rate-desc";
+  const subtitleId = "country-live-explainer";
   const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
   const infoLabel = INFO_LABELS[effLang] || INFO_LABELS.en;
 
@@ -294,56 +292,56 @@ export default function CountryClient({
   const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
-  // Live Debt/GDP
-  const ratioPct =
-    Number.isFinite(gdpAbs) && gdpAbs > 0 ? (current / gdpAbs) * 100 : null;
-
   const finalYearLabel = gdpPeriod || yearLabel;
   const pageTitle = pageTitleFor(effLang, displayName);
 
   return (
     <>
-      {/* Back knop */}
       <div style={{ marginBottom: 8 }}>
         <Link className="btn" href={backHref} prefetch>
           {backText}
         </Link>
       </div>
 
-      {/* Landtitel */}
-      <h1 style={{ margin: 0 }}>
-        {safeCountry.flag ? (
-          <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
-        ) : null}
-        {pageTitle}
-      </h1>
-
-      {/* Labels + subtiele Debt/GDP pill */}
-      <div
+      <header
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          flexWrap: "wrap",
-          marginTop: 6,
+          display: "grid",
+          gap: 8,
+          justifyItems: "center",
+          textAlign: "center",
+          width: "100%",
         }}
       >
-        <LabelsBar country={safeCountry} valueNow={current} lang={effLang} />
-        <DebtToGDPPill ratioPct={ratioPct} lang={effLang} />
-      </div>
+        <h1 style={{ margin: 0 }}>
+          {safeCountry.flag ? (
+            <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
+          ) : null}
+          {pageTitle}
+        </h1>
 
-      <CountryExploreStrip code={safeCountry.code} lang={effLang} />
+        <p
+          id={subtitleId}
+          style={{
+            margin: 0,
+            maxWidth: 760,
+            color: "rgb(71,85,105)",
+            fontSize: 14,
+            lineHeight: 1.65,
+          }}
+        >
+          {infoLabel}
+        </p>
+      </header>
 
-      {/* Live bedrag */}
       <div
         className="mono"
         style={{
-          marginTop: 14,
+          marginTop: 16,
           textAlign: "center",
           width: "100%",
         }}
         aria-live="polite"
-        aria-describedby={rateBoxId}
+        aria-describedby={subtitleId}
       >
         <span style={SR_ONLY}>{liveLabel}</span>
 
@@ -352,9 +350,9 @@ export default function CountryClient({
           suppressHydrationWarning
           style={{
             display: "inline-block",
-            lineHeight: 1.1,
+            lineHeight: 1.05,
             fontWeight: 800,
-            fontSize: "clamp(22px, 6vw, 68px)",
+            fontSize: "clamp(28px, 7vw, 72px)",
             letterSpacing: "0.2px",
             textShadow: "0 1px 0 rgba(15,23,42,0.18)",
             maxWidth: "100%",
@@ -365,36 +363,9 @@ export default function CountryClient({
         </span>
       </div>
 
-      {/* Infobox */}
-      <div
-        style={{
-          marginTop: 12,
-          width: "100%",
-          border: "1px solid rgba(15,23,42,0.08)",
-          background: "rgba(241,245,249,0.6)",
-          borderRadius: 12,
-          padding: "10px 16px",
-          fontSize: 13.5,
-          color: "rgb(71,85,105)",
-          textAlign: "left",
-        }}
-        id={rateBoxId}
-      >
-        {infoLabel}
-      </div>
+      <CountryExploreStrip code={safeCountry.code} lang={effLang} />
 
-      <hr
-        aria-hidden="true"
-        style={{
-          marginTop: 12,
-          marginBottom: 6,
-          border: 0,
-          borderTop: "1px solid rgba(15,23,42,0.08)",
-        }}
-      />
-
-      {/* Feitenblok */}
-      <div style={{ marginTop: 8 }}>
+      <div style={{ marginTop: 16 }}>
         <CountryFacts
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
@@ -403,17 +374,14 @@ export default function CountryClient({
         />
       </div>
 
-      {/* Advertentie */}
       <ManualAd lang={effLang} />
 
       {introSlot}
 
-      {/* Delen */}
       <div style={{ marginTop: 8 }}>
         <ShareBar title={shareTitle} lang={effLang} />
       </div>
 
-      {/* CTA + artikel */}
       <div
         className="grid"
         style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}

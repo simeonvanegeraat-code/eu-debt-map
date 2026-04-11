@@ -17,7 +17,6 @@ export default function CountryIntro({ country, lang }) {
   const pathname = usePathname() || "/";
   const detected = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
   const effLang = useMemo(() => {
-    // "" in jullie project = Engels
     const norm = (x) => (x === "" ? "en" : x);
     const fromProp = norm(lang);
     const fromUrl = norm(detected);
@@ -29,19 +28,19 @@ export default function CountryIntro({ country, lang }) {
   // 2) Vertaalde weergavenaam
   const name = countryName(country.code, effLang);
 
-  // 3) Content per taal
   if (effLang === "nl") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
-        <h3 className="text-base font-semibold mb-2">Staatsschuld {name}: live schatting</h3>
+        <h3 className="text-base font-semibold mb-2">Over de staatsschuld van {name}</h3>
         <p className="text-sm text-slate-300">
-          Op deze pagina zie je de <strong>staatschuld {name}</strong> als <strong>live teller</strong>
-          (ook wel <em>schuldenklok</em>). De stand is een <strong>geschatte overheidsschuld</strong> op basis
-          van de laatste twee Eurostat-referentiemomenten (gemiddelde verandering per seconde).
+          Deze pagina toont de <strong>staatsschuld van {name}</strong> als
+          <strong> live schatting</strong>. De teller is gebaseerd op de twee
+          meest recente officiële Eurostat-momenten en rekent de gemiddelde
+          verandering door naar nu.
         </p>
         <p className="text-sm text-slate-300" style={{ marginTop: 6 }}>
-          We tonen ook de wijziging t.o.v. het vorige kwartaal en de gemiddelde <strong>rate</strong> (€/s).
-          Schuldquote (% bbp) volgt later.
+          Je ziet hierboven direct het bedrag, de verandering ten opzichte van
+          het vorige kwartaal en de verhouding tussen schuld en bbp.
         </p>
       </section>
     );
@@ -50,15 +49,16 @@ export default function CountryIntro({ country, lang }) {
   if (effLang === "de") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
-        <h3 className="text-base font-semibold mb-2">Staatsschulden {name}: Live-Schätzung</h3>
+        <h3 className="text-base font-semibold mb-2">Über die Staatsverschuldung von {name}</h3>
         <p className="text-sm text-slate-300">
-          Diese Seite zeigt die <strong>Staatsschulden von {name}</strong> als <strong>Live-Zähler</strong>.
-          Es handelt sich um eine <strong>geschätzte Regierungsschuld</strong> auf Basis der zwei jüngsten
-          Eurostat-Referenztermine (durchschnittliche Veränderung pro Sekunde).
+          Diese Seite zeigt die <strong>Staatsverschuldung von {name}</strong>
+          als <strong>Live-Schätzung</strong>. Der Zähler basiert auf den zwei
+          jüngsten offiziellen Eurostat-Referenzwerten und schreibt die
+          durchschnittliche Veränderung bis heute fort.
         </p>
         <p className="text-sm text-slate-300" style={{ marginTop: 6 }}>
-          Ebenfalls enthalten: Änderung gegenüber dem Vorquartal und die durchschnittliche <strong>Rate</strong> (€/s).
-          Schuldenquote (% BIP) folgt.
+          Oben siehst du direkt den Betrag, die Veränderung gegenüber dem
+          Vorquartal und das Verhältnis von Schulden zu BIP.
         </p>
       </section>
     );
@@ -67,15 +67,16 @@ export default function CountryIntro({ country, lang }) {
   if (effLang === "fr") {
     return (
       <section className="card" style={{ padding: 12, marginTop: 12 }}>
-        <h3 className="text-base font-semibold mb-2">Dette publique de {name} : estimation en direct</h3>
+        <h3 className="text-base font-semibold mb-2">À propos de la dette publique de {name}</h3>
         <p className="text-sm text-slate-300">
-          Cette page affiche la <strong>dette publique de {name}</strong> sous forme de <strong>compteur en direct</strong>.
-          Il s’agit d’une <strong>estimation</strong> dérivée des deux dernières dates de référence Eurostat
-          (variation moyenne par seconde).
+          Cette page affiche la <strong>dette publique de {name}</strong> sous
+          forme de <strong>compteur estimé en direct</strong>. Le calcul repose
+          sur les deux derniers points de référence officiels d’Eurostat et
+          prolonge l’évolution moyenne jusqu’à aujourd’hui.
         </p>
         <p className="text-sm text-slate-300" style={{ marginTop: 6 }}>
-          Nous indiquons aussi la variation depuis le dernier trimestre et le <strong>taux</strong> moyen (€/s).
-          Le ratio dette/PIB arrivera bientôt.
+          Vous voyez ci-dessus le montant actuel, la variation depuis le
+          trimestre précédent et le ratio dette/PIB.
         </p>
       </section>
     );
@@ -84,15 +85,16 @@ export default function CountryIntro({ country, lang }) {
   // EN (default)
   return (
     <section className="card" style={{ padding: 12, marginTop: 12 }}>
-      <h3 className="text-base font-semibold mb-2">About {name}&rsquo;s national debt</h3>
+      <h3 className="text-base font-semibold mb-2">About {name}&rsquo;s public debt</h3>
       <p className="text-sm text-slate-300">
-        This page shows <strong>{name}&rsquo;s public debt</strong> as a <strong>live counter</strong>.
-        It is an <strong>estimated government debt</strong> derived from the two most recent Eurostat
-        reference dates (average change per second).
+        This page shows <strong>{name}&rsquo;s public debt</strong> as a
+        <strong> live estimate</strong>. The counter is based on the two most
+        recent official Eurostat reference points and extends the average
+        change forward to today.
       </p>
       <p className="text-sm text-slate-300" style={{ marginTop: 6 }}>
-        We also display the change since the previous quarter and the average <strong>rate</strong> (€/s).
-        Debt-to-GDP context coming soon.
+        Above, you can immediately see the current amount, the change since the
+        previous quarter, and the debt-to-GDP ratio.
       </p>
     </section>
   );

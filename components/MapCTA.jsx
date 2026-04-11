@@ -1,128 +1,85 @@
 // components/MapCTA.jsx
 import Link from "next/link";
-import { countries } from "@/lib/data";
-import { countryName } from "@/lib/countries";
 
 const TEXT = {
   en: {
-    title: "Explore the map",
-    intro: (name) =>
-      `View all EU countries and quickly switch to another one. Current: ${name}.`,
-    openMap: "Open interactive map",
-    openMapAria: "Open interactive map",
-    goTo: (name) => `Go to ${name}`,
+    title: "View the full EU overview",
+    intro: "See the combined EU debt estimate and open the interactive map.",
+    openMap: "Open EU overview",
+    openMapAria: "Open EU overview",
   },
   nl: {
-    title: "Verken de kaart",
-    intro: (name) =>
-      `Bekijk alle EU-landen en schakel snel naar een ander land. Huidig land: ${name}.`,
-    openMap: "Open interactieve kaart",
-    openMapAria: "Open interactieve kaart",
-    goTo: (name) => `Ga naar ${name}`,
+    title: "Bekijk het volledige EU-overzicht",
+    intro: "Zie de gezamenlijke EU-schuld en open de interactieve kaart.",
+    openMap: "Open EU-overzicht",
+    openMapAria: "Open EU-overzicht",
   },
   de: {
-    title: "Karte erkunden",
-    intro: (name) =>
-      `Alle EU-Länder anzeigen und schnell zu einem anderen Land wechseln. Aktuelles Land: ${name}.`,
-    openMap: "Interaktive Karte öffnen",
-    openMapAria: "Interaktive Karte öffnen",
-    goTo: (name) => `Zu ${name} wechseln`,
+    title: "Vollständigen EU-Überblick anzeigen",
+    intro: "Sieh dir die gesamte EU-Schuldenschätzung an und öffne die interaktive Karte.",
+    openMap: "EU-Überblick öffnen",
+    openMapAria: "EU-Überblick öffnen",
   },
   fr: {
-    title: "Explorer la carte",
-    intro: (name) =>
-      `Voir tous les pays de l’Union européenne et passer rapidement à un autre pays. Pays actuel : ${name}.`,
-    openMap: "Ouvrir la carte interactive",
-    openMapAria: "Ouvrir la carte interactive",
-    goTo: (name) => `Aller vers ${name}`,
+    title: "Voir la vue d’ensemble de l’UE",
+    intro: "Consultez l’estimation totale de la dette de l’UE et ouvrez la carte interactive.",
+    openMap: "Ouvrir la vue d’ensemble UE",
+    openMapAria: "Ouvrir la vue d’ensemble UE",
   },
 };
 
-export default function MapCTA({ code, name, lang = "en" }) {
+export default function MapCTA({ lang = "en" }) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = TEXT[effLang] || TEXT.en;
 
-  // taal-root: '' (en), '/nl', '/de', '/fr'
   const base = effLang && effLang !== "en" ? `/${effLang}` : "";
 
-  // prev/next alfabetisch op bestaande basislijst
-  const baseList = Array.isArray(countries) ? [...countries] : [];
-  baseList.sort((a, b) => a.name.localeCompare(b.name));
-
-  const want = String(code || "").toLowerCase();
-  const idx = baseList.findIndex(
-    (c) => String(c.code).toLowerCase() === want
-  );
-
-  const prev =
-    idx >= 0 ? baseList[(idx - 1 + baseList.length) % baseList.length] : null;
-  const next = idx >= 0 ? baseList[(idx + 1) % baseList.length] : null;
-
-  // Gebruik gelokaliseerde landnamen voor zichtbare UI
-  const prevName = prev ? countryName(prev.code, effLang) : "";
-  const nextName = next ? countryName(next.code, effLang) : "";
-
-  const btnStyle = {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 40,
-    borderRadius: 12,
-    paddingInline: 14,
-    whiteSpace: "nowrap",
-    marginRight: 12,
-    marginBottom: 12,
-  };
-
   return (
-    <div className="card" style={{ padding: 12 }}>
-      <h3 className="text-base font-semibold mb-2">{t.title}</h3>
+    <section
+      aria-label={t.title}
+      style={{
+        padding: "8px 0 0",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gap: 8,
+          justifyItems: "start",
+        }}
+      >
+        <h3
+          style={{
+            margin: 0,
+            fontSize: "1rem",
+            fontWeight: 700,
+            color: "var(--fg)",
+          }}
+        >
+          {t.title}
+        </h3>
 
-      <p className="text-sm text-slate-300">
-        {t.intro(name)}
-      </p>
+        <p
+          style={{
+            margin: 0,
+            color: "rgb(71,85,105)",
+            fontSize: 14,
+            lineHeight: 1.6,
+          }}
+        >
+          {t.intro}
+        </p>
 
-      <div style={{ marginTop: 12 }}>
-        <div>
-          <Link
-            className="btn"
-            href={`${base}/#map`}
-            aria-label={t.openMapAria}
-            style={btnStyle}
-            title={t.openMapAria}
-          >
-            {t.openMap}
-          </Link>
-        </div>
-
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-          {prev && (
-            <Link
-              className="btn"
-              href={`${base}/country/${String(prev.code).toLowerCase()}`}
-              prefetch
-              aria-label={t.goTo(prevName)}
-              title={prevName}
-              style={btnStyle}
-            >
-              ← {prevName}
-            </Link>
-          )}
-
-          {next && (
-            <Link
-              className="btn"
-              href={`${base}/country/${String(next.code).toLowerCase()}`}
-              prefetch
-              aria-label={t.goTo(nextName)}
-              title={nextName}
-              style={btnStyle}
-            >
-              {nextName} →
-            </Link>
-          )}
-        </div>
+        <Link
+          className="btn"
+          href={base || "/"}
+          aria-label={t.openMapAria}
+          title={t.openMapAria}
+          prefetch
+        >
+          {t.openMap}
+        </Link>
       </div>
-    </div>
+    </section>
   );
 }

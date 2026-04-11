@@ -6,25 +6,25 @@ import { countryName } from "@/lib/countries";
 
 const TEXT = {
   en: {
-    title: "Explore more countries",
+    title: "Compare with",
     home: "EU overview",
     openCountry: (name) => `Open ${name}`,
     openOverview: "Open EU overview",
   },
   nl: {
-    title: "Ontdek meer landen",
+    title: "Vergelijk met",
     home: "EU-overzicht",
     openCountry: (name) => `Open ${name}`,
     openOverview: "Open EU-overzicht",
   },
   de: {
-    title: "Mehr Länder entdecken",
+    title: "Vergleiche mit",
     home: "EU-Überblick",
     openCountry: (name) => `${name} öffnen`,
     openOverview: "EU-Überblick öffnen",
   },
   fr: {
-    title: "Explorer d’autres pays",
+    title: "Comparer avec",
     home: "Vue d’ensemble UE",
     openCountry: (name) => `Ouvrir ${name}`,
     openOverview: "Ouvrir la vue d’ensemble UE",
@@ -82,7 +82,7 @@ export default function CountryExploreStrip({ code, lang = "en" }) {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 36,
+    minHeight: 38,
     padding: "8px 12px",
     borderRadius: 999,
     border: "1px solid rgba(15,23,42,0.10)",
@@ -99,20 +99,18 @@ export default function CountryExploreStrip({ code, lang = "en" }) {
     <nav
       aria-label={t.title}
       style={{
-        marginTop: 12,
+        marginTop: 14,
         width: "100%",
-        border: "1px solid rgba(15,23,42,0.08)",
-        background: "rgba(241,245,249,0.65)",
-        borderRadius: 14,
-        padding: 12,
       }}
     >
       <div
         style={{
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: 700,
-          color: "#334155",
-          marginBottom: 10,
+          color: "#64748b",
+          marginBottom: 8,
+          textTransform: "uppercase",
+          letterSpacing: "0.04em",
         }}
       >
         {t.title}
@@ -132,19 +130,15 @@ export default function CountryExploreStrip({ code, lang = "en" }) {
           href={base || "/"}
           aria-label={t.openOverview}
           title={t.home}
-          style={{
-            ...chipStyle,
-            background: "#eef2ff",
-            border: "1px solid #c7d2fe",
-            color: "#1d4ed8",
-          }}
+          style={chipStyle}
         >
           {t.home}
         </Link>
 
         {visible.map((country) => {
           const href = `${base}/country/${String(country.code).toLowerCase()}`;
-          const name = countryName(country.code, effLang) || country.name || country.code;
+          const name =
+            countryName(country.code, effLang) || country.name || country.code;
 
           return (
             <Link
