@@ -4,84 +4,121 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const OUT_FILE = path.join(process.cwd(), "lib", "eurostat.gen.js");
+const OUT_FILE = path.join(process.cwd(), "lib", "eurostat.debt.gen.js");
 
 // EU-27 (Eurostat gebruikt EL i.p.v. GR)
 const EU27 = [
   "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT",
   "LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"
 ];
+
 const euroGeo = (code) => (code === "GR" ? "EL" : code);
 
 // Einde-van-kwartaal in UTC voor "YYYYQX"
 const qEndDate = (timeStr) => {
   const m = /^(\d{4})Q([1-4])$/.exec(timeStr || "");
-  if (!m) return new Date();
-  const y = +m[1], q = +m[2];
-  const end = {1:[2,31],2:[5,30],3:[8,30],4:[11,31]}; // 0-based months
+  if (!m) return null;
+  const y = +m[1];
+  const q = +m[2];
+  const end = {
+    1: [2, 31],
+    2: [5, 30],
+    3: [8, 30],
+    4: [11, 31],
+  }; // 0-based months
   const [mo, d] = end[q];
   return new Date(Date.UTC(y, mo, d, 23, 59, 59));
 };
 
 // Helpers voor JSON-stat
 const orderFromIndex = (indexMap) =>
-  Object.entries(indexMap).sort((a,b)=>a[1]-b[1]).map(([k])=>k);
+  Object.entries(indexMap)
+    .sort((a, b) => a[1] - b[1])
+    .map(([k]) => k);
 
 // We vragen ruimer op (laatste 8 kwartalen)
-// zodat we per land altijd 2 *verschillende* kwartalen kunnen kiezen.
+// zodat we per land altijd 2 verschillende kwartalen kunnen kiezen.
 const buildUrl = () => {
-  const base = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt";
-  const fixed = "lang=EN&format=JSON&freq=Q&sector=S13&na_item=GD&unit=MIO_EUR&lastTimePeriod=8";
-  const geos = EU27.map(c => "geo=" + euroGeo(c)).join("&");
+  const base =
+    "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt";
+  const fixed =
+    "lang=EN&format=JSON&freq=Q&sector=S13&na_item=GD&unit=MIO_EUR&lastTimePeriod=8";
+  const geos = EU27.map((c) => "geo=" + euroGeo(c)).join("&");
   return `${base}?${fixed}&${geos}`;
 };
 
 async function main() {
   const url = buildUrl();
   console.log("[fetch-eurostat] GET", url);
-  const res = await fetch(url, { headers: { accept: "application/json" } });
-  if (!res.ok) throw new Error(`Eurostat fetch failed: ${res.status} ${res.statusText}`);
+
+  const res = await fetch(url, {
+    headers: { accept: "application/json" },
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Eurostat fetch failed: ${res.status} ${res.statusText}`
+    );
+  }
+
   const data = await res.json();
 
-  const ids  = data.id || data.dataset?.id;
+  const ids = data.id || data.dataset?.id;
   const size = data.size || data.dataset?.size;
-  const dim  = data.dimension || data.dataset?.dimension;
-  if (!ids || !size || !dim) throw new Error("Unexpected JSON-stat format");
+  const dim = data.dimension || data.dataset?.dimension;
 
-  const idxGeo  = ids.indexOf("geo");
+  if (!ids || !size || !dim) {
+    throw new Error("Unexpected JSON-stat format");
+  }
+
+  const idxGeo = ids.indexOf("geo");
   const idxTime = ids.indexOf("time");
-  if (idxGeo === -1 || idxTime === -1) throw new Error("geo/time dimension missing");
 
-  const geoKeys  = orderFromIndex(dim.geo.category.index);
+  if (idxGeo === -1 || idxTime === -1) {
+    throw new Error("geo/time dimension missing");
+  }
+
+  const geoKeys = orderFromIndex(dim.geo.category.index);
   const timeKeys = orderFromIndex(dim.time.category.index); // oud -> nieuw
 
   // strides voor platte index
   const strides = [];
   let acc = 1;
-  for (let i = ids.length - 1; i >= 0; i--) { strides[i] = acc; acc *= size[i]; }
+  for (let i = ids.length - 1; i >= 0; i--) {
+    strides[i] = acc;
+    acc *= size[i];
+  }
+
   const at = (coords) => {
     let flat = 0;
-    for (let i = 0; i < coords.length; i++) flat += coords[i] * strides[i];
+    for (let i = 0; i < coords.length; i++) {
+      flat += coords[i] * strides[i];
+    }
     return data.value[flat] ?? null;
   };
 
   const out = {};
+
   for (let g = 0; g < geoKeys.length; g++) {
     const eg = geoKeys[g];
     const appCode = eg === "EL" ? "GR" : eg;
+
     if (!EU27.includes(appCode)) continue;
 
     const coords = new Array(ids.length).fill(0);
     coords[idxGeo] = g;
 
-    // Zoek vanaf het nieuwste kwartaal terug naar de laatste 2 met waarde (en verschillend)
-    let lastKey = null, lastVal = null;
-    let prevKey = null, prevVal = null;
+    // Zoek vanaf het nieuwste kwartaal terug naar de laatste 2 met waarde
+    let lastKey = null;
+    let lastVal = null;
+    let prevKey = null;
+    let prevVal = null;
 
     for (let t = timeKeys.length - 1; t >= 0; t--) {
       coords[idxTime] = t;
       const v = at(coords); // miljoenen €
       if (v == null) continue;
+
       if (lastKey === null) {
         lastKey = timeKeys[t];
         lastVal = v;
@@ -92,51 +129,63 @@ async function main() {
       }
     }
 
-    if (lastKey === null) continue; // geen data
-    if (prevKey === null) { // slechts één periode → flat
+    if (lastKey === null) continue;
+
+    // Slechts één periode beschikbaar
+    if (prevKey === null) {
       prevKey = lastKey;
       prevVal = lastVal;
     }
 
     const currEUR = lastVal * 1_000_000;
     const prevEUR = prevVal * 1_000_000;
+
     const currDate = qEndDate(lastKey);
     const prevDate = qEndDate(prevKey);
 
-    const seconds = Math.max(1, Math.floor((currDate - prevDate) / 1000));
-    const delta   = currEUR - prevEUR;
+    const seconds =
+      currDate && prevDate
+        ? Math.max(1, Math.floor((currDate - prevDate) / 1000))
+        : 1;
+
+    const delta = currEUR - prevEUR;
     const perSecond = delta / seconds;
-    const trend = Math.abs(delta) < 1 ? "flat" : (delta > 0 ? "rising" : "falling");
+    const trend =
+      Math.abs(delta) < 1 ? "flat" : delta > 0 ? "rising" : "falling";
 
     out[appCode] = {
       latestTime: lastKey,
       previousTime: prevKey,
       startValue: prevEUR,
       endValue: currEUR,
-      startDateISO: prevDate.toISOString(),
-      endDateISO: currDate.toISOString(),
+      startDateISO: prevDate ? prevDate.toISOString() : null,
+      endDateISO: currDate ? currDate.toISOString() : null,
       perSecond,
-      trend
+      trend,
     };
   }
 
-  const file =
-`// Auto-generated by scripts/fetch-eurostat.js
+  const file = `// Auto-generated by scripts/fetch-eurostat.js
 export const EUROSTAT_UPDATED_AT = ${JSON.stringify(new Date().toISOString())};
 export const EUROSTAT_SERIES = ${JSON.stringify(out, null, 2)};
 `;
+
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, file, "utf8");
-  console.log(`[fetch-eurostat] wrote ${OUT_FILE} with ${Object.keys(out).length} countries`);
+
+  console.log(
+    `[fetch-eurostat] wrote ${OUT_FILE} with ${Object.keys(out).length} countries`
+  );
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error("[fetch-eurostat] ERROR", err);
-  const fallback =
-`export const EUROSTAT_UPDATED_AT = null;
+
+  const fallback = `export const EUROSTAT_UPDATED_AT = null;
 export const EUROSTAT_SERIES = {};
 `;
-  fs.mkdirSync(path.join(process.cwd(),"lib"), { recursive: true });
+
+  fs.mkdirSync(path.join(process.cwd(), "lib"), { recursive: true });
   fs.writeFileSync(OUT_FILE, fallback, "utf8");
   process.exit(0);
 });
