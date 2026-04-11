@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
-// Let op de import pad: we verwijzen nu naar de component in de bovenliggende map
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
@@ -14,21 +13,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const code = params.code?.toUpperCase() || "";
-  // We forceren hier 'de' omdat we in de Duitse map zitten
   const lang = "de";
   const name = countryName(code, lang);
 
   const base = "https://www.eudebtmap.com";
-  // Basis pad zonder taal prefix voor canonicals
   const path = `/country/${code.toLowerCase()}`;
 
-  // --- AANPASSING VOOR SEO: Schuldenuhr ---
-  // Dit is wat Google leest voor de blauwe link in de zoekresultaten
-  const title = `${name} Schuldenuhr: Aktuelle Staatsverschuldung (Live) | EU Debt Map`;
-  const desc = `Verfolge die offizielle Schuldenuhr von ${name} live. Aktuelle Staatsverschuldung, Pro-Kopf-Verschuldung und BIP-Verhältnis in Echtzeit.`;
+  const title = `${name} Schuldenuhr (live) | EU Debt Map`;
+  const desc = `Verfolge die Staatsverschuldung von ${name} live mit einer aktuellen Schätzung auf Basis von Eurostat. Inklusive Schuldenstand und BIP-Verhältnis.`;
 
   return {
-    title: title,
+    title,
     description: desc,
     alternates: {
       canonical: `${base}${withLocale(path, "de")}`,
@@ -41,7 +36,7 @@ export async function generateMetadata({ params }) {
       },
     },
     openGraph: {
-      title: title,
+      title,
       description: desc,
       url: `${base}${withLocale(path, lang)}`,
       type: "website",
@@ -50,7 +45,7 @@ export async function generateMetadata({ params }) {
           url: `${base}/og/country-${code.toLowerCase()}.png`,
           width: 1200,
           height: 630,
-          alt: `${name} Schuldenuhr Live`,
+          alt: `${name} Schuldenuhr live`,
         },
         {
           url: `${base}/og/eu-debt-map.jpg`,
@@ -66,7 +61,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// BELANGRIJK: Force dynamic om de live data fetch te laten werken
 export const dynamic = "force-dynamic";
 
 export default async function CountryPageDE({ params: { code } }) {
@@ -76,7 +70,6 @@ export default async function CountryPageDE({ params: { code } }) {
   );
   if (!country) return notFound();
 
-  // 1. Haal LIVE de correcte GDP data op (Quarterly Run Rate), net als in de Engelse versie
   const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
   const lang = "de";
@@ -89,7 +82,6 @@ export default async function CountryPageDE({ params: { code } }) {
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
-          // 2. Geef data door aan SSR, zodat Google en gebruiker direct Q3 2025 zien
           gdpAbs={valueEUR}
           gdpPeriod={period}
         />

@@ -64,9 +64,10 @@ const AD_LABELS = {
 };
 
 function pageTitleFor(lang, name) {
-  if (lang === "de") return `Schuldenuhr ${name}: Live`;
-  if (lang === "fr") return `Dette publique ${name} : compteur en direct`;
-  return name;
+  if (lang === "nl") return `Staatsschuld ${name} (live)`;
+  if (lang === "de") return `${name} Schuldenuhr (live)`;
+  if (lang === "fr") return `Dette publique ${name} (en direct)`;
+  return `${name} public debt (live)`;
 }
 
 // Kleine client cache voor GDP-API

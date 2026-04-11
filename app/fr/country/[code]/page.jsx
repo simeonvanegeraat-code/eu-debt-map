@@ -18,13 +18,12 @@ export async function generateMetadata({ params }) {
     (x) => String(x.code).toLowerCase() === code
   );
 
-  // Gebruik de gelokaliseerde Franse landnaam i.p.v. de Engelse naam uit lib/data
   const name = countryName(code.toUpperCase(), "fr") || c?.name || code.toUpperCase();
   const url = `${SITE}/fr/country/${code}`;
 
   return {
-    title: `Dette publique ${name} (compteur en direct) • EU Debt Map`,
-    description: `Estimation en direct de la dette publique ${name} (€/s), basée sur les deux dernières références Eurostat.`,
+    title: `Dette publique ${name} (en direct) | EU Debt Map`,
+    description: `Suivez la dette publique de ${name} en direct avec une estimation actuelle basée sur Eurostat. Inclut le niveau de dette et le ratio dette/PIB.`,
     alternates: {
       canonical: url,
       languages: {

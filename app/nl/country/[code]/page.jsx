@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
+import { countryName } from "@/lib/countries";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -13,13 +14,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const code = String(params.code).toLowerCase();
-  const c = (Array.isArray(countries) ? countries : []).find(x => String(x.code).toLowerCase() === code);
-  const name = c?.name || code.toUpperCase();
+  const name = countryName(code.toUpperCase(), "nl") || code.toUpperCase();
   const url = `${SITE}/nl/country/${code}`;
 
   return {
-    title: `Staatsschuld ${name} (live teller) • EU Debt Map`,
-    description: `Bekijk de actuele (geschatte) staatsschuld van ${name} met een live teller in euro per seconde. Gebaseerd op Eurostat.`,
+    title: `Staatsschuld ${name} (live) | EU Debt Map`,
+    description: `Bekijk de staatsschuld van ${name} live met een actuele schatting op basis van Eurostat. Inclusief schuldniveau en bbp-verhouding.`,
     alternates: {
       canonical: url,
       languages: {
@@ -44,7 +44,11 @@ export default function CountryPageNL({ params: { code } }) {
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
       <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient country={country} lang="nl" introSlot={<CountryIntro country={country} lang="nl" />} />
+        <CountryClient
+          country={country}
+          lang="nl"
+          introSlot={<CountryIntro country={country} lang="nl" />}
+        />
       </section>
     </main>
   );

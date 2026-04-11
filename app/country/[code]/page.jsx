@@ -3,7 +3,7 @@ import { countries } from "@/lib/data";
 import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
-import { getLocaleFromPathname, withLocale } from "@/lib/locale";
+import { withLocale } from "@/lib/locale";
 import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live";
 
 export async function generateStaticParams() {
@@ -13,28 +13,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const code = params.code?.toUpperCase() || "";
-  const lang = getLocaleFromPathname?.() || "en";
+  const lang = "en";
   const name = countryName(code, lang);
 
   const base = "https://www.eudebtmap.com";
   const path = `/country/${code.toLowerCase()}`;
 
-  const titleMap = {
-    en: `${name} public debt & GDP ratio (live) | EU Debt Map`,
-    nl: `${name} staatsschuld & bbp-verhouding (live) | EU Debt Map`,
-    de: `${name} Staatsverschuldung & BIP-Verhältnis (live) | EU Debt Map`,
-    fr: `${name} dette publique & ratio PIB (en direct) | EU Debt Map`,
-  };
-  const descMap = {
-    en: `Track ${name}’s estimated public debt and debt-to-GDP ratio, updated live from Eurostat.`,
-    nl: `Bekijk de geschatte staatsschuld van ${name} en de schuld-/bbp-verhouding, live bijgewerkt via Eurostat.`,
-    de: `Verfolge die geschätzte Staatsverschuldung von ${name} und das Schulden-zu-BIP-Verhältnis, live von Eurostat.`,
-    fr: `Suivez la dette publique estimée de ${name} et son ratio dette/PIB, mis à jour en direct à partir d’Eurostat.`,
-  };
+  const title = `${name} public debt (live) | EU Debt Map`;
+  const description = `Track ${name} public debt live with a real-time estimate based on Eurostat data. See debt levels, GDP ratio, and country details.`;
 
   return {
-    title: titleMap[lang] || titleMap.en,
-    description: descMap[lang] || descMap.en,
+    title,
+    description,
     alternates: {
       canonical: `${base}${path}`,
       languages: {
@@ -46,9 +36,9 @@ export async function generateMetadata({ params }) {
       },
     },
     openGraph: {
-      title: titleMap[lang] || titleMap.en,
-      description: descMap[lang] || descMap.en,
-      url: `${base}${withLocale(path, lang)}`,
+      title,
+      description,
+      url: `${base}${withLocale(path, "")}`,
       type: "website",
       images: [
         {
@@ -71,10 +61,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// AANPASSING 1: Snelheid (LCP)
-// In plaats van 'force-dynamic' (traag), gebruiken we ISR.
-// De pagina wordt elke 3600 seconden (1 uur) op de achtergrond ververst met nieuwe Eurostat data.
-export const revalidate = 3600; 
+export const revalidate = 3600;
 
 export default async function CountryPage({ params: { code } }) {
   const want = String(code).toLowerCase();
@@ -83,18 +70,13 @@ export default async function CountryPage({ params: { code } }) {
   );
   if (!country) return notFound();
 
-  // Haal data op (dit gebeurt nu 1x per uur op de server, supersnel voor de bezoeker)
   const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
-  const rawLang = getLocaleFromPathname?.() || "en";
-  const lang = ["en", "nl", "de", "fr"].includes(rawLang) ? rawLang : "en";
+  const lang = "en";
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* AANPASSING 2: Stabiliteit (CLS)
-          minHeight toegevoegd zodat de footer niet verspringt tijdens het laden. 
-      */}
       <section className="card" style={{ gridColumn: "1 / -1", minHeight: "600px" }}>
         <CountryClient
           country={localizedCountry}
