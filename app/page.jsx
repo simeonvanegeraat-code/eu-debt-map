@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor } from "@/lib/data";
+import { countries, trendFor, livePerSecondFor } from "@/lib/data";
 
 // Kaart & Ticker client-only (ssr:false) => geen hydration mismatch
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
@@ -65,17 +65,9 @@ function formatEUR(v) {
   return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v));
 }
 
-// Bepaal groei per seconde voor een land
+// Gedeelde live-rate bron uit lib/data
 function perSecondForCountry(c) {
-  if (!c) return 0;
-  if (typeof c.per_second === "number") return c.per_second;
-
-  const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
-  if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
-    return delta / c.seconds_between;
-  }
-  const approxSeconds = 90 * 24 * 60 * 60; // ~90 dagen tussen kwartalen
-  return delta / approxSeconds;
+  return livePerSecondFor(c);
 }
 
 export default function HomePage() {
@@ -99,8 +91,6 @@ export default function HomePage() {
 
   const topArticles = listArticles({ lang: "en" }).slice(0, 3);
 
-  // Toegevoegd: extra CSS regels (.hero-lede, .tag, .card-content) om te forceren dat elementen 
-  // niet naast advertenties gaan drijven (clearing floats) en breedte behouden.
   const responsiveCss = `
     .ql-articles{
       display:grid;
@@ -116,18 +106,16 @@ export default function HomePage() {
        width: 100%;
        max-width: 760px;
        display: block;
-       clear: both; /* Voorkomt dat tekst naast een zwevende advertentie gepropt wordt */
+       clear: both;
     }
     .card-content-wrapper {
        width: 100%;
        display: flex;
        flex-direction: column;
-       /* Zorgt dat padding overal consistent is binnen de card */
        box-sizing: border-box; 
     }
   `;
 
-  // --- JSON-LD (Website + Organization) ---
   const websiteLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -144,7 +132,6 @@ export default function HomePage() {
     sameAs: ["https://www.eudebtmap.com/"],
   };
 
-  // Extra: FAQ schema (non-breaking SEO enhancement)
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -170,14 +157,13 @@ export default function HomePage() {
     ]
   };
 
-  // Light-styles
   const s = {
     mapFooter: {
       marginTop: 12,
       border: "1px solid var(--border)",
       borderRadius: 12,
       padding: 12,
-      background: "#f9fafb", // subtiel subpaneel
+      background: "#f9fafb",
       boxShadow: "var(--shadow-sm)",
     },
     legend: { fontSize: 14, lineHeight: 1.5, color: "var(--fg)" },
@@ -218,22 +204,19 @@ export default function HomePage() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      {/* === HERO === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
-        {/* Wrapper om content bij elkaar te houden als er advertenties in de <section> worden geïnjecteerd */}
         <div className="card-content-wrapper">
           <header style={{ maxWidth: 760, width: "100%" }}>
             <h1
               id="page-title"
               className="hero-title"
               style={{
-                fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)", // iets kleinere max op mobiel
-                background: "linear-gradient(90deg, #2563eb, #00875a)", // donkerder groen voor contrast
+                fontSize: "clamp(1.8rem, 4vw + 1rem, 3rem)",
+                background: "linear-gradient(90deg, #2563eb, #00875a)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 marginBottom: 8,
@@ -244,7 +227,6 @@ export default function HomePage() {
               Live EU Government Debt Map
             </h1>
 
-            {/* Korte intro met semibold eerste zin */}
             <p className="hero-lede" style={{ maxWidth: 760 }}>
               <span style={{ fontWeight: 600 }}>
                 If you added together every euro of public debt from all 27 EU countries, you’d get the number shown below, a live, ticking estimate that never stands still.
@@ -252,13 +234,10 @@ export default function HomePage() {
             </p>
           </header>
 
-          {/* EU-27 Total (live) – direct onder de intro */}
-          {/* clear:both zorgt dat hij onder eventuele zwevende ads komt, width:100% forceert blok */}
           <div style={{ marginTop: 16, width: "100%", clear: "both" }}>
             <EUTotalTicker />
           </div>
 
-          {/* Uitlegblok onder de teller */}
           <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
             The EU Debt Map visualizes the combined national debts of the European Union in real time.
             Each country’s most recent Eurostat data point is used as a baseline, then projected second by
@@ -268,7 +247,6 @@ export default function HomePage() {
             this map translates complex fiscal data into an intuitive visual that updates every second.
           </p>
 
-          {/* Bronregel onder de uitleg */}
           <p
             className="tag"
             style={{
@@ -283,7 +261,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === MAP === */}
       <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }}>
         <div className="card-content-wrapper">
           <h2 style={{ marginTop: 4 }}>EU overview</h2>
@@ -292,7 +269,6 @@ export default function HomePage() {
             <EuropeMap />
           </div>
 
-          {/* Legend + CTA (subpaneel) */}
           <div role="note" aria-label="Map legend and action" style={s.mapFooter}>
             <div style={s.legend}>
               <strong>Legend:</strong>
@@ -311,7 +287,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Korte uitleg onder de kaart (SEO) */}
           <div className="tag" style={{ marginTop: 6, lineHeight: 1.7 }}>
             <h3 style={{ margin: "8px 0" }}>EU debt explained in simple terms</h3>
             <p style={{ margin: 0 }}>
@@ -321,9 +296,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === HIGHLIGHTS === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        {/* Wrapper added here too for consistency and ad-protection */}
         <div className="card-content-wrapper">
             <h2 style={{ marginTop: 0 }}>Highlights</h2>
 
@@ -367,14 +340,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === QUICK LIST + LATEST ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
-        {/* Quick List: Wrapped in card section + card-content-wrapper for consistent padding */}
         <section className="card section">
             <div className="card-content-wrapper">
                 <QuickList
                     items={quickItems}
-                    initialCount={quickItems.length} // toon alles standaard
+                    initialCount={quickItems.length}
                     strings={{
                     title: "Quick list",
                     showAll: "Show all",
@@ -388,7 +359,6 @@ export default function HomePage() {
             </div>
         </section>
 
-        {/* Latest Articles: Wrapped content in card-content-wrapper to fix padding issues */}
         <section className="card section" style={{ alignContent: "start" }}>
           <div className="card-content-wrapper">
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
@@ -406,7 +376,6 @@ export default function HomePage() {
         </section>
       </section>
 
-      {/* Mini-FAQ (extra SEO) */}
       <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="faq-title">
         <div className="card-content-wrapper">
           <h2 id="faq-title" style={{ marginTop: 0 }}>FAQ: EU government debt</h2>

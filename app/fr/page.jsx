@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor } from "@/lib/data";
+import { countries, trendFor, livePerSecondFor } from "@/lib/data";
 
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
@@ -48,15 +48,7 @@ export async function generateMetadata() {
 }
 
 function perSecondForCountry(c) {
-  if (!c) return 0;
-  if (typeof c.per_second === "number") return c.per_second;
-
-  const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
-  if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
-    return delta / c.seconds_between;
-  }
-  const approxSeconds = 90 * 24 * 60 * 60;
-  return delta / approxSeconds;
+  return livePerSecondFor(c);
 }
 
 export default function HomePageFR() {
@@ -72,7 +64,6 @@ export default function HomePageFR() {
     trend: trendFor(c),
   }));
 
-  // ARTIKEL FRANS
   const topArticles = listArticles({ lang: "fr" }).slice(0, 3);
 
   const responsiveCss = `
@@ -145,8 +136,6 @@ export default function HomePageFR() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      
-      {/* === HERO === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
           <header style={{ maxWidth: 760, width: "100%" }}>
@@ -188,7 +177,6 @@ export default function HomePageFR() {
         </div>
       </section>
 
-      {/* === MAP === */}
       <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }}>
         <div className="card-content-wrapper">
           <h2 style={{ marginTop: 4 }}>Aperçu UE</h2>
@@ -223,7 +211,6 @@ export default function HomePageFR() {
         </div>
       </section>
 
-      {/* === HIGHLIGHTS === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
           <h2 style={{ marginTop: 0 }}>Faits marquants</h2>
@@ -256,7 +243,6 @@ export default function HomePageFR() {
         </div>
       </section>
 
-      {/* === QUICK LIST + ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
         <section className="card section">
             <div className="card-content-wrapper">
@@ -292,7 +278,6 @@ export default function HomePageFR() {
         </section>
       </section>
 
-      {/* === FAQ === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
             <h2 style={{ marginTop: 0 }}>FAQ : Dette publique UE</h2>

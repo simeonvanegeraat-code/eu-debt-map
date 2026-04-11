@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor } from "@/lib/data";
+import { countries, trendFor, livePerSecondFor } from "@/lib/data";
 
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
@@ -53,15 +53,7 @@ export async function generateMetadata() {
 }
 
 function perSecondForCountry(c) {
-  if (!c) return 0;
-  if (typeof c.per_second === "number") return c.per_second;
-
-  const delta = (c.last_value_eur ?? 0) - (c.prev_value_eur ?? 0);
-  if (typeof c.seconds_between === "number" && c.seconds_between > 0) {
-    return delta / c.seconds_between;
-  }
-  const approxSeconds = 90 * 24 * 60 * 60;
-  return delta / approxSeconds;
+  return livePerSecondFor(c);
 }
 
 export default function HomePageNL() {
@@ -72,12 +64,11 @@ export default function HomePageNL() {
 
   const quickItems = valid.map((c) => ({
     code: c.code,
-    name: c.name, // Zorg dat je data eventueel NL namen heeft, anders blijft dit Engels
+    name: c.name,
     flag: c.flag,
     trend: trendFor(c),
   }));
 
-  // LET OP: articles laden voor NL
   const topArticles = listArticles({ lang: "nl" }).slice(0, 3);
 
   const responsiveCss = `
@@ -150,9 +141,6 @@ export default function HomePageNL() {
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
-      {/* JSON-LD mag hier eventueel ook vertaald, maar Engels is vaak standaard voor Schema.org */}
-      
-      {/* === HERO === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
           <header style={{ maxWidth: 760, width: "100%" }}>
@@ -194,7 +182,6 @@ export default function HomePageNL() {
         </div>
       </section>
 
-      {/* === MAP === */}
       <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }}>
         <div className="card-content-wrapper">
           <h2 style={{ marginTop: 4 }}>EU overzicht</h2>
@@ -229,7 +216,6 @@ export default function HomePageNL() {
         </div>
       </section>
 
-      {/* === HIGHLIGHTS === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
           <h2 style={{ marginTop: 0 }}>Hoogtepunten</h2>
@@ -262,7 +248,6 @@ export default function HomePageNL() {
         </div>
       </section>
 
-      {/* === QUICK LIST + ARTICLES === */}
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
         <section className="card section">
             <div className="card-content-wrapper">
@@ -298,7 +283,6 @@ export default function HomePageNL() {
         </section>
       </section>
 
-      {/* === FAQ === */}
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
             <h2 style={{ marginTop: 0 }}>FAQ: EU overheidsschuld</h2>
