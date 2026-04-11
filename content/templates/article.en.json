@@ -13,19 +13,6 @@
   "image": "/images/articles/placeholder.jpg",
   "imageAlt": "Describe the image for accessibility",
   "lang": "en",
-  "body": "<h2>Intro</h2><p>Write your article body as HTML or minimal markup here.</p>"
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste the raw AdSense script into the body.",
+  "body": "<h2>Intro</h2><p>Write the first part of your article body as HTML or minimal markup here.</p><h2>Main section</h2><p>Continue the article here.</p><!-- MID_ARTICLE_AD --><h2>Final section</h2><p>Finish the article here.</p>"
 }
-
-Voeg in het artikel half in de ad toe. 
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9252617114074571"
-     data-ad-slot="8569800942"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
