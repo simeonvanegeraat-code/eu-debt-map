@@ -1,4 +1,3 @@
-// app/articles/[slug]/page.jsx
 export const runtime = "nodejs";
 
 import { getArticle, getTranslations } from "@/lib/articles";
@@ -6,6 +5,7 @@ import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
+import InArticleAd from "@/components/InArticleAd";
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "en";
@@ -19,11 +19,11 @@ export async function generateMetadata({ params }) {
   const url = `${SITE}${prefix}/articles/${slug}`;
 
   if (!a) {
-    return { 
-      title: "Article • EU Debt Map", 
-      alternates: { canonical: url }, 
+    return {
+      title: "Article • EU Debt Map",
+      alternates: { canonical: url },
       openGraph: { url },
-      robots: { index: false }
+      robots: { index: false },
     };
   }
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }) {
   languages["x-default"] = languages.en || url;
 
   const og = articleOgImage(a);
-  
+
   return {
     title: `${a.title} • EU Debt Map`,
     description: a.summary,
@@ -82,7 +82,7 @@ export default function ArticleDetailPage({ params }) {
   if (!article) return notFound();
 
   const url = `${SITE}${prefix}/articles/${params.slug}`;
-  
+
   const publishDate = article.datePublished || article.date;
   const modifyDate = article.dateModified || publishDate;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
@@ -95,16 +95,22 @@ export default function ArticleDetailPage({ params }) {
 
   const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
 
-  // --- PREMIUM EDITORIAL STYLING ---
+  const rawBody = article.body || "";
+  const adMarker = "<!-- MID_ARTICLE_AD -->";
+  const adIndex = rawBody.indexOf(adMarker);
+  const hasMidArticleAd = adIndex >= 0;
+  const bodyBeforeAd = hasMidArticleAd ? rawBody.slice(0, adIndex) : rawBody;
+  const bodyAfterAd = hasMidArticleAd
+    ? rawBody.slice(adIndex + adMarker.length)
+    : "";
+
   const css = `
-    /* Layout Container */
     .article-container {
-      max-width: 740px; /* Optimale leesbreedte */
+      max-width: 740px;
       margin: 0 auto;
       padding: 0 16px;
     }
 
-    /* Typography Hierarchy */
     .pageTitle {
       margin: 1rem 0 0.5rem;
       line-height: 1.1;
@@ -112,19 +118,20 @@ export default function ArticleDetailPage({ params }) {
       font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
       letter-spacing: -0.02em;
       color: #111827;
-      font-family: var(--font-sans, sans-serif); /* Koppen blijven strak */
+      font-family: var(--font-sans, sans-serif);
     }
 
-    .metaRow { 
-      display: flex; 
-      gap: 12px; 
-      flex-wrap: wrap; 
+    .metaRow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       font-size: 0.85rem;
       color: #6b7280;
       margin-bottom: 24px;
       font-weight: 500;
       align-items: center;
     }
+
     .metaRow .tag {
       color: #2563eb;
       font-weight: 600;
@@ -145,7 +152,7 @@ export default function ArticleDetailPage({ params }) {
     }
 
     .heroWrap {
-      width: 100%; /* Hero mag breder */
+      width: 100%;
       max-width: 100%;
       margin: 0 0 32px 0;
       border-radius: 12px;
@@ -154,6 +161,7 @@ export default function ArticleDetailPage({ params }) {
       aspect-ratio: 16/9;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
+
     .heroWrap img {
       width: 100%;
       height: 100%;
@@ -161,19 +169,17 @@ export default function ArticleDetailPage({ params }) {
       display: block;
     }
 
-    /* THE ARTICLE BODY - "The Economist" style */
     .articleProse {
       font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-      font-size: 1.125rem; /* 18px */
+      font-size: 1.125rem;
       line-height: 1.8;
-      color: #1f2937; /* Donkergrijs, niet zwart */
+      color: #1f2937;
     }
 
     .articleProse p {
       margin-bottom: 1.5rem;
     }
 
-    /* Headings in article body */
     .articleProse h2 {
       font-family: var(--font-sans, sans-serif);
       font-size: 1.75rem;
@@ -183,6 +189,7 @@ export default function ArticleDetailPage({ params }) {
       line-height: 1.3;
       letter-spacing: -0.01em;
     }
+
     .articleProse h3 {
       font-family: var(--font-sans, sans-serif);
       font-size: 1.35rem;
@@ -191,32 +198,33 @@ export default function ArticleDetailPage({ params }) {
       margin: 2rem 0 0.75rem;
     }
 
-    /* Links */
     .articleProse a {
       color: #2563eb;
       text-decoration: underline;
       text-decoration-thickness: 1px;
       text-underline-offset: 3px;
     }
+
     .articleProse a:hover {
       color: #1d4ed8;
       text-decoration-thickness: 2px;
     }
 
-    /* Lists */
-    .articleProse ul, .articleProse ol {
+    .articleProse ul,
+    .articleProse ol {
       margin: 1.5rem 0;
       padding-left: 1.5rem;
     }
+
     .articleProse li {
       margin-bottom: 0.5rem;
       padding-left: 0.5rem;
     }
+
     .articleProse ul li::marker {
       color: #9ca3af;
     }
 
-    /* Blockquotes */
     .articleProse blockquote {
       border-left: 4px solid #2563eb;
       margin: 2rem 0;
@@ -228,19 +236,23 @@ export default function ArticleDetailPage({ params }) {
       border-radius: 0 8px 8px 0;
     }
 
-    /* Images in text */
     .articleProse figure {
-      margin: 2.5rem -16px; /* Iets breder dan tekst op mobiel */
+      margin: 2.5rem -16px;
     }
+
     @media (min-width: 640px) {
-      .articleProse figure { margin: 2.5rem 0; }
+      .articleProse figure {
+        margin: 2.5rem 0;
+      }
     }
+
     .articleProse img {
       width: 100%;
       height: auto;
       border-radius: 8px;
       display: block;
     }
+
     .articleProse figcaption {
       font-family: var(--font-sans, sans-serif);
       color: #6b7280;
@@ -250,17 +262,16 @@ export default function ArticleDetailPage({ params }) {
     }
   `;
 
-  // Author Object
   let authorObj;
   if (article.author) {
-    if (typeof article.author === 'string') {
-       authorObj = { "@type": "Person", name: article.author };
+    if (typeof article.author === "string") {
+      authorObj = { "@type": "Person", name: article.author };
     } else {
-       authorObj = { 
-         "@type": "Person", 
-         name: article.author.name, 
-         url: article.author.url 
-       };
+      authorObj = {
+        "@type": "Person",
+        name: article.author.name,
+        url: article.author.url,
+      };
     }
   } else {
     authorObj = { "@type": "Organization", name: "EU Debt Map" };
@@ -279,29 +290,38 @@ export default function ArticleDetailPage({ params }) {
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 },
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/icons/icon-512.png`,
+        width: 512,
+        height: 512,
+      },
     },
     image: candidateHero ? [`${SITE}${candidateHero}`] : undefined,
   };
 
   return (
     <main style={{ paddingBottom: 60 }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <style>{css}</style>
 
       <article className="article-container">
-        {/* Header Section */}
         <header>
           <div className="metaRow">
             {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
             <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
             {article.author && (
-               <span>by {typeof article.author === 'string' ? article.author : article.author.name}</span>
+              <span>
+                by {typeof article.author === "string" ? article.author : article.author.name}
+              </span>
             )}
           </div>
-          
+
           <h1 className="pageTitle">{article.title}</h1>
-          
+
           {article.summary && (
             <div className="summary-lead">
               {article.summary}
@@ -309,12 +329,10 @@ export default function ArticleDetailPage({ params }) {
           )}
         </header>
 
-        {/* Share buttons */}
         <div style={{ margin: "20px 0" }}>
           <ShareBar url={url} title={article.title} />
         </div>
 
-        {/* Hero Image */}
         {shouldRenderHero && (
           <figure className="heroWrap">
             <img
@@ -328,17 +346,18 @@ export default function ArticleDetailPage({ params }) {
           </figure>
         )}
 
-        {/* The Content */}
-        <div className="articleProse" dangerouslySetInnerHTML={{ __html: article.body || "" }} />
-
-        {/* Footer Area */}
-        <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
-        
-        <div style={{ marginBottom: 40 }}>
-            <ShareBar url={url} title={article.title} />
+        <div className="articleProse">
+          <div dangerouslySetInnerHTML={{ __html: bodyBeforeAd }} />
+          {hasMidArticleAd && <InArticleAd />}
+          {bodyAfterAd && <div dangerouslySetInnerHTML={{ __html: bodyAfterAd }} />}
         </div>
 
-        {/* Read More */}
+        <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
+
+        <div style={{ marginBottom: 40 }}>
+          <ShareBar url={url} title={article.title} />
+        </div>
+
         <ArticleRailServer
           lang={article.lang}
           exceptSlug={article.slug}
