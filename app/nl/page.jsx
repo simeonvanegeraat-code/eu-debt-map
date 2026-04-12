@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor, livePerSecondFor } from "@/lib/data";
+import { countries, trendFor, livePerSecondFor, interpolateDebt } from "@/lib/data";
 
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
@@ -56,6 +56,11 @@ function perSecondForCountry(c) {
   return livePerSecondFor(c);
 }
 
+function liveStartForCountry(c, atMs) {
+  if (!c) return 0;
+  return interpolateDebt(c, atMs);
+}
+
 export default function HomePageNL() {
   const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
   const largestDebt = valid.length > 0 ? valid.reduce((a, b) => (a.last_value_eur > b.last_value_eur ? a : b)) : null;
@@ -70,6 +75,7 @@ export default function HomePageNL() {
   }));
 
   const topArticles = listArticles({ lang: "nl" }).slice(0, 3);
+  const nowMs = Date.now();
 
   const responsiveCss = `
     .ql-articles{
@@ -225,7 +231,7 @@ export default function HomePageNL() {
                 label="Grootste schuld"
                 flag={largestDebt.flag}
                 name={largestDebt.name}
-                start={largestDebt.last_value_eur}
+                start={liveStartForCountry(largestDebt, nowMs)}
                 perSecond={perSecondForCountry(largestDebt)}
               />
             ) : <div className="tag">—</div>}
@@ -235,7 +241,7 @@ export default function HomePageNL() {
                 label="Snelst groeiend"
                 flag={fastestGrowing.flag}
                 name={fastestGrowing.name}
-                start={fastestGrowing.last_value_eur}
+                start={liveStartForCountry(fastestGrowing, nowMs)}
                 perSecond={perSecondForCountry(fastestGrowing)}
                 accent="var(--bad)"
               />

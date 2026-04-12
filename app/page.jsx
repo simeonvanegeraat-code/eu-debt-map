@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor, livePerSecondFor } from "@/lib/data";
+import { countries, trendFor, livePerSecondFor, interpolateDebt } from "@/lib/data";
 
 // Kaart & Ticker client-only (ssr:false) => geen hydration mismatch
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
@@ -70,6 +70,12 @@ function perSecondForCountry(c) {
   return livePerSecondFor(c);
 }
 
+// Gedeelde live startwaarde, gelijk aan country pages
+function liveStartForCountry(c, atMs) {
+  if (!c) return 0;
+  return interpolateDebt(c, atMs);
+}
+
 export default function HomePage() {
   // Alleen landen met echte waarden voor highlights/quick list
   const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
@@ -90,6 +96,9 @@ export default function HomePage() {
   }));
 
   const topArticles = listArticles({ lang: "en" }).slice(0, 3);
+
+  // Één gedeeld tijdstip zodat beide highlight-boxen op dezelfde referentie starten
+  const nowMs = Date.now();
 
   const responsiveCss = `
     .ql-articles{
@@ -313,7 +322,7 @@ export default function HomePage() {
                 label="Largest debt"
                 flag={largestDebt.flag}
                 name={largestDebt.name}
-                start={largestDebt.last_value_eur}
+                start={liveStartForCountry(largestDebt, nowMs)}
                 perSecond={perSecondForCountry(largestDebt)}
                 />
             ) : (
@@ -325,7 +334,7 @@ export default function HomePage() {
                 label="Fastest growing"
                 flag={fastestGrowing.flag}
                 name={fastestGrowing.name}
-                start={fastestGrowing.last_value_eur}
+                start={liveStartForCountry(fastestGrowing, nowMs)}
                 perSecond={perSecondForCountry(fastestGrowing)}
                 accent="var(--bad)"
                 />
