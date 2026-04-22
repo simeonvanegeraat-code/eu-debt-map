@@ -6,7 +6,6 @@ import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor, livePerSecondFor, interpolateDebt } from "@/lib/data";
 
-// Map & ticker client-only to avoid hydration mismatch
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
   loading: () => (
@@ -20,9 +19,10 @@ const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ),
 });
 
-const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), { ssr: false });
+const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), {
+  ssr: false,
+});
 
-// --- SEO metadata (EN root) ---
 export async function generateMetadata() {
   const base = new URL("https://www.eudebtmap.com");
   const title = "EU Debt Map | Live EU Government Debt by Country";
@@ -79,17 +79,13 @@ function liveStartForCountry(c, atMs) {
 function formatEURShort(v) {
   const abs = Math.abs(v);
 
-  if (abs >= 1_000_000_000_000) {
-    return `€${(v / 1_000_000_000_000).toFixed(2)}tn`;
-  }
-  if (abs >= 1_000_000_000) {
-    return `€${(v / 1_000_000_000).toFixed(0)}bn`;
-  }
-  if (abs >= 1_000_000) {
-    return `€${(v / 1_000_000).toFixed(0)}m`;
-  }
+  if (abs >= 1_000_000_000_000) return `€${(v / 1_000_000_000_000).toFixed(2)}tn`;
+  if (abs >= 1_000_000_000) return `€${(v / 1_000_000_000).toFixed(2)}bn`;
+  if (abs >= 1_000_000) return `€${(v / 1_000_000).toFixed(0)}m`;
 
-  return `€${new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v))}`;
+  return `€${new Intl.NumberFormat("en-GB", {
+    maximumFractionDigits: 0,
+  }).format(Math.round(v))}`;
 }
 
 export default function HomePage() {
@@ -171,7 +167,7 @@ export default function HomePage() {
       align-items: start;
     }
 
-    .home-hero {
+    .hero-card {
       position: relative;
       overflow: hidden;
       background:
@@ -180,67 +176,88 @@ export default function HomePage() {
         #ffffff;
     }
 
-    .home-hero-grid {
+    .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(520px, 1.08fr);
-      gap: 24px;
+      grid-template-columns: minmax(320px, 0.84fr) minmax(720px, 1.26fr);
+      gap: 26px;
       align-items: start;
     }
 
-    .hero-copy {
+    .hero-left {
       min-width: 0;
+      display: flex;
+      flex-direction: column;
     }
 
-    .hero-copy .hero-title {
-      max-width: 14ch;
-      margin-bottom: 12px;
-    }
-
-    .hero-copy .hero-lede {
-      max-width: 33ch;
-      margin-top: 0;
-      color: #49637f;
-    }
-
-    .hero-copy .hero-lede strong {
-      color: #3f5874;
+    .hero-title-stack {
+      margin: 0 0 14px 0;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      font-family: var(--font-display);
+      font-size: clamp(2.3rem, 4.4vw, 4.4rem);
       font-weight: 700;
     }
 
-    .hero-subcopy {
-      margin-top: 14px;
+    .hero-title-stack span {
+      display: block;
+      background: linear-gradient(90deg, #2563eb, #22c55e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title-stack span + span {
+      margin-top: 4px;
+    }
+
+    .hero-lede {
+      margin-top: 0;
+      max-width: 28ch;
+      color: #425d79;
+      font-size: clamp(1.1rem, 1.1vw, 1.35rem);
+      line-height: 1.65;
+    }
+
+    .hero-lede strong {
+      color: #3e5975;
+      font-weight: 700;
+    }
+
+    .hero-copy {
+      margin-top: 10px;
       max-width: 58ch;
-      color: #546b84;
+      color: #556b84;
       line-height: 1.72;
+      font-size: 1rem;
     }
 
     .hero-meta {
-      margin-top: 16px;
-      display: inline-flex;
+      margin-top: 18px;
+      display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      align-items: center;
     }
 
     .meta-chip {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
       border: 1px solid #dbe4ef;
       border-radius: 999px;
-      padding: 7px 11px;
-      background: rgba(255,255,255,0.88);
-      color: #4b6077;
+      background: rgba(255,255,255,0.92);
+      color: #50667f;
       font-size: 13px;
-      line-height: 1.2;
-      font-weight: 600;
+      line-height: 1;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .hero-btn-primary,
@@ -249,12 +266,12 @@ export default function HomePage() {
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 46px;
-      padding: 0 16px;
+      min-height: 48px;
+      padding: 0 18px;
       border-radius: 999px;
       text-decoration: none;
       font-weight: 700;
-      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      transition: transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
     }
 
     .hero-btn-primary {
@@ -283,79 +300,6 @@ export default function HomePage() {
       text-decoration: none;
     }
 
-    .hero-right {
-      min-width: 0;
-      display: grid;
-      gap: 14px;
-      align-content: start;
-    }
-
-    .hero-right .hero-mobile-copy {
-      display: none;
-    }
-
-    .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"]) {
-      width: 100%;
-      min-width: 0;
-    }
-
-    .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-      font-size: clamp(2rem, 3.5vw, 3.35rem) !important;
-      line-height: 1.06 !important;
-      letter-spacing: -0.03em !important;
-    }
-
-    .hero-side-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .hero-side-card {
-      border: 1px solid #e4ebf3;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.94);
-      box-shadow: 0 8px 18px rgba(15,23,42,0.05);
-      padding: 14px;
-    }
-
-    .hero-side-label {
-      font-size: 12px;
-      color: #6a7f93;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: 6px;
-    }
-
-    .hero-side-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #0f172a;
-      margin: 0 0 8px 0;
-      line-height: 1.3;
-    }
-
-    .hero-side-value {
-      font-family: var(--font-display);
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-side-sub {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #586d85;
-      line-height: 1.45;
-    }
-
-    .hero-side-sub strong {
-      color: #0f172a;
-    }
-
     .hero-source {
       margin-top: 16px;
       color: #64748b;
@@ -363,6 +307,90 @@ export default function HomePage() {
       line-height: 1.6;
       padding-top: 14px;
       border-top: 1px solid #e6edf4;
+      max-width: 60ch;
+    }
+
+    .hero-right {
+      min-width: 0;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .hero-ticker {
+      width: 100%;
+    }
+
+    .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"]) {
+      width: 100%;
+      border-radius: 22px !important;
+      padding: 18px 20px !important;
+    }
+
+    .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+      font-size: clamp(2.7rem, 3.3vw, 4.1rem) !important;
+      line-height: 1.04 !important;
+      white-space: nowrap !important;
+      word-break: keep-all !important;
+      overflow-wrap: normal !important;
+      letter-spacing: -0.04em !important;
+      display: block !important;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .hero-stat-card {
+      border: 1px solid #e3ebf3;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.05);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .hero-stat-label {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      color: #6b8095;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-stat-country {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+      line-height: 1.3;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 1.9vw, 2.15rem);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .hero-stat-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #5b6f86;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+      gap: 16px;
+      grid-column: 1 / -1;
+      align-items: start;
     }
 
     .overview-card {
@@ -485,18 +513,27 @@ export default function HomePage() {
       text-decoration: none;
     }
 
+    .sidebar-stack {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .sidebar-card {
+      background: #ffffff;
+    }
+
     .highlights-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 10px;
     }
 
     .highlights-intro {
-      margin-top: 10px;
-      max-width: 72ch;
+      margin-top: 8px;
       color: #5a6f86;
-      line-height: 1.72;
+      line-height: 1.7;
     }
 
     .why-card {
@@ -544,6 +581,7 @@ export default function HomePage() {
       grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
       gap: 16px;
       align-items: start;
+      grid-column: 1 / -1;
     }
 
     .quicklist-shell {
@@ -602,24 +640,29 @@ export default function HomePage() {
       line-height: 1.72;
     }
 
-    @media (max-width: 1240px) {
-      .home-hero-grid {
-        grid-template-columns: minmax(0, 1fr) minmax(460px, 1fr);
+    @media (max-width: 1380px) {
+      .hero-grid {
+        grid-template-columns: minmax(300px, 0.82fr) minmax(620px, 1.18fr);
       }
 
-      .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-        font-size: clamp(1.9rem, 3.2vw, 3rem) !important;
+      .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+        font-size: clamp(2.35rem, 3vw, 3.6rem) !important;
       }
     }
 
-    @media (max-width: 1120px) {
-      .home-hero-grid,
+    @media (max-width: 1220px) {
+      .hero-grid {
+        grid-template-columns: minmax(300px, 0.9fr) minmax(540px, 1.1fr);
+      }
+
+      .dashboard-grid,
       .lower-grid {
         grid-template-columns: 1fr;
       }
 
-      .hero-copy .hero-title {
-        max-width: 14ch;
+      .why-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
       }
 
       .overview-top,
@@ -631,29 +674,20 @@ export default function HomePage() {
       .overview-links {
         justify-content: flex-start;
       }
+    }
 
-      .why-grid,
-      .faq-grid {
+    @media (max-width: 980px) {
+      .hero-grid {
         grid-template-columns: 1fr;
       }
 
-      .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-        font-size: clamp(2rem, 5vw, 3.4rem) !important;
+      .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+        font-size: clamp(2rem, 5.2vw, 3.4rem) !important;
+        white-space: normal !important;
       }
     }
 
     @media (max-width: 820px) {
-      .hero-copy .hero-subcopy--desktop {
-        display: none;
-      }
-
-      .hero-right .hero-mobile-copy {
-        display: block;
-        color: #586d85;
-        line-height: 1.72;
-        margin: 0;
-      }
-
       .hero-actions {
         flex-direction: column;
         align-items: stretch;
@@ -664,8 +698,7 @@ export default function HomePage() {
         width: 100%;
       }
 
-      .hero-side-grid,
-      .highlights-grid {
+      .hero-stats {
         grid-template-columns: 1fr;
       }
 
@@ -675,15 +708,11 @@ export default function HomePage() {
     }
 
     @media (max-width: 640px) {
-      .home-hero {
-        padding-top: 22px;
+      .hero-title-stack {
+        font-size: clamp(2rem, 10vw, 3rem);
       }
 
-      .hero-copy .hero-title {
-        max-width: none;
-      }
-
-      .hero-copy .hero-lede {
+      .hero-lede {
         max-width: none;
       }
 
@@ -708,11 +737,13 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      <section className="card section home-hero" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
-        <div className="home-hero-grid">
-          <div className="hero-copy">
-            <h1 id="page-title" className="hero-title">
-              Live EU Government Debt Map
+      <section className="card section hero-card" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
+        <div className="hero-grid">
+          <div className="hero-left">
+            <h1 id="page-title" className="hero-title-stack">
+              <span>Live EU</span>
+              <span>Government</span>
+              <span>Debt Map</span>
             </h1>
 
             <p className="hero-lede">
@@ -722,7 +753,7 @@ export default function HomePage() {
               </strong>
             </p>
 
-            <p className="hero-subcopy hero-subcopy--desktop">
+            <p className="hero-copy">
               EU Debt Map turns Eurostat debt data into a simple way to explore government debt
               across the European Union. Use the interactive map to compare countries such as
               France, Germany, Italy, Spain, and the Netherlands, then open any country page for a
@@ -751,36 +782,32 @@ export default function HomePage() {
           </div>
 
           <div className="hero-right">
-            <EUTotalTicker />
+            <div className="hero-ticker">
+              <EUTotalTicker />
+            </div>
 
-            <p className="hero-mobile-copy">
-              EU Debt Map turns Eurostat debt data into a simple way to explore government debt
-              across the European Union. Tap any country to open its page and compare live debt,
-              recent movement, and debt-to-GDP context.
-            </p>
-
-            <div className="hero-side-grid" aria-label="Top insights">
+            <div className="hero-stats" aria-label="Top insights">
               {largestDebt && (
-                <div className="hero-side-card">
-                  <div className="hero-side-label">Largest debt</div>
-                  <p className="hero-side-title">
+                <div className="hero-stat-card">
+                  <p className="hero-stat-label">Largest debt</p>
+                  <p className="hero-stat-country">
                     {largestDebt.flag} {largestDebt.name}
                   </p>
-                  <div className="hero-side-value">{formatEURShort(largestDebt.last_value_eur)}</div>
-                  <div className="hero-side-sub">
+                  <div className="hero-stat-value">{formatEURShort(largestDebt.last_value_eur)}</div>
+                  <div className="hero-stat-sub">
                     Biggest debt stock in the EU at the latest reference point.
                   </div>
                 </div>
               )}
 
               {fastestGrowing && (
-                <div className="hero-side-card">
-                  <div className="hero-side-label">Fastest growing</div>
-                  <p className="hero-side-title">
+                <div className="hero-stat-card">
+                  <p className="hero-stat-label">Fastest growing</p>
+                  <p className="hero-stat-country">
                     {fastestGrowing.flag} {fastestGrowing.name}
                   </p>
-                  <div className="hero-side-value">{formatEURShort(fastestGrowing.last_value_eur)}</div>
-                  <div className="hero-side-sub">
+                  <div className="hero-stat-value">{formatEURShort(fastestGrowing.last_value_eur)}</div>
+                  <div className="hero-stat-sub">
                     Strongest absolute increase between the latest two periods.
                   </div>
                 </div>
@@ -790,148 +817,149 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
-        className="card section overview-card"
-        style={{ gridColumn: "1 / -1" }}
-        aria-labelledby="overview-title"
-      >
-        <div className="overview-top">
-          <div className="overview-title-wrap">
-            <h2 id="overview-title" style={{ marginTop: 0, marginBottom: 8 }}>
-              EU overview
-            </h2>
-            <p>
-              The map shows whether government debt has risen or fallen between the latest two
-              reference points. Open any country to see its live debt estimate, recent movement,
-              and country context.
-            </p>
-          </div>
-
-          <div className="overview-legend-inline" aria-label="Legend">
-            <span className="legend-chip">
-              <span className="legend-dot" style={{ background: "var(--ok)" }} />
-              Falling debt
-            </span>
-            <span className="legend-chip">
-              <span className="legend-dot" style={{ background: "var(--bad)" }} />
-              Rising debt
-            </span>
-            <span className="legend-chip">{fallingCount} falling · {risingCount} rising</span>
-          </div>
-        </div>
-
-        <div className="map-panel">
-          <div className="mapWrap" role="region" aria-label="Interactive EU map">
-            <EuropeMap />
-          </div>
-        </div>
-
-        <div className="overview-bottom">
-          <div className="overview-banner">
-            <span aria-hidden>➜</span>
-            <span>
-              <strong>Click any country</strong> on the map to open its live debt ticker.
-            </span>
-          </div>
-
-          <div className="overview-links">
-            <Link href="/eu-debt" className="soft-link-chip">
-              5-year EU debt chart
-            </Link>
-            <Link href="/debt" className="soft-link-chip">
-              What government debt means
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="highlights-title">
-        <div>
-          <h2 id="highlights-title" style={{ marginTop: 0, marginBottom: 0 }}>
-            Highlights
-          </h2>
-
-          <p className="highlights-intro">
-            Government debt affects borrowing costs, budget choices, interest rates, and how much
-            room governments have to respond to crises. These live highlights surface the biggest
-            movements at a glance.
-          </p>
-        </div>
-
-        <div className="highlights-grid">
-          {largestDebt ? (
-            <HighlightTicker
-              label="Largest debt"
-              flag={largestDebt.flag}
-              name={largestDebt.name}
-              start={liveStartForCountry(largestDebt, nowMs)}
-              perSecond={perSecondForCountry(largestDebt)}
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
-
-          {fastestGrowing ? (
-            <HighlightTicker
-              label="Fastest growing"
-              flag={fastestGrowing.flag}
-              name={fastestGrowing.name}
-              start={liveStartForCountry(fastestGrowing, nowMs)}
-              perSecond={perSecondForCountry(fastestGrowing)}
-              accent="var(--bad)"
-            />
-          ) : (
-            <div className="tag">—</div>
-          )}
-        </div>
-      </section>
-
-      <section className="card section why-card" style={{ gridColumn: "1 / -1" }} aria-labelledby="why-title">
-        <div>
-          <h2 id="why-title" style={{ marginTop: 0, marginBottom: 16 }}>
-            Why EU government debt matters
-          </h2>
-
-          <div className="why-grid" aria-label="Key reasons">
-            <div className="why-point">
-              <p className="why-point-title">Borrowing costs</p>
-              <p className="why-point-text">
-                Higher debt can make countries more exposed when interest rates rise.
+      <section className="dashboard-grid">
+        <section className="card section overview-card" aria-labelledby="overview-title">
+          <div className="overview-top">
+            <div className="overview-title-wrap">
+              <h2 id="overview-title" style={{ marginTop: 0, marginBottom: 8 }}>
+                EU overview
+              </h2>
+              <p>
+                The map shows whether government debt has risen or fallen between the latest two
+                reference points. Open any country to see its live debt estimate, recent movement,
+                and country context.
               </p>
             </div>
 
-            <div className="why-point">
-              <p className="why-point-title">Fiscal flexibility</p>
-              <p className="why-point-text">
-                Debt levels shape how much room governments have for spending and crisis response.
-              </p>
-            </div>
-
-            <div className="why-point">
-              <p className="why-point-title">EU comparison</p>
-              <p className="why-point-text">
-                The map makes it easier to compare very different fiscal positions inside one bloc.
-              </p>
+            <div className="overview-legend-inline" aria-label="Legend">
+              <span className="legend-chip">
+                <span className="legend-dot" style={{ background: "var(--ok)" }} />
+                Falling debt
+              </span>
+              <span className="legend-chip">
+                <span className="legend-dot" style={{ background: "var(--bad)" }} />
+                Rising debt
+              </span>
+              <span className="legend-chip">
+                {fallingCount} falling · {risingCount} rising
+              </span>
             </div>
           </div>
 
-          <div className="why-copy">
-            <p style={{ marginTop: 0 }}>
-              Government debt is not just an abstract economic number. It shapes what states can
-              spend, how vulnerable they are to higher interest rates, and how much room they have
-              to support growth, defense, pensions, infrastructure, or crisis measures.
-            </p>
-
-            <p style={{ marginBottom: 0 }}>
-              Start with the live map, open a country page to compare national debt, then use{" "}
-              <Link href="/eu-debt">EU debt</Link> for the broader trend and <Link href="/debt">Debt</Link>{" "}
-              if you want a clearer explanation of debt, deficits, and debt-to-GDP.
-            </p>
+          <div className="map-panel">
+            <div className="mapWrap" role="region" aria-label="Interactive EU map">
+              <EuropeMap />
+            </div>
           </div>
+
+          <div className="overview-bottom">
+            <div className="overview-banner">
+              <span aria-hidden>➜</span>
+              <span>
+                <strong>Click any country</strong> on the map to open its live debt ticker.
+              </span>
+            </div>
+
+            <div className="overview-links">
+              <Link href="/eu-debt" className="soft-link-chip">
+                5-year EU debt chart
+              </Link>
+              <Link href="/debt" className="soft-link-chip">
+                What government debt means
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <div className="sidebar-stack">
+          <section className="card section sidebar-card" aria-labelledby="highlights-title">
+            <div>
+              <h2 id="highlights-title" style={{ marginTop: 0, marginBottom: 0 }}>
+                Highlights
+              </h2>
+
+              <p className="highlights-intro">
+                Government debt affects borrowing costs, budget choices, interest rates, and how
+                much room governments have to respond to crises.
+              </p>
+            </div>
+
+            <div className="highlights-grid">
+              {largestDebt ? (
+                <HighlightTicker
+                  label="Largest debt"
+                  flag={largestDebt.flag}
+                  name={largestDebt.name}
+                  start={liveStartForCountry(largestDebt, nowMs)}
+                  perSecond={perSecondForCountry(largestDebt)}
+                />
+              ) : (
+                <div className="tag">—</div>
+              )}
+
+              {fastestGrowing ? (
+                <HighlightTicker
+                  label="Fastest growing"
+                  flag={fastestGrowing.flag}
+                  name={fastestGrowing.name}
+                  start={liveStartForCountry(fastestGrowing, nowMs)}
+                  perSecond={perSecondForCountry(fastestGrowing)}
+                  accent="var(--bad)"
+                />
+              ) : (
+                <div className="tag">—</div>
+              )}
+            </div>
+          </section>
+
+          <section className="card section why-card" aria-labelledby="why-title">
+            <div>
+              <h2 id="why-title" style={{ marginTop: 0, marginBottom: 16 }}>
+                Why EU government debt matters
+              </h2>
+
+              <div className="why-grid" aria-label="Key reasons">
+                <div className="why-point">
+                  <p className="why-point-title">Borrowing costs</p>
+                  <p className="why-point-text">
+                    Higher debt can make countries more exposed when interest rates rise.
+                  </p>
+                </div>
+
+                <div className="why-point">
+                  <p className="why-point-title">Fiscal flexibility</p>
+                  <p className="why-point-text">
+                    Debt levels shape how much room governments have for spending and crisis response.
+                  </p>
+                </div>
+
+                <div className="why-point">
+                  <p className="why-point-title">EU comparison</p>
+                  <p className="why-point-text">
+                    The map makes it easier to compare very different fiscal positions inside one bloc.
+                  </p>
+                </div>
+              </div>
+
+              <div className="why-copy">
+                <p style={{ marginTop: 0 }}>
+                  Government debt is not just an abstract economic number. It shapes what states can
+                  spend, how vulnerable they are to higher interest rates, and how much room they
+                  have to support growth, defense, pensions, infrastructure, or crisis measures.
+                </p>
+
+                <p style={{ marginBottom: 0 }}>
+                  Start with the live map, open a country page to compare national debt, then use{" "}
+                  <Link href="/eu-debt">EU debt</Link> for the broader trend and <Link href="/debt">Debt</Link>{" "}
+                  if you want a clearer explanation of debt, deficits, and debt-to-GDP.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
 
-      <section className="lower-grid" style={{ gridColumn: "1 / -1" }}>
+      <section className="lower-grid">
         <div className="quicklist-shell">
           <QuickList
             items={quickItems}
