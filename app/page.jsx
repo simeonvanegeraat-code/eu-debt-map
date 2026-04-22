@@ -109,19 +109,19 @@ export default function HomePage() {
     @media (max-width: 920px){
       .ql-articles{ grid-template-columns: 1fr !important; }
     }
-    
-    /* Layout Hardening tegen advertenties */
+
     .hero-lede, .tag, .hero-title {
-       width: 100%;
-       max-width: 760px;
-       display: block;
-       clear: both;
+      width: 100%;
+      max-width: 760px;
+      display: block;
+      clear: both;
     }
+
     .card-content-wrapper {
-       width: 100%;
-       display: flex;
-       flex-direction: column;
-       box-sizing: border-box; 
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
     }
   `;
 
@@ -209,6 +209,23 @@ export default function HomePage() {
       color: "#0b1220",
     },
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
+    heroCta: {
+      marginTop: 14,
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      padding: "10px 14px",
+      borderRadius: 999,
+      border: "1px solid #dbeafe",
+      background: "#eff6ff",
+      color: "#1d4ed8",
+      textDecoration: "none",
+      fontSize: 14,
+      fontWeight: 700,
+      alignSelf: "flex-start",
+      boxShadow: "0 4px 10px rgba(37,99,235,0.08)",
+    },
   };
 
   return (
@@ -238,8 +255,24 @@ export default function HomePage() {
 
             <p className="hero-lede" style={{ maxWidth: 760 }}>
               <span style={{ fontWeight: 600 }}>
-                If you added together every euro of public debt from all 27 EU countries, you’d get the number shown below, a live, ticking estimate that never stands still.
+                See the combined public debt of all 27 EU countries as a live estimate.
               </span>
+            </p>
+
+            <p className="hero-lede" style={{ maxWidth: 760, marginTop: 10 }}>
+              Built from the latest Eurostat data and updated second by second. Click any country to view its debt ticker, recent trend, and debt-to-GDP context.
+            </p>
+
+            <p
+              className="tag"
+              style={{
+                marginTop: 14,
+                paddingTop: 10,
+                borderTop: "1px solid var(--border)",
+                color: "#4b5563",
+              }}
+            >
+              Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Live values are estimates based on the latest quarterly data, not official real-time statistics.
             </p>
           </header>
 
@@ -247,26 +280,9 @@ export default function HomePage() {
             <EUTotalTicker />
           </div>
 
-          <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
-            The EU Debt Map visualizes the combined national debts of the European Union in real time.
-            Each country’s most recent Eurostat data point is used as a baseline, then projected second by
-            second to show how fast public debt continues to grow (or, in rare cases, shrink). This isn’t
-            just a statistic, it’s a pulse of Europe’s financial health. Whether you’re comparing France
-            to Germany, tracking Italy’s debt ratio, or exploring smaller economies like Estonia and Malta,
-            this map translates complex fiscal data into an intuitive visual that updates every second.
-          </p>
-
-          <p
-            className="tag"
-            style={{
-              marginTop: 14,
-              paddingTop: 10,
-              borderTop: "1px solid var(--border)",
-              color: "#4b5563",
-            }}
-          >
-            Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Educational visualization, not an official statistic.
-          </p>
+          <Link href="/eu-debt" style={s.heroCta}>
+            Explore EU debt over time: 5-year chart and debt by country →
+          </Link>
         </div>
       </section>
 
@@ -296,10 +312,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="tag" style={{ marginTop: 6, lineHeight: 1.7 }}>
-            <h3 style={{ margin: "8px 0" }}>EU debt explained in simple terms</h3>
+          <div className="tag" style={{ marginTop: 8, lineHeight: 1.7 }}>
+            <h3 style={{ margin: "8px 0" }}>New: EU debt over time</h3>
             <p style={{ margin: 0 }}>
-              This EU Debt Map shows the national debt of all EU-27 countries in real time. Using Eurostat as a baseline, each country’s latest official figure is extrapolated per second to create a live, ticking estimate. Click any country to drill into its numbers and see whether debt is rising or falling. This is an educational visualization—not an official statistic.
+              See the 5-year EU debt chart and country breakdown on the dedicated analysis page.{" "}
+              <Link href="/eu-debt">Open the analysis</Link>.
             </p>
           </div>
         </div>
@@ -307,79 +324,79 @@ export default function HomePage() {
 
       <section className="card section" style={{ gridColumn: "1 / -1" }}>
         <div className="card-content-wrapper">
-            <h2 style={{ marginTop: 0 }}>Highlights</h2>
+          <h2 style={{ marginTop: 0 }}>Highlights</h2>
 
-            <div
+          <div
             style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-                gap: 12,
-                marginTop: 8,
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 12,
+              marginTop: 8,
             }}
-            >
+          >
             {largestDebt ? (
-                <HighlightTicker
+              <HighlightTicker
                 label="Largest debt"
                 flag={largestDebt.flag}
                 name={largestDebt.name}
                 start={liveStartForCountry(largestDebt, nowMs)}
                 perSecond={perSecondForCountry(largestDebt)}
-                />
+              />
             ) : (
-                <div className="tag">—</div>
+              <div className="tag">—</div>
             )}
 
             {fastestGrowing ? (
-                <HighlightTicker
+              <HighlightTicker
                 label="Fastest growing"
                 flag={fastestGrowing.flag}
                 name={fastestGrowing.name}
                 start={liveStartForCountry(fastestGrowing, nowMs)}
                 perSecond={perSecondForCountry(fastestGrowing)}
                 accent="var(--bad)"
-                />
+              />
             ) : (
-                <div className="tag">—</div>
+              <div className="tag">—</div>
             )}
-            </div>
+          </div>
 
-            <p className="tag" style={{ marginTop: 12 }}>
+          <p className="tag" style={{ marginTop: 12 }}>
             Government debt shapes interest rates, inflation, fiscal policy, and the broader EU economy. These live tickers surface the biggest movements at a glance.
-            </p>
+          </p>
         </div>
       </section>
 
       <section className="ql-articles" style={{ gridColumn: "1 / -1" }}>
         <section className="card section">
-            <div className="card-content-wrapper">
-                <QuickList
-                    items={quickItems}
-                    initialCount={quickItems.length}
-                    strings={{
-                    title: "Quick list",
-                    showAll: "Show all",
-                    showLess: "Show less",
-                    rising: "↑ rising",
-                    falling: "↓ falling",
-                    flat: "→ flat",
-                    more: "more",
-                    }}
-                />
-            </div>
+          <div className="card-content-wrapper">
+            <QuickList
+              items={quickItems}
+              initialCount={quickItems.length}
+              strings={{
+                title: "Quick list",
+                showAll: "Show all",
+                showLess: "Show less",
+                rising: "↑ rising",
+                falling: "↓ falling",
+                flat: "→ flat",
+                more: "more",
+              }}
+            />
+          </div>
         </section>
 
         <section className="card section" style={{ alignContent: "start" }}>
           <div className="card-content-wrapper">
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
-                <Link href="/articles" className="tag">View all →</Link>
+              <h2 style={{ margin: 0, flex: 1 }}>Latest articles</h2>
+              <Link href="/articles" className="tag">View all →</Link>
             </div>
 
             <div style={{ display: "grid", gap: 12 }}>
-                {topArticles.map((a) => (
+              {topArticles.map((a) => (
                 <ArticleCard key={a.slug} article={a} />
-                ))}
-                {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
+              ))}
+              {topArticles.length === 0 && <div className="tag">No articles yet. Coming soon.</div>}
             </div>
           </div>
         </section>
