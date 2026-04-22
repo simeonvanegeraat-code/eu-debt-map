@@ -12,22 +12,34 @@ const EU27 = [
   "LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"
 ];
 
+const FALLBACK_SECONDS = 91 * 24 * 60 * 60; // veilige fallback van ongeveer 1 kwartaal
+
 const euroGeo = (code) => (code === "GR" ? "EL" : code);
 
-// Einde-van-kwartaal in UTC voor "YYYYQX"
-const qEndDate = (timeStr) => {
-  const m = /^(\d{4})Q([1-4])$/.exec(timeStr || "");
+function parseQuarterKey(timeStr) {
+  const m = /^(\d{4})-?Q([1-4])$/i.exec(String(timeStr || "").trim());
   if (!m) return null;
-  const y = +m[1];
-  const q = +m[2];
+  return {
+    year: Number(m[1]),
+    quarter: Number(m[2]),
+  };
+}
+
+// Einde-van-kwartaal in UTC voor "YYYYQX" en "YYYY-QX"
+const qEndDate = (timeStr) => {
+  const parsed = parseQuarterKey(timeStr);
+  if (!parsed) return null;
+
+  const { year, quarter } = parsed;
   const end = {
     1: [2, 31],
     2: [5, 30],
     3: [8, 30],
     4: [11, 31],
   }; // 0-based months
-  const [mo, d] = end[q];
-  return new Date(Date.UTC(y, mo, d, 23, 59, 59));
+
+  const [mo, d] = end[quarter];
+  return new Date(Date.UTC(year, mo, d, 23, 59, 59));
 };
 
 // Helpers voor JSON-stat
@@ -146,7 +158,7 @@ async function main() {
     const seconds =
       currDate && prevDate
         ? Math.max(1, Math.floor((currDate - prevDate) / 1000))
-        : 1;
+        : FALLBACK_SECONDS;
 
     const delta = currEUR - prevEUR;
     const perSecond = delta / seconds;
