@@ -6,7 +6,7 @@ import HighlightTicker from "@/components/HighlightTicker";
 import { listArticles } from "@/lib/articles";
 import { countries, trendFor, livePerSecondFor, interpolateDebt } from "@/lib/data";
 
-// Kaart & Ticker client-only (ssr:false) => geen hydration mismatch
+// Map & ticker client-only to avoid hydration mismatch
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
   ssr: false,
   loading: () => (
@@ -18,12 +18,12 @@ const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
 
 const EUTotalTicker = dynamic(() => import("@/components/EUTotalTicker"), { ssr: false });
 
-// --- SEO: generateMetadata (EN root) ---
+// --- SEO metadata (EN root) ---
 export async function generateMetadata() {
   const base = new URL("https://www.eudebtmap.com");
-  const title = "EU Debt Map – Live National Debt by Country (EU-27, 2025)";
+  const title = "EU Debt Map | Live EU Government Debt by Country";
   const description =
-    "See EU government debt live, country by country. Interactive EU-27 debt map with real-time estimates, debt growth, and comparisons. Based on Eurostat data.";
+    "Track EU government debt country by country with a live EU-27 debt map, real-time estimates, country comparisons, and debt trends based on Eurostat data.";
 
   return {
     metadataBase: base,
@@ -41,7 +41,8 @@ export async function generateMetadata() {
     },
     openGraph: {
       title,
-      description: "Explore government debt across the EU-27 with a live, ticking estimate per country.",
+      description:
+        "Explore EU government debt with a live map, country pages, debt trends, and real-time estimates based on Eurostat data.",
       url: "https://www.eudebtmap.com/",
       siteName: "EU Debt Map",
       type: "website",
@@ -49,7 +50,8 @@ export async function generateMetadata() {
     twitter: {
       card: "summary_large_image",
       title,
-      description: "Live, ticking estimates of EU government debt based on Eurostat.",
+      description:
+        "Live EU government debt estimates, country comparisons, and trends based on Eurostat data.",
     },
     robots: {
       index: true,
@@ -61,23 +63,19 @@ export async function generateMetadata() {
   };
 }
 
-function formatEUR(v) {
-  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(v));
-}
-
-// Gedeelde live-rate bron uit lib/data
+// Shared live-rate source from lib/data
 function perSecondForCountry(c) {
   return livePerSecondFor(c);
 }
 
-// Gedeelde live startwaarde, gelijk aan country pages
+// Shared live starting value, same logic as country pages
 function liveStartForCountry(c, atMs) {
   if (!c) return 0;
   return interpolateDebt(c, atMs);
 }
 
 export default function HomePage() {
-  // Alleen landen met echte waarden voor highlights/quick list
+  // Only countries with real values for highlights and quick list
   const valid = countries.filter((c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0);
 
   const largestDebt =
@@ -97,7 +95,7 @@ export default function HomePage() {
 
   const topArticles = listArticles({ lang: "en" }).slice(0, 3);
 
-  // Één gedeeld tijdstip zodat beide highlight-boxen op dezelfde referentie starten
+  // One shared timestamp so both highlight cards start from the same reference point
   const nowMs = Date.now();
 
   const responsiveCss = `
@@ -123,6 +121,28 @@ export default function HomePage() {
       flex-direction: column;
       box-sizing: border-box;
     }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .text-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 680px){
+      .hero-links,
+      .text-links {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
   `;
 
   const websiteLd = {
@@ -130,7 +150,7 @@ export default function HomePage() {
     "@type": "WebSite",
     url: "https://www.eudebtmap.com/",
     name: "EU Debt Map",
-    inLanguage: "en"
+    inLanguage: "en",
   };
 
   const orgLd = {
@@ -151,19 +171,28 @@ export default function HomePage() {
         acceptedAnswer: {
           "@type": "Answer",
           text:
-            "We interpolate between the last two Eurostat reference periods and extrapolate per second. Country pages include the baseline and trend indicator."
-        }
+            "We interpolate between the last two Eurostat reference periods and extrapolate the change per second. Country pages show the baseline and recent direction.",
+        },
       },
       {
         "@type": "Question",
-        name: "Is this an official statistic?",
+        name: "Is this an official real-time government statistic?",
         acceptedAnswer: {
           "@type": "Answer",
           text:
-            "No. It’s an educational visualization based on official data to improve understanding and spark discussion."
-        }
-      }
-    ]
+            "No. It is an educational visualization based on official Eurostat data. The live ticker is an estimate, not an official real-time publication.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is the difference between debt and deficit?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Government debt is the accumulated amount a country owes. A deficit is the gap between what a government spends and what it collects over a period, usually a year.",
+        },
+      },
+    ],
   };
 
   const s = {
@@ -209,8 +238,7 @@ export default function HomePage() {
       color: "#0b1220",
     },
     ctaIcon: { fontSize: 16, opacity: 0.9, transform: "translateY(1px)" },
-    heroCta: {
-      marginTop: 14,
+    heroLinkPrimary: {
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
@@ -223,8 +251,25 @@ export default function HomePage() {
       textDecoration: "none",
       fontSize: 14,
       fontWeight: 700,
-      alignSelf: "flex-start",
       boxShadow: "0 4px 10px rgba(37,99,235,0.08)",
+    },
+    heroLinkSecondary: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      padding: "10px 14px",
+      borderRadius: 999,
+      border: "1px solid var(--border)",
+      background: "#ffffff",
+      color: "var(--fg)",
+      textDecoration: "none",
+      fontSize: 14,
+      fontWeight: 700,
+    },
+    inlineLink: {
+      fontWeight: 700,
+      textDecoration: "none",
     },
   };
 
@@ -247,7 +292,7 @@ export default function HomePage() {
                 WebkitTextFillColor: "transparent",
                 marginBottom: 8,
                 display: "block",
-                width: "100%"
+                width: "100%",
               }}
             >
               Live EU Government Debt Map
@@ -255,12 +300,19 @@ export default function HomePage() {
 
             <p className="hero-lede" style={{ maxWidth: 760 }}>
               <span style={{ fontWeight: 600 }}>
-                See the combined public debt of all 27 EU countries as a live estimate.
+                Add together the public debt of all 27 EU countries and you get the figure below: a live estimate that keeps moving every second.
               </span>
             </p>
 
+            <p className="hero-lede" style={{ maxWidth: 760, marginTop: 18 }}>
+              EU Debt Map turns Eurostat debt data into a simple way to explore government debt across the European Union.
+              Use the interactive map to compare countries such as France, Germany, Italy, Spain, and the Netherlands, then open any country page for a live debt ticker, recent trend, and debt-to-GDP context.
+            </p>
+
             <p className="hero-lede" style={{ maxWidth: 760, marginTop: 10 }}>
-              Built from the latest Eurostat data and updated second by second. Click any country to view its debt ticker, recent trend, and debt-to-GDP context.
+              This homepage is the fastest way to scan the EU-27 at a glance.
+              For the bigger picture, visit the <Link href="/eu-debt" style={s.inlineLink}>EU debt analysis page</Link>.
+              If you want the basics first, read the <Link href="/debt" style={s.inlineLink}>government debt explainer</Link>.
             </p>
 
             <p
@@ -274,21 +326,31 @@ export default function HomePage() {
             >
               Source: Eurostat (<code className="mono">gov_10q_ggdebt</code>). Live values are estimates based on the latest quarterly data, not official real-time statistics.
             </p>
+
+            <div className="hero-links">
+              <Link href="/eu-debt" style={s.heroLinkPrimary}>
+                View EU debt trends →
+              </Link>
+              <Link href="/debt" style={s.heroLinkSecondary}>
+                Read the debt explainer →
+              </Link>
+            </div>
           </header>
 
-          <div style={{ marginTop: 16, width: "100%", clear: "both" }}>
+          <div style={{ marginTop: 18, width: "100%", clear: "both" }}>
             <EUTotalTicker />
           </div>
-
-          <Link href="/eu-debt" style={s.heroCta}>
-            Explore EU debt over time: 5-year chart and debt by country →
-          </Link>
         </div>
       </section>
 
-      <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }}>
+      <section className="card section" style={{ gridColumn: "1 / -1", gap: 16 }} aria-labelledby="overview-title">
         <div className="card-content-wrapper">
-          <h2 style={{ marginTop: 4 }}>EU overview</h2>
+          <h2 id="overview-title" style={{ marginTop: 4 }}>EU overview</h2>
+
+          <p className="tag" style={{ marginTop: 0, lineHeight: 1.7 }}>
+            The map shows whether government debt has risen or fallen between the latest two reference points.
+            Click any EU country to open its dedicated page and see a live debt estimate, recent movement, and country context.
+          </p>
 
           <div className="mapWrap" role="region" aria-label="Interactive EU map" style={{ width: "100%", clear: "both" }}>
             <EuropeMap />
@@ -301,30 +363,30 @@ export default function HomePage() {
               <span style={s.sep}>•</span>
               <span style={{ ...s.pill, ...s.pillBad }}>Red</span>= debt rising
               <span style={s.sep}>•</span>
-              <span style={s.muted}>Based on the last two reference dates.</span>
+              <span style={s.muted}>Based on the latest two reference dates.</span>
             </div>
 
             <div style={s.cta}>
               <span aria-hidden style={s.ctaIcon}>➜</span>
               <span>
-                <strong>Click any country</strong> on the map to see its live debt ticker.
+                <strong>Click any country</strong> on the map to open its live debt ticker.
               </span>
             </div>
           </div>
 
           <div className="tag" style={{ marginTop: 8, lineHeight: 1.7 }}>
-            <h3 style={{ margin: "8px 0" }}>New: EU debt over time</h3>
+            <h3 style={{ margin: "8px 0" }}>Go deeper than the map</h3>
             <p style={{ margin: 0 }}>
-              See the 5-year EU debt chart and country breakdown on the dedicated analysis page.{" "}
-              <Link href="/eu-debt">Open the analysis</Link>.
+              Looking for the bigger EU-wide trend rather than one country at a time?
+              Visit <Link href="/eu-debt">EU debt</Link> for the 5-year chart and country breakdown, or open <Link href="/debt">Debt</Link> for a plain-English explanation of how government debt works.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="card section" style={{ gridColumn: "1 / -1" }}>
+      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="highlights-title">
         <div className="card-content-wrapper">
-          <h2 style={{ marginTop: 0 }}>Highlights</h2>
+          <h2 id="highlights-title" style={{ marginTop: 0 }}>Highlights</h2>
 
           <div
             style={{
@@ -361,7 +423,25 @@ export default function HomePage() {
           </div>
 
           <p className="tag" style={{ marginTop: 12 }}>
-            Government debt shapes interest rates, inflation, fiscal policy, and the broader EU economy. These live tickers surface the biggest movements at a glance.
+            Government debt influences borrowing costs, budget choices, interest rates, and how much room governments have to respond to crises.
+            These live highlights surface the biggest movements at a glance.
+          </p>
+        </div>
+      </section>
+
+      <section className="card section" style={{ gridColumn: "1 / -1" }} aria-labelledby="why-title">
+        <div className="card-content-wrapper">
+          <h2 id="why-title" style={{ marginTop: 0 }}>Why EU government debt matters</h2>
+
+          <p className="tag" style={{ marginTop: 0, lineHeight: 1.75 }}>
+            Government debt is not just an abstract economic number.
+            It shapes what states can spend, how vulnerable they are to higher interest rates, and how much room they have to support growth, defense, pensions, infrastructure, or crisis measures.
+            Comparing debt across the EU also shows how different fiscal positions can exist inside the same political and economic bloc.
+          </p>
+
+          <p className="tag" style={{ marginTop: 12, lineHeight: 1.75 }}>
+            This site is built to make those differences easier to see.
+            Start with the live map, open a country page to compare national debt, then use <Link href="/eu-debt">EU debt</Link> for the broader trend and <Link href="/debt">Debt</Link> if you want a clearer explanation of debt, deficits, and debt-to-GDP.
           </p>
         </div>
       </section>
@@ -408,12 +488,21 @@ export default function HomePage() {
 
           <h3 style={{ marginBottom: 6 }}>How is the live estimate calculated?</h3>
           <p className="tag" style={{ marginTop: 0 }}>
-            We interpolate between the last two Eurostat reference periods and extrapolate per second. Country pages include the baseline and trend indicator.
+            We interpolate between the last two Eurostat reference periods and extrapolate the change per second.
+            Country pages include the baseline and recent direction.
           </p>
 
-          <h3 style={{ marginBottom: 6 }}>Is this an official statistic?</h3>
+          <h3 style={{ marginBottom: 6 }}>Is this an official real-time statistic?</h3>
           <p className="tag" style={{ marginTop: 0 }}>
-            No. It’s an educational visualization based on official data to improve understanding and spark discussion.
+            No. This is an educational visualization based on official Eurostat data.
+            The live ticker is an estimate designed to make national debt easier to understand.
+          </p>
+
+          <h3 style={{ marginBottom: 6 }}>What is the difference between debt and deficit?</h3>
+          <p className="tag" style={{ marginTop: 0 }}>
+            Debt is the total amount a government owes.
+            A deficit is the gap between what a government spends and what it collects over a period.
+            You can read more on the <Link href="/debt">Debt page</Link>.
           </p>
         </div>
       </section>
