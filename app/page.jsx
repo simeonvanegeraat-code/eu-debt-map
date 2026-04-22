@@ -182,7 +182,7 @@ export default function HomePage() {
 
     .home-hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      grid-template-columns: minmax(0, 0.92fr) minmax(520px, 1.08fr);
       gap: 24px;
       align-items: start;
     }
@@ -209,7 +209,7 @@ export default function HomePage() {
 
     .hero-subcopy {
       margin-top: 14px;
-      max-width: 62ch;
+      max-width: 58ch;
       color: #546b84;
       line-height: 1.72;
     }
@@ -292,6 +292,17 @@ export default function HomePage() {
 
     .hero-right .hero-mobile-copy {
       display: none;
+    }
+
+    .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"]) {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+      font-size: clamp(2rem, 3.5vw, 3.35rem) !important;
+      line-height: 1.06 !important;
+      letter-spacing: -0.03em !important;
     }
 
     .hero-side-grid {
@@ -591,7 +602,17 @@ export default function HomePage() {
       line-height: 1.72;
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 1240px) {
+      .home-hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(460px, 1fr);
+      }
+
+      .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+        font-size: clamp(1.9rem, 3.2vw, 3rem) !important;
+      }
+    }
+
+    @media (max-width: 1120px) {
       .home-hero-grid,
       .lower-grid {
         grid-template-columns: 1fr;
@@ -614,6 +635,10 @@ export default function HomePage() {
       .why-grid,
       .faq-grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero-right :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
+        font-size: clamp(2rem, 5vw, 3.4rem) !important;
       }
     }
 
