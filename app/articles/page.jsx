@@ -1,4 +1,4 @@
-// app/articles/page.jsx
+import Link from "next/link";
 import { listArticles } from "@/lib/articles";
 import ArticlesListClient from "@/components/ArticlesListClient";
 
@@ -39,7 +39,7 @@ export const metadata = {
 };
 
 export default function ArticlesPage() {
-  const articles = listArticles({ lang: LANG }); // newest-first
+  const articles = listArticles({ lang: LANG });
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -53,7 +53,6 @@ export default function ArticlesPage() {
 
   return (
     <main>
-      {/* Styles specifiek voor deze pagina */}
       <style>{`
         .articles-hero {
           padding: 40px 16px 24px;
@@ -71,6 +70,115 @@ export default function ArticlesPage() {
           font-size: 0.98rem;
           line-height: 1.6;
           color: #6b7280;
+        }
+
+        .featured-wrap {
+          max-width: 1120px;
+          margin: 0 auto 24px;
+          padding: 0 16px;
+        }
+
+        .featured-label {
+          display: inline-block;
+          margin: 0 0 10px;
+          color: #2563eb;
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .featured-card {
+          display: grid;
+          grid-template-columns: 1.25fr 0.75fr;
+          gap: 24px;
+          padding: 24px;
+          border-radius: 28px;
+          background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+          box-shadow: 0 14px 38px rgba(15, 23, 42, 0.08);
+          border: 1px solid #e5e7eb;
+          text-decoration: none;
+          color: inherit;
+          transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .featured-card:hover,
+        .featured-card:focus-visible {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
+        }
+
+        .featured-title {
+          margin: 0 0 10px;
+          font-size: clamp(1.45rem, 1.2rem + 0.8vw, 2rem);
+          line-height: 1.15;
+          letter-spacing: -0.02em;
+          font-weight: 800;
+          color: #111827;
+        }
+
+        .featured-text {
+          margin: 0 0 14px;
+          font-size: 1rem;
+          line-height: 1.65;
+          color: #4b5563;
+          max-width: 680px;
+        }
+
+        .featured-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin: 0 0 16px;
+        }
+
+        .featured-chip {
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 10px;
+          border-radius: 999px;
+          background: #eff6ff;
+          color: #1d4ed8;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+
+        .featured-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #111827;
+        }
+
+        .featured-statbox {
+          display: grid;
+          gap: 12px;
+          align-content: center;
+        }
+
+        .featured-stat {
+          border: 1px solid #e5e7eb;
+          border-radius: 18px;
+          padding: 16px 18px;
+          background: #ffffff;
+        }
+
+        .featured-stat-label {
+          margin: 0 0 6px;
+          font-size: 0.8rem;
+          color: #6b7280;
+          font-weight: 600;
+        }
+
+        .featured-stat-value {
+          margin: 0;
+          font-size: 1.5rem;
+          line-height: 1.1;
+          font-weight: 800;
+          color: #111827;
+          letter-spacing: -0.02em;
         }
 
         .articles-list {
@@ -199,6 +307,12 @@ export default function ArticlesPage() {
           color: #6b7280;
         }
 
+        @media (max-width: 900px) {
+          .featured-card {
+            grid-template-columns: 1fr;
+          }
+        }
+
         @media (max-width: 768px) {
           .articles-hero {
             padding-top: 24px;
@@ -230,13 +344,11 @@ export default function ArticlesPage() {
         }
       `}</style>
 
-      {/* ItemList structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero */}
       <section className="articles-hero" aria-labelledby="articles-title">
         <h1 id="articles-title" className="hero-title">
           EU Debt Articles & Insights
@@ -248,13 +360,47 @@ export default function ArticlesPage() {
         </p>
       </section>
 
-      {/* Artikels met lazy load / load more */}
+      <section className="featured-wrap" aria-labelledby="featured-analysis-title">
+        <div className="featured-label">Featured analysis</div>
+        <Link href="/eu-debt" className="featured-card" aria-labelledby="featured-analysis-title">
+          <div>
+            <h2 id="featured-analysis-title" className="featured-title">
+              EU debt in 2026: 5-year chart and debt by country
+            </h2>
+            <p className="featured-text">
+              See how total EU debt has changed over the last five years, which countries carry the
+              biggest share, and why the burden is far from evenly spread across Europe.
+            </p>
+            <div className="featured-meta">
+              <span className="featured-chip">5-year chart</span>
+              <span className="featured-chip">Debt by country</span>
+              <span className="featured-chip">Eurostat-based</span>
+            </div>
+            <div className="featured-cta">Open analysis →</div>
+          </div>
+
+          <div className="featured-statbox" aria-hidden="true">
+            <div className="featured-stat">
+              <div className="featured-stat-label">Focus</div>
+              <div className="featured-stat-value">EU debt</div>
+            </div>
+            <div className="featured-stat">
+              <div className="featured-stat-label">Format</div>
+              <div className="featured-stat-value">Chart + breakdown</div>
+            </div>
+            <div className="featured-stat">
+              <div className="featured-stat-label">Angle</div>
+              <div className="featured-stat-value">Scale and distribution</div>
+            </div>
+          </div>
+        </Link>
+      </section>
+
       <ArticlesListClient
         articles={articles}
         pageSize={PAGE_SIZE}
       />
 
-      {/* SEO / context-blok */}
       <section className="articles-seo">
         EU Debt Map publishes independent, data-driven articles on EU-27 government debt,
         debt-to-GDP ratios, deficit rules and fiscal frameworks. All insights are based on
