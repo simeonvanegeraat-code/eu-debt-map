@@ -192,7 +192,7 @@ export default function HomePage() {
     }
 
     .hero-copy .hero-title {
-      max-width: 11ch;
+      max-width: 14ch;
       margin-bottom: 12px;
     }
 
@@ -598,7 +598,7 @@ export default function HomePage() {
       }
 
       .hero-copy .hero-title {
-        max-width: 12ch;
+        max-width: 14ch;
       }
 
       .overview-top,

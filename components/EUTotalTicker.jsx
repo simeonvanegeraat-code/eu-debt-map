@@ -44,7 +44,7 @@ export default function EUTotalTicker() {
         background: "#ffffff",
         color: "#0b1220",
         border: "1px solid var(--header-border, #e2e8f0)",
-        borderRadius: 18,
+        borderRadius: 20,
         padding: 18,
         boxShadow: "var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
         maxWidth: "100%",
@@ -56,9 +56,10 @@ export default function EUTotalTicker() {
         className="tag"
         style={{
           color: "#334155",
-          marginBottom: 6,
-          fontSize: "0.875rem",
-          lineHeight: "1.25rem"
+          marginBottom: 10,
+          fontSize: "0.95rem",
+          lineHeight: "1.35rem",
+          fontWeight: 600,
         }}
       >
         EU-27 total government debt (live estimate)
@@ -67,19 +68,22 @@ export default function EUTotalTicker() {
       <div
         className="ticker-hero num"
         style={{
-          marginTop: "0.5rem"
+          marginTop: 0,
         }}
       >
         <span
           suppressHydrationWarning
           style={{
-            fontSize: "clamp(1.5rem, 6vw, 3.5rem)",
+            fontSize: "clamp(2rem, 4.1vw, 3.8rem)",
             fontWeight: 700,
             color: "#2563eb",
-            lineHeight: 1.1,
+            lineHeight: 1.04,
+            letterSpacing: "-0.03em",
             fontVariantNumeric: "tabular-nums",
             display: "block",
-            wordBreak: "break-word"
+            whiteSpace: "normal",
+            wordBreak: "normal",
+            overflowWrap: "anywhere",
           }}
         >
           €{formatted}
