@@ -171,15 +171,15 @@ export default function HomePage() {
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(circle at top right, rgba(37,99,235,0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(37,99,235,0.09), transparent 30%),
         radial-gradient(circle at bottom left, rgba(34,197,94,0.08), transparent 24%),
         #ffffff;
     }
 
-    .hero-grid {
+    .hero-main {
       display: grid;
-      grid-template-columns: minmax(320px, 0.84fr) minmax(720px, 1.26fr);
-      gap: 26px;
+      grid-template-columns: minmax(280px, 0.78fr) minmax(760px, 1.32fr);
+      gap: 28px;
       align-items: start;
     }
 
@@ -189,52 +189,53 @@ export default function HomePage() {
       flex-direction: column;
     }
 
-    .hero-title-stack {
+    .hero-title {
       margin: 0 0 14px 0;
-      line-height: 0.98;
-      letter-spacing: -0.03em;
       font-family: var(--font-display);
-      font-size: clamp(2.3rem, 4.4vw, 4.4rem);
+      font-size: clamp(2.8rem, 4.8vw, 4.9rem);
       font-weight: 700;
+      line-height: 0.94;
+      letter-spacing: -0.04em;
     }
 
-    .hero-title-stack span {
+    .hero-title span {
       display: block;
       background: linear-gradient(90deg, #2563eb, #22c55e);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero-title-stack span + span {
-      margin-top: 4px;
+    .hero-title span + span {
+      margin-top: 6px;
     }
 
     .hero-lede {
       margin-top: 0;
-      max-width: 28ch;
+      margin-bottom: 0;
+      max-width: 24ch;
       color: #425d79;
-      font-size: clamp(1.1rem, 1.1vw, 1.35rem);
-      line-height: 1.65;
+      font-size: clamp(1.08rem, 0.95vw, 1.26rem);
+      line-height: 1.62;
     }
 
     .hero-lede strong {
-      color: #3e5975;
+      color: #3f5874;
       font-weight: 700;
     }
 
-    .hero-copy {
-      margin-top: 10px;
-      max-width: 58ch;
-      color: #556b84;
+    .hero-text {
+      margin-top: 16px;
+      max-width: 52ch;
+      color: #566d86;
       line-height: 1.72;
       font-size: 1rem;
     }
 
     .hero-meta {
-      margin-top: 18px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: 18px;
     }
 
     .meta-chip {
@@ -245,11 +246,11 @@ export default function HomePage() {
       padding: 0 12px;
       border: 1px solid #dbe4ef;
       border-radius: 999px;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       color: #50667f;
       font-size: 13px;
-      line-height: 1;
       font-weight: 700;
+      line-height: 1;
       white-space: nowrap;
     }
 
@@ -257,7 +258,7 @@ export default function HomePage() {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     .hero-btn-primary,
@@ -302,12 +303,12 @@ export default function HomePage() {
 
     .hero-source {
       margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #e6edf4;
+      max-width: 56ch;
       color: #64748b;
       font-size: 13px;
       line-height: 1.6;
-      padding-top: 14px;
-      border-top: 1px solid #e6edf4;
-      max-width: 60ch;
     }
 
     .hero-right {
@@ -321,15 +322,15 @@ export default function HomePage() {
       width: 100%;
     }
 
-    .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"]) {
+    .hero-ticker [role="region"][aria-label="EU-27 total government debt (live)"] {
       width: 100%;
       border-radius: 22px !important;
-      padding: 18px 20px !important;
+      padding: 20px 22px !important;
     }
 
-    .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-      font-size: clamp(2.7rem, 3.3vw, 4.1rem) !important;
-      line-height: 1.04 !important;
+    .hero-ticker [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
+      font-size: clamp(2.25rem, 2.75vw, 3.35rem) !important;
+      line-height: 1.03 !important;
       white-space: nowrap !important;
       word-break: keep-all !important;
       overflow-wrap: normal !important;
@@ -344,12 +345,12 @@ export default function HomePage() {
     }
 
     .hero-stat-card {
+      min-width: 0;
       border: 1px solid #e3ebf3;
       border-radius: 18px;
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,0.96);
       box-shadow: 0 8px 18px rgba(15,23,42,0.05);
       padding: 16px;
-      min-width: 0;
     }
 
     .hero-stat-label {
@@ -371,8 +372,8 @@ export default function HomePage() {
 
     .hero-stat-value {
       font-family: var(--font-display);
-      font-size: clamp(1.4rem, 1.9vw, 2.15rem);
-      line-height: 1.08;
+      font-size: clamp(1.45rem, 1.8vw, 2.05rem);
+      line-height: 1.06;
       font-weight: 700;
       letter-spacing: -0.03em;
       color: #0f172a;
@@ -385,9 +386,37 @@ export default function HomePage() {
       color: #5b6f86;
     }
 
+    .hero-features {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .hero-feature {
+      border: 1px solid #e4ebf3;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), #fbfdff);
+      padding: 14px;
+    }
+
+    .hero-feature-title {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .hero-feature-text {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #5c7086;
+    }
+
     .dashboard-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+      grid-template-columns: minmax(0, 1.32fr) minmax(320px, 0.98fr);
       gap: 16px;
       grid-column: 1 / -1;
       align-items: start;
@@ -525,7 +554,6 @@ export default function HomePage() {
 
     .highlights-grid {
       display: grid;
-      grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 10px;
     }
@@ -584,16 +612,12 @@ export default function HomePage() {
       grid-column: 1 / -1;
     }
 
-    .quicklist-shell {
-      display: block;
-    }
-
-    .quicklist-shell :global(section.card) {
+    .quicklist-shell section.card {
       padding: 20px;
       border-radius: 18px;
     }
 
-    .quicklist-shell :global(h3) {
+    .quicklist-shell h3 {
       margin-bottom: 12px;
     }
 
@@ -640,28 +664,27 @@ export default function HomePage() {
       line-height: 1.72;
     }
 
-    @media (max-width: 1380px) {
-      .hero-grid {
-        grid-template-columns: minmax(300px, 0.82fr) minmax(620px, 1.18fr);
+    @media (max-width: 1440px) {
+      .hero-main {
+        grid-template-columns: minmax(260px, 0.76fr) minmax(680px, 1.24fr);
       }
 
-      .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-        font-size: clamp(2.35rem, 3vw, 3.6rem) !important;
+      .hero-ticker [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
+        font-size: clamp(2rem, 2.45vw, 3rem) !important;
       }
     }
 
-    @media (max-width: 1220px) {
-      .hero-grid {
-        grid-template-columns: minmax(300px, 0.9fr) minmax(540px, 1.1fr);
+    @media (max-width: 1260px) {
+      .hero-main {
+        grid-template-columns: minmax(260px, 0.82fr) minmax(560px, 1.18fr);
+      }
+
+      .hero-ticker [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
+        font-size: clamp(1.85rem, 2.25vw, 2.65rem) !important;
       }
 
       .dashboard-grid,
       .lower-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .why-grid,
-      .faq-grid {
         grid-template-columns: 1fr;
       }
 
@@ -674,16 +697,26 @@ export default function HomePage() {
       .overview-links {
         justify-content: flex-start;
       }
+
+      .why-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 980px) {
-      .hero-grid {
+      .hero-main {
         grid-template-columns: 1fr;
       }
 
-      .hero-ticker :global([role="region"][aria-label="EU-27 total government debt (live)"] span) {
-        font-size: clamp(2rem, 5.2vw, 3.4rem) !important;
+      .hero-ticker [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
+        font-size: clamp(2rem, 5vw, 3.35rem) !important;
         white-space: normal !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      .hero-features {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -708,8 +741,8 @@ export default function HomePage() {
     }
 
     @media (max-width: 640px) {
-      .hero-title-stack {
-        font-size: clamp(2rem, 10vw, 3rem);
+      .hero-title {
+        font-size: clamp(2.15rem, 9vw, 3.2rem);
       }
 
       .hero-lede {
@@ -733,14 +766,27 @@ export default function HomePage() {
 
   return (
     <main className="container grid home-page">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
 
-      <section className="card section hero-card" style={{ gridColumn: "1 / -1" }} aria-labelledby="page-title">
-        <div className="hero-grid">
+      <section
+        className="card section hero-card"
+        style={{ gridColumn: "1 / -1" }}
+        aria-labelledby="page-title"
+      >
+        <div className="hero-main">
           <div className="hero-left">
-            <h1 id="page-title" className="hero-title-stack">
+            <h1 id="page-title" className="hero-title">
               <span>Live EU</span>
               <span>Government</span>
               <span>Debt Map</span>
@@ -753,7 +799,7 @@ export default function HomePage() {
               </strong>
             </p>
 
-            <p className="hero-copy">
+            <p className="hero-text">
               EU Debt Map turns Eurostat debt data into a simple way to explore government debt
               across the European Union. Use the interactive map to compare countries such as
               France, Germany, Italy, Spain, and the Netherlands, then open any country page for a
@@ -793,7 +839,9 @@ export default function HomePage() {
                   <p className="hero-stat-country">
                     {largestDebt.flag} {largestDebt.name}
                   </p>
-                  <div className="hero-stat-value">{formatEURShort(largestDebt.last_value_eur)}</div>
+                  <div className="hero-stat-value">
+                    {formatEURShort(largestDebt.last_value_eur)}
+                  </div>
                   <div className="hero-stat-sub">
                     Biggest debt stock in the EU at the latest reference point.
                   </div>
@@ -806,13 +854,38 @@ export default function HomePage() {
                   <p className="hero-stat-country">
                     {fastestGrowing.flag} {fastestGrowing.name}
                   </p>
-                  <div className="hero-stat-value">{formatEURShort(fastestGrowing.last_value_eur)}</div>
+                  <div className="hero-stat-value">
+                    {formatEURShort(fastestGrowing.last_value_eur)}
+                  </div>
                   <div className="hero-stat-sub">
                     Strongest absolute increase between the latest two periods.
                   </div>
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        <div className="hero-features" aria-label="What you can do here">
+          <div className="hero-feature">
+            <p className="hero-feature-title">Compare countries quickly</p>
+            <p className="hero-feature-text">
+              See which EU countries are rising, falling, and diverging in debt direction.
+            </p>
+          </div>
+
+          <div className="hero-feature">
+            <p className="hero-feature-title">Track live estimated totals</p>
+            <p className="hero-feature-text">
+              Follow a running estimate built from the latest official Eurostat reference periods.
+            </p>
+          </div>
+
+          <div className="hero-feature">
+            <p className="hero-feature-title">Go deeper when needed</p>
+            <p className="hero-feature-text">
+              Open country pages, EU trend pages, and plain-English explainers from one place.
+            </p>
           </div>
         </div>
       </section>
@@ -877,7 +950,6 @@ export default function HomePage() {
               <h2 id="highlights-title" style={{ marginTop: 0, marginBottom: 0 }}>
                 Highlights
               </h2>
-
               <p className="highlights-intro">
                 Government debt affects borrowing costs, budget choices, interest rates, and how
                 much room governments have to respond to crises.
@@ -929,14 +1001,16 @@ export default function HomePage() {
                 <div className="why-point">
                   <p className="why-point-title">Fiscal flexibility</p>
                   <p className="why-point-text">
-                    Debt levels shape how much room governments have for spending and crisis response.
+                    Debt levels shape how much room governments have for spending and crisis
+                    response.
                   </p>
                 </div>
 
                 <div className="why-point">
                   <p className="why-point-title">EU comparison</p>
                   <p className="why-point-text">
-                    The map makes it easier to compare very different fiscal positions inside one bloc.
+                    The map makes it easier to compare very different fiscal positions inside one
+                    bloc.
                   </p>
                 </div>
               </div>
@@ -950,8 +1024,9 @@ export default function HomePage() {
 
                 <p style={{ marginBottom: 0 }}>
                   Start with the live map, open a country page to compare national debt, then use{" "}
-                  <Link href="/eu-debt">EU debt</Link> for the broader trend and <Link href="/debt">Debt</Link>{" "}
-                  if you want a clearer explanation of debt, deficits, and debt-to-GDP.
+                  <Link href="/eu-debt">EU debt</Link> for the broader trend and{" "}
+                  <Link href="/debt">Debt</Link> if you want a clearer explanation of debt,
+                  deficits, and debt-to-GDP.
                 </p>
               </div>
             </div>
