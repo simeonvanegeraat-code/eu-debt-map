@@ -93,9 +93,9 @@ function countryHref(code) {
 }
 
 export default function HomePage() {
-  const valid = countries.filter((country) => {
-    return country && country.last_value_eur > 0 && country.prev_value_eur > 0;
-  });
+  const valid = countries.filter(
+    (country) => country && country.last_value_eur > 0 && country.prev_value_eur > 0
+  );
 
   const largestDebt =
     valid.length > 0
@@ -180,41 +180,25 @@ export default function HomePage() {
   const styles = `
     .home-shell {
       display: grid;
-      gap: 20px;
+      gap: 18px;
       align-items: start;
-      max-width: 1320px !important;
+      max-width: 1180px !important;
     }
 
     .home-hero {
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       padding: 28px;
       background:
-        radial-gradient(circle at top right, rgba(37,99,235,0.11), transparent 28%),
+        radial-gradient(circle at top right, rgba(37,99,235,0.10), transparent 30%),
         radial-gradient(circle at bottom left, rgba(34,197,94,0.08), transparent 24%),
         linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
     }
 
-    .home-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(37,99,235,0.03), transparent 36%);
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      position: relative;
-      z-index: 1;
+    .hero-stack {
       display: grid;
-      grid-template-columns: minmax(360px, 0.9fr) minmax(620px, 1.1fr);
-      gap: 28px;
+      gap: 22px;
       align-items: start;
-    }
-
-    .hero-copy,
-    .hero-panel {
-      min-width: 0;
     }
 
     .hero-kicker {
@@ -225,21 +209,23 @@ export default function HomePage() {
       padding: 0 12px;
       border-radius: 999px;
       border: 1px solid #dbe7f4;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.94);
       color: #4f6780;
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.02em;
+      width: fit-content;
     }
 
     .hero-title {
-      margin: 16px 0 14px;
+      margin: 14px 0 14px;
       font-family: var(--font-display);
-      font-size: clamp(3.2rem, 5vw, 5.5rem);
+      font-size: clamp(3rem, 5vw, 5rem);
       line-height: 0.92;
       letter-spacing: -0.05em;
       font-weight: 700;
-      max-width: 6.4ch;
+      max-width: none;
+      overflow: visible;
     }
 
     .hero-title span {
@@ -247,6 +233,7 @@ export default function HomePage() {
       background: linear-gradient(90deg, #2563eb 0%, #0f78d1 46%, #18b37a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      overflow: visible;
     }
 
     .hero-title span + span {
@@ -257,7 +244,7 @@ export default function HomePage() {
       margin: 0;
       max-width: 34ch;
       color: #39536f;
-      font-size: clamp(1.08rem, 0.5vw + 0.95rem, 1.32rem);
+      font-size: clamp(1.08rem, 0.4vw + 1rem, 1.3rem);
       line-height: 1.62;
       font-weight: 600;
     }
@@ -267,6 +254,7 @@ export default function HomePage() {
       max-width: 64ch;
       color: #5a7086;
       line-height: 1.72;
+      font-size: 1rem;
     }
 
     .hero-meta {
@@ -402,7 +390,7 @@ export default function HomePage() {
     }
 
     .hero-ticker-shell [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
-      font-size: clamp(2.5rem, 3vw, 4.1rem) !important;
+      font-size: clamp(2.35rem, 3vw, 4rem) !important;
       line-height: 1.02 !important;
       letter-spacing: -0.045em !important;
       white-space: nowrap !important;
@@ -412,7 +400,7 @@ export default function HomePage() {
 
     .hero-metric-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 14px;
     }
 
@@ -444,7 +432,7 @@ export default function HomePage() {
 
     .metric-value {
       font-family: var(--font-display);
-      font-size: clamp(1.5rem, 1.4vw, 2rem);
+      font-size: clamp(1.55rem, 1.5vw, 2rem);
       line-height: 1.06;
       font-weight: 700;
       letter-spacing: -0.03em;
@@ -464,7 +452,7 @@ export default function HomePage() {
       gap: 8px;
       flex-wrap: wrap;
       font-family: var(--font-display);
-      font-size: clamp(1.65rem, 1.65vw, 2.2rem);
+      font-size: clamp(1.7rem, 1.7vw, 2.2rem);
       line-height: 1.05;
       letter-spacing: -0.04em;
       font-weight: 700;
@@ -488,9 +476,8 @@ export default function HomePage() {
 
     .overview-head {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 18px;
-      align-items: end;
+      gap: 14px;
+      align-items: start;
     }
 
     .overview-title {
@@ -507,7 +494,6 @@ export default function HomePage() {
     .overview-legend {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 8px;
       align-items: center;
     }
@@ -537,15 +523,9 @@ export default function HomePage() {
 
     .overview-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+      grid-template-columns: 1fr;
       gap: 18px;
-      align-items: stretch;
-    }
-
-    .map-shell {
-      min-width: 0;
-      display: grid;
-      gap: 12px;
+      align-items: start;
     }
 
     .map-frame {
@@ -571,61 +551,9 @@ export default function HomePage() {
       border-radius: 0;
     }
 
-    .overview-foot {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .overview-callout {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 50px;
-      padding: 0 16px;
-      border-radius: 14px;
-      background: #ffffff;
-      border: 1px dashed #cbd5e1;
-      color: #0f172a;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-
-    .overview-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .soft-link-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid #d9e2ec;
-      background: #ffffff;
-      color: #0f172a;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .soft-link-chip:hover {
-      background: #f8fafc;
-      text-decoration: none;
-    }
-
     .overview-rail {
-      min-width: 0;
       display: grid;
       gap: 14px;
-      align-content: start;
     }
 
     .rail-card {
@@ -673,17 +601,66 @@ export default function HomePage() {
       font-size: 15px;
     }
 
+    .overview-foot {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .overview-callout {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 16px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      color: #0f172a;
+      font-weight: 700;
+      line-height: 1.45;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .overview-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .soft-link-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid #d9e2ec;
+      background: #ffffff;
+      color: #0f172a;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .soft-link-chip:hover {
+      background: #f8fafc;
+      text-decoration: none;
+    }
+
     .info-grid {
       display: grid;
-      grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
-      gap: 20px;
+      grid-template-columns: 1fr;
+      gap: 18px;
       align-items: start;
     }
 
     .quicklist-shell section.card {
       padding: 22px;
       border-radius: 20px;
-      height: 100%;
     }
 
     .articles-shell {
@@ -724,8 +701,8 @@ export default function HomePage() {
 
     .explainer-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
-      gap: 24px;
+      grid-template-columns: 1fr;
+      gap: 18px;
       align-items: start;
     }
 
@@ -745,7 +722,7 @@ export default function HomePage() {
 
     .reason-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 12px;
     }
 
@@ -779,7 +756,7 @@ export default function HomePage() {
 
     .faq-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 12px;
     }
 
@@ -802,53 +779,7 @@ export default function HomePage() {
       line-height: 1.72;
     }
 
-    @media (max-width: 1260px) {
-      .hero-grid {
-        grid-template-columns: minmax(320px, 0.92fr) minmax(520px, 1.08fr);
-      }
-
-      .hero-ticker-shell [role="region"][aria-label="EU-27 total government debt (live)"] .ticker-hero > span {
-        font-size: clamp(2.2rem, 2.7vw, 3.55rem) !important;
-      }
-
-      .hero-metric-grid,
-      .reason-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .overview-grid,
-      .info-grid,
-      .explainer-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-title {
-        max-width: none;
-      }
-
-      .overview-head {
-        grid-template-columns: 1fr;
-        align-items: start;
-      }
-
-      .overview-legend {
-        justify-content: flex-start;
-      }
-    }
-
     @media (max-width: 900px) {
-      .hero-metric-grid,
-      .faq-grid,
-      .reason-grid {
-        grid-template-columns: 1fr;
-      }
-
       .map-frame .mapWrap {
         min-height: 460px;
       }
@@ -864,7 +795,7 @@ export default function HomePage() {
       }
 
       .hero-title {
-        font-size: clamp(2.5rem, 10vw, 3.6rem);
+        font-size: clamp(2.45rem, 10vw, 3.7rem);
         line-height: 0.95;
       }
 
@@ -874,14 +805,8 @@ export default function HomePage() {
       }
 
       .hero-btn-primary,
-      .hero-btn-secondary,
-      .overview-links,
-      .overview-callout {
+      .hero-btn-secondary {
         width: 100%;
-      }
-
-      .overview-foot {
-        align-items: stretch;
       }
 
       .overview-links {
@@ -889,6 +814,10 @@ export default function HomePage() {
       }
 
       .soft-link-chip {
+        width: 100%;
+      }
+
+      .overview-callout {
         width: 100%;
       }
 
@@ -920,8 +849,8 @@ export default function HomePage() {
       />
 
       <section className="card home-hero" aria-labelledby="page-title">
-        <div className="hero-grid">
-          <div className="hero-copy">
+        <div className="hero-stack">
+          <div>
             <div className="hero-kicker">Live EU-27 overview</div>
 
             <h1 id="page-title" className="hero-title">
@@ -1051,11 +980,9 @@ export default function HomePage() {
         </div>
 
         <div className="overview-grid">
-          <div className="map-shell">
-            <div className="map-frame">
-              <div className="mapWrap" role="region" aria-label="Interactive EU map">
-                <EuropeMap />
-              </div>
+          <div className="map-frame">
+            <div className="mapWrap" role="region" aria-label="Interactive EU map">
+              <EuropeMap />
             </div>
           </div>
 
@@ -1233,7 +1160,8 @@ export default function HomePage() {
             <h3>What is the difference between debt and deficit?</h3>
             <p>
               Debt is the total amount a government owes. A deficit is the gap between what a
-              government spends and what it collects over a period. You can read more on the <Link href="/debt">Debt page</Link>.
+              government spends and what it collects over a period. You can read more on the{" "}
+              <Link href="/debt">Debt page</Link>.
             </p>
           </div>
         </div>
