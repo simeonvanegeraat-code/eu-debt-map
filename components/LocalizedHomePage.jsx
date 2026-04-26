@@ -1449,28 +1449,65 @@ export default function LocalizedHomePage({ lang = "en" }) {
         }
 
         @media (max-width: 560px) {
-          .eu-home-actions {
-            flex-direction: column;
-            align-items: stretch;
-          }
+  .eu-home-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-          .eu-home-btn {
-            width: 100%;
-          }
+  .eu-home-btn {
+    width: 100%;
+  }
 
-          .eu-home-meta span {
-            width: 100%;
-            justify-content: center;
-          }
+  .eu-home-meta span {
+    width: 100%;
+    justify-content: center;
+  }
 
-          .eu-home-mini-card {
-            padding: 16px;
-          }
+  .eu-home-mini-card {
+    padding: 16px;
+  }
 
-          .eu-home-map-shell {
-            min-height: 260px;
-          }
-        }
+  .eu-home-map-card {
+    padding: 14px;
+  }
+
+  .eu-home-map-pills {
+    gap: 7px;
+  }
+
+  .eu-home-pill {
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 0.74rem;
+  }
+
+  .eu-home-map-shell {
+    min-height: 390px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .eu-home-map-shell svg {
+    width: 128%;
+    max-width: none;
+    height: auto;
+    flex: 0 0 auto;
+    transform: translateY(-4px);
+  }
+
+  .eu-home-map-actions {
+    gap: 9px;
+    margin-top: 14px;
+  }
+
+  .eu-home-map-action {
+    min-height: 52px;
+    padding: 12px 14px;
+    font-size: 0.86rem;
+  }
+}
       `}</style>
     </main>
   );
