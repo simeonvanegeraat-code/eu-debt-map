@@ -4,7 +4,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { countries, livePerSecondFor } from "@/lib/data";
 
-export default function EUTotalTicker() {
+export default function EUTotalTicker({
+  label = "EU-27 total government debt (live estimate)",
+  ariaLabel = "EU-27 total government debt live estimate",
+  locale = "en-GB",
+}) {
   const totals = useMemo(() => {
     const valid = (countries || []).filter(
       (c) => c && c.last_value_eur > 0 && c.prev_value_eur > 0
@@ -32,14 +36,14 @@ export default function EUTotalTicker() {
     return () => clearInterval(id);
   }, [totals.last, totals.perSecond]);
 
-  const formatted = new Intl.NumberFormat("en-GB", {
+  const formatted = new Intl.NumberFormat(locale, {
     maximumFractionDigits: 0,
   }).format(Math.max(0, Math.round(value)));
 
   return (
     <div
       role="region"
-      aria-label="EU-27 total government debt (live)"
+      aria-label={ariaLabel}
       style={{
         background: "#ffffff",
         color: "#0b1220",
@@ -62,15 +66,10 @@ export default function EUTotalTicker() {
           fontWeight: 600,
         }}
       >
-        EU-27 total government debt (live estimate)
+        {label}
       </div>
 
-      <div
-        className="ticker-hero num"
-        style={{
-          marginTop: 0,
-        }}
-      >
+      <div className="ticker-hero num" style={{ marginTop: 0 }}>
         <span
           suppressHydrationWarning
           style={{
