@@ -1,4 +1,4 @@
-// app/components/ShareBar.jsx
+// components/ShareBar.jsx
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -63,6 +63,7 @@ function Icon({ name, size = 18 }) {
       </svg>
     );
   }
+
   if (name === "x") {
     return (
       <svg {...common}>
@@ -70,6 +71,7 @@ function Icon({ name, size = 18 }) {
       </svg>
     );
   }
+
   if (name === "reddit") {
     return (
       <svg {...common}>
@@ -77,6 +79,7 @@ function Icon({ name, size = 18 }) {
       </svg>
     );
   }
+
   if (name === "linkedin") {
     return (
       <svg {...common}>
@@ -84,6 +87,7 @@ function Icon({ name, size = 18 }) {
       </svg>
     );
   }
+
   if (name === "whatsapp") {
     return (
       <svg {...common}>
@@ -91,53 +95,80 @@ function Icon({ name, size = 18 }) {
       </svg>
     );
   }
+
   return null;
 }
 
-export default function ShareBar({ title, summary, lang = "en" }) {
+function buildShareUrl(baseUrl, params = {}) {
+  const shareUrl = new URL(baseUrl);
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) shareUrl.searchParams.set(key, value);
+  });
+
+  return shareUrl.toString();
+}
+
+export default function ShareBar({
+  url: providedUrl = "",
+  title = "",
+  summary,
+  lang = "en",
+}) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = TEXT[effLang] || TEXT.en;
 
   const [copied, setCopied] = useState(false);
-  const [url, setUrl] = useState("");
+  const [shareUrl, setShareUrl] = useState(providedUrl || "");
 
   useEffect(() => {
-    if (typeof window !== "undefined") setUrl(window.location.href);
-  }, []);
+    if (!providedUrl && typeof window !== "undefined") {
+      setShareUrl(window.location.href);
+    }
+  }, [providedUrl]);
 
   const copy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(url);
+      const valueToCopy =
+        shareUrl ||
+        providedUrl ||
+        (typeof window !== "undefined" ? window.location.href : "");
+
+      if (!valueToCopy) return;
+
+      await navigator.clipboard.writeText(valueToCopy);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {}
-  }, [url]);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }, [providedUrl, shareUrl]);
 
   const xUrl = useMemo(() => {
-    const u = new URL("https://twitter.com/intent/tweet");
-    if (url) u.searchParams.set("url", url);
-    if (title) u.searchParams.set("text", title);
-    return u.toString();
-  }, [url, title]);
+    return buildShareUrl("https://twitter.com/intent/tweet", {
+      url: shareUrl,
+      text: title,
+    });
+  }, [shareUrl, title]);
 
   const redditUrl = useMemo(() => {
-    const u = new URL("https://www.reddit.com/submit");
-    if (url) u.searchParams.set("url", url);
-    if (title) u.searchParams.set("title", title);
-    return u.toString();
-  }, [url, title]);
+    return buildShareUrl("https://www.reddit.com/submit", {
+      url: shareUrl,
+      title,
+    });
+  }, [shareUrl, title]);
 
   const linkedInUrl = useMemo(() => {
-    const u = new URL("https://www.linkedin.com/sharing/share-offsite/");
-    if (url) u.searchParams.set("url", url);
-    return u.toString();
-  }, [url]);
+    return buildShareUrl("https://www.linkedin.com/sharing/share-offsite/", {
+      url: shareUrl,
+    });
+  }, [shareUrl]);
 
   const whatsAppUrl = useMemo(() => {
-    const u = new URL("https://api.whatsapp.com/send");
-    if (url) u.searchParams.set("text", `${title} ${url}`.trim());
-    return u.toString();
-  }, [url, title]);
+    return buildShareUrl("https://api.whatsapp.com/send", {
+      text: [title, shareUrl].filter(Boolean).join(" "),
+    });
+  }, [shareUrl, title]);
 
   return (
     <div className="share-bar">
@@ -171,6 +202,7 @@ export default function ShareBar({ title, summary, lang = "en" }) {
           color: #374151;
           border-color: #e5e7eb;
         }
+
         .btn-copy:hover {
           background: #e5e7eb;
           color: #111827;
@@ -180,6 +212,7 @@ export default function ShareBar({ title, summary, lang = "en" }) {
           background: #000000;
           color: #ffffff;
         }
+
         .btn-x:hover {
           opacity: 0.8;
           transform: translateY(-1px);
@@ -189,6 +222,7 @@ export default function ShareBar({ title, summary, lang = "en" }) {
           background: #ff4500;
           color: #ffffff;
         }
+
         .btn-reddit:hover {
           background: #e03d00;
           transform: translateY(-1px);
@@ -198,22 +232,37 @@ export default function ShareBar({ title, summary, lang = "en" }) {
           background: #0a66c2;
           color: #ffffff;
         }
+
         .btn-linkedin:hover {
           background: #004182;
           transform: translateY(-1px);
         }
 
         .btn-whatsapp {
-          background: #25D366;
+          background: #25d366;
           color: #ffffff;
         }
+
         .btn-whatsapp:hover {
-          background: #128C7E;
+          background: #128c7e;
           transform: translateY(-1px);
+        }
+
+        @media (max-width: 560px) {
+          .share-bar {
+            gap: 8px;
+          }
+
+          .btn-base {
+            height: 38px;
+            padding: 0 12px;
+            font-size: 0.84rem;
+          }
         }
       `}</style>
 
       <button
+        type="button"
         onClick={copy}
         className="btn-base btn-copy"
         aria-label={t.ariaCopy}
