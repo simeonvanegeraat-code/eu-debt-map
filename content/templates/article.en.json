@@ -1,18 +1,55 @@
 {
-  "slug": "your-slug-here",
-  "title": "Your title here",
-  "summary": "Short summary (1–2 sentences).",
-  "excerpt": "Same as summary, used in some components.",
-  "tags": ["debt-to-GDP", "EU debt", "economics"],
-  "datePublished": "2025-10-10T08:00:00+00:00",
-  "dateModified": "2025-10-10T08:00:00+00:00",
-  "author": {
-    "name": "Simeon",
-    "url": "https://www.eudebtmap.com/authors/author-name"
-  },
-  "image": "/images/articles/placeholder.jpg",
-  "imageAlt": "Describe the image for accessibility",
+  "slug": "eu-debt-burden-2026",
+  "title": "Europe’s Debt Burden in 2026: Which EU Countries Are Under the Most Pressure?",
+  "seoTitle": "Europe’s Debt Burden in 2026: EU Countries Under the Most Pressure",
+  "summary": "Europe’s public debt is not spread evenly. This data-backed analysis explains why total debt and debt-to-GDP tell two different stories about fiscal pressure in the EU.",
+  "excerpt": "Europe’s public debt is not spread evenly. This data-backed analysis explains why total debt and debt-to-GDP tell two different stories about fiscal pressure in the EU.",
+  "primaryTopic": "EU government debt",
+  "articleType": "analysis",
+  "tags": ["EU debt", "debt-to-GDP", "government debt", "Eurostat", "fiscal rules"],
   "lang": "en",
+  "datePublished": "2026-04-28T08:00:00+00:00",
+  "dateModified": "2026-04-28T08:00:00+00:00",
+  "dateReviewed": "2026-04-28T08:00:00+00:00",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/methodology"
+  },
+  "readingTime": "5 min read",
+  "image": "/images/articles/eu-debt-burden-2026.jpg",
+  "imageAlt": "Stylized map of the European Union with financial charts representing public debt pressure across EU countries",
+  "imageCredit": "Original editorial image created for EU Debt Map",
+  "relatedLinks": [
+    {
+      "label": "Live EU debt map",
+      "url": "https://www.eudebtmap.com/"
+    },
+    {
+      "label": "Debt-to-GDP ranking",
+      "url": "https://www.eudebtmap.com/debt-to-gdp"
+    },
+    {
+      "label": "Methodology",
+      "url": "https://www.eudebtmap.com/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Eurostat quarterly government debt release, Q4 2025",
+      "url": "https://ec.europa.eu/eurostat/product?code=2-22042026-bp",
+      "accessed": "2026-04-28"
+    },
+    {
+      "name": "Eurostat quarterly government debt metadata",
+      "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm",
+      "accessed": "2026-04-28"
+    }
+  ],
   "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste the raw AdSense script into the body.",
-  "body": "<h2>Intro</h2><p>Write the first part of your article body as HTML or minimal markup here.</p><h2>Main section</h2><p>Continue the article here.</p><!-- MID_ARTICLE_AD --><h2>Final section</h2><p>Finish the article here.</p>"
+  "contentNotes": "Use short paragraphs, clear source references, internal links and a non-clickbait Discover-friendly headline.",
+  "body": "<p class=\"article-intro\">Europe’s debt burden is not spread evenly. Some countries owe more in absolute terms, while others face heavier pressure because their debt is large compared with the size of their economy.</p><h2>Key takeaways</h2><ul><li>The EU government debt-to-GDP ratio stood at 81.7% at the end of 2025, according to Eurostat.</li><li>Total debt and debt-to-GDP measure different kinds of pressure.</li><li>Large economies can carry very large debts, but high debt ratios can create greater fiscal vulnerability.</li><li>The next Eurostat quarterly government debt update is scheduled for 21 July 2026.</li></ul><!-- MID_ARTICLE_AD --><h2>Continue article here</h2><p>Write the full article body here.</p>"
 }
