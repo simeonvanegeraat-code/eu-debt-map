@@ -1,115 +1,228 @@
 // app/sitemap.js
-/** Hardened sitemap: always returns valid entries, even if imports fail. */
+// Hardened sitemap for EU Debt Map.
+// Includes static pages, localized pages, country pages, article hubs,
+// article detail pages and image sitemap data for articles.
 
 const SITE = "https://www.eudebtmap.com";
 
-// Talen ("" = en op root)
-const LOCALES = ["", "nl", "de", "fr"];
 const ALL_LOCALES = ["en", "nl", "de", "fr"];
+const LOCALE_PREFIX = {
+  en: "",
+  nl: "/nl",
+  de: "/de",
+  fr: "/fr",
+};
 
-// Statische paden die we in ALLE talen willen hebben
 const STATIC_PATHS = [
-  "/",            // Home
-  "/debt-to-gdp", // NIEUW in sitemap
-  "/debt",
-  "/about",
-  "/methodology",
+  {
+    path: "/",
+    changeFrequency: "daily",
+    priority: 1.0,
+  },
+  {
+    path: "/debt-to-gdp",
+    changeFrequency: "daily",
+    priority: 0.9,
+  },
+  {
+    path: "/debt",
+    changeFrequency: "weekly",
+    priority: 0.75,
+  },
+  {
+    path: "/articles",
+    changeFrequency: "weekly",
+    priority: 0.8,
+  },
+  {
+    path: "/about",
+    changeFrequency: "monthly",
+    priority: 0.6,
+  },
+  {
+    path: "/methodology",
+    changeFrequency: "weekly",
+    priority: 0.75,
+  },
 ];
 
-function withLocale(path, locale) {
-  if (!locale) return path; // EN root
-  if (path === "/") return `/${locale}`;
-  return `/${locale}${path}`;
+const EN_ONLY_PATHS = [
+  {
+    path: "/eu-debt",
+    changeFrequency: "weekly",
+    priority: 0.75,
+  },
+];
+
+function withLocale(path, lang = "en") {
+  const prefix = LOCALE_PREFIX[lang] ?? "";
+
+  if (!prefix) return path;
+  if (path === "/") return prefix;
+
+  return `${prefix}${path}`;
+}
+
+function urlFor(path, lang = "en") {
+  return `${SITE}${withLocale(path, lang)}`;
 }
 
 function languageAlternatesFor(path) {
-  // hreflang alternates (en, nl, de, fr)
-  return {
-    en: `${SITE}${withLocale(path, "")}`,
-    nl: `${SITE}${withLocale(path, "nl")}`,
-    de: `${SITE}${withLocale(path, "de")}`,
-    fr: `${SITE}${withLocale(path, "fr")}`,
-  };
+  return Object.fromEntries(
+    ALL_LOCALES.map((lang) => [lang, urlFor(path, lang)])
+  );
+}
+
+function safeDate(value, fallback = new Date()) {
+  if (!value) return fallback;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return fallback;
+
+  return date;
+}
+
+function absoluteImageUrl(image) {
+  if (!image) return undefined;
+  if (/^https?:\/\//i.test(image)) return image;
+  return `${SITE}${image.startsWith("/") ? image : `/${image}`}`;
+}
+
+function articleUrl(article) {
+  if (article?.url) {
+    return article.url.startsWith("http")
+      ? article.url
+      : `${SITE}${article.url}`;
+  }
+
+  const lang = article?.lang || "en";
+  const prefix = LOCALE_PREFIX[lang] ?? "";
+  return `${SITE}${prefix}/articles/${article.slug}`;
+}
+
+function articleAlternates(article, translations = []) {
+  if (!article?.slug) return undefined;
+
+  const actualTranslations = Array.isArray(translations)
+    ? translations.filter((t) => t?.slug && t?.lang)
+    : [];
+
+  if (!actualTranslations.length) {
+    return undefined;
+  }
+
+  const languages = Object.fromEntries(
+    actualTranslations.map((t) => {
+      const prefix = LOCALE_PREFIX[t.lang] ?? "";
+      return [t.lang, `${SITE}${prefix}/articles/${t.slug}`];
+    })
+  );
+
+  if (!languages.en) {
+    languages["x-default"] = articleUrl(article);
+  } else {
+    languages["x-default"] = languages.en;
+  }
+
+  return { languages };
 }
 
 export default async function sitemap() {
-  // --------- SAFE IMPORTS + FALLBACKS ----------
   let EUROSTAT_UPDATED_AT = null;
   let countries = [];
   let listArticles = () => [];
+  let getTranslations = () => [];
 
   try {
-    // eurostat.gen should only export constants; if not present, ignore
     const eurostat = await import("@/lib/eurostat.gen").catch(() => ({}));
     EUROSTAT_UPDATED_AT = eurostat?.EUROSTAT_UPDATED_AT ?? null;
-  } catch {}
+  } catch {
+    EUROSTAT_UPDATED_AT = null;
+  }
 
   try {
     const dataMod = await import("@/lib/data").catch(() => ({}));
     countries = Array.isArray(dataMod?.countries) ? dataMod.countries : [];
-  } catch {}
+  } catch {
+    countries = [];
+  }
 
   try {
-    const artMod = await import("@/lib/articles").catch(() => ({}));
-    if (typeof artMod?.listArticles === "function") listArticles = artMod.listArticles;
-  } catch {}
+    const articlesMod = await import("@/lib/articles").catch(() => ({}));
 
-  const DATA_LASTMOD = EUROSTAT_UPDATED_AT ? new Date(EUROSTAT_UPDATED_AT) : new Date();
+    if (typeof articlesMod?.listArticles === "function") {
+      listArticles = articlesMod.listArticles;
+    }
 
-  // We bouwen in een Set om duplicaten te voorkomen
+    if (typeof articlesMod?.getTranslations === "function") {
+      getTranslations = articlesMod.getTranslations;
+    }
+  } catch {
+    listArticles = () => [];
+    getTranslations = () => [];
+  }
+
+  const DATA_LASTMOD = safeDate(EUROSTAT_UPDATED_AT);
   const seen = new Set();
   const urls = [];
 
-  // Helper om veilig toe te voegen
-  const pushUrl = (entry) => {
-    try {
-      if (!entry?.url) return;
-      if (seen.has(entry.url)) return;
-      seen.add(entry.url);
-      urls.push(entry);
-    } catch {
-      /* ignore broken entry */
-    }
-  };
+  function pushUrl(entry) {
+    if (!entry?.url) return;
+    if (seen.has(entry.url)) return;
 
-  // --------- 1) Statische pagina's in alle talen ----------
-  for (const p of STATIC_PATHS) {
-    const alts = languageAlternatesFor(p);
+    seen.add(entry.url);
+    urls.push(entry);
+  }
+
+  // 1. Static localized pages.
+  for (const item of STATIC_PATHS) {
+    const alternates = languageAlternatesFor(item.path);
+
     for (const lang of ALL_LOCALES) {
-      const locPath = withLocale(p, lang === "en" ? "" : lang);
       pushUrl({
-        url: `${SITE}${locPath}`,
+        url: urlFor(item.path, lang),
         lastModified: DATA_LASTMOD,
-        changeFrequency: (p === "/" || p === "/debt-to-gdp") ? "daily" : "weekly",
-        priority: p === "/" ? 1.0 : p === "/debt-to-gdp" ? 0.9 : 0.7,
-        alternates: { languages: alts },
+        changeFrequency: item.changeFrequency,
+        priority: item.priority,
+        alternates: { languages: alternates },
       });
     }
   }
 
-  // --------- 2) Country-pagina's in alle talen ----------
+  // 2. English-only special pages.
+  for (const item of EN_ONLY_PATHS) {
+    pushUrl({
+      url: `${SITE}${item.path}`,
+      lastModified: DATA_LASTMOD,
+      changeFrequency: item.changeFrequency,
+      priority: item.priority,
+    });
+  }
+
+  // 3. Country pages in all languages.
   if (Array.isArray(countries) && countries.length) {
-    for (const c of countries) {
-      const code = String(c?.code ?? "").toLowerCase();
+    for (const country of countries) {
+      const code = String(country?.code ?? "").toLowerCase();
       if (!code) continue;
+
       const path = `/country/${code}`;
-      const alts = languageAlternatesFor(path);
+      const alternates = languageAlternatesFor(path);
 
       for (const lang of ALL_LOCALES) {
-        const locPath = withLocale(path, lang === "en" ? "" : lang);
         pushUrl({
-          url: `${SITE}${locPath}`,
+          url: urlFor(path, lang),
           lastModified: DATA_LASTMOD,
           changeFrequency: "daily",
           priority: 0.8,
-          alternates: { languages: alts },
+          alternates: { languages: alternates },
         });
       }
     }
   }
 
-  // --------- 3) Artikelen (ENG-only) ----------
+  // 4. Article detail pages.
   let articles = [];
+
   try {
     articles = listArticles() || [];
   } catch {
@@ -117,36 +230,34 @@ export default async function sitemap() {
   }
 
   if (Array.isArray(articles) && articles.length) {
-    for (const a of articles) {
-      // Verwacht: { slug, date, dateModified, image }
-      const slug = a?.slug ? String(a.slug) : null;
-      if (!slug) continue;
+    for (const article of articles) {
+      if (!article?.slug) continue;
 
-      // Datum logica: dateModified > datePublished > date > DATA_LASTMOD
-      const published = a.datePublished || a.date;
-      const modified = a.dateModified || published;
-      const lm = modified ? new Date(modified) : DATA_LASTMOD;
+      const published = article.datePublished || article.date;
+      const modified = article.dateModified || published;
+      const lastModified = safeDate(modified, DATA_LASTMOD);
+      const imageUrl = absoluteImageUrl(article.image);
 
-      // Afbeelding logica voor Google Discover/Images sitemap
-      let images = undefined;
-      if (a.image) {
-        const imgUrl = a.image.startsWith("http") ? a.image : `${SITE}${a.image}`;
-        images = [imgUrl];
+      let translations = [];
+      try {
+        translations = getTranslations(article.slug) || [];
+      } catch {
+        translations = [];
       }
 
       pushUrl({
-        url: `${SITE}/articles/${slug}`,
-        lastModified: lm,
+        url: articleUrl(article),
+        lastModified,
         changeFrequency: "monthly",
-        priority: 0.7,
-        images: images, // Voegt image sitemap data toe
+        priority: article.lang === "en" ? 0.72 : 0.65,
+        images: imageUrl ? [imageUrl] : undefined,
+        alternates: articleAlternates(article, translations),
       });
     }
   }
 
-  // --------- 4) Minimale fallback (NOOIT leeg) ----------
-  if (urls.length === 0) {
-    // Geef in elk geval de homepage terug zodat sitemap nooit 0 B is
+  // 5. Safe fallback so sitemap is never empty.
+  if (!urls.length) {
     return [
       {
         url: `${SITE}/`,

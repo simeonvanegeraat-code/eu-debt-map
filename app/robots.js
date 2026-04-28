@@ -1,19 +1,19 @@
 // app/robots.js
+
+const SITE = "https://www.eudebtmap.com";
+
 export default function robots() {
-  const base = "https://www.eudebtmap.com";
-  
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/api/", "/_next/"],
-    },
-    // Host is deprecated, maar kan geen kwaad
-    host: base,
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/"],
+      },
+    ],
     sitemap: [
-      `${base}/sitemap.xml`,       // Je algemene sitemap
-      `${base}/news-sitemap.xml`,  // Je nieuwe News sitemap
-      `${base}/rss.xml`,           // Je bestaande RSS feed (optioneel om hier te melden, maar mag)
+      `${SITE}/sitemap.xml`,
+      `${SITE}/news-sitemap.xml`,
     ],
   };
 }

@@ -191,7 +191,6 @@ export default function ArticleDetailPage({ params }) {
     articleSection:
       article.primaryTopic || article.tags?.[0] || "EU government debt",
     keywords: Array.isArray(article.tags) ? article.tags.join(", ") : undefined,
-    isAccessibleForFree: true,
   };
 
   const css = `
