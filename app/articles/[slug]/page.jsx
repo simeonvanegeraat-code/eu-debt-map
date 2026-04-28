@@ -12,13 +12,58 @@ const LANG = "en";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 
+/* ---------- helpers ---------- */
+
+function bodyStartsWithImage(html = "") {
+  const head = html.trim().slice(0, 500).toLowerCase();
+  return head.startsWith("<img") || head.startsWith("<figure");
+}
+
+function schemaPersonOrOrganization(value, fallbackName = "EU Debt Map") {
+  if (!value) {
+    return {
+      "@type": "Organization",
+      name: fallbackName,
+      url: SITE,
+    };
+  }
+
+  if (typeof value === "string") {
+    const isOrg = value.toLowerCase().includes("debt map");
+
+    return {
+      "@type": isOrg ? "Organization" : "Person",
+      name: value,
+    };
+  }
+
+  const name = value.name || fallbackName;
+  const isOrg = name.toLowerCase().includes("debt map");
+
+  return {
+    "@type": value.type || (isOrg ? "Organization" : "Person"),
+    name,
+    url: value.url || undefined,
+  };
+}
+
+function safeIsoDate(value) {
+  if (!value) return undefined;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return undefined;
+
+  return date.toISOString();
+}
+
 /* ---------- SEO ---------- */
+
 export async function generateMetadata({ params }) {
   const slug = params.slug;
-  const a = getArticle({ slug, lang: LANG });
+  const article = getArticle({ slug, lang: LANG });
   const url = `${SITE}${prefix}/articles/${slug}`;
 
-  if (!a) {
+  if (!article) {
     return {
       title: "Article • EU Debt Map",
       alternates: { canonical: url },
@@ -36,11 +81,13 @@ export async function generateMetadata({ params }) {
   );
   languages["x-default"] = languages.en || url;
 
-  const og = articleOgImage(a);
+  const og = articleOgImage(article);
+  const title = article.seoTitle || article.title;
+  const description = article.summary || article.excerpt || undefined;
 
   return {
-    title: `${a.title} • EU Debt Map`,
-    description: a.summary,
+    title: `${title} • EU Debt Map`,
+    description,
     alternates: { canonical: url, languages },
     robots: {
       index: true,
@@ -50,33 +97,28 @@ export async function generateMetadata({ params }) {
       "max-video-preview": -1,
     },
     openGraph: {
-      title: a.title,
-      description: a.summary,
+      title: article.title,
+      description,
       url,
       siteName: "EU Debt Map",
       type: "article",
-      publishedTime: a.datePublished || a.date,
-      modifiedTime: a.dateModified || a.date,
-      authors: a.author?.name ? [a.author.name] : ["EU Debt Map"],
+      publishedTime: article.datePublished || article.date,
+      modifiedTime: article.dateModified || article.date,
+      authors: article.author?.name ? [article.author.name] : ["EU Debt Map"],
       images: og ? [{ url: og, width: 1200, height: 630 }] : undefined,
       locale: LANG,
     },
     twitter: {
       card: "summary_large_image",
-      title: a.title,
-      description: a.summary,
+      title: article.title,
+      description,
       images: og ? [og] : undefined,
     },
   };
 }
 
-/* ---------- helpers ---------- */
-function bodyStartsWithImage(html = "") {
-  const head = html.trim().slice(0, 500).toLowerCase();
-  return head.startsWith("<img") || head.startsWith("<figure");
-}
-
 /* ---------- page ---------- */
+
 export default function ArticleDetailPage({ params }) {
   const article = getArticle({ slug: params.slug, lang: LANG });
   if (!article) return notFound();
@@ -93,6 +135,7 @@ export default function ArticleDetailPage({ params }) {
     article.image ||
     null;
 
+  const og = articleOgImage(article);
   const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
 
   const rawBody = article.body || "";
@@ -103,6 +146,53 @@ export default function ArticleDetailPage({ params }) {
   const bodyAfterAd = hasMidArticleAd
     ? rawBody.slice(adIndex + adMarker.length)
     : "";
+
+  const authorObj = schemaPersonOrOrganization(article.author);
+  const reviewedByObj = article.reviewedBy
+    ? schemaPersonOrOrganization(article.reviewedBy)
+    : undefined;
+
+  const schemaType = article.articleType === "news" ? "NewsArticle" : "Article";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": schemaType,
+    headline: article.title,
+    description: article.summary || article.excerpt || undefined,
+    datePublished: safeIsoDate(publishDate),
+    dateModified: safeIsoDate(modifyDate),
+    dateReviewed: safeIsoDate(article.dateReviewed),
+    inLanguage: article.lang || LANG,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    author: authorObj,
+    reviewedBy: reviewedByObj,
+    publisher: {
+      "@type": "Organization",
+      name: "EU Debt Map",
+      url: SITE,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/eu_favicon_512.png`,
+        width: 512,
+        height: 512,
+      },
+    },
+    image: og
+      ? [
+          {
+            "@type": "ImageObject",
+            url: og,
+            width: 1200,
+            height: 630,
+          },
+        ]
+      : undefined,
+    articleSection:
+      article.primaryTopic || article.tags?.[0] || "EU government debt",
+    keywords: Array.isArray(article.tags) ? article.tags.join(", ") : undefined,
+    isAccessibleForFree: true,
+  };
 
   const css = `
     .article-container {
@@ -158,7 +248,7 @@ export default function ArticleDetailPage({ params }) {
       border-radius: 12px;
       overflow: hidden;
       background: #f3f4f6;
-      aspect-ratio: 16/9;
+      aspect-ratio: 16 / 9;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
@@ -262,44 +352,6 @@ export default function ArticleDetailPage({ params }) {
     }
   `;
 
-  let authorObj;
-  if (article.author) {
-    if (typeof article.author === "string") {
-      authorObj = { "@type": "Person", name: article.author };
-    } else {
-      authorObj = {
-        "@type": "Person",
-        name: article.author.name,
-        url: article.author.url,
-      };
-    }
-  } else {
-    authorObj = { "@type": "Organization", name: "EU Debt Map" };
-  }
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    headline: article.title,
-    description: article.summary || undefined,
-    datePublished: new Date(publishDate).toISOString(),
-    dateModified: new Date(modifyDate).toISOString(),
-    inLanguage: article.lang || LANG,
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    author: authorObj,
-    publisher: {
-      "@type": "Organization",
-      name: "EU Debt Map",
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE}/icons/icon-512.png`,
-        width: 512,
-        height: 512,
-      },
-    },
-    image: candidateHero ? [`${SITE}${candidateHero}`] : undefined,
-  };
-
   return (
     <main style={{ paddingBottom: 60 }}>
       <script
@@ -312,10 +364,17 @@ export default function ArticleDetailPage({ params }) {
         <header>
           <div className="metaRow">
             {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
-            <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
+
+            <time dateTime={publishDate}>
+              {dateFmt.format(new Date(publishDate))}
+            </time>
+
             {article.author && (
               <span>
-                by {typeof article.author === "string" ? article.author : article.author.name}
+                by{" "}
+                {typeof article.author === "string"
+                  ? article.author
+                  : article.author.name}
               </span>
             )}
           </div>
@@ -323,9 +382,7 @@ export default function ArticleDetailPage({ params }) {
           <h1 className="pageTitle">{article.title}</h1>
 
           {article.summary && (
-            <div className="summary-lead">
-              {article.summary}
-            </div>
+            <div className="summary-lead">{article.summary}</div>
           )}
         </header>
 
@@ -349,10 +406,18 @@ export default function ArticleDetailPage({ params }) {
         <div className="articleProse">
           <div dangerouslySetInnerHTML={{ __html: bodyBeforeAd }} />
           {hasMidArticleAd && <InArticleAd />}
-          {bodyAfterAd && <div dangerouslySetInnerHTML={{ __html: bodyAfterAd }} />}
+          {bodyAfterAd && (
+            <div dangerouslySetInnerHTML={{ __html: bodyAfterAd }} />
+          )}
         </div>
 
-        <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
+        <hr
+          style={{
+            margin: "40px 0 24px",
+            border: 0,
+            borderTop: "1px solid #e5e7eb",
+          }}
+        />
 
         <div style={{ marginBottom: 40 }}>
           <ShareBar url={url} title={article.title} />
