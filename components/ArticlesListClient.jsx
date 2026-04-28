@@ -1,93 +1,217 @@
-// components/ArticlesListClient.jsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-function formatDate(iso) {
+const TEXT = {
+  en: {
+    loadMore: "Load more articles",
+    readMore: "Read analysis",
+    noArticles: "No articles found yet.",
+    minRead: "min read",
+    fallbackTag: "Analysis",
+  },
+  nl: {
+    loadMore: "Meer artikelen laden",
+    readMore: "Lees analyse",
+    noArticles: "Nog geen artikelen gevonden.",
+    minRead: "min lezen",
+    fallbackTag: "Analyse",
+  },
+  de: {
+    loadMore: "Weitere Artikel laden",
+    readMore: "Analyse lesen",
+    noArticles: "Noch keine Artikel gefunden.",
+    minRead: "Min. Lesezeit",
+    fallbackTag: "Analyse",
+  },
+  fr: {
+    loadMore: "Charger plus d’articles",
+    readMore: "Lire l’analyse",
+    noArticles: "Aucun article trouvé pour le moment.",
+    minRead: "min de lecture",
+    fallbackTag: "Analyse",
+  },
+};
+
+function localeForArticles(articles) {
+  const lang = articles?.[0]?.lang;
+  return TEXT[lang] ? lang : "en";
+}
+
+function formatDate(iso, lang = "en") {
+  if (!iso) return "";
+
+  const locale = {
+    en: "en-GB",
+    nl: "nl-NL",
+    de: "de-DE",
+    fr: "fr-FR",
+  }[lang] || "en-GB";
+
   try {
-    return new Date(iso).toLocaleDateString("en-GB", {
+    return new Intl.DateTimeFormat(locale, {
       day: "2-digit",
       month: "short",
       year: "numeric",
-    });
+    }).format(new Date(iso));
   } catch {
     return iso;
   }
 }
 
-export default function ArticlesListClient({ articles, pageSize = 12 }) {
+function hrefFor(article) {
+  if (!article) return "#";
+  if (article.url) return article.url;
+  const lang = article.lang && article.lang !== "en" ? `/${article.lang}` : "";
+  return `${lang}/articles/${article.slug}`;
+}
+
+function tagFor(article, fallback) {
+  if (Array.isArray(article?.tags) && article.tags.length) {
+    return String(article.tags[0]).replace(/-/g, " ");
+  }
+  return fallback;
+}
+
+function summaryFor(article) {
+  return article?.summary || article?.excerpt || "";
+}
+
+function readingMinutes(article) {
+  if (Number.isFinite(article?.readingMinutes)) {
+    return Math.max(1, Math.round(article.readingMinutes));
+  }
+
+  const html = article?.body || "";
+  const text = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const words = text ? text.split(" ").length : 650;
+
+  return Math.max(2, Math.round(words / 220));
+}
+
+export default function ArticlesListClient({ articles = [], pageSize = 12 }) {
+  const safeArticles = Array.isArray(articles) ? articles : [];
+  const lang = localeForArticles(safeArticles);
+  const t = TEXT[lang] || TEXT.en;
+
   const [visible, setVisible] = useState(
-    Math.min(pageSize, articles.length)
+    Math.min(pageSize, safeArticles.length)
   );
   const [autoLoading, setAutoLoading] = useState(false);
   const sentinelRef = useRef(null);
+  const timerRef = useRef(null);
 
-  const hasMore = visible < articles.length;
+  const hasMore = visible < safeArticles.length;
+
+  useEffect(() => {
+    setVisible(Math.min(pageSize, safeArticles.length));
+  }, [pageSize, safeArticles.length]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) window.clearTimeout(timerRef.current);
+    };
+  }, []);
 
   const handleLoadMore = () => {
     if (!hasMore) return;
-    setVisible((v) => Math.min(v + pageSize, articles.length));
+
+    setVisible((current) =>
+      Math.min(current + pageSize, safeArticles.length)
+    );
   };
 
-  // Lazy-load bij scroll via IntersectionObserver
   useEffect(() => {
     if (!hasMore) return;
+
     const el = sentinelRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting) {
-          setAutoLoading(true);
-          handleLoadMore();
-        }
+
+        if (!entry.isIntersecting || autoLoading) return;
+
+        setAutoLoading(true);
+        handleLoadMore();
+
+        timerRef.current = window.setTimeout(() => {
+          setAutoLoading(false);
+        }, 250);
       },
-      { rootMargin: "160px" }
+      { rootMargin: "220px" }
     );
 
     observer.observe(el);
+
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMore]);
+  }, [autoLoading, hasMore, pageSize, safeArticles.length]);
+
+  if (!safeArticles.length) {
+    return (
+      <section className="articles-list" aria-live="polite">
+        <div className="articles-empty">{t.noArticles}</div>
+      </section>
+    );
+  }
 
   return (
     <>
-      <section className="articles-list">
-        {articles.slice(0, visible).map((a) => (
-          <Link
-            key={a.slug}
-            href={hrefFor(a)}
-            className="articles-item"
-          >
-            <div className="articles-row">
-              <div className="articles-thumb">
-                <img
-                  src={a.image || "/images/articles/placeholder.jpg"}
-                  alt={a.imageAlt || a.title}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
+      <section className="articles-list" aria-label="Article list">
+        {safeArticles.slice(0, visible).map((article) => {
+          const date = article.date || article.datePublished;
+          const tag = tagFor(article, t.fallbackTag);
+          const minutes = readingMinutes(article);
 
-              <div className="articles-content">
-                <p className="articles-date">
-                  {formatDate(a.date)}
-                </p>
-                <h2 className="articles-title">
-                  {a.title}
-                </h2>
-                <p className="articles-excerpt">
-                  {a.excerpt || a.summary}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+          return (
+            <Link
+              key={`${article.lang || "en"}-${article.slug}`}
+              href={hrefFor(article)}
+              className="articles-item"
+            >
+              <article className="articles-row">
+                <div className="articles-thumb">
+                  <img
+                    src={article.image || "/images/articles/placeholder.jpg"}
+                    alt={article.imageAlt || article.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+
+                <div className="articles-content">
+                  <div className="articles-meta">
+                    <span className="articles-tag">{tag}</span>
+                    {date && (
+                      <>
+                        <span aria-hidden="true">•</span>
+                        <time className="articles-date" dateTime={date}>
+                          {formatDate(date, lang)}
+                        </time>
+                      </>
+                    )}
+                    <span aria-hidden="true">•</span>
+                    <span>
+                      {minutes} {t.minRead}
+                    </span>
+                  </div>
+
+                  <h2 className="articles-title">{article.title}</h2>
+
+                  {summaryFor(article) && (
+                    <p className="articles-excerpt">{summaryFor(article)}</p>
+                  )}
+
+                  <span className="articles-cta">{t.readMore} →</span>
+                </div>
+              </article>
+            </Link>
+          );
+        })}
       </section>
 
-      {/* Load more + sentinel */}
       {hasMore && (
         <>
           <div className="loadmore-wrap">
@@ -97,9 +221,10 @@ export default function ArticlesListClient({ articles, pageSize = 12 }) {
               onClick={handleLoadMore}
               disabled={autoLoading}
             >
-              Load more articles
+              {t.loadMore}
             </button>
           </div>
+
           <div
             ref={sentinelRef}
             aria-hidden="true"
@@ -109,11 +234,4 @@ export default function ArticlesListClient({ articles, pageSize = 12 }) {
       )}
     </>
   );
-}
-
-function hrefFor(a) {
-  if (!a) return "#";
-  if (a.url) return a.url;
-  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${lang}/articles/${a.slug}`;
 }
