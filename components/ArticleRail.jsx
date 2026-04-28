@@ -1,36 +1,51 @@
-// app/components/ArticleRail.jsx
-"use client";
+// components/ArticleRail.jsx
 
 import Link from "next/link";
 
-/* Helper voor URL opbouw */
-function hrefFor(a) {
-  if (!a) return "#";
-  if (a.url) return a.url;
-  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${lang}/articles/${a.slug}`;
+function hrefFor(article) {
+  if (!article) return "#";
+  if (article.url) return article.url;
+
+  const lang = article.lang && article.lang !== "en" ? `/${article.lang}` : "";
+  return `${lang}/articles/${article.slug}`;
 }
 
-/* Helper voor datum */
 function formatDate(iso, lang = "en") {
   if (!iso) return "";
+
+  const locale =
+    {
+      en: "en-GB",
+      nl: "nl-NL",
+      de: "de-DE",
+      fr: "fr-FR",
+    }[lang] || "en-GB";
+
   try {
-    return new Date(iso).toLocaleDateString(lang === "en" ? "en-GB" : lang, {
+    return new Intl.DateTimeFormat(locale, {
       day: "numeric",
       month: "long",
       year: "numeric",
-    });
+    }).format(new Date(iso));
   } catch {
     return iso;
   }
 }
 
-export default function ArticleRail({ articles = [], title = "More articles" }) {
+function summaryFor(article) {
+  return article.summary || article.excerpt || "";
+}
+
+export default function ArticleRail({
+  articles = [],
+  title = "Further Reading",
+  lang = "en",
+}) {
   if (!articles.length) return null;
 
   return (
     <section className="rail-wrapper">
-      <style jsx>{`
+      <style>{`
         .rail-wrapper {
           margin-top: 48px;
           padding-top: 32px;
@@ -48,66 +63,67 @@ export default function ArticleRail({ articles = [], title = "More articles" }) 
 
         .rail-title {
           margin: 0;
-          font-size: 1.4rem; /* Groter = Duidelijker */
+          font-size: 1.4rem;
           font-weight: 800;
           letter-spacing: -0.02em;
           color: #111827;
+          font-family: var(--font-sans, sans-serif);
         }
 
         .rail-subtitle {
           margin: 0;
           font-size: 0.95rem;
           color: #6b7280;
+          font-family: var(--font-sans, sans-serif);
         }
 
         .rail-grid {
           display: grid;
           gap: 24px;
-          /* Mobile first: 1 kolom */
-          grid-template-columns: 1fr; 
+          grid-template-columns: 1fr;
         }
 
         @media (min-width: 640px) {
           .rail-grid {
-            /* Tablet: 2 kolommen */
-            grid-template-columns: repeat(2, 1fr); 
-          }
-        }
-        @media (min-width: 1024px) {
-          .rail-grid {
-            /* Desktop: 3 kolommen */
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(2, 1fr);
           }
         }
 
-        /* CARD */
-        .card {
+        @media (min-width: 1024px) {
+          .rail-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        .rail-card {
           display: flex;
           flex-direction: column;
           text-decoration: none;
           color: inherit;
-          background: #fff;
-          border-radius: 12px;
+          background: #ffffff;
+          border-radius: 14px;
           overflow: hidden;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-          border: 1px solid rgba(0,0,0,0.06);
-          height: 100%; /* Gelijke hoogte */
+          transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          border: 1px solid rgba(15, 23, 42, 0.08);
+          height: 100%;
         }
 
-        .card:hover {
+        .rail-card:hover,
+        .rail-card:focus-visible {
           transform: translateY(-4px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-          border-color: rgba(0,0,0,0.0);
+          box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+          border-color: rgba(37, 99, 235, 0.22);
+          text-decoration: none;
         }
 
-        .thumb-wrap {
+        .rail-thumb {
           position: relative;
-          aspect-ratio: 16/9;
+          aspect-ratio: 16 / 9;
           background: #f3f4f6;
           overflow: hidden;
         }
-        
-        .thumb-wrap img {
+
+        .rail-thumb img {
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -115,11 +131,12 @@ export default function ArticleRail({ articles = [], title = "More articles" }) 
           transition: transform 0.5s ease;
         }
 
-        .card:hover .thumb-wrap img {
+        .rail-card:hover .rail-thumb img,
+        .rail-card:focus-visible .rail-thumb img {
           transform: scale(1.05);
         }
 
-        .content {
+        .rail-content {
           padding: 16px;
           display: flex;
           flex-direction: column;
@@ -127,31 +144,36 @@ export default function ArticleRail({ articles = [], title = "More articles" }) 
           flex-grow: 1;
         }
 
-        .meta {
+        .rail-meta {
           font-size: 0.75rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          font-weight: 600;
-          color: #9ca3af;
+          font-weight: 700;
+          color: #6b7280;
+          font-family: var(--font-sans, sans-serif);
         }
 
-        .card-title {
+        .rail-card-title {
           margin: 0;
-          font-size: 1.15rem; /* Leesbaarder */
-          font-weight: 700;
-          line-height: 1.4;
+          font-size: 1.08rem;
+          font-weight: 750;
+          line-height: 1.35;
           color: #111827;
+          letter-spacing: -0.01em;
+          font-family: var(--font-sans, sans-serif);
         }
-        
-        .card:hover .card-title {
-          color: #2563eb; /* Blauw accent bij hover */
+
+        .rail-card:hover .rail-card-title,
+        .rail-card:focus-visible .rail-card-title {
+          color: #2563eb;
           text-decoration: underline;
           text-decoration-thickness: 2px;
+          text-underline-offset: 3px;
         }
 
-        .excerpt {
+        .rail-excerpt {
           font-size: 0.9rem;
-          line-height: 1.6;
+          line-height: 1.55;
           color: #4b5563;
           margin: 0;
           display: -webkit-box;
@@ -163,32 +185,44 @@ export default function ArticleRail({ articles = [], title = "More articles" }) 
 
       <div className="rail-header">
         <h3 className="rail-title">{title}</h3>
-        <p className="rail-subtitle">Analysis & data you might have missed</p>
+        <p className="rail-subtitle">Analysis and data you might have missed</p>
       </div>
 
       <div className="rail-grid">
-        {articles.map((a) => (
-          <Link 
-            key={a.slug} 
-            href={hrefFor(a)} 
-            className="card"
-            title={a.title}
-          >
-            <div className="thumb-wrap">
-              <img
-                src={a.image || "/images/articles/placeholder.jpg"}
-                alt={a.title}
-                loading="lazy"
-              />
-            </div>
-            <div className="content">
-              {a.date && <span className="meta">{formatDate(a.date, a.lang)}</span>}
-              <h4 className="card-title">{a.title}</h4>
-              {/* Excerpt is optioneel, zet uit als het te druk wordt */}
-              {a.summary && <p className="excerpt">{a.summary}</p>}
-            </div>
-          </Link>
-        ))}
+        {articles.map((article) => {
+          const date = article.date || article.datePublished;
+          const formattedDate = formatDate(date, article.lang || lang);
+
+          return (
+            <Link
+              key={`${article.lang || "en"}-${article.slug}`}
+              href={hrefFor(article)}
+              className="rail-card"
+              title={article.title}
+            >
+              <div className="rail-thumb">
+                <img
+                  src={article.image || "/images/articles/placeholder.jpg"}
+                  alt={article.imageAlt || article.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <div className="rail-content">
+                {formattedDate && (
+                  <span className="rail-meta">{formattedDate}</span>
+                )}
+
+                <h4 className="rail-card-title">{article.title}</h4>
+
+                {summaryFor(article) && (
+                  <p className="rail-excerpt">{summaryFor(article)}</p>
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

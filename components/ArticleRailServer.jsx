@@ -1,30 +1,37 @@
-// app/components/ArticleRailServer.jsx
-import { listArticles } from "@/lib/articles";
+// components/ArticleRailServer.jsx
+
 import ArticleRail from "./ArticleRail";
+import { listArticles } from "@/lib/articles";
+
+function scoreArticle(article, exceptSlug) {
+  const date = article.dateModified || article.datePublished || article.date || "";
+  const dateScore = date ? new Date(date).getTime() : 0;
+
+  if (article.slug === exceptSlug) return -1;
+
+  return dateScore;
+}
 
 export default async function ArticleRailServer({
   lang = "en",
   exceptSlug,
-  limit = 3, // 3 is vaak mooier op desktop (1 rij), 6 mag ook
-  title = "Read also",
+  limit = 6,
+  title = "Further Reading",
 }) {
-  let items = listArticles({ lang }); // haalt alles op
+  let items = [];
 
-  // 1. Filter het huidige artikel eruit
-  if (exceptSlug) {
-    items = items.filter((a) => a.slug !== exceptSlug);
+  try {
+    items = listArticles({ lang }) || [];
+  } catch {
+    items = [];
   }
 
-  // 2. Shuffle de array (Fisher-Yates algoritme) voor variatie
-  for (let i = items.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [items[i], items[j]] = [items[j], items[i]];
-  }
-
-  // 3. Pak de eerste X items
-  const articles = items.slice(0, limit);
+  const articles = [...items]
+    .filter((article) => article?.slug && article.slug !== exceptSlug)
+    .sort((a, b) => scoreArticle(b, exceptSlug) - scoreArticle(a, exceptSlug))
+    .slice(0, limit);
 
   if (!articles.length) return null;
 
-  return <ArticleRail articles={articles} title={title} />;
+  return <ArticleRail articles={articles} title={title} lang={lang} />;
 }
