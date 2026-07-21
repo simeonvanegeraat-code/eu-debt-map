@@ -5,9 +5,9 @@ import LocalizedEUDebtPage, {
 } from "@/components/LocalizedEUDebtPage";
 
 export function generateMetadata() {
-  return generateEUDebtMetadata("en");
+  return generateEUDebtMetadata("nl");
 }
 
-export default function EUDebtPage() {
-  return <LocalizedEUDebtPage lang="en" />;
+export default function EUDebtPageNL() {
+  return <LocalizedEUDebtPage lang="nl" />;
 }
