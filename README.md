@@ -7,7 +7,9 @@
 
 ## Deploy (your flow.)
 
-Just replace files in GitHub and push. Vercel will install and build automatically.. 
+Just replace files in GitHub and push. Vercel will install and build automatically..
 
 (If testing locally: `npm install` then `npm run dev`)
+
+thanks 
 
