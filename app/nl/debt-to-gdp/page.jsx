@@ -2,14 +2,14 @@ import DebtToGDPList from "../debt-to-gdp/DebtToGDPList";
 import { withLocale } from "@/lib/locale";
 
 export const dynamic = "force-static";
-export const revalidate = 0;
+export const revalidate = false;
 
 export async function generateMetadata() {
   const base = "https://www.eudebtmap.com";
   const path = "/debt-to-gdp";
-  const title = "Schuld/BBP-ranglijst (EU-27) – live | EU Debt Map";
+  const title = "EU schuld/BBP-ranglijst 2026 (EU-27) | EU Debt Map";
   const description =
-    "Live ranglijst van EU-27-landen op basis van staatsschuld ten opzichte van het bbp, met drempels van 60% en 90%. Gegevens afkomstig van Eurostat.";
+    "Vergelijk de officiële Eurostat-schuldquotes voor 2026 van alle 27 EU-landen, met een optionele live schatting.";
 
   return {
     title,
@@ -39,10 +39,9 @@ export default function DebtToGDPPageNL() {
   return (
     <main className="container" style={{ display: "grid", gap: 16 }}>
       <header>
-        <h1 style={{ margin: 0 }}>Schuld ten opzichte van BBP per land</h1>
+        <h1 style={{ margin: 0 }}>EU schuld/BBP-ranglijst 2026</h1>
         <p className="tag" style={{ marginTop: 6 }}>
-          Deze ranglijst toont de verhouding tussen overheidsschuld en het bruto binnenlands product (BBP) voor elk EU-land.  
-          Volgens de EU-regels wordt een schuld onder de 60% van het BBP als gezond beschouwd, terwijl waarden boven 90% risico’s voor stabiliteit kunnen betekenen.
+          Vergelijk de officiële schuldquote van ieder EU-land. De 60%-waarde is de EU-referentiewaarde; de live weergave is een aanvullende schatting.
         </p>
       </header>
 

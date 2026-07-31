@@ -15,11 +15,25 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const code = String(params.code).toLowerCase();
   const name = countryName(code.toUpperCase(), "nl") || code.toUpperCase();
+  const country = countries.find((item) => item.code === code.toUpperCase());
+  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratioPeriod = country?.official_debt_to_gdp_time || "";
+  const ratioYear = ratioPeriod.slice(0, 4) || "2026";
+  const ratioText = Number.isFinite(ratio)
+    ? `${ratio.toLocaleString("nl-NL", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })}%`
+    : null;
   const url = `${SITE}/nl/country/${code}`;
 
   return {
-    title: `Staatsschuld ${name} (live) | EU Debt Map`,
-    description: `Bekijk de staatsschuld van ${name} live met een actuele schatting op basis van Eurostat. Inclusief schuldniveau en bbp-verhouding.`,
+    title: ratioText
+      ? `Staatsschuld ${name}: live en ${ratioText} van bbp (${ratioYear}) | EU Debt Map`
+      : `Staatsschuld ${name} (live) | EU Debt Map`,
+    description: ratioText
+      ? `Bekijk de staatsschuld van ${name} live en de officiële Eurostat-schuldquote van ${ratioText} voor ${ratioPeriod}.`
+      : `Bekijk de staatsschuld van ${name} live met een actuele schatting op basis van Eurostat. Inclusief schuldniveau en bbp-verhouding.`,
     alternates: {
       canonical: url,
       languages: {

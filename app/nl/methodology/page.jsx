@@ -1,14 +1,14 @@
 // app/nl/methodology/page.jsx
 import Link from "next/link";
-import { countries } from "@/lib/data";
+import { countries, debtDataSummary } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
-const METHOD_VERSION = "1.1";
-const METHOD_REVIEWED = "april 2026";
+const METHOD_VERSION = "1.2";
+const METHOD_REVIEWED = "juli 2026";
 
 export async function generateMetadata() {
   const base = new URL(SITE);
@@ -64,6 +64,8 @@ function formatDateTime(value) {
 }
 
 function getLatestReferencePeriod() {
+  if (debtDataSummary.dominantLatestTime) return debtDataSummary.dominantLatestTime;
+
   const periods = (countries || [])
     .map((country) => country?.official_latest_time || country?.last_date)
     .filter(Boolean);
@@ -120,9 +122,10 @@ function FilterTable() {
     ["Sector", "S13, algemene overheid"],
     ["Schulditem", "GD, bruto overheidsschuld"],
     ["Eenheid", "MIO_EUR, omgezet naar euro door × 1.000.000"],
+    ["Officiële schuldquote", "PC_GDP, rechtstreeks opgeslagen als Eurostat-kwartaalpercentage"],
     ["Landen", "Alleen EU-27 lidstaten"],
     ["Griekenland-code", "Eurostat gebruikt EL, EU Debt Map toont GR"],
-    ["Terugblik", "lastTimePeriod=8, daarna selecteren we per land de laatste twee beschikbare kwartalen"],
+    ["Terugblik", "lastTimePeriod=20, daarna selecteren we per land de laatste twee beschikbare kwartalen"],
   ];
 
   return (
@@ -303,7 +306,8 @@ export default function MethodologyPageNL() {
         <div className="method-steps">
           <StepCard number="1" title="Officiële data ophalen">
             We gebruiken de kwartaalreeks van Eurostat over overheidsschuld en halen de nieuwste
-            beschikbare periodes op voor alle EU-27 landen.
+            beschikbare periodes op voor alle EU-27 landen. Dezelfde dataset levert zowel de schuld in
+            euro als het officiële schuldpercentage ten opzichte van het bbp.
           </StepCard>
 
           <StepCard number="2" title="Laatste trend selecteren">
@@ -481,14 +485,15 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Updates"
         title="Wanneer de cijfers veranderen"
-        intro="De live beweging verandert wanneer nieuwe officiële Eurostat-data is opgehaald en de site opnieuw is gegenereerd."
+        intro="De live beweging verandert nadat nieuwe officiële Eurostat-data is opgehaald, gecontroleerd en met een nieuwe siteversie is gepubliceerd."
       >
         <div className="method-update-box">
           <div>
-            <strong>Databron verversen</strong>
+            <strong>Gecontroleerde data-update</strong>
             <span>
-              Het buildscript vraagt Eurostat-data op met <code>lastTimePeriod=8</code> en selecteert
-              daarna per land de laatste twee beschikbare kwartalen.
+              De update-opdracht vraagt Eurostat-data op met <code>lastTimePeriod=20</code>. Geldige
+              landen worden onafhankelijk bijgewerkt; een ontbrekend land behoudt de laatste goede officiële data.
+              De EU-27-historie schuift alleen door wanneer een kwartaal alle 27 officiële landwaarden bevat.
             </span>
           </div>
 
@@ -511,7 +516,7 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Voor technische bezoekers"
         title="Inputdata reproduceren"
-        intro="De exacte waarden worden tijdens het buildproces omgezet. De publieke Eurostat API-call hieronder toont de brondata en filters."
+        intro="De exacte waarden worden vóór de deployment omgezet en gecontroleerd. Gewone websitebuilds gebruiken de opgeslagen laatste goede dataset. De publieke Eurostat API-call hieronder toont de brondata en filters."
       >
         <CodeBlock title="Voorbeeld Eurostat API-call">
 {`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt
@@ -521,7 +526,7 @@ if now > latest_reference_timestamp:
   &sector=S13
   &na_item=GD
   &unit=MIO_EUR
-  &lastTimePeriod=8
+  &lastTimePeriod=20
   &geo=FR
   &geo=DE
   &geo=IT`}

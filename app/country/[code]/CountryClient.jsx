@@ -217,6 +217,9 @@ export default function CountryClient({
   // ---------- GDP Logic ----------
   const serverGdp = safeCountry?.gdp || gdpAbsProp;
   const serverPeriod = safeCountry?.gdpPeriod || gdpPeriodProp;
+  const hasOfficialRatio =
+    Number.isFinite(Number(safeCountry?.official_debt_to_gdp_pct)) &&
+    Number(safeCountry?.official_debt_to_gdp_pct) > 0;
 
   const [gdpAbs, setGdpAbs] = useState(
     Number.isFinite(serverGdp) ? serverGdp : null
@@ -226,8 +229,8 @@ export default function CountryClient({
   useEffect(() => {
     if (!safeCountry) return;
 
-    // Als server data al aanwezig is, niet opnieuw fetchen
-    if (Number.isFinite(serverGdp)) {
+    // Officiële ratio heeft voorrang. De oude GDP-route blijft alleen als terugval bestaan.
+    if (hasOfficialRatio || Number.isFinite(serverGdp)) {
       return;
     }
 
@@ -266,7 +269,7 @@ export default function CountryClient({
         ctrl.abort();
       } catch {}
     };
-  }, [safeCountry, serverGdp]);
+  }, [safeCountry, serverGdp, hasOfficialRatio]);
 
   if (!safeCountry) {
     return (
@@ -370,6 +373,7 @@ export default function CountryClient({
           code={safeCountry.code}
           gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
           yearLabel={finalYearLabel}
+          liveDebt={current}
           lang={effLang}
         />
       </div>

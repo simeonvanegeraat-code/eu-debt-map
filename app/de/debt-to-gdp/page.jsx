@@ -2,14 +2,14 @@ import DebtToGDPList from "../debt-to-gdp/DebtToGDPList";
 import { withLocale } from "@/lib/locale";
 
 export const dynamic = "force-static";
-export const revalidate = 0;
+export const revalidate = false;
 
 export async function generateMetadata() {
   const base = "https://www.eudebtmap.com";
   const path = "/debt-to-gdp";
-  const title = "Schulden/BIP-Rangliste (EU-27) – live | EU Debt Map";
+  const title = "EU Schulden/BIP-Ranking 2026 (EU-27) | EU Debt Map";
   const description =
-    "Live-Rangliste der EU-27 nach Staatsschulden im Verhältnis zum Bruttoinlandsprodukt (BIP), mit Schwellenwerten von 60 % und 90 %. Daten von Eurostat.";
+    "Vergleichen Sie die offiziellen Eurostat-Schuldenquoten 2026 aller 27 EU-Länder, optional mit Live-Schätzung.";
 
   return {
     title,
@@ -39,10 +39,9 @@ export default function DebtToGDPPageDE() {
   return (
     <main className="container" style={{ display: "grid", gap: 16 }}>
       <header>
-        <h1 style={{ margin: 0 }}>Staatsschulden im Verhältnis zum BIP</h1>
+        <h1 style={{ margin: 0 }}>EU Schulden/BIP-Ranking 2026</h1>
         <p className="tag" style={{ marginTop: 6 }}>
-          Diese Rangliste zeigt das Verhältnis von Staatsverschuldung zum Bruttoinlandsprodukt (BIP) für jedes EU-Land.  
-          Laut EU-Kriterien gilt eine Verschuldung unter 60 % des BIP als nachhaltig, während Werte über 90 % als kritisch betrachtet werden.
+          Vergleichen Sie die offizielle Schuldenquote jedes EU-Landes. Der Wert von 60 % ist der EU-Referenzwert; die Live-Ansicht ist eine zusätzliche Schätzung.
         </p>
       </header>
 

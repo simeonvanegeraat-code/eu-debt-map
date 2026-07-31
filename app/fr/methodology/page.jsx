@@ -1,14 +1,14 @@
 // app/fr/methodology/page.jsx
 import Link from "next/link";
-import { countries } from "@/lib/data";
+import { countries, debtDataSummary } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
-const METHOD_VERSION = "1.1";
-const METHOD_REVIEWED = "avril 2026";
+const METHOD_VERSION = "1.2";
+const METHOD_REVIEWED = "juillet 2026";
 
 export async function generateMetadata() {
   const base = new URL(SITE);
@@ -64,6 +64,8 @@ function formatDateTime(value) {
 }
 
 function getLatestReferencePeriod() {
+  if (debtDataSummary.dominantLatestTime) return debtDataSummary.dominantLatestTime;
+
   const periods = (countries || [])
     .map((country) => country?.official_latest_time || country?.last_date)
     .filter(Boolean);
@@ -120,9 +122,10 @@ function FilterTable() {
     ["Secteur", "S13, administrations publiques"],
     ["Poste de dette", "GD, dette brute"],
     ["Unité", "MIO_EUR, converti en euros par × 1 000 000"],
+    ["Ratio dette/PIB officiel", "PC_GDP, stocké directement comme pourcentage trimestriel d’Eurostat"],
     ["Pays", "Uniquement les 27 États membres de l’UE"],
     ["Code Grèce", "Eurostat utilise EL, EU Debt Map affiche GR"],
-    ["Périodes utilisées", "lastTimePeriod=8, puis nous sélectionnons les deux derniers trimestres disponibles par pays"],
+    ["Périodes utilisées", "lastTimePeriod=20, puis nous sélectionnons les deux derniers trimestres disponibles par pays"],
   ];
 
   return (
@@ -303,7 +306,8 @@ export default function MethodologyPageFR() {
         <div className="method-steps">
           <StepCard number="1" title="Charger les données officielles">
             Nous utilisons la série trimestrielle d’Eurostat sur la dette publique et chargeons les
-            périodes les plus récentes disponibles pour les 27 pays de l’UE.
+            périodes les plus récentes disponibles pour les 27 pays de l’UE. Le même jeu de données
+            fournit la dette en euros et le ratio dette/PIB officiel.
           </StepCard>
 
           <StepCard number="2" title="Sélectionner la tendance récente">
@@ -482,14 +486,15 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Mises à jour"
         title="Quand les chiffres changent"
-        intro="Le mouvement en direct change lorsque de nouvelles données officielles d’Eurostat sont chargées et que le site est régénéré."
+        intro="Le mouvement en direct change après le chargement, la validation et la publication de nouvelles données officielles d’Eurostat avec une nouvelle version du site."
       >
         <div className="method-update-box">
           <div>
-            <strong>Rafraîchissement de la source</strong>
+            <strong>Mise à jour validée des données</strong>
             <span>
-              Le script de génération demande les données Eurostat avec <code>lastTimePeriod=8</code>,
-              puis sélectionne les deux derniers trimestres disponibles pour chaque pays.
+              La commande de mise à jour demande les données Eurostat avec <code>lastTimePeriod=20</code>.
+              Les pays valides sont actualisés séparément ; un pays manquant conserve ses dernières données officielles valides.
+              L’historique UE-27 n’avance que lorsqu’un trimestre contient les 27 valeurs nationales officielles.
             </span>
           </div>
 
@@ -512,7 +517,7 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Pour les visiteurs techniques"
         title="Reproduire les données d’entrée"
-        intro="Les valeurs exactes sont transformées pendant le processus de génération. L’appel API public ci-dessous montre la source et les filtres."
+        intro="Les valeurs exactes sont transformées et validées avant le déploiement. Les générations normales du site utilisent le dernier instantané valide enregistré. L’appel API public ci-dessous montre la source et les filtres."
       >
         <CodeBlock title="Exemple d’appel API Eurostat">
 {`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt
@@ -522,7 +527,7 @@ if now > latest_reference_timestamp:
   &sector=S13
   &na_item=GD
   &unit=MIO_EUR
-  &lastTimePeriod=8
+  &lastTimePeriod=20
   &geo=FR
   &geo=DE
   &geo=IT`}

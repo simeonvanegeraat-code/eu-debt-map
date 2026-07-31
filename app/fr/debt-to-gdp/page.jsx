@@ -2,14 +2,14 @@ import DebtToGDPList from "../debt-to-gdp/DebtToGDPList";
 import { withLocale } from "@/lib/locale";
 
 export const dynamic = "force-static";
-export const revalidate = 0;
+export const revalidate = false;
 
 export async function generateMetadata() {
   const base = "https://www.eudebtmap.com";
   const path = "/debt-to-gdp";
-  const title = "Classement Dette/PIB (UE-27) – en direct | EU Debt Map";
+  const title = "Classement dette/PIB UE 2026 (UE-27) | EU Debt Map";
   const description =
-    "Classement en direct des 27 pays de l’UE selon le ratio dette publique/PIB, avec seuils de 60 % et 90 %. Données issues d’Eurostat.";
+    "Comparez les ratios dette/PIB officiels d’Eurostat en 2026 pour les 27 pays de l’UE, avec une estimation en direct en option.";
 
   return {
     title,
@@ -39,10 +39,9 @@ export default function DebtToGDPPageFR() {
   return (
     <main className="container" style={{ display: "grid", gap: 16 }}>
       <header>
-        <h1 style={{ margin: 0 }}>Dette publique par rapport au PIB</h1>
+        <h1 style={{ margin: 0 }}>Classement dette/PIB UE 2026</h1>
         <p className="tag" style={{ marginTop: 6 }}>
-          Ce classement montre le rapport entre la dette publique et le produit intérieur brut (PIB) de chaque pays de l’UE.  
-          Selon les critères de l’Union, une dette inférieure à 60 % du PIB est considérée comme saine, tandis que des niveaux supérieurs à 90 % peuvent représenter un risque économique.
+          Comparez le ratio dette/PIB officiel de chaque pays de l’UE. La valeur de 60 % est la référence de l’UE ; l’affichage en direct est une estimation complémentaire.
         </p>
       </header>
 

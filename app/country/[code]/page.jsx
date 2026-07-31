@@ -4,7 +4,6 @@ import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { withLocale } from "@/lib/locale";
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live";
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -15,12 +14,26 @@ export async function generateMetadata({ params }) {
   const code = params.code?.toUpperCase() || "";
   const lang = "en";
   const name = countryName(code, lang);
+  const country = countries.find((item) => item.code === code);
+  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratioPeriod = country?.official_debt_to_gdp_time || "";
+  const ratioYear = ratioPeriod.slice(0, 4) || "2026";
+  const ratioText = Number.isFinite(ratio)
+    ? `${ratio.toLocaleString("en-GB", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })}%`
+    : null;
 
   const base = "https://www.eudebtmap.com";
   const path = `/country/${code.toLowerCase()}`;
 
-  const title = `${name} public debt (live) | EU Debt Map`;
-  const description = `Track ${name} public debt live with a real-time estimate based on Eurostat data. See debt levels, GDP ratio, and country details.`;
+  const title = ratioText
+    ? `${name} public debt: live & ${ratioText} of GDP (${ratioYear}) | EU Debt Map`
+    : `${name} public debt (live) | EU Debt Map`;
+  const description = ratioText
+    ? `Track ${name} public debt live and see the official Eurostat debt-to-GDP ratio of ${ratioText} for ${ratioPeriod}.`
+    : `Track ${name} public debt live with a real-time estimate based on Eurostat data. See debt levels, GDP ratio, and country details.`;
 
   return {
     title,
@@ -61,7 +74,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export const revalidate = 3600;
+export const dynamic = "error";
 
 export default async function CountryPage({ params: { code } }) {
   const want = String(code).toLowerCase();
@@ -69,8 +82,6 @@ export default async function CountryPage({ params: { code } }) {
     (x) => String(x.code).toLowerCase() === want
   );
   if (!country) return notFound();
-
-  const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
   const lang = "en";
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
@@ -82,8 +93,6 @@ export default async function CountryPage({ params: { code } }) {
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
-          gdpAbs={valueEUR}
-          gdpPeriod={period}
         />
       </section>
     </main>
