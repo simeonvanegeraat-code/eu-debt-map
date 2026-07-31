@@ -1,14 +1,14 @@
 // app/methodology/page.jsx
 import Link from "next/link";
-import { countries } from "@/lib/data";
+import { countries, debtDataSummary } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
-const METHOD_VERSION = "1.1";
-const METHOD_REVIEWED = "April 2026";
+const METHOD_VERSION = "1.2";
+const METHOD_REVIEWED = "July 2026";
 
 export async function generateMetadata() {
   const base = new URL(SITE);
@@ -64,6 +64,8 @@ function formatDateTime(value) {
 }
 
 function getLatestReferencePeriod() {
+  if (debtDataSummary.dominantLatestTime) return debtDataSummary.dominantLatestTime;
+
   const periods = (countries || [])
     .map((country) => country?.official_latest_time || country?.last_date)
     .filter(Boolean);
@@ -120,9 +122,10 @@ function FilterTable() {
     ["Sector", "S13, general government"],
     ["Debt item", "GD, gross debt"],
     ["Unit", "MIO_EUR, converted to euro by multiplying by 1,000,000"],
+    ["Official debt-to-GDP", "PC_GDP, stored directly as Eurostat's quarterly percentage"],
     ["Countries", "EU-27 member states only"],
     ["Greece code", "Eurostat uses EL, EU Debt Map displays GR"],
-    ["Lookback", "lastTimePeriod=8, then we select the latest two available quarters per country"],
+    ["Lookback", "lastTimePeriod=20, then we select the latest two available quarters per country"],
   ];
 
   return (
@@ -303,7 +306,8 @@ export default function MethodologyPage() {
         <div className="method-steps">
           <StepCard number="1" title="Fetch official data">
             We use Eurostat’s quarterly government debt dataset and request the latest available periods
-            for all EU-27 countries.
+            for all EU-27 countries. The same dataset provides both debt in euros and the official
+            debt-to-GDP percentage.
           </StepCard>
 
           <StepCard number="2" title="Select the latest trend">
@@ -481,14 +485,15 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Updates"
         title="When the numbers change"
-        intro="The live movement changes when new official Eurostat data is fetched and the site is regenerated."
+        intro="The live movement changes after new official Eurostat data has been fetched, validated and published with a new site version."
       >
         <div className="method-update-box">
           <div>
-            <strong>Data source refresh</strong>
+            <strong>Validated data update</strong>
             <span>
-              The build script requests Eurostat data with <code>lastTimePeriod=8</code>, then selects
-              the latest two available quarters per country.
+              The update command requests Eurostat data with <code>lastTimePeriod=20</code>. Valid
+              countries update independently; a missing country keeps its last-known-good official data.
+              The EU-27 history advances only when a quarter contains all 27 official country values.
             </span>
           </div>
 
@@ -511,7 +516,7 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="For technical users"
         title="Reproduce the input data"
-        intro="The exact transformed values are generated during the build process. The public Eurostat API call below shows the source dataset and filters."
+        intro="The exact transformed values are generated and validated before deployment. Regular website builds use the stored last-known-good snapshot. The public Eurostat API call below shows the source dataset and filters."
       >
         <CodeBlock title="Example Eurostat API call">
 {`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt
@@ -521,7 +526,7 @@ if now > latest_reference_timestamp:
   &sector=S13
   &na_item=GD
   &unit=MIO_EUR
-  &lastTimePeriod=8
+  &lastTimePeriod=20
   &geo=FR
   &geo=DE
   &geo=IT`}

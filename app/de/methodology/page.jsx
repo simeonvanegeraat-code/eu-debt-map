@@ -1,14 +1,14 @@
 // app/de/methodology/page.jsx
 import Link from "next/link";
-import { countries } from "@/lib/data";
+import { countries, debtDataSummary } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 
 export const runtime = "nodejs";
 
 const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
-const METHOD_VERSION = "1.1";
-const METHOD_REVIEWED = "April 2026";
+const METHOD_VERSION = "1.2";
+const METHOD_REVIEWED = "Juli 2026";
 
 export async function generateMetadata() {
   const base = new URL(SITE);
@@ -64,6 +64,8 @@ function formatDateTime(value) {
 }
 
 function getLatestReferencePeriod() {
+  if (debtDataSummary.dominantLatestTime) return debtDataSummary.dominantLatestTime;
+
   const periods = (countries || [])
     .map((country) => country?.official_latest_time || country?.last_date)
     .filter(Boolean);
@@ -120,9 +122,10 @@ function FilterTable() {
     ["Sektor", "S13, allgemeiner Staat"],
     ["Schuldenposition", "GD, Bruttoschulden"],
     ["Einheit", "MIO_EUR, umgerechnet in Euro durch × 1.000.000"],
+    ["Offizielle Schuldenquote", "PC_GDP, direkt als Eurostat-Quartalswert gespeichert"],
     ["Länder", "Nur EU-27 Mitgliedstaaten"],
     ["Griechenland-Code", "Eurostat verwendet EL, EU Debt Map zeigt GR"],
-    ["Rückblick", "lastTimePeriod=8, danach wählen wir pro Land die letzten zwei verfügbaren Quartale"],
+    ["Rückblick", "lastTimePeriod=20, danach wählen wir pro Land die letzten zwei verfügbaren Quartale"],
   ];
 
   return (
@@ -303,7 +306,8 @@ export default function MethodologyPageDE() {
         <div className="method-steps">
           <StepCard number="1" title="Offizielle Daten laden">
             Wir verwenden die Eurostat-Quartalsreihe zu Staatsschulden und laden die neuesten
-            verfügbaren Perioden für alle EU-27 Länder.
+            verfügbaren Perioden für alle EU-27 Länder. Derselbe Datensatz liefert sowohl Schulden in
+            Euro als auch die offizielle Schuldenquote im Verhältnis zum BIP.
           </StepCard>
 
           <StepCard number="2" title="Jüngsten Trend wählen">
@@ -482,14 +486,15 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Updates"
         title="Wann sich die Zahlen ändern"
-        intro="Die Live-Bewegung ändert sich, wenn neue offizielle Eurostat-Daten geladen und die Website neu generiert wurde."
+        intro="Die Live-Bewegung ändert sich, nachdem neue offizielle Eurostat-Daten geladen, geprüft und mit einer neuen Website-Version veröffentlicht wurden."
       >
         <div className="method-update-box">
           <div>
-            <strong>Datenquelle aktualisieren</strong>
+            <strong>Geprüfte Datenaktualisierung</strong>
             <span>
-              Das Build-Skript lädt Eurostat-Daten mit <code>lastTimePeriod=8</code> und wählt danach
-              pro Land die letzten zwei verfügbaren Quartale.
+              Der Aktualisierungsbefehl lädt Eurostat-Daten mit <code>lastTimePeriod=20</code>. Gültige
+              Länder werden unabhängig aktualisiert; bei fehlenden Daten bleibt der letzte gültige offizielle Stand erhalten.
+              Die EU-27-Historie wird nur fortgeführt, wenn ein Quartal alle 27 offiziellen Länderwerte enthält.
             </span>
           </div>
 
@@ -512,7 +517,7 @@ if now > latest_reference_timestamp:
       <Section
         eyebrow="Für technische Besucher"
         title="Eingabedaten reproduzieren"
-        intro="Die exakten Werte werden während des Buildprozesses umgewandelt. Der öffentliche Eurostat API-Aufruf unten zeigt Quelldaten und Filter."
+        intro="Die exakten Werte werden vor dem Deployment umgewandelt und geprüft. Reguläre Website-Builds verwenden den gespeicherten letzten gültigen Datenstand. Der öffentliche Eurostat API-Aufruf unten zeigt Quelldaten und Filter."
       >
         <CodeBlock title="Beispiel Eurostat API-Aufruf">
 {`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt
@@ -522,7 +527,7 @@ if now > latest_reference_timestamp:
   &sector=S13
   &na_item=GD
   &unit=MIO_EUR
-  &lastTimePeriod=8
+  &lastTimePeriod=20
   &geo=FR
   &geo=DE
   &geo=IT`}

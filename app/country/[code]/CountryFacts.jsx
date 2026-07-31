@@ -11,9 +11,11 @@ const LABELS = {
     change: "Change between official quarters",
     rate: "Live rate (approx)",
     derived: "Live rate extrapolated from the last two official Eurostat debt quarters.",
+    frozen: "The ticker is paused because this country is more than one quarter behind the main dataset.",
     sourcePeriods: "Source: Eurostat official debt periods:",
     sourceDates: "Quarter-end dates:",
     sourceLive: "Live estimate extends the latest official figure to today.",
+    sourceFrozen: "The latest official value remains visible without further extrapolation until newer data is available.",
     sourceFallback:
       "Source note: official Eurostat debt periods are unavailable, so the live ticker is using a fallback estimate.",
     perSec: "/ s",
@@ -24,9 +26,11 @@ const LABELS = {
     change: "Verandering tussen officiële kwartalen",
     rate: "Live tempo (geschat)",
     derived: "Het live tempo is geëxtrapoleerd uit de laatste twee officiële Eurostat-schuldkwartalen.",
+    frozen: "De teller is gepauzeerd omdat dit land meer dan één kwartaal achterloopt op de hoofddataset.",
     sourcePeriods: "Bron: officiële Eurostat-schuldperioden:",
     sourceDates: "Kwartaaleindes:",
     sourceLive: "De live schatting trekt de laatste officiële stand door tot vandaag.",
+    sourceFrozen: "De laatste officiële waarde blijft zichtbaar zonder verdere extrapolatie totdat nieuwere data beschikbaar is.",
     sourceFallback:
       "Bronopmerking: officiële Eurostat-schuldperioden ontbreken, dus de live teller gebruikt een fallbackschatting.",
     perSec: "/ s",
@@ -37,9 +41,11 @@ const LABELS = {
     change: "Veränderung zwischen offiziellen Quartalen",
     rate: "Live-Tempo (ca.)",
     derived: "Die Live-Rate wird aus den letzten zwei offiziellen Eurostat-Schuldenquartalen extrapoliert.",
+    frozen: "Der Ticker ist pausiert, weil dieses Land mehr als ein Quartal hinter dem Hauptdatensatz liegt.",
     sourcePeriods: "Quelle: offizielle Eurostat-Schuldenperioden:",
     sourceDates: "Quartalsenden:",
     sourceLive: "Die Live-Schätzung verlängert den letzten offiziellen Stand bis heute.",
+    sourceFrozen: "Der letzte offizielle Wert bleibt ohne weitere Extrapolation sichtbar, bis neuere Daten verfügbar sind.",
     sourceFallback:
       "Quellenhinweis: Offizielle Eurostat-Schuldenperioden sind nicht verfügbar, daher nutzt der Live-Ticker eine Fallback-Schätzung.",
     perSec: "/ s",
@@ -50,9 +56,11 @@ const LABELS = {
     change: "Variation entre les trimestres officiels",
     rate: "Rythme en direct (approx.)",
     derived: "Le rythme en direct est extrapolé à partir des deux derniers trimestres officiels de dette d’Eurostat.",
+    frozen: "Le compteur est en pause car ce pays a plus d’un trimestre de retard sur le jeu de données principal.",
     sourcePeriods: "Source : périodes officielles de dette Eurostat :",
     sourceDates: "Fins de trimestre :",
     sourceLive: "L’estimation en direct prolonge la dernière valeur officielle jusqu’à aujourd’hui.",
+    sourceFrozen: "La dernière valeur officielle reste visible sans extrapolation supplémentaire jusqu’à la disponibilité de données plus récentes.",
     sourceFallback:
       "Note sur la source : les périodes officielles de dette Eurostat ne sont pas disponibles, donc le compteur en direct utilise une estimation de secours.",
     perSec: "/ s",
@@ -75,12 +83,14 @@ function formatQuarterKey(key) {
  * - lang (string, optioneel): taalcode (bv. "en", "de")
  * - gdpAbs (number, optioneel): Live GDP in euro
  * - yearLabel (string, optioneel): De bronperiode
+ * - liveDebt (number, optioneel): actuele live-schuldschatting
  */
 export default function CountryFacts({
   code,
   lang = "en",
   gdpAbs: gdpAbsProp,
   yearLabel: yearLabelProp,
+  liveDebt: liveDebtProp,
 }) {
   const c = useMemo(() => {
     const want = String(code || "").toLowerCase();
@@ -139,6 +149,19 @@ export default function CountryFacts({
     : gdpFromDataEUR;
 
   const showDebtToGDP = Number.isFinite(gdpAbs) && gdpAbs > 0;
+  const officialRatioPct = Number(c?.official_debt_to_gdp_pct);
+  const officialRatioPeriod = c?.official_debt_to_gdp_time || null;
+  const hasOfficialRatio =
+    Number.isFinite(officialRatioPct) && officialRatioPct > 0 && !!officialRatioPeriod;
+  const liveDebt = Number(liveDebtProp);
+  const liveRatioPct =
+    hasOfficialRatio &&
+    officialRatioPeriod === c.official_latest_time &&
+    Number.isFinite(liveDebt) &&
+    liveDebt > 0 &&
+    v1 > 0
+      ? officialRatioPct * (liveDebt / v1)
+      : null;
 
   // 3. Label bepaling
   const yearLabel =
@@ -188,7 +211,7 @@ export default function CountryFacts({
             {rateText}
           </div>
           <div className="tag" style={{ marginTop: 4, opacity: 0.8 }}>
-            {t.derived}
+            {c.isDebtTickerFrozen ? t.frozen : t.derived}
           </div>
         </div>
       </div>
@@ -206,7 +229,7 @@ export default function CountryFacts({
           )}
 
           <div className="tag" style={{ marginTop: 4, opacity: 0.8 }}>
-            {t.sourceLive}
+            {c.isDebtTickerFrozen ? t.sourceFrozen : t.sourceLive}
           </div>
         </>
       ) : (
@@ -215,7 +238,7 @@ export default function CountryFacts({
         </div>
       )}
 
-      {showDebtToGDP && (
+      {(hasOfficialRatio || showDebtToGDP) && (
         <div
           style={{
             marginTop: 24,
@@ -228,6 +251,9 @@ export default function CountryFacts({
             yearLabel={yearLabel}
             debt={v1}
             gdp={gdpAbs}
+            officialRatioPct={hasOfficialRatio ? officialRatioPct : undefined}
+            officialPeriod={hasOfficialRatio ? officialRatioPeriod : undefined}
+            liveRatioPct={Number.isFinite(liveRatioPct) ? liveRatioPct : undefined}
             lang={effLang}
           />
         </div>

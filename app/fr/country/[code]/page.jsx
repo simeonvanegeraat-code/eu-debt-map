@@ -19,11 +19,24 @@ export async function generateMetadata({ params }) {
   );
 
   const name = countryName(code.toUpperCase(), "fr") || c?.name || code.toUpperCase();
+  const ratio = Number(c?.official_debt_to_gdp_pct);
+  const ratioPeriod = c?.official_debt_to_gdp_time || "";
+  const ratioYear = ratioPeriod.slice(0, 4) || "2026";
+  const ratioText = Number.isFinite(ratio)
+    ? `${ratio.toLocaleString("fr-FR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })} %`
+    : null;
   const url = `${SITE}/fr/country/${code}`;
 
   return {
-    title: `Dette publique ${name} (en direct) | EU Debt Map`,
-    description: `Suivez la dette publique de ${name} en direct avec une estimation actuelle basée sur Eurostat. Inclut le niveau de dette et le ratio dette/PIB.`,
+    title: ratioText
+      ? `Dette publique ${name} : direct et ${ratioText} du PIB (${ratioYear}) | EU Debt Map`
+      : `Dette publique ${name} (en direct) | EU Debt Map`,
+    description: ratioText
+      ? `Suivez la dette publique de ${name} en direct et consultez le ratio officiel d’Eurostat de ${ratioText} pour ${ratioPeriod}.`
+      : `Suivez la dette publique de ${name} en direct avec une estimation actuelle basée sur Eurostat. Inclut le niveau de dette et le ratio dette/PIB.`,
     alternates: {
       canonical: url,
       languages: {

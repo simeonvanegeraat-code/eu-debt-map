@@ -120,6 +120,41 @@ const TRANSLATIONS = {
   },
 };
 
+const OFFICIAL_TRANSLATIONS = {
+  en: {
+    official: "Official Eurostat ratio",
+    live: "Live estimate today",
+    summary: (country, pct, period, bucket) =>
+      `Eurostat reports an official debt-to-GDP ratio of ${pct} for ${country} in ${period}. This is ${bucket} relative to common EU reference levels.`,
+    source:
+      "Source: Eurostat quarterly government debt, unit PC_GDP. The live estimate only extends the debt trend; it is not an official real-time ratio.",
+  },
+  nl: {
+    official: "Officiële Eurostat-schuldquote",
+    live: "Live schatting vandaag",
+    summary: (country, pct, period, bucket) =>
+      `Eurostat rapporteert voor ${country} in ${period} een officiële schuldquote van ${pct}. Dit is ${bucket} ten opzichte van gangbare EU-referentiewaarden.`,
+    source:
+      "Bron: Eurostat kwartaaldata overheidsschuld, eenheid PC_GDP. De live schatting trekt alleen de schuldtrend door en is geen officiële realtime schuldquote.",
+  },
+  de: {
+    official: "Offizielle Eurostat-Schuldenquote",
+    live: "Live-Schätzung heute",
+    summary: (country, pct, period, bucket) =>
+      `Eurostat weist für ${country} im ${period} eine offizielle Schuldenquote von ${pct} aus. Im Vergleich zu gängigen EU-Referenzwerten gilt sie als ${bucket}.`,
+    source:
+      "Quelle: Vierteljährliche Eurostat-Staatsschulden, Einheit PC_GDP. Die Live-Schätzung schreibt nur den Schuldentrend fort und ist keine offizielle Echtzeitquote.",
+  },
+  fr: {
+    official: "Ratio officiel d’Eurostat",
+    live: "Estimation en direct aujourd’hui",
+    summary: (country, pct, period, bucket) =>
+      `Eurostat indique pour ${country} un ratio dette/PIB officiel de ${pct} en ${period}. Ce niveau est considéré comme ${bucket} par rapport aux valeurs de référence courantes de l’UE.`,
+    source:
+      "Source : dette publique trimestrielle d’Eurostat, unité PC_GDP. L’estimation en direct prolonge uniquement la tendance de la dette et ne constitue pas un ratio officiel en temps réel.",
+  },
+};
+
 function classifyBucket(pct) {
   if (pct < 60) return { key: "low", colorVar: "var(--ok)" };
   if (pct < 90) return { key: "mid", colorVar: "var(--warn)" };
@@ -164,21 +199,55 @@ function normalizeCountryNameForSentence(name, lang) {
   return name;
 }
 
+function formatPeriod(period, lang) {
+  const match = /^(\d{4})-?Q([1-4])$/i.exec(String(period || "").trim());
+  if (!match) return period || "";
+  if (lang === "fr") return `T${match[2]} ${match[1]}`;
+  return `${match[1]} Q${match[2]}`;
+}
+
+function formatPct(value, lang, digits = 1) {
+  if (!Number.isFinite(value)) return "—";
+  const locale =
+    lang === "nl"
+      ? "nl-NL"
+      : lang === "de"
+      ? "de-DE"
+      : lang === "fr"
+      ? "fr-FR"
+      : "en-GB";
+  return `${value.toLocaleString(locale, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  })}%`;
+}
+
 export default function DebtToGDPBlock({
   countryName = "Country",
   debt,
   gdp,
+  officialRatioPct,
+  officialPeriod,
+  liveRatioPct,
   lang = "en",
 }) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = TRANSLATIONS[effLang];
+  const officialT = OFFICIAL_TRANSLATIONS[effLang];
 
-  const ratio =
+  const calculatedRatio =
     Number.isFinite(debt) && Number.isFinite(gdp) && gdp > 0
       ? (debt / gdp) * 100
       : NaN;
+  const hasOfficialRatio =
+    Number.isFinite(Number(officialRatioPct)) &&
+    Number(officialRatioPct) > 0 &&
+    !!officialPeriod;
+  const ratio = hasOfficialRatio ? Number(officialRatioPct) : calculatedRatio;
 
-  const pct = Math.max(0, Math.min(300, Number.isFinite(ratio) ? ratio : 0));
+  if (!Number.isFinite(ratio)) return null;
+
+  const pct = Math.max(0, Math.min(300, ratio));
   const bucketInfo = classifyBucket(pct);
 
   const bucketLabel = t[bucketInfo.key];
@@ -188,17 +257,17 @@ export default function DebtToGDPBlock({
 
   const debtStr = formatMoneyEUR(debt, effLang);
   const gdpStr = formatMoneyEUR(gdp, effLang);
-  const pctStr = Number.isFinite(pct) ? `${pct.toFixed(0)}%` : "—";
+  const pctStr = formatPct(pct, effLang, hasOfficialRatio ? 1 : 0);
   const sentenceCountry = normalizeCountryNameForSentence(countryName, effLang);
 
-  const summaryText = t.text.summary(
-    sentenceCountry,
-    debtStr,
-    gdpStr,
-    pctStr,
-    bucketLabel
-  );
+  const periodLabel = formatPeriod(officialPeriod, effLang);
+  const summaryText = hasOfficialRatio
+    ? officialT.summary(sentenceCountry, pctStr, periodLabel, bucketLabel)
+    : t.text.summary(sentenceCountry, debtStr, gdpStr, pctStr, bucketLabel);
   const advisory = t.advisory[bucketInfo.key];
+  const livePctStr = Number.isFinite(Number(liveRatioPct))
+    ? formatPct(Number(liveRatioPct), effLang, 1)
+    : null;
 
   return (
     <div className="debtgdp-block">
@@ -208,6 +277,18 @@ export default function DebtToGDPBlock({
           {pctStr}
         </div>
       </div>
+
+      {hasOfficialRatio && (
+        <div className="debtgdp-status">
+          <strong>{officialT.official}</strong>
+          <span>{periodLabel}</span>
+          {livePctStr && (
+            <span>
+              {officialT.live}: <strong>{livePctStr}</strong>
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="debtgdp-bar" aria-label={t.aria.bar(countryName)}>
         <div className="debtgdp-bar-bg" />
@@ -240,7 +321,7 @@ export default function DebtToGDPBlock({
         <p>{summaryText}</p>
         <p>{advisory}</p>
         <p className="source">
-          {t.source}
+          {hasOfficialRatio ? officialT.source : t.source}
         </p>
       </div>
 
@@ -261,6 +342,18 @@ export default function DebtToGDPBlock({
         .debtgdp-title {
           font-weight: 600;
           font-size: 16px;
+        }
+        .debtgdp-status {
+          display: flex;
+          gap: 8px 14px;
+          flex-wrap: wrap;
+          align-items: baseline;
+          margin: -2px 0 12px;
+          color: var(--muted);
+          font-size: 12px;
+        }
+        .debtgdp-status strong {
+          color: var(--fg);
         }
         .debtgdp-badge {
           color: #0b1220;

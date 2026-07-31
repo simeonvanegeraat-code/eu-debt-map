@@ -4,7 +4,7 @@ import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import EUTotalTicker from "@/components/EUTotalTicker";
 import { listArticles } from "@/lib/articles";
-import { countries, trendFor, livePerSecondFor } from "@/lib/data";
+import { countries, debtDataSummary, trendFor, livePerSecondFor } from "@/lib/data";
 import { countryName } from "@/lib/countries";
 
 const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
@@ -24,7 +24,7 @@ const TEXT = {
   en: {
     locale: "en-GB",
     basePath: "",
-    title: "EU Debt Map | Live Government Debt by Country (EU-27, 2025)",
+    title: (year) => `EU Debt Map | Live Government Debt by Country (EU-27, ${year})`,
     description:
       "Track EU government debt live, country by country. Interactive EU-27 debt map with live estimates, debt growth, and country comparisons based on Eurostat data.",
     heroTitle: ["Live EU", "Government", "Debt Map"],
@@ -67,6 +67,7 @@ const TEXT = {
     euMovement: "EU movement",
     euMovementNote: "Estimated combined movement per second.",
     latestPeriod: "Latest reference period",
+    periodCoverage: (count) => `${count} of 27 countries use this reference period.`,
     flatCountries: (count) => `${count} countries are currently flat in this dataset.`,
     whyTitle: "Why EU government debt matters",
     insight1Title: "Borrowing costs",
@@ -102,7 +103,7 @@ const TEXT = {
   nl: {
     locale: "nl-NL",
     basePath: "/nl",
-    title: "EU Schuldenkaart | Live staatsschuld per land (EU-27, 2025)",
+    title: (year) => `EU Schuldenkaart | Live staatsschuld per land (EU-27, ${year})`,
     description:
       "Bekijk de overheidsschuld van de EU live, land per land. Interactieve EU-27 kaart met live schattingen, schuldgroei en vergelijkingen op basis van Eurostat-data.",
     heroTitle: ["Live EU", "Staatsschuld", "Kaart"],
@@ -145,6 +146,7 @@ const TEXT = {
     euMovement: "EU-beweging",
     euMovementNote: "Geschatte gezamenlijke beweging per seconde.",
     latestPeriod: "Laatste referentieperiode",
+    periodCoverage: (count) => `${count} van 27 landen gebruiken deze referentieperiode.`,
     flatCountries: (count) => `${count} landen zijn momenteel vlak in deze dataset.`,
     whyTitle: "Waarom EU-overheidsschuld ertoe doet",
     insight1Title: "Leenkosten",
@@ -181,7 +183,7 @@ const TEXT = {
   de: {
     locale: "de-DE",
     basePath: "/de",
-    title: "EU-Schuldenkarte | Live-Staatsschulden nach Land (EU-27, 2025)",
+    title: (year) => `EU-Schuldenkarte | Live-Staatsschulden nach Land (EU-27, ${year})`,
     description:
       "Verfolgen Sie die Staatsschulden der EU live, Land für Land. Interaktive EU-27 Schuldenkarte mit Live-Schätzungen, Schuldenwachstum und Ländervergleichen auf Basis von Eurostat-Daten.",
     heroTitle: ["Live EU", "Staats-", "schuldenkarte"],
@@ -225,6 +227,7 @@ const TEXT = {
     euMovement: "EU-Bewegung",
     euMovementNote: "Geschätzte gemeinsame Bewegung pro Sekunde.",
     latestPeriod: "Letzte Referenzperiode",
+    periodCoverage: (count) => `${count} von 27 Ländern verwenden diesen Referenzzeitraum.`,
     flatCountries: (count) => `${count} Länder sind in diesem Datensatz derzeit stabil.`,
     whyTitle: "Warum EU-Staatsschulden wichtig sind",
     insight1Title: "Finanzierungskosten",
@@ -262,7 +265,7 @@ const TEXT = {
   fr: {
     locale: "fr-FR",
     basePath: "/fr",
-    title: "Carte de la dette de l’UE | Dette publique en direct par pays (UE-27, 2025)",
+    title: (year) => `Carte de la dette de l’UE | Dette publique en direct par pays (UE-27, ${year})`,
     description:
       "Suivez la dette publique de l’UE en direct, pays par pays. Carte interactive de l’UE-27 avec estimations en direct, évolution de la dette et comparaisons basées sur Eurostat.",
     heroTitle: ["Carte UE", "Dette", "Publique"],
@@ -305,6 +308,7 @@ const TEXT = {
     euMovement: "Mouvement UE",
     euMovementNote: "Mouvement combiné estimé par seconde.",
     latestPeriod: "Dernière période de référence",
+    periodCoverage: (count) => `${count} pays sur 27 utilisent cette période de référence.`,
     flatCountries: (count) => `${count} pays sont actuellement stables dans ce jeu de données.`,
     whyTitle: "Pourquoi la dette publique de l’UE compte",
     insight1Title: "Coûts d’emprunt",
@@ -345,10 +349,12 @@ export function generateLocalizedHomeMetadata(lang) {
   const t = TEXT[lang] || TEXT.en;
   const base = new URL("https://www.eudebtmap.com");
   const url = lang === "en" ? "https://www.eudebtmap.com/" : `https://www.eudebtmap.com${t.basePath}`;
+  const dataYear = Number(String(debtDataSummary.dominantLatestTime || "").slice(0, 4));
+  const title = t.title(Number.isFinite(dataYear) ? dataYear : new Date().getUTCFullYear());
 
   return {
     metadataBase: base,
-    title: t.title,
+    title,
     description: t.description,
     alternates: {
       canonical: url,
@@ -361,7 +367,7 @@ export function generateLocalizedHomeMetadata(lang) {
       },
     },
     openGraph: {
-      title: t.title,
+      title,
       description: t.description,
       url,
       siteName: "EU Debt Map",
@@ -369,7 +375,7 @@ export function generateLocalizedHomeMetadata(lang) {
     },
     twitter: {
       card: "summary_large_image",
-      title: t.title,
+      title,
       description: t.description,
     },
   };
@@ -528,7 +534,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
 
   const totalPerSecond = valid.reduce((sum, c) => sum + livePerSecondFor(c), 0);
   const latestPeriod =
-    valid.find((c) => c.official_latest_time)?.official_latest_time ||
+    debtDataSummary.dominantLatestTime ||
     valid.find((c) => c.last_date)?.last_date ||
     "Eurostat";
 
@@ -675,6 +681,9 @@ export default function LocalizedHomePage({ lang = "en" }) {
             <div className="eu-home-period-box">
               <span>{t.latestPeriod}</span>
               <strong>{latestPeriod}</strong>
+              {debtDataSummary.dominantCoverage > 0 && debtDataSummary.dominantCoverage < 27 && (
+                <small>{t.periodCoverage(debtDataSummary.dominantCoverage)}</small>
+              )}
               {flatCount > 0 && <small>{t.flatCountries(flatCount)}</small>}
             </div>
           </section>

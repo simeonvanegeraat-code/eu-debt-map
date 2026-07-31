@@ -4,21 +4,21 @@ import { t } from "@/lib/i18n";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
 
 export const dynamic = "force-static";
-export const revalidate = 0;
+export const revalidate = false;
 
 export async function generateMetadata() {
   const lang = getLocaleFromPathname?.() || "en";
   const titleMap = {
-    en: "Debt-to-GDP ranking (EU-27) – live | EU Debt Map",
-    nl: "Schuld-/bbp-ranglijst (EU-27) – live | EU Debt Map",
-    de: "Schulden-zu-BIP-Ranking (EU-27) – live | EU Debt Map",
-    fr: "Classement Dette/PIB (UE-27) – en direct | EU Debt Map",
+    en: "EU debt-to-GDP ranking 2026 (EU-27) | EU Debt Map",
+    nl: "EU schuld-/bbp-ranglijst 2026 (EU-27) | EU Debt Map",
+    de: "EU Schulden/BIP-Ranking 2026 (EU-27) | EU Debt Map",
+    fr: "Classement dette/PIB UE 2026 (UE-27) | EU Debt Map",
   };
   const descMap = {
-    en: "Live EU-27 ranking by public debt relative to GDP, with thresholds at 60% and 90%. Updated from Eurostat.",
-    nl: "Live ranglijst van EU-27 op staatsschuld t.o.v. bbp, met drempels 60% en 90%. Bijgewerkt via Eurostat.",
-    de: "Live-Ranking der EU-27 nach Staatsschulden relativ zum BIP, Schwellen bei 60 % und 90 %. Daten von Eurostat.",
-    fr: "Classement en direct des 27 pays de l’UE par dette publique/PIB, seuils à 60 % et 90 %. Données Eurostat.",
+    en: "Compare official 2026 Eurostat debt-to-GDP ratios for all EU-27 countries, with an optional live estimate.",
+    nl: "Vergelijk officiële Eurostat-schuldquotes voor 2026 van alle 27 EU-landen, met een optionele live schatting.",
+    de: "Vergleichen Sie die offiziellen Eurostat-Schuldenquoten 2026 aller 27 EU-Länder, optional mit Live-Schätzung.",
+    fr: "Comparez les ratios dette/PIB officiels d’Eurostat en 2026 pour les 27 pays de l’UE, avec une estimation en direct en option.",
   };
 
   const base = "https://www.eudebtmap.com";
@@ -50,7 +50,7 @@ export default function DebtToGDPPage() {
   return (
     <main className="container" style={{ display: "grid", gap: 16 }}>
       <header>
-        <h1 style={{ margin: 0 }}>{t(lang, "dtg.title")}</h1>
+        <h1 style={{ margin: 0 }}>EU debt-to-GDP ranking 2026</h1>
         <p className="tag" style={{ marginTop: 6 }}>
           {t(lang, "dtg.why")}
         </p>

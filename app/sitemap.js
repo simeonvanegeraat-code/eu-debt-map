@@ -134,7 +134,7 @@ export default async function sitemap() {
   let getTranslations = () => [];
 
   try {
-    const eurostat = await import("@/lib/eurostat.gen").catch(() => ({}));
+    const eurostat = await import("@/lib/eurostat.debt.gen").catch(() => ({}));
     EUROSTAT_UPDATED_AT = eurostat?.EUROSTAT_UPDATED_AT ?? null;
   } catch {
     EUROSTAT_UPDATED_AT = null;

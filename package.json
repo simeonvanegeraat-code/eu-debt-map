@@ -7,10 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "fetch:data": "node scripts/fetch-eurostat.js && node scripts/fetch-eu-history.js",
-    "fetch:history": "node scripts/fetch-eu-history.js",
-    "prebuild": "node scripts/fetch-eurostat.js && node scripts/fetch-eu-history.js",
-    "new:article": "node scripts/new-article.js en 2025 new-article-slug \"New Article Title\""
+    "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js",
+    "update:debt": "node scripts/update-eurostat-debt.js",
+    "update:ratios": "node scripts/update-eurostat-ratios.js",
+    "update:data": "npm run update:debt && npm run update:ratios",
+    "fetch:data": "npm run update:data",
+    "fetch:history": "npm run update:data",
+    "prebuild": "node scripts/validate-eurostat-data.js && node scripts/validate-eurostat-ratios.js",
+    "new:article": "node scripts/new-article.js en 2026 new-article-slug \"New Article Title\""
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

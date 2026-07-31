@@ -4,7 +4,6 @@ import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import { countryName } from "@/lib/countries";
 import { withLocale } from "@/lib/locale";
-import { getLatestGDPForGeoEUR } from "@/lib/eurostat.live";
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -15,12 +14,26 @@ export async function generateMetadata({ params }) {
   const code = params.code?.toUpperCase() || "";
   const lang = "de";
   const name = countryName(code, lang);
+  const country = countries.find((item) => item.code === code);
+  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratioPeriod = country?.official_debt_to_gdp_time || "";
+  const ratioYear = ratioPeriod.slice(0, 4) || "2026";
+  const ratioText = Number.isFinite(ratio)
+    ? `${ratio.toLocaleString("de-DE", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })}%`
+    : null;
 
   const base = "https://www.eudebtmap.com";
   const path = `/country/${code.toLowerCase()}`;
 
-  const title = `${name} Schuldenuhr (live) | EU Debt Map`;
-  const desc = `Verfolge die Staatsverschuldung von ${name} live mit einer aktuellen Schätzung auf Basis von Eurostat. Inklusive Schuldenstand und BIP-Verhältnis.`;
+  const title = ratioText
+    ? `${name} Staatsschulden: live & ${ratioText} des BIP (${ratioYear}) | EU Debt Map`
+    : `${name} Schuldenuhr (live) | EU Debt Map`;
+  const desc = ratioText
+    ? `Verfolgen Sie die Staatsschulden von ${name} live und sehen Sie die offizielle Eurostat-Schuldenquote von ${ratioText} für ${ratioPeriod}.`
+    : `Verfolge die Staatsverschuldung von ${name} live mit einer aktuellen Schätzung auf Basis von Eurostat. Inklusive Schuldenstand und BIP-Verhältnis.`;
 
   return {
     title,
@@ -61,7 +74,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = "error";
 
 export default async function CountryPageDE({ params: { code } }) {
   const want = String(code).toLowerCase();
@@ -69,8 +82,6 @@ export default async function CountryPageDE({ params: { code } }) {
     (x) => String(x.code).toLowerCase() === want
   );
   if (!country) return notFound();
-
-  const { valueEUR, period } = await getLatestGDPForGeoEUR(country.code);
 
   const lang = "de";
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
@@ -82,8 +93,6 @@ export default async function CountryPageDE({ params: { code } }) {
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
-          gdpAbs={valueEUR}
-          gdpPeriod={period}
         />
       </section>
     </main>

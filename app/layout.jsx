@@ -51,6 +51,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const adsEnabled = process.env.VERCEL_ENV === "production";
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -81,21 +82,27 @@ export default function RootLayout({ children }) {
         </Script>
 
         {/* AdSense meta + preconnects */}
-        <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+        {adsEnabled && (
+          <>
+            <meta name="google-adsense-account" content="ca-pub-9252617114074571" />
+            <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+            <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+          </>
+        )}
 
         <meta name="theme-color" content="#ffffff" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="format-detection" content="telephone=no" />
 
         {/* AdSense Auto Ads loader (één keer, site-wide) */}
-        <Script
-          id="adsense"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {adsEnabled && (
+          <Script
+            id="adsense"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9252617114074571"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
 
         {/* Structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
