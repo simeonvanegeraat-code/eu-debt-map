@@ -788,7 +788,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
 
         .eu-home-hero,
         .eu-home-card,
-        .eu-home-quick-wrap > .card {
+        .eu-home-quick-wrap .card {
           background: #ffffff;
           border: 1px solid rgba(203, 213, 225, 0.8);
           border-radius: 18px;
@@ -1064,7 +1064,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
         .eu-home-map-card,
         .eu-home-side-card,
         .eu-home-lower-card,
-        .eu-home-quick-wrap > .card {
+        .eu-home-quick-wrap .card {
           padding: 22px;
         }
 
@@ -1428,7 +1428,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
           .eu-home-map-card,
           .eu-home-side-card,
           .eu-home-lower-card,
-          .eu-home-quick-wrap > .card {
+          .eu-home-quick-wrap .card {
             padding: 18px;
           }
 

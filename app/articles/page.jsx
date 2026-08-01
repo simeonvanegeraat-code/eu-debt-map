@@ -155,7 +155,7 @@ export default function ArticlesPage() {
 
   return (
     <div className="insights-page">
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .insights-page {
           background:
             radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 34rem),
@@ -914,7 +914,7 @@ export default function ArticlesPage() {
             align-items: flex-start;
           }
         }
-      `}</style>
+      ` }} />
 
       <script
         type="application/ld+json"
