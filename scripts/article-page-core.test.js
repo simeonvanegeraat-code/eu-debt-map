@@ -166,3 +166,33 @@ test("all localized article routes use the shared body and schema helpers", () =
     assert.doesNotMatch(source, /"@type": "NewsArticle"/, route);
   }
 });
+
+test("homepage article cards use isolated responsive styles and descriptive links", () => {
+  const card = fs.readFileSync(
+    path.join(ROOT, "components", "ArticleCard.jsx"),
+    "utf8"
+  );
+  const styles = fs.readFileSync(
+    path.join(ROOT, "components", "ArticleCard.module.css"),
+    "utf8"
+  );
+  const homepage = fs.readFileSync(
+    path.join(ROOT, "components", "LocalizedHomePage.jsx"),
+    "utf8"
+  );
+
+  assert.match(card, /ArticleCard\.module\.css/);
+  assert.match(card, /className=\{styles\.titleLink\}/);
+  assert.match(card, /Array\.isArray\(tags\)/);
+  assert.match(card, /rel="bookmark"/);
+  assert.doesNotMatch(card, /Read more/);
+  assert.doesNotMatch(card, /rounded-2xl|border-slate|line-clamp-3/);
+
+  assert.match(styles, /grid-template-columns:\s*144px minmax\(0, 1fr\)/);
+  assert.match(styles, /\.withoutImage/);
+  assert.match(styles, /@media \(max-width: 560px\)/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+
+  assert.match(homepage, /<ul className="eu-home-articles-list">/);
+  assert.match(homepage, /<ArticleCard key=\{article\.slug\} article=\{article\} \/>/);
+});

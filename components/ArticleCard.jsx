@@ -1,13 +1,33 @@
-"use client";
-
 import Link from "next/link";
+import styles from "./ArticleCard.module.css";
 
-// Veilige href (eerst expliciete url, anders /{lang?}/articles/{slug})
-function articleHref(a) {
-  if (!a) return "#";
-  if (a.url) return a.url;
-  const lang = a.lang && a.lang !== "en" ? `/${a.lang}` : "";
-  return `${lang}/articles/${a.slug}`;
+const DATE_LOCALES = {
+  en: "en-GB",
+  nl: "nl-NL",
+  de: "de-DE",
+  fr: "fr-FR",
+};
+
+function articleHref(article) {
+  if (!article) return "#";
+  if (article.url) return article.url;
+
+  const prefix = article.lang && article.lang !== "en" ? `/${article.lang}` : "";
+  return `${prefix}/articles/${article.slug}`;
+}
+
+function formatDate(iso, lang = "en") {
+  if (!iso) return "";
+
+  try {
+    return new Intl.DateTimeFormat(DATE_LOCALES[lang] || DATE_LOCALES.en, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return iso;
+  }
 }
 
 export default function ArticleCard({ article }) {
@@ -22,143 +42,53 @@ export default function ArticleCard({ article }) {
     date,
     tags = [],
     lang = "en",
-    slug,
   } = article;
 
-  const href = articleHref(article);
   const text = summary || excerpt || "";
+  const primaryTag = Array.isArray(tags) ? tags[0] : null;
 
   return (
-    <Link
-      href={href}
-      aria-label={title}
-      rel="bookmark"
-      className="
-        group
-        block
-        rounded-2xl
-        border border-slate-200/80
-        bg-white
-        shadow-[0_6px_16px_rgba(15,23,42,0.05)]
-        hover:shadow-[0_14px_32px_rgba(15,23,42,0.14)]
-        hover:bg-slate-50/70
-        transition-all duration-150
-        overflow-hidden
-      "
-    >
-      {/* 16:9 thumbnail, voorkomt CLS door aspect-ratio container */}
-      {image && (
-        <div
-          className="
-            w-full
-            aspect-[16/9]
-            overflow-hidden
-            bg-slate-100
-          "
-        >
-          <img
-            src={image}
-            alt={imageAlt || title}
-            loading="lazy"
-            decoding="async"
-            width={800}
-            height={450}
-            className="
-              h-full w-full object-cover
-              transition-transform duration-150
-              group-hover:scale-[1.03]
-            "
-          />
-        </div>
-      )}
-
-      <div className="grid gap-2.5 p-3.5">
-        {/* Meta: datum + max 2 tags */}
-        <div className="flex flex-wrap items-center gap-1.5 text-[0.7rem] text-slate-500">
-          {date && (
-            <time
-              dateTime={date}
-              className="font-medium uppercase tracking-[0.14em]"
-            >
-              {formatDate(date, lang)}
-            </time>
-          )}
-          {tags.slice(0, 2).map((t) => (
-            <span
-              key={t}
-              className="
-                px-2 py-0.5
-                rounded-full
-                border border-slate-200
-                bg-slate-50
-                text-[0.65rem]
-                font-semibold
-                text-slate-700
-              "
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        {/* Titel */}
-        <h3
-          className="
-            m-0
-            text-[1.02rem]
-            leading-snug
-            font-semibold
-            text-slate-900
-            line-clamp-3
-          "
-        >
-          {title}
-        </h3>
-
-        {/* Korte samenvatting */}
-        {text && (
-          <p
-            className="
-              m-0
-              text-[0.82rem]
-              leading-snug
-              text-slate-600
-              line-clamp-3
-            "
-          >
-            {text}
-          </p>
+    <li className={styles.item}>
+      <article
+        className={image ? styles.card : `${styles.card} ${styles.withoutImage}`}
+      >
+        {image && (
+          <div className={styles.thumbnail}>
+            <img
+              src={image}
+              alt={imageAlt || ""}
+              loading="lazy"
+              decoding="async"
+              width={240}
+              height={160}
+            />
+          </div>
         )}
 
-        {/* Subtle CTA */}
-        <span
-          className="
-            mt-0.5
-            text-[0.78rem]
-            font-semibold
-            text-sky-700
-            group-hover:text-sky-800
-          "
-        >
-          Read more →
-        </span>
-      </div>
-    </Link>
-  );
-}
+        <div className={styles.content}>
+          {(date || primaryTag) && (
+            <div className={styles.meta}>
+              {primaryTag && <span className={styles.tag}>{primaryTag}</span>}
+              {date && primaryTag && <span aria-hidden="true">·</span>}
+              {date && (
+                <time dateTime={date}>{formatDate(date, lang)}</time>
+              )}
+            </div>
+          )}
 
-function formatDate(iso, lang = "en") {
-  if (!iso) return "";
-  try {
-    return new Intl.DateTimeFormat(
-      lang && lang !== "en" ? lang : "en-GB",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }
-    ).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+          <h3 className={styles.title}>
+            <Link
+              href={articleHref(article)}
+              rel="bookmark"
+              className={styles.titleLink}
+            >
+              {title}
+            </Link>
+          </h3>
+
+          {text && <p className={styles.summary}>{text}</p>}
+        </div>
+      </article>
+    </li>
+  );
 }
