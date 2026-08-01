@@ -5,12 +5,14 @@ import { notFound } from "next/navigation";
 import ShareBar from "@/components/ShareBar";
 import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
-import InArticleAd from "@/components/InArticleAd";
+import ArticleBody from "@/components/ArticleBody";
+import articlePageCore from "@/lib/articlePageCore.cjs";
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "en";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
+const { buildArticleJsonLd, buildArticleMetadata } = articlePageCore;
 
 /* ---------- helpers ---------- */
 
@@ -19,102 +21,22 @@ function bodyStartsWithImage(html = "") {
   return head.startsWith("<img") || head.startsWith("<figure");
 }
 
-function schemaPersonOrOrganization(value, fallbackName = "EU Debt Map") {
-  if (!value) {
-    return {
-      "@type": "Organization",
-      name: fallbackName,
-      url: SITE,
-    };
-  }
-
-  if (typeof value === "string") {
-    const isOrg = value.toLowerCase().includes("debt map");
-
-    return {
-      "@type": isOrg ? "Organization" : "Person",
-      name: value,
-    };
-  }
-
-  const name = value.name || fallbackName;
-  const isOrg = name.toLowerCase().includes("debt map");
-
-  return {
-    "@type": value.type || (isOrg ? "Organization" : "Person"),
-    name,
-    url: value.url || undefined,
-  };
-}
-
-function safeIsoDate(value) {
-  if (!value) return undefined;
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return undefined;
-
-  return date.toISOString();
-}
-
 /* ---------- SEO ---------- */
 
 export async function generateMetadata({ params }) {
   const slug = params.slug;
   const article = getArticle({ slug, lang: LANG });
-  const url = `${SITE}${prefix}/articles/${slug}`;
 
-  if (!article) {
-    return {
-      title: "Article • EU Debt Map",
-      alternates: { canonical: url },
-      openGraph: { url },
-      robots: { index: false },
-    };
-  }
-
-  const translations = getTranslations(slug);
-  const languages = Object.fromEntries(
-    translations.map((t) => {
-      const pfx = ROUTE_PREFIX[t.lang] ?? "";
-      return [t.lang, `${SITE}${pfx}/articles/${t.slug}`];
-    })
-  );
-  languages["x-default"] = languages.en || url;
-
-  const og = articleOgImage(article);
-  const title = article.seoTitle || article.title;
-  const description = article.summary || article.excerpt || undefined;
-
-  return {
-    title: `${title} • EU Debt Map`,
-    description,
-    alternates: { canonical: url, languages },
-    robots: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-    openGraph: {
-      title: article.title,
-      description,
-      url,
-      siteName: "EU Debt Map",
-      type: "article",
-      publishedTime: article.datePublished || article.date,
-      modifiedTime: article.dateModified || article.date,
-      authors: article.author?.name ? [article.author.name] : ["EU Debt Map"],
-      images: og ? [{ url: og, width: 1200, height: 630 }] : undefined,
-      locale: LANG,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: article.title,
-      description,
-      images: og ? [og] : undefined,
-    },
-  };
+  return buildArticleMetadata({
+    article,
+    translations: article ? getTranslations(slug) : [],
+    slug,
+    lang: LANG,
+    site: SITE,
+    routePrefixes: ROUTE_PREFIX,
+    missingTitle: "Article • EU Debt Map",
+    ogImage: article ? articleOgImage(article) : undefined,
+  });
 }
 
 /* ---------- page ---------- */
@@ -126,7 +48,6 @@ export default function ArticleDetailPage({ params }) {
   const url = `${SITE}${prefix}/articles/${params.slug}`;
 
   const publishDate = article.datePublished || article.date;
-  const modifyDate = article.dateModified || publishDate;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
   const candidateHero =
@@ -138,60 +59,13 @@ export default function ArticleDetailPage({ params }) {
   const og = articleOgImage(article);
   const shouldRenderHero = candidateHero && !bodyStartsWithImage(article.body);
 
-  const rawBody = article.body || "";
-  const adMarker = "<!-- MID_ARTICLE_AD -->";
-  const adIndex = rawBody.indexOf(adMarker);
-  const hasMidArticleAd = adIndex >= 0;
-  const bodyBeforeAd = hasMidArticleAd ? rawBody.slice(0, adIndex) : rawBody;
-  const bodyAfterAd = hasMidArticleAd
-    ? rawBody.slice(adIndex + adMarker.length)
-    : "";
-
-  const authorObj = schemaPersonOrOrganization(article.author);
-  const reviewedByObj = article.reviewedBy
-    ? schemaPersonOrOrganization(article.reviewedBy)
-    : undefined;
-
-  const schemaType = article.articleType === "news" ? "NewsArticle" : "Article";
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": schemaType,
-    headline: article.title,
-    description: article.summary || article.excerpt || undefined,
-    datePublished: safeIsoDate(publishDate),
-    dateModified: safeIsoDate(modifyDate),
-    dateReviewed: safeIsoDate(article.dateReviewed),
-    inLanguage: article.lang || LANG,
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  const jsonLd = buildArticleJsonLd({
+    article,
     url,
-    author: authorObj,
-    reviewedBy: reviewedByObj,
-    publisher: {
-      "@type": "Organization",
-      name: "EU Debt Map",
-      url: SITE,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE}/eu_favicon_512.png`,
-        width: 512,
-        height: 512,
-      },
-    },
-    image: og
-      ? [
-          {
-            "@type": "ImageObject",
-            url: og,
-            width: 1200,
-            height: 630,
-          },
-        ]
-      : undefined,
-    articleSection:
-      article.primaryTopic || article.tags?.[0] || "EU government debt",
-    keywords: Array.isArray(article.tags) ? article.tags.join(", ") : undefined,
-  };
+    lang: LANG,
+    site: SITE,
+    imageUrl: og,
+  });
 
   const css = `
     .article-container {
@@ -357,7 +231,7 @@ export default function ArticleDetailPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <style>{css}</style>
+      <style dangerouslySetInnerHTML={{ __html: css }} />
 
       <article className="article-container">
         <header>
@@ -402,13 +276,7 @@ export default function ArticleDetailPage({ params }) {
           </figure>
         )}
 
-        <div className="articleProse">
-          <div dangerouslySetInnerHTML={{ __html: bodyBeforeAd }} />
-          {hasMidArticleAd && <InArticleAd />}
-          {bodyAfterAd && (
-            <div dangerouslySetInnerHTML={{ __html: bodyAfterAd }} />
-          )}
-        </div>
+        <ArticleBody body={article.body} />
 
         <hr
           style={{
