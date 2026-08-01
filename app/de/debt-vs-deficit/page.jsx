@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (DE)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/de/debt-vs-deficit";
   const title = "Schulden vs. Defizit — Der Unterschied in 5 Minuten erklärt • EU Debt Map";
   const description =
     "Verstehen Sie den Unterschied zwischen Staatsschulden (Bestand) und Defizit (Strom). Klare, visuelle Erklärung mit Beispielen, Analogie, FAQ und Links zu Debt-to-GDP und Stabilitäts- und Wachstumspakt.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

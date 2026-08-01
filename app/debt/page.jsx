@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/debt";
   const title =
     "What Is Government Debt? Public Debt, Deficits and Bonds Explained | EU Debt Map";
@@ -10,7 +10,7 @@ export async function generateMetadata() {
     "A simple guide to government debt: what public debt is, how it differs from a deficit, how bonds work, who lends to governments, and why debt-to-GDP matters.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

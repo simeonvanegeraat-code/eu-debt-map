@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/nl/debt";
   const title =
     "Wat is overheidsschuld? Schuld, tekort en obligaties uitgelegd | EU Debt Map";
@@ -10,7 +10,7 @@ export async function generateMetadata() {
     "Eenvoudige uitleg over overheidsschuld: wat publieke schuld is, het verschil tussen schuld en tekort, hoe staatsobligaties werken, wie de overheid geld leent en waarom schuld/bbp belangrijk is.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {
