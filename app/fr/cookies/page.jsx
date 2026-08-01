@@ -1,3 +1,5 @@
+import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
+
 export const metadata = {
   title: "Politique relative aux cookies • EU Debt Map",
   description:
@@ -20,7 +22,7 @@ export default function CookiesPageFR() {
           <strong>Nécessaires</strong> — requis pour les fonctions essentielles et la sécurité.
         </li>
         <li>
-          <strong>Analytiques</strong> — nous aide à mesurer l’usage (Google Analytics 4).
+          <strong>Analytiques</strong> — Vercel Web Analytics mesure l&apos;usage agrégé sans cookies analytiques.
         </li>
         <li>
           <strong>Publicitaires</strong> — permet l’affichage des annonces Google AdSense.
@@ -29,9 +31,9 @@ export default function CookiesPageFR() {
 
       <h3 style={{ marginTop: 24 }}>Partenaires</h3>
       <ul>
-        <li><strong>CookieScript</strong> — gestion du consentement (IAB TCF, Consent Mode v2).</li>
-        <li><strong>Google Analytics 4</strong> — mesure & insights (après consentement).</li>
-        <li><strong>Google AdSense</strong> — publicité (personnalisée uniquement après consentement en UE/UK/CH).</li>
+        <li><strong>Google Consent Management Platform</strong> — gestion du consentement via Confidentialité et messages (IAB TCF).</li>
+        <li><strong>Google AdSense</strong> — publicité selon les choix effectués dans le message de consentement de Google.</li>
+        <li><strong>Vercel Web Analytics</strong> — analyse agrégée du site sans cookies.</li>
       </ul>
 
       <h3 style={{ marginTop: 24 }}>Gérer vos préférences</h3>
@@ -39,13 +41,12 @@ export default function CookiesPageFR() {
         Vous pouvez modifier ou retirer votre consentement à tout moment :
       </p>
 
-      <a
-        href="#"
-        className="csconsentlink underline hover:no-underline"
+      <GoogleConsentSettingsLink
+        className="underline hover:no-underline"
         style={{ display: "inline-block", marginTop: 8 }}
       >
-        Ouvrir les préférences de cookies
-      </a>
+        Ouvrir les paramètres de confidentialité et de cookies
+      </GoogleConsentSettingsLink>
 
       <div style={{ marginTop: 32 }} />
     </main>

@@ -1,13 +1,15 @@
+import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
+
 export const metadata = {
   title: "Datenschutzrichtlinie • EU Debt Map",
   description:
-    "Datenschutz- und Cookie-Richtlinie für EU Debt Map, einschließlich Google AdSense, Google Analytics 4 und Consent-Management.",
+    "Datenschutz- und Cookie-Richtlinie für EU Debt Map, einschließlich Google AdSense, Google Consent-Management und Vercel Web Analytics.",
   alternates: { canonical: "https://www.eudebtmap.com/de/privacy" },
 };
 
 export default function PrivacyPage() {
   const email = "firenature23@gmail.com";
-  const lastUpdated = "16. September 2025";
+  const lastUpdated = "1. August 2026";
 
   return (
     <main className="container grid gap-6 py-10">
@@ -42,14 +44,15 @@ export default function PrivacyPage() {
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h2 className="text-2xl font-bold">Consent-Management</h2>
         <p className="mt-3 text-gray-300">
-          Beim ersten Besuch sehen Sie ein Zustimmungsbanner von <strong>CookieScript</strong> (IAB TCF und Google Consent Mode v2).
+          Bei Ihrem ersten Besuch im EWR, Vereinigten Königreich oder in der Schweiz kann Googles veröffentlichte Einwilligungsnachricht erscheinen.
+          Sie wird über <strong>Google Datenschutz &amp; Mitteilungen</strong> in AdSense verwaltet und unterstützt das IAB Transparency and Consent Framework (TCF).
           Sie können Ihre Einwilligung jederzeit ändern oder widerrufen:
         </p>
         <ul className="mt-3 list-disc pl-6 text-gray-300">
           <li>
-            <a href="#" className="csconsentlink underline hover:no-underline">
-              Cookie-Einstellungen öffnen
-            </a>{" "}
+            <GoogleConsentSettingsLink className="underline hover:no-underline">
+              Datenschutz- und Cookie-Einstellungen öffnen
+            </GoogleConsentSettingsLink>{" "}
             (aktualisieren Sie Ihre Auswahl)
           </li>
           <li>Cookies über die Browsereinstellungen verwalten oder löschen.</li>
@@ -59,8 +62,17 @@ export default function PrivacyPage() {
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h2 className="text-2xl font-bold">Analyse</h2>
         <p className="mt-3 text-gray-300">
-          Wir verwenden <strong>Google Analytics 4</strong>, um die Nutzung der Website zu verstehen. In der EU/UK/CH läuft Analytics
-          nur nach Ihrer Zustimmung (über Consent Mode v2). IP-Anonymisierung ist aktiviert.
+          Wir verwenden <strong>Vercel Web Analytics</strong> für aggregierte Verkehrsstatistiken. Laut Vercel speichert dieser
+          Analysedienst anonymisierte Daten und verwendet keine Cookies. Weitere Informationen finden Sie in Vercels{" "}
+          <a
+            href="https://vercel.com/docs/analytics/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            Datenschutz- und Compliance-Dokumentation
+          </a>
+          .
         </p>
       </section>
 

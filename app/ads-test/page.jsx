@@ -27,7 +27,7 @@ export default function AdsTestPage() {
       {/* ---- Handmatig advertentieblok 2 (ook test) ---- */}
       <AdBox slot="8705915822" test />
 
-      {/* Live inzage in consent-cookies en dataLayer events */}
+      {/* Live inzage in Google CMP- en dataLayer-signalen */}
       <ConsentDebug />
     </main>
   );

@@ -1,5 +1,7 @@
 // app/cookies/page.jsx
 
+import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
+
 export const metadata = {
   title: "Cookie Policy • EU Debt Map",
   description:
@@ -22,7 +24,7 @@ export default function CookiesPage() {
           <strong>Necessary</strong> — required for core functionality and security.
         </li>
         <li>
-          <strong>Analytics</strong> — helps us measure usage (Google Analytics 4).
+          <strong>Analytics</strong> — Vercel Web Analytics measures aggregated usage without analytics cookies.
         </li>
         <li>
           <strong>Advertising</strong> — enables showing Google AdSense ads.
@@ -31,9 +33,9 @@ export default function CookiesPage() {
 
       <h3 style={{ marginTop: 24 }}>Vendors</h3>
       <ul>
-        <li><strong>CookieScript</strong> — consent management (IAB TCF, Consent Mode v2).</li>
-        <li><strong>Google Analytics 4</strong> — measurement & insights (after consent).</li>
-        <li><strong>Google AdSense</strong> — advertising (personalized only after consent in EEA/UK/CH).</li>
+        <li><strong>Google Consent Management Platform</strong> — consent management through Privacy &amp; messaging (IAB TCF).</li>
+        <li><strong>Google AdSense</strong> — advertising based on the choices made in Google&apos;s consent message.</li>
+        <li><strong>Vercel Web Analytics</strong> — aggregated, cookie-free website analytics.</li>
       </ul>
 
       <h3 style={{ marginTop: 24 }}>Manage your preferences</h3>
@@ -41,16 +43,13 @@ export default function CookiesPage() {
         You can change or withdraw your consent at any time:
       </p>
 
-      {/* Officiële CookieScript-trigger */}
-      <a
-        href="#"
-        className="csconsentlink underline hover:no-underline"
+      <GoogleConsentSettingsLink
+        className="underline hover:no-underline"
         style={{ display: "inline-block", marginTop: 8 }}
       >
-        Open cookie preferences
-      </a>
+        Open privacy and cookie settings
+      </GoogleConsentSettingsLink>
 
-      {/* Optioneel: CookieScript declaration/report embed kan hier */}
       <div style={{ marginTop: 32 }} />
     </main>
   );
