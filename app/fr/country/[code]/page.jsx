@@ -4,6 +4,7 @@ import { countries } from "@/lib/data";
 import { countryName } from "@/lib/countries";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
+import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -66,6 +67,9 @@ export default function CountryPageFR({ params: { code } }) {
           country={country}
           lang="fr"
           introSlot={<CountryIntro country={country} lang="fr" />}
+          relatedArticleSlot={
+            <CountryRelatedArticleServer code={country.code} lang="fr" />
+          }
         />
       </section>
     </main>

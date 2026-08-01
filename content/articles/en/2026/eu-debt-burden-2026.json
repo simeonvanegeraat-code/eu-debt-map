@@ -5,6 +5,8 @@
   "summary": "Eurostat’s Q1 2026 data puts Greece at 143.5% of GDP, Italy at 138.9% and France at 117.6%. See which EU debt ratios rose fastest and what the figures mean.",
   "excerpt": "Eurostat’s Q1 2026 data puts Greece at 143.5% of GDP, Italy at 138.9% and France at 117.6%. See which EU debt ratios rose fastest and what the figures mean.",
   "primaryTopic": "EU government debt",
+  "countryPageFallback": true,
+  "relatedCountries": [],
   "articleType": "analysis",
   "tags": ["EU debt", "debt-to-GDP", "government debt", "Eurostat", "fiscal rules"],
   "lang": "en",

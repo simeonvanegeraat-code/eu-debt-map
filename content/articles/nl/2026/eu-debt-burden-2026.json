@@ -5,6 +5,8 @@
   "summary": "Eurostats cijfers voor Q1 2026 zetten Griekenland op 143,5% van het bbp, Italië op 138,9% en Frankrijk op 117,6%. Bekijk waar de schuldquote het snelst steeg en wat de cijfers betekenen.",
   "excerpt": "Eurostats cijfers voor Q1 2026 zetten Griekenland op 143,5% van het bbp, Italië op 138,9% en Frankrijk op 117,6%. Bekijk waar de schuldquote het snelst steeg en wat de cijfers betekenen.",
   "primaryTopic": "EU-staatsschuld",
+  "countryPageFallback": true,
+  "relatedCountries": [],
   "articleType": "analysis",
   "tags": ["EU debt", "schuld/bbp", "staatsschuld", "Eurostat", "begrotingsregels"],
   "lang": "nl",

@@ -5,6 +5,8 @@
   "summary": "Eurostats Daten für Q1 2026 zeigen Griechenland bei 143,5% des BIP, Italien bei 138,9% und Frankreich bei 117,6%. Lesen Sie, wo die Schuldenquote am schnellsten stieg und was die Werte bedeuten.",
   "excerpt": "Eurostats Daten für Q1 2026 zeigen Griechenland bei 143,5% des BIP, Italien bei 138,9% und Frankreich bei 117,6%. Lesen Sie, wo die Schuldenquote am schnellsten stieg und was die Werte bedeuten.",
   "primaryTopic": "EU-Staatsverschuldung",
+  "countryPageFallback": true,
+  "relatedCountries": [],
   "articleType": "analysis",
   "tags": ["EU debt", "Schulden/BIP", "Staatsverschuldung", "Eurostat", "Fiskalregeln"],
   "lang": "de",
