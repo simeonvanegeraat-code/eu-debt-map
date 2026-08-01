@@ -7,40 +7,27 @@ export default function ConsentDebug() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    function getCookie(name){
-      return ('; '+document.cookie).split('; '+name+'=').pop().split(';')[0] || '';
-    }
-    function read(){
-      let cookie = "";
-      try { cookie = decodeURIComponent(getCookie("CookieScriptConsent")); } catch {}
-      const dl = (window.dataLayer || []).filter(e => e[0]==="consent" || e.event==="consent");
+    function read() {
+      const dl = (window.dataLayer || []).filter(
+        (entry) => entry?.[0] === "consent" || entry?.event === "consent"
+      );
       setEvents(dl.slice(-5));
       setState({
-        cookieScriptConsent: cookie || "(none)",
+        googleCmpScriptLoaded: Array.from(document.scripts).some((script) =>
+          script.src.includes("fundingchoicesmessages.google.com")
+        ),
+        googleConsentApiAvailable:
+          typeof window.googlefc?.showRevocationMessage === "function",
+        tcfApiAvailable: typeof window.__tcfapi === "function",
       });
     }
-    read();
-    const onUpd = () => setTimeout(read, 50);
-    document.addEventListener("CookieScriptLoaded", onUpd);
-    document.addEventListener("CookieScriptConsentUpdated", onUpd);
-    const t = setInterval(read, 2000);
-    return () => {
-      clearInterval(t);
-      document.removeEventListener("CookieScriptLoaded", onUpd);
-      document.removeEventListener("CookieScriptConsentUpdated", onUpd);
-    };
-  }, []);
 
-  useEffect(() => {
-    // Toon actuele Consent Mode status via gtag API (indien beschikbaar)
-    try {
-      window.gtag?.("get", "consent", "default", (c)=> {
-        setState(s => ({ ...(s||{}), defaultConsent: c }));
-      });
-      window.gtag?.("get", "consent", "update", (c)=> {
-        setState(s => ({ ...(s||{}), lastUpdate: c }));
-      });
-    } catch {}
+    read();
+    const timer = setInterval(read, 2000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   return (
@@ -50,12 +37,9 @@ export default function ConsentDebug() {
       borderRadius: 10, fontSize: 12, maxWidth: 340, lineHeight: 1.4
     }}>
       <div style={{fontWeight:700, marginBottom:6}}>Consent Debug</div>
-      <div><strong>CookieScriptConsent</strong>:</div>
-      <pre style={{whiteSpace:"pre-wrap"}}>{state?.cookieScriptConsent}</pre>
-      <div style={{marginTop:6}}><strong>Consent defaults</strong>:</div>
-      <pre>{JSON.stringify(state?.defaultConsent || {}, null, 2)}</pre>
-      <div style={{marginTop:6}}><strong>Last consent update</strong>:</div>
-      <pre>{JSON.stringify(state?.lastUpdate || {}, null, 2)}</pre>
+      <div><strong>Google CMP script loaded</strong>: {String(Boolean(state?.googleCmpScriptLoaded))}</div>
+      <div><strong>Google consent API available</strong>: {String(Boolean(state?.googleConsentApiAvailable))}</div>
+      <div><strong>IAB TCF API available</strong>: {String(Boolean(state?.tcfApiAvailable))}</div>
       <div style={{marginTop:6}}><strong>Recent dataLayer consent events</strong>:</div>
       <pre style={{maxHeight:150, overflow:"auto"}}>{JSON.stringify(events, null, 2)}</pre>
     </div>

@@ -4,6 +4,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
+import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
+
+const CONSENT_SETTINGS_LABELS = {
+  en: "Privacy and cookie settings",
+  nl: "Privacy- en cookie-instellingen",
+  de: "Datenschutz- und Cookie-Einstellungen",
+  fr: "Paramètres de confidentialité et de cookies",
+};
 
 export default function Footer() {
   const pathname = usePathname() || "/";
@@ -77,10 +85,9 @@ export default function Footer() {
             Cookie Policy
           </Link>
 
-          {/* Officiële CookieScript-trigger: geen JS, alleen deze class */}
-          <a href="#" className="footer-link csconsentlink">
-            Cookie preferences
-          </a>
+          <GoogleConsentSettingsLink className="footer-link">
+            {CONSENT_SETTINGS_LABELS[locale] || CONSENT_SETTINGS_LABELS.en}
+          </GoogleConsentSettingsLink>
         </nav>
       </div>
 

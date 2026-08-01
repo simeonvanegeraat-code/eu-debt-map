@@ -1,3 +1,5 @@
+import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
+
 export const metadata = {
   title: "Cookiebeleid • EU Debt Map",
   description:
@@ -20,7 +22,7 @@ export default function CookiesPageNL() {
           <strong>Noodzakelijk</strong> — vereist voor kernfunctionaliteit en veiligheid.
         </li>
         <li>
-          <strong>Analyse</strong> — helpt ons gebruik te meten (Google Analytics 4).
+          <strong>Analyse</strong> — Vercel Web Analytics meet geaggregeerd gebruik zonder analysecookies.
         </li>
         <li>
           <strong>Advertenties</strong> — maakt het tonen van Google AdSense-advertenties mogelijk.
@@ -29,9 +31,9 @@ export default function CookiesPageNL() {
 
       <h3 style={{ marginTop: 24 }}>Aanbieders</h3>
       <ul>
-        <li><strong>CookieScript</strong> — toestemmingsbeheer (IAB TCF, Consent Mode v2).</li>
-        <li><strong>Google Analytics 4</strong> — meting & inzichten (na toestemming).</li>
-        <li><strong>Google AdSense</strong> — advertenties (gepersonaliseerd alleen na toestemming in EEA/UK/CH).</li>
+        <li><strong>Google Consent Management Platform</strong> — toestemmingsbeheer via Privacy en berichten (IAB TCF).</li>
+        <li><strong>Google AdSense</strong> — advertenties op basis van de keuzes in Googles toestemmingsbericht.</li>
+        <li><strong>Vercel Web Analytics</strong> — geaggregeerde websiteanalyse zonder cookies.</li>
       </ul>
 
       <h3 style={{ marginTop: 24 }}>Beheer je voorkeuren</h3>
@@ -39,13 +41,12 @@ export default function CookiesPageNL() {
         Je kunt je toestemming op ieder moment wijzigen of intrekken:
       </p>
 
-      <a
-        href="#"
-        className="csconsentlink underline hover:no-underline"
+      <GoogleConsentSettingsLink
+        className="underline hover:no-underline"
         style={{ display: "inline-block", marginTop: 8 }}
       >
-        Open cookievoorkeuren
-      </a>
+        Open privacy- en cookie-instellingen
+      </GoogleConsentSettingsLink>
 
       <div style={{ marginTop: 32 }} />
     </main>
