@@ -5,6 +5,8 @@
   "summary": "Europe’s public debt is not spread evenly. This data-backed analysis explains why total debt and debt-to-GDP tell two different stories about fiscal pressure in the EU.",
   "excerpt": "Europe’s public debt is not spread evenly. This data-backed analysis explains why total debt and debt-to-GDP tell two different stories about fiscal pressure in the EU.",
   "primaryTopic": "EU government debt",
+  "countryPageFallback": false,
+  "relatedCountries": [],
   "articleType": "analysis",
   "tags": ["EU debt", "debt-to-GDP", "government debt", "Eurostat", "fiscal rules"],
   "lang": "en",
