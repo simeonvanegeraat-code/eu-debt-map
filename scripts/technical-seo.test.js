@@ -108,6 +108,20 @@ test("all existing localized EU debt routes are included in the multilingual sit
   assert.doesNotMatch(sitemap, /const EN_ONLY_PATHS/);
 });
 
+test("both homepage EU debt actions preserve the selected language", () => {
+  const homepage = read("components/LocalizedHomePage.jsx");
+
+  for (const href of ["/eu-debt", "/nl/eu-debt", "/de/eu-debt", "/fr/eu-debt"]) {
+    assert.match(homepage, new RegExp(`euDebtHref: "${href}"`));
+  }
+
+  assert.equal(
+    (homepage.match(/<Link href=\{t\.euDebtHref\}/g) || []).length,
+    2
+  );
+  assert.doesNotMatch(homepage, /<Link href="\/eu-debt"/);
+});
+
 test("RSS article links use their actual locale and are deduplicated", () => {
   const rss = read("app/rss.xml/route.js");
 
