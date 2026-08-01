@@ -98,6 +98,7 @@ const TEXT = {
     noArticles: "No articles yet. More coming soon.",
     articlesHref: "/articles",
     debtHref: "/debt",
+    euDebtHref: "/eu-debt",
   },
 
   nl: {
@@ -178,6 +179,7 @@ const TEXT = {
     noArticles: "Nog geen artikelen. Binnenkort meer.",
     articlesHref: "/nl/articles",
     debtHref: "/nl/debt",
+    euDebtHref: "/nl/eu-debt",
   },
 
   de: {
@@ -260,6 +262,7 @@ const TEXT = {
     noArticles: "Noch keine Artikel. Bald verfügbar.",
     articlesHref: "/de/articles",
     debtHref: "/de/debt",
+    euDebtHref: "/de/eu-debt",
   },
 
   fr: {
@@ -342,6 +345,7 @@ const TEXT = {
     noArticles: "Aucun article pour le moment. D’autres arrivent bientôt.",
     articlesHref: "/fr/articles",
     debtHref: "/fr/debt",
+    euDebtHref: "/fr/eu-debt",
   },
 };
 
@@ -563,7 +567,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
           </div>
 
           <div className="eu-home-actions">
-            <Link href="/eu-debt" className="eu-home-btn eu-home-btn-primary">
+            <Link href={t.euDebtHref} className="eu-home-btn eu-home-btn-primary">
               {t.primaryCta}
             </Link>
             <Link href={t.debtHref} className="eu-home-btn eu-home-btn-secondary">
@@ -634,7 +638,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
               <strong>{t.mapMainAction}</strong>
             </div>
 
-            <Link href="/eu-debt" className="eu-home-map-action">
+            <Link href={t.euDebtHref} className="eu-home-map-action">
               <span aria-hidden>⌁</span>
               <strong>{t.fiveYearChart}</strong>
             </Link>
