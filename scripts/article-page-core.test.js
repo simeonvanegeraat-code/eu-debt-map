@@ -72,6 +72,39 @@ test("shared metadata uses the localized SEO title and hreflang routes", () => {
   );
 });
 
+test("hreflang uses one stable x-default when a translation group has no English article", () => {
+  const translations = [
+    { lang: "nl", slug: "franse-schuld" },
+    { lang: "fr", slug: "dette-francaise" },
+  ];
+  const article = {
+    title: "Franse staatsschuld",
+    summary: "Summary",
+  };
+
+  const dutchMetadata = buildArticleMetadata({
+    article,
+    translations,
+    slug: "franse-schuld",
+    lang: "nl",
+  });
+  const frenchMetadata = buildArticleMetadata({
+    article,
+    translations,
+    slug: "dette-francaise",
+    lang: "fr",
+  });
+
+  assert.equal(
+    dutchMetadata.alternates.languages["x-default"],
+    "https://www.eudebtmap.com/nl/articles/franse-schuld"
+  );
+  assert.equal(
+    frenchMetadata.alternates.languages["x-default"],
+    "https://www.eudebtmap.com/nl/articles/franse-schuld"
+  );
+});
+
 test("shared schema distinguishes analysis from news and preserves review data", () => {
   const article = {
     title: "Example analysis",

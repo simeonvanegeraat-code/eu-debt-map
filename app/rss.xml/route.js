@@ -5,12 +5,36 @@ export const revalidate = 1800;         // 30 min cache
 const SITE = "https://www.eudebtmap.com";
 const TITLE = "EU Debt Map – Articles";
 const DESC = "Explainers and insights on EU government debt.";
+const LOCALE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 
 function esc(s = "") {
   return String(s)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function cdata(s = "") {
+  return `<![CDATA[${String(s).replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
+}
+
+function articleUrl(article) {
+  if (!article?.slug) return null;
+
+  if (article.url) {
+    return article.url.startsWith("http")
+      ? article.url
+      : `${SITE}${article.url.startsWith("/") ? article.url : `/${article.url}`}`;
+  }
+
+  const prefix = LOCALE_PREFIX[article.lang] ?? "";
+  return `${SITE}${prefix}/articles/${encodeURIComponent(article.slug)}`;
+}
+
+function safeRssDate(article) {
+  const value = article?.dateModified || article?.datePublished || article?.date;
+  const date = value ? new Date(value) : new Date();
+  return Number.isNaN(date.getTime()) ? new Date() : date;
 }
 
 async function safeListArticles() {
@@ -28,20 +52,29 @@ async function safeListArticles() {
 
 export async function GET() {
   try {
-    const items = (await safeListArticles()).slice(0, 20);
+    const seenLinks = new Set();
+    const items = [];
 
-    const xmlItems = items.map(a => {
-      const slug = esc(a?.slug ?? "");
-      const title = a?.title ? `<![CDATA[${a.title}]]>` : "EU Debt Map Article";
-      const summary = a?.summary ? `<![CDATA[${a.summary}]]>` : "";
-      const date = a?.date ? new Date(a.date) : new Date();
-      const link = `${SITE}/articles/${slug}`;
+    for (const article of await safeListArticles()) {
+      const link = articleUrl(article);
+      if (!link || seenLinks.has(link)) continue;
+
+      seenLinks.add(link);
+      items.push({ article, link });
+      if (items.length === 20) break;
+    }
+
+    const xmlItems = items.map(({ article, link }) => {
+      const title = article?.title ? cdata(article.title) : "EU Debt Map Article";
+      const summary = article?.summary ? cdata(article.summary) : "";
+      const date = safeRssDate(article);
+      const escapedLink = esc(link);
 
       return `
   <item>
     <title>${title}</title>
-    <link>${link}</link>
-    <guid>${link}</guid>
+    <link>${escapedLink}</link>
+    <guid>${escapedLink}</guid>
     <pubDate>${date.toUTCString()}</pubDate>
     ${summary ? `<description>${summary}</description>` : ""}
   </item>`;
