@@ -879,7 +879,7 @@ if now > latest_reference_timestamp:
           gap: 12px;
         }
 
-        .method-formula-card > div {
+        .method-formula-card div {
           padding: 16px;
           border-radius: 16px;
           border: 1px solid #bfdbfe;
@@ -943,8 +943,8 @@ if now > latest_reference_timestamp:
             Menlo,
             Monaco,
             Consolas,
-            "Liberation Mono",
-            "Courier New",
+            Liberation Mono,
+            Courier New,
             monospace;
           font-size: 0.86rem;
           line-height: 1.62;
@@ -962,7 +962,7 @@ if now > latest_reference_timestamp:
           gap: 12px;
         }
 
-        .method-limits > div {
+        .method-limits div {
           padding: 16px;
           border-radius: 16px;
           border: 1px solid #fecaca;
@@ -979,7 +979,7 @@ if now > latest_reference_timestamp:
           gap: 12px;
         }
 
-        .method-update-box > div {
+        .method-update-box div {
           display: grid;
           gap: 7px;
           padding: 16px;
@@ -1142,8 +1142,8 @@ if now > latest_reference_timestamp:
           .method-stat,
           .method-step,
           .method-example,
-          .method-limits > div,
-          .method-update-box > div,
+          .method-limits div,
+          .method-update-box div,
           .method-related-card {
             padding: 14px;
           }
