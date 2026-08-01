@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (EN)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/stability-and-growth-pact";
   const title = "The EU Stability and Growth Pact (SGP): basics, rules, and why it matters • EU Debt Map";
   const description =
     "A plain-English explainer of the EU’s Stability and Growth Pact (SGP): what it aims to do, how the debt and deficit rules work, the role of debt-to-GDP, and key FAQs with links to methodology and the live EU debt map.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (DE)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/de/stability-and-growth-pact";
   const title = "Stabilitäts- und Wachstumspakt (SWP): Grundlagen, Regeln und Bedeutung • EU Debt Map";
   const description =
     "Einfach erklärt: Ziele des Stabilitäts- und Wachstumspakts, Schulden- und Defizitregeln, Rolle der Schuldenquote (Debt-to-GDP) und häufige Fragen. Mit Links zur Methodik und Live-Karte.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

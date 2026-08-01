@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/fr/debt";
   const title =
     "Qu’est-ce que la dette publique ? Dette, déficit et obligations expliqués | EU Debt Map";
@@ -10,7 +10,7 @@ export async function generateMetadata() {
     "Une explication simple de la dette publique : ce qu’est la dette de l’État, la différence avec le déficit, le fonctionnement des obligations, les prêteurs de l’État et l’importance du ratio dette/PIB.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (FR)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/fr/stability-and-growth-pact";
   const title = "Pacte de stabilité et de croissance (PSC) : bases, règles et enjeux • EU Debt Map";
   const description =
     "Explication simple du Pacte de stabilité et de croissance : objectifs, règles de dette et de déficit, rôle du ratio dette/PIB, FAQ et liens vers la méthodologie et la carte en direct.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

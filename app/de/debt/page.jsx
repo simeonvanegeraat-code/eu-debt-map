@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/de/debt";
   const title =
     "Was ist Staatsverschuldung? Schulden, Defizit und Anleihen einfach erklärt | EU Debt Map";
@@ -10,7 +10,7 @@ export async function generateMetadata() {
     "Einfache Erklärung der Staatsverschuldung: was öffentliche Schulden sind, wie sie sich vom Defizit unterscheiden, wie Staatsanleihen funktionieren, wer dem Staat Geld leiht und warum die Schuldenquote wichtig ist.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

@@ -9,6 +9,21 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/de/de/debt-vs-deficit",
+        destination: "/de/debt-vs-deficit",
+        permanent: true,
+      },
+      {
+        source: "/fr/fr/debt-vs-deficit",
+        destination: "/fr/debt-vs-deficit",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     const securityHeaders = [
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -95,7 +110,18 @@ const nextConfig = {
       },
     ];
 
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      {
+        source: "/debug/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
+        ],
+      },
+      { source: "/(.*)", headers: securityHeaders },
+    ];
   },
 };
 

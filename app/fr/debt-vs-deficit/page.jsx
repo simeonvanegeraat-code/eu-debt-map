@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (FR)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/fr/debt-vs-deficit";
   const title = "Dette vs Déficit — La différence en 5 minutes • EU Debt Map";
   const description =
     "Comprenez la différence entre dette publique (stock) et déficit (flux). Explication claire et visuelle avec exemples, analogie, FAQ et liens vers dette/PIB et le Pacte de stabilité et de croissance.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

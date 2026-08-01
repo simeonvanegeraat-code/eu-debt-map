@@ -5,14 +5,14 @@ import Link from "next/link";
  * SEO METADATA (NL)
  * ----------------------------- */
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/nl/debt-vs-deficit";
   const title = "Schuld vs. Tekort — Het verschil in 5 minuten • EU Debt Map";
   const description =
     "Snap het verschil tussen overheidsschuld (voorraad) en begrotingstekort (stroom). Heldere, visuele uitleg met voorbeelden, analogie, FAQ en links naar debt-to-GDP en het Stabiliteits- en Groeipact.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {

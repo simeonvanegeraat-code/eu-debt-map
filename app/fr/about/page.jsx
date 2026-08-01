@@ -1,13 +1,13 @@
 // app/fr/about/page.jsx
 export async function generateMetadata() {
-  const base = new URL("https://www.eudebtmap.com");
+  const base = "https://www.eudebtmap.com";
   const path = "/about";
   const title = "À propos & Contact | EU Debt Map";
   const description =
     "Découvrez pourquoi EU Debt Map a été créé et comment nous contacter.";
 
   return {
-    metadataBase: base,
+    metadataBase: new URL(base),
     title,
     description,
     alternates: {
