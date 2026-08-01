@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "./CountryClient";
 import CountryIntro from "@/components/CountryIntro";
+import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import { countryName } from "@/lib/countries";
 import { withLocale } from "@/lib/locale";
 
@@ -93,6 +94,9 @@ export default async function CountryPage({ params: { code } }) {
           country={localizedCountry}
           lang={lang}
           introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+          relatedArticleSlot={
+            <CountryRelatedArticleServer code={localizedCountry.code} lang={lang} />
+          }
         />
       </section>
     </main>

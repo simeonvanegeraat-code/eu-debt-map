@@ -7,7 +7,6 @@ import { interpolateDebt } from "@/lib/data";
 
 import MapCTA from "@/components/MapCTA";
 import ShareBar from "@/components/ShareBar";
-import LatestArticles from "@/components/LatestArticles";
 import CountryExploreStrip from "@/components/CountryExploreStrip";
 import CountryFacts from "./CountryFacts";
 
@@ -161,6 +160,7 @@ export default function CountryClient({
   country,
   lang = "en",
   introSlot = null,
+  relatedArticleSlot = null,
 
   // Optioneel: kan via SSR worden meegegeven
   gdpAbs: gdpAbsProp = null,
@@ -392,7 +392,7 @@ export default function CountryClient({
       >
         <div className="grid" style={{ gap: 16 }}>
           <MapCTA code={safeCountry.code} name={displayName} lang={effLang} />
-          <LatestArticles max={1} />
+          {relatedArticleSlot}
         </div>
       </div>
     </>

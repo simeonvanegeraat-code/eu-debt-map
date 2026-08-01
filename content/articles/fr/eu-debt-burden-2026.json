@@ -5,6 +5,8 @@
   "summary": "Les données d’Eurostat pour le T1 2026 placent la Grèce à 143,5% du PIB, l’Italie à 138,9% et la France à 117,6%. Découvrez où le ratio a le plus augmenté et comment interpréter ces chiffres.",
   "excerpt": "Les données d’Eurostat pour le T1 2026 placent la Grèce à 143,5% du PIB, l’Italie à 138,9% et la France à 117,6%. Découvrez où le ratio a le plus augmenté et comment interpréter ces chiffres.",
   "primaryTopic": "Dette publique de l’UE",
+  "countryPageFallback": true,
+  "relatedCountries": [],
   "articleType": "analysis",
   "tags": ["EU debt", "dette/PIB", "dette publique", "Eurostat", "règles budgétaires"],
   "lang": "fr",

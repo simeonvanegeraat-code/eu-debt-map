@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
+import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import { countryName } from "@/lib/countries";
 
 const SITE = "https://www.eudebtmap.com";
@@ -62,6 +63,9 @@ export default function CountryPageNL({ params: { code } }) {
           country={country}
           lang="nl"
           introSlot={<CountryIntro country={country} lang="nl" />}
+          relatedArticleSlot={
+            <CountryRelatedArticleServer code={country.code} lang="nl" />
+          }
         />
       </section>
     </main>
