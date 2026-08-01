@@ -31,6 +31,23 @@ function filesBelow(relativeDir, fileName) {
   return files;
 }
 
+function jsonFilesBelow(relativeDir) {
+  const start = path.join(ROOT, relativeDir);
+  const files = [];
+  const stack = [start];
+
+  while (stack.length) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const entryPath = path.join(current, entry.name);
+      if (entry.isDirectory()) stack.push(entryPath);
+      if (entry.isFile() && entry.name.endsWith(".json")) files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
 test("localized debt-vs-deficit pages use the intended public routes", () => {
   assert.equal(exists("app/de/debt-vs-deficit/page.jsx"), true);
   assert.equal(exists("app/fr/debt-vs-deficit/page.jsx"), true);
@@ -82,6 +99,60 @@ test("localized explainer routes are included in the sitemap", () => {
   const sitemap = read("app/sitemap.js");
   assert.match(sitemap, /path: "\/debt-vs-deficit"/);
   assert.match(sitemap, /path: "\/stability-and-growth-pact"/);
+});
+
+test("all existing localized EU debt routes are included in the multilingual sitemap", () => {
+  const sitemap = read("app/sitemap.js");
+
+  assert.match(sitemap, /path: "\/eu-debt"/);
+  assert.doesNotMatch(sitemap, /const EN_ONLY_PATHS/);
+});
+
+test("RSS article links use their actual locale and are deduplicated", () => {
+  const rss = read("app/rss.xml/route.js");
+
+  assert.match(rss, /const LOCALE_PREFIX/);
+  assert.match(rss, /function articleUrl/);
+  assert.match(rss, /seenLinks/);
+  assert.doesNotMatch(rss, /const link = `\$\{SITE\}\/articles\/\$\{slug\}`/);
+});
+
+test("the central article translation registry only references real articles", () => {
+  const registryPath = "content/article-translations.json";
+  assert.equal(exists(registryPath), true);
+
+  const registry = JSON.parse(read(registryPath));
+  const supportedLocales = new Set(["en", "nl", "de", "fr"]);
+  const articles = jsonFilesBelow("content/articles").map((filePath) =>
+    JSON.parse(fs.readFileSync(filePath, "utf8"))
+  );
+  const existingArticles = new Set(
+    articles.map((article) => `${article.lang}:${article.slug}`)
+  );
+  const registeredArticles = new Set();
+
+  for (const [translationKey, translations] of Object.entries(registry)) {
+    assert.match(translationKey, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.ok(Object.keys(translations).length >= 2);
+
+    for (const [lang, slug] of Object.entries(translations)) {
+      assert.equal(supportedLocales.has(lang), true);
+      assert.equal(typeof slug, "string");
+      assert.ok(slug.length > 0);
+
+      const articleKey = `${lang}:${slug}`;
+      assert.equal(existingArticles.has(articleKey), true, `${articleKey} must exist`);
+      assert.equal(
+        registeredArticles.has(articleKey),
+        false,
+        `${articleKey} must belong to one translation group`
+      );
+      registeredArticles.add(articleKey);
+    }
+  }
+
+  assert.match(read("lib/articleTranslations.js"), /article-translations\.json/);
+  assert.match(read("lib/articles.js"), /getTranslationGroupBySlug/);
 });
 
 test("debug pages and responses are explicitly excluded from indexing", async () => {

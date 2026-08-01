@@ -54,9 +54,6 @@ const STATIC_PATHS = [
     changeFrequency: "weekly",
     priority: 0.75,
   },
-];
-
-const EN_ONLY_PATHS = [
   {
     path: "/eu-debt",
     changeFrequency: "weekly",
@@ -128,11 +125,12 @@ function articleAlternates(article, translations = []) {
     })
   );
 
-  if (!languages.en) {
-    languages["x-default"] = articleUrl(article);
-  } else {
-    languages["x-default"] = languages.en;
-  }
+  languages["x-default"] =
+    languages.en ||
+    languages.nl ||
+    languages.de ||
+    languages.fr ||
+    articleUrl(article);
 
   return { languages };
 }
@@ -199,17 +197,7 @@ export default async function sitemap() {
     }
   }
 
-  // 2. English-only special pages.
-  for (const item of EN_ONLY_PATHS) {
-    pushUrl({
-      url: `${SITE}${item.path}`,
-      lastModified: DATA_LASTMOD,
-      changeFrequency: item.changeFrequency,
-      priority: item.priority,
-    });
-  }
-
-  // 3. Country pages in all languages.
+  // 2. Country pages in all languages.
   if (Array.isArray(countries) && countries.length) {
     for (const country of countries) {
       const code = String(country?.code ?? "").toLowerCase();
@@ -230,7 +218,7 @@ export default async function sitemap() {
     }
   }
 
-  // 4. Article detail pages.
+  // 3. Article detail pages.
   let articles = [];
 
   try {
@@ -266,7 +254,7 @@ export default async function sitemap() {
     }
   }
 
-  // 5. Safe fallback so sitemap is never empty.
+  // 4. Safe fallback so sitemap is never empty.
   if (!urls.length) {
     return [
       {

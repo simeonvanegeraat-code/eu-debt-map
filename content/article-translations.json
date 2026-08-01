@@ -1,0 +1,70 @@
+{
+  "eu-debt-burden-2026": {
+    "en": "eu-debt-burden-2026",
+    "nl": "eu-debt-burden-2026",
+    "de": "eu-debt-burden-2026",
+    "fr": "eu-debt-burden-2026"
+  },
+  "eu-vs-us-debt-capacity-2025": {
+    "en": "eu-vs-us-debt-capacity-2025",
+    "nl": "eu-vs-us-debt-capacity-2025",
+    "de": "eu-vs-us-debt-capacity-2025",
+    "fr": "eu-vs-us-debt-capacity-2025"
+  },
+  "european-debt-per-person-2025": {
+    "en": "european-debt-per-person-2025",
+    "nl": "europese-schuld-per-persoon-2025",
+    "de": "europas-schuld-pro-person-2025",
+    "fr": "dette-europeenne-par-personne-2025"
+  },
+  "eu-debt-per-capita-2026": {
+    "en": "eu-debt-per-capita-2026-inequality-report",
+    "nl": "eu-staatsschuld-per-inwoner-2026-analyse",
+    "de": "eu-pro-kopf-verschuldung-2026-analyse",
+    "fr": "dette-publique-ue-par-habitant-2026-analyse"
+  },
+  "german-debt-paradox": {
+    "en": "german-debt-paradox-schuldenbremse-straitjacket",
+    "de": "deutsches-schuldenparadox-schuldenbremse-zwickmuehle"
+  },
+  "eu-debt-dilemma": {
+    "en": "europes-debt-dilemma-investing-in-tomorrow-or-burdening-the-future",
+    "nl": "europa-schuldendilemma-investeren-voor-de-toekomst"
+  },
+  "eu-debt-thermometer-q2-2025": {
+    "en": "eu-debt-thermometer-q2-2025",
+    "nl": "eu-schuldthermometer-q2-2025"
+  },
+  "eurozone-hidden-debt": {
+    "en": "eurozone-hidden-debt-timebomb-extended",
+    "nl": "eurozone-hidden-debt-timebomb-extended"
+  },
+  "end-of-free-money": {
+    "en": "end-of-free-money-europes-silent-debt-crisis",
+    "nl": "einde-van-gratis-geld-europas-stille-schuldencrisis"
+  },
+  "dollar-euro-sovereign-debt": {
+    "en": "dollar-dip-euro-surge-sovereign-debt-impact",
+    "nl": "dollar-crash-euro-rally-gevolgen-europese-staatsschuld"
+  },
+  "eu-debt-trend-change-2026": {
+    "en": "eu-debt-trend-change-2026",
+    "nl": "eu-schuld-trend-verandering-2026"
+  },
+  "france-debt-to-gdp-crisis-2025": {
+    "en": "france-debt-to-gdp-crisis-2025-nyt",
+    "fr": "france-dette-pib-crise-2025-nyt"
+  },
+  "netherlands-debt-live-tracker-eu": {
+    "en": "netherlands-national-debt-live-tracker-eu",
+    "nl": "nederlandse-staatsschuld-live-teller-europa"
+  },
+  "sweden-debt-live-tracker": {
+    "en": "sweden-national-debt-live-tracker-falling",
+    "nl": "zweedse-staatsschuld-live-teller-dalend"
+  },
+  "france-debt-live-counter": {
+    "nl": "franse-staatsschuld-live-teller-record",
+    "fr": "dette-publique-france-compteur-live-record"
+  }
+}
