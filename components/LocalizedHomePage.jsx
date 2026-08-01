@@ -760,13 +760,15 @@ export default function LocalizedHomePage({ lang = "en" }) {
             </Link>
           </div>
 
-          <div className="eu-home-articles-list">
-            {topArticles.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
-            ))}
-
-            {topArticles.length === 0 && <div className="eu-home-empty">{t.noArticles}</div>}
-          </div>
+          {topArticles.length > 0 ? (
+            <ul className="eu-home-articles-list">
+              {topArticles.map((article) => (
+                <ArticleCard key={article.slug} article={article} />
+              ))}
+            </ul>
+          ) : (
+            <div className="eu-home-empty">{t.noArticles}</div>
+          )}
         </section>
       </section>
 
@@ -1369,6 +1371,8 @@ export default function LocalizedHomePage({ lang = "en" }) {
         .eu-home-articles-list {
           display: grid;
           gap: 12px;
+          margin: 0;
+          padding: 0;
         }
 
         .eu-home-empty {
