@@ -182,7 +182,9 @@ test("all localized article routes use the shared body and schema helpers", () =
 
   for (const route of routes) {
     const source = fs.readFileSync(path.join(ROOT, route), "utf8");
-    assert.match(source, /<ArticleBody body=\{article\.body\} \/>/, route);
+    assert.match(source, /body=\{article\.body\}/, route);
+    assert.match(source, /visualizations=\{article\.visualizations\}/, route);
+    assert.match(source, /lang=\{article\.lang\}/, route);
     assert.match(source, /buildArticleMetadata\(/, route);
     assert.match(source, /buildArticleJsonLd\(/, route);
     assert.match(
@@ -197,6 +199,49 @@ test("all localized article routes use the shared body and schema helpers", () =
     );
     assert.doesNotMatch(source, /<style>\{css\}<\/style>/, route);
     assert.doesNotMatch(source, /"@type": "NewsArticle"/, route);
+  }
+});
+
+test("article donut visualizations are internally consistent", () => {
+  const contentRoot = path.join(ROOT, "content", "articles");
+  const stack = [contentRoot];
+
+  while (stack.length) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const filePath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(filePath);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+
+      const article = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      for (const [key, visual] of Object.entries(article.visualizations || {})) {
+        if (visual?.type !== "donut") continue;
+
+        assert.match(key, /^[a-z0-9-]+$/, `${filePath}: invalid visualization key`);
+        assert.ok(Array.isArray(visual.segments), `${filePath}: segments missing`);
+        assert.ok(visual.segments.length >= 2, `${filePath}: at least two segments required`);
+        assert.ok(Number.isFinite(visual.total) && visual.total > 0, `${filePath}: invalid total`);
+
+        const segmentTotal = visual.segments.reduce((sum, segment) => {
+          assert.equal(typeof segment.label, "string", `${filePath}: segment label missing`);
+          assert.ok(Number.isFinite(segment.value) && segment.value > 0, `${filePath}: invalid segment`);
+          return sum + segment.value;
+        }, 0);
+
+        assert.ok(
+          Math.abs(segmentTotal - visual.total) < 0.001,
+          `${filePath}: donut segments (${segmentTotal}) must equal total (${visual.total})`
+        );
+        assert.match(
+          article.body || "",
+          new RegExp(`<!--\\s*ARTICLE_VISUAL:${key}\\s*-->`, "i"),
+          `${filePath}: visualization marker missing`
+        );
+      }
+    }
   }
 });
 

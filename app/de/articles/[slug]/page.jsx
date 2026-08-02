@@ -275,7 +275,11 @@ export default function ArticleDetailPage({ params }) {
         )}
 
         {/* The Content */}
-        <ArticleBody body={article.body} />
+        <ArticleBody
+          body={article.body}
+          visualizations={article.visualizations}
+          lang={article.lang}
+        />
 
         {/* Footer Area with Source Note */}
         <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />

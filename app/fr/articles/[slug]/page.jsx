@@ -257,7 +257,11 @@ export default function ArticleDetailPage({ params }) {
           </figure>
         )}
 
-        <ArticleBody body={article.body} />
+        <ArticleBody
+          body={article.body}
+          visualizations={article.visualizations}
+          lang={article.lang}
+        />
 
         <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
         
