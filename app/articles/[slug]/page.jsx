@@ -276,7 +276,11 @@ export default function ArticleDetailPage({ params }) {
           </figure>
         )}
 
-        <ArticleBody body={article.body} />
+        <ArticleBody
+          body={article.body}
+          visualizations={article.visualizations}
+          lang={article.lang}
+        />
 
         <hr
           style={{

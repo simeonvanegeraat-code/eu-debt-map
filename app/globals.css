@@ -388,6 +388,193 @@ p{ margin: var(--sp-3) 0; }
   font-size:var(--fs-sm); opacity:0.85; text-align:center; margin-top:6px; color:var(--muted);
 }
 
+/* Herbruikbare datavisuals binnen artikelen */
+.articleProse figure.articleDonutFigure{
+  margin:2.5rem 0;
+  padding:clamp(1rem, 3vw, 1.5rem);
+  border:1px solid #dbe4f0;
+  border-radius:18px;
+  background:linear-gradient(145deg, #f8fbff 0%, #ffffff 70%);
+  box-shadow:0 12px 32px rgba(15, 23, 42, 0.07);
+}
+.articleProse .articleDonutCaption{
+  display:flex;
+  flex-direction:column;
+  gap:.25rem;
+  margin:0 0 1.25rem;
+  text-align:left;
+  color:#111827;
+  font-family:var(--font-sans, sans-serif);
+}
+.articleProse .articleDonutCaption strong{
+  font-size:clamp(1.15rem, 2.4vw, 1.45rem);
+  line-height:1.25;
+}
+.articleProse .articleDonutCaption span{
+  color:#64748b;
+  font-size:.9rem;
+}
+.articleDonutLayout{
+  display:grid;
+  grid-template-columns:minmax(180px, 230px) minmax(0, 1fr);
+  gap:clamp(1.25rem, 4vw, 2.25rem);
+  align-items:center;
+}
+.articleDonutChart{
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  border-radius:50%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+}
+.articleDonutCenter{
+  position:absolute;
+  inset:23%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 4px 18px rgba(15,23,42,.13);
+  text-align:center;
+  font-family:var(--font-sans, sans-serif);
+}
+.articleDonutCenter strong{
+  color:#0f172a;
+  font-size:clamp(1rem, 2.5vw, 1.35rem);
+  line-height:1.15;
+}
+.articleDonutCenter span{
+  margin-top:.25rem;
+  color:#64748b;
+  font-size:.72rem;
+  line-height:1.2;
+}
+.articleProse ul.articleDonutLegend{
+  display:grid;
+  gap:.8rem;
+  margin:0;
+  padding:0;
+  list-style:none;
+  font-family:var(--font-sans, sans-serif);
+}
+.articleProse .articleDonutLegend li{
+  display:grid;
+  grid-template-columns:12px minmax(0, 1fr) auto;
+  column-gap:.65rem;
+  align-items:center;
+  margin:0;
+  padding:0;
+}
+.articleDonutSwatch{
+  width:12px;
+  height:12px;
+  border-radius:4px;
+}
+.articleDonutLegendLabel{
+  color:#334155;
+  font-size:.92rem;
+  line-height:1.3;
+}
+.articleDonutLegend strong{
+  color:#0f172a;
+  font-size:.92rem;
+}
+.articleDonutLegend small{
+  grid-column:2 / 4;
+  color:#64748b;
+  font-size:.78rem;
+  line-height:1.2;
+}
+.articleProse p.articleDonutNote{
+  margin:1.25rem 0 0;
+  padding-top:1rem;
+  border-top:1px solid #e2e8f0;
+  color:#64748b;
+  font-family:var(--font-sans, sans-serif);
+  font-size:.78rem;
+  line-height:1.55;
+}
+.articleDataTableWrap{
+  margin:1.5rem 0;
+  overflow-x:auto;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+}
+.articleProse .articleDataTable{
+  width:100%;
+  border-collapse:collapse;
+  font-family:var(--font-sans, sans-serif);
+  font-size:.9rem;
+}
+.articleDataTable th,
+.articleDataTable td{
+  padding:.75rem .9rem;
+  border-bottom:1px solid #e2e8f0;
+  text-align:left;
+  vertical-align:top;
+}
+.articleDataTable th{
+  background:#f8fafc;
+  color:#334155;
+  font-size:.78rem;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.articleDataTable tr:last-child td{ border-bottom:0; }
+.articleDataTable td:nth-child(n+2),
+.articleDataTable th:nth-child(n+2){ text-align:right; white-space:nowrap; }
+.articleKeyNumbers,
+.articleBalanceGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:1rem;
+  margin:1.5rem 0;
+}
+.articleKeyNumber,
+.articleBalanceCard{
+  padding:1rem;
+  border:1px solid #dbe4f0;
+  border-radius:12px;
+  background:#f8fbff;
+  font-family:var(--font-sans, sans-serif);
+}
+.articleKeyNumber strong,
+.articleBalanceCard strong{
+  display:block;
+  margin-bottom:.25rem;
+  color:#0f3f8c;
+  font-size:clamp(1.2rem, 3vw, 1.6rem);
+  line-height:1.2;
+}
+.articleKeyNumber span,
+.articleBalanceCard span{
+  display:block;
+  color:#475569;
+  font-size:.86rem;
+  line-height:1.45;
+}
+.articleProse .articleDefinition{
+  margin:1.5rem 0;
+  padding:1rem 1.15rem;
+  border-left:4px solid #0f9f8f;
+  border-radius:0 10px 10px 0;
+  background:#f0fdfa;
+  color:#134e4a;
+  font-family:var(--font-sans, sans-serif);
+  font-size:.92rem;
+  line-height:1.6;
+}
+@media (max-width:640px){
+  .articleDonutLayout{ grid-template-columns:1fr; }
+  .articleDonutChart{ max-width:230px; margin:0 auto; }
+  .articleKeyNumbers,
+  .articleBalanceGrid{ grid-template-columns:1fr; }
+  .articleDataTable th,
+  .articleDataTable td{ padding:.65rem .7rem; }
+}
+
 /* Figures */
 .figure{ margin:0 0 1rem 0; }
 .figure img{
