@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js scripts/article-page-core.test.js scripts/raw-style-hydration.test.js scripts/technical-seo.test.js scripts/consent-config.test.js scripts/related-articles.test.js",
+    "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js scripts/article-page-core.test.js scripts/article-archive-pagination.test.js scripts/raw-style-hydration.test.js scripts/technical-seo.test.js scripts/consent-config.test.js scripts/related-articles.test.js",
     "update:debt": "node scripts/update-eurostat-debt.js",
     "update:ratios": "node scripts/update-eurostat-ratios.js",
     "update:data": "npm run update:debt && npm run update:ratios",

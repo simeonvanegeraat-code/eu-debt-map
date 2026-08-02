@@ -1,0 +1,87 @@
+.pagination {
+  margin-top: 28px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page,
+.direction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  color: #1d4ed8;
+  font-weight: 800;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.page {
+  min-width: 44px;
+  padding: 0 12px;
+}
+
+.direction {
+  padding: 0 18px;
+}
+
+.page:hover,
+.direction:hover {
+  background: #eff6ff;
+  border-color: #60a5fa;
+}
+
+.page:focus-visible,
+.direction:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.34);
+  outline-offset: 2px;
+}
+
+.current {
+  color: #ffffff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.disabled {
+  color: #94a3b8;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+@media (max-width: 560px) {
+  .controls {
+    gap: 7px;
+  }
+
+  .direction {
+    min-width: 44px;
+    padding: 0 11px;
+    font-size: 0;
+  }
+
+  .direction span {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .direction {
+    transition: none;
+  }
+}
