@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { listArticles } from "@/lib/articles";
 import ArticlesListClient from "@/components/ArticlesListClient";
+import ArticleArchivePagination from "@/components/ArticleArchivePagination";
+import paginationCore from "@/lib/articleArchivePagination.cjs";
+
+const { paginateArchive } = paginationCore;
 
 export const runtime = "nodejs";
 
@@ -8,8 +12,6 @@ const SITE = "https://www.eudebtmap.com";
 const LANG = "nl";
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
-
-const PAGE_SIZE = 12;
 
 export const metadata = {
   title:
@@ -127,8 +129,14 @@ function SmallStoryCard({ article, label }) {
 export default function ArticlesPage() {
   const articles = listArticles({ lang: LANG });
 
-  const [topStory, secondStory, thirdStory, ...restArticles] = articles;
-  const latestArticles = restArticles.length ? restArticles : articles;
+  const [topStory, secondStory, thirdStory] = articles;
+  const firstArchivePage = paginateArchive(articles, 1);
+  const firstPageArticles = [
+    topStory,
+    secondStory,
+    thirdStory,
+    ...firstArchivePage.items,
+  ].filter(Boolean);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,7 +152,7 @@ export default function ArticlesPage() {
     },
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: articles.map((article, index) => ({
+      itemListElement: firstPageArticles.map((article, index) => ({
         "@type": "ListItem",
         position: index + 1,
         url: `${SITE}${hrefForArticle(article)}`,
@@ -1043,7 +1051,15 @@ export default function ArticlesPage() {
           </div>
         </div>
 
-        <ArticlesListClient articles={latestArticles} pageSize={PAGE_SIZE} />
+        <ArticlesListClient
+          articles={firstArchivePage.items}
+          pageSize={firstArchivePage.pageSize}
+        />
+        <ArticleArchivePagination
+          lang={LANG}
+          currentPage={firstArchivePage.currentPage}
+          totalPages={firstArchivePage.totalPages}
+        />
       </section>
 
       <section

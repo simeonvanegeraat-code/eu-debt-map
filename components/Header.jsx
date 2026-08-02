@@ -214,10 +214,23 @@ function LanguageDropdown({ t }) {
     const isArticleDetail = /^\/(articles|nl\/articles|de\/articles|fr\/articles)\/[^/]+$/.test(
       pathOnly
     );
+    const isArticleArchivePage = /^\/(?:(?:nl|de|fr)\/)?articles\/page\/\d+$/.test(
+      pathOnly
+    );
 
     let nextPath;
 
-    if (isArticleDetail) {
+    if (isArticleArchivePage) {
+      const alternate = document.querySelector(
+        `link[rel="alternate"][hreflang="${toLang}"]`
+      );
+
+      nextPath = alternate
+        ? new URL(alternate.href).pathname
+        : toLang === "en"
+          ? "/articles"
+          : `/${toLang}/articles`;
+    } else if (isArticleDetail) {
       nextPath = getArticleTranslationHref({
         currentPath: pathOnly,
         fromLang,
