@@ -1,0 +1,153 @@
+{
+  "slug": "wer-haelt-deutsche-staatsschulden-2026",
+  "title": "Wer hält Deutschlands Staatsschulden? Zentralbanken, Banken und internationale Investoren",
+  "seoTitle": "Wer hält Deutschlands Staatsschulden 2026?",
+  "summary": "Die Gläubigerstruktur des Bundes zeigt, wer Bundeswertpapiere hält: Zentralbanken, Fonds, Banken und internationale Investoren. Mit offiziellen Daten zum 31. März 2026.",
+  "excerpt": "Die Gläubigerstruktur des Bundes zeigt, wer Bundeswertpapiere hält: Zentralbanken, Fonds, Banken und internationale Investoren. Mit offiziellen Daten zum 31. März 2026.",
+  "primaryTopic": "Gläubigerstruktur deutscher Staatsanleihen",
+  "relatedCountries": ["DE"],
+  "articleType": "analysis",
+  "tags": ["deutsche Staatsschulden", "Bundeswertpapiere", "Gläubigerstruktur", "Staatsanleihen", "Finanzagentur"],
+  "lang": "de",
+  "datePublished": "2026-08-08T12:00:00+02:00",
+  "dateModified": "2026-08-08T12:00:00+02:00",
+  "dateReviewed": "2026-08-08T12:00:00+02:00",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/de/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/de/methodology"
+  },
+  "readingMinutes": 11,
+  "image": "/images/articles/wer-haelt-deutsche-staatsschulden-2026.jpg",
+  "imageAlt": "Illustration deutscher Bundeswertpapiere, die mit Zentralbanken, Banken, Fonds und internationalen Investoren verbunden sind",
+  "imageCredit": "Original editorial image created for EU Debt Map",
+  "sourceNote": "Quellen: Deutsche Finanzagentur, Eurostat und Deutsche Bundesbank. Die Gläubigeranteile sind Schätzungen für Bundeswertpapiere; Gesamtstaatsschuld und Vergleichszahlen haben andere Abgrenzungen.",
+  "relatedLinks": [
+    {
+      "label": "Live-Staatsschuld Deutschland",
+      "url": "https://www.eudebtmap.com/de/country/de"
+    },
+    {
+      "label": "Deutschland im Schuldenquoten-Vergleich",
+      "url": "https://www.eudebtmap.com/de/debt-to-gdp"
+    },
+    {
+      "label": "Methodik von EU Debt Map",
+      "url": "https://www.eudebtmap.com/de/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Deutsche Finanzagentur: Gläubigerstruktur, Anteile zum 31. März 2026",
+      "url": "https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/der-bund-als-emittent/glaeubigerstruktur",
+      "accessed": "2026-08-08"
+    },
+    {
+      "name": "Deutsche Finanzagentur: Umlaufvolumen und Eigenbestände der Bundeswertpapiere",
+      "url": "https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/schuldenstatistik/umlaufvolumen",
+      "accessed": "2026-08-08"
+    },
+    {
+      "name": "Eurostat: Staatsschulden am Ende des ersten Quartals 2026",
+      "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21072026-ap",
+      "accessed": "2026-08-08"
+    },
+    {
+      "name": "Deutsche Bundesbank: Finanzstabilitätsbericht 2025, Staatsanleihenbestände deutscher Banken",
+      "url": "https://publikationen.bundesbank.de/publikationen-de/berichte-studien/finanzstabilitaetsberichte/finanzstabilitaetsbericht-2025-968826?article=stabilitaetslage-im-deutschen-finanzsystem-968818",
+      "accessed": "2026-08-08"
+    },
+    {
+      "name": "Deutsche Bundesbank: Auslandsvermögensstatus, erstes Quartal 2026",
+      "url": "https://www.bundesbank.de/de/statistiken/aussenwirtschaft/auslandsvermoegen-und-verschuldung/auslandsvermoegensstatus-775722",
+      "accessed": "2026-08-08"
+    }
+  ],
+  "visualizations": {
+    "holder-types": {
+      "type": "donut",
+      "title": "Wer hält Bundeswertpapiere?",
+      "subtitle": "Geschätzte Anteile nach Investorentyp · 31. März 2026",
+      "total": 100,
+      "totalDisplay": "100%",
+      "totalLabel": "geschätzte Verteilung",
+      "showValues": false,
+      "legendLabel": "Geschätzte Verteilung der Bundeswertpapiere nach Investorentyp",
+      "segments": [
+        {
+          "label": "Zentralbanken und öffentliche Institutionen",
+          "value": 51,
+          "color": "#2563eb"
+        },
+        {
+          "label": "Real Money: Fonds, Versicherer, Pensionen und Sonstige",
+          "value": 21,
+          "color": "#0f9f8f"
+        },
+        {
+          "label": "Banken und Broker",
+          "value": 17,
+          "color": "#0f172a"
+        },
+        {
+          "label": "Eigenbestand der Finanzagentur",
+          "value": 10,
+          "color": "#f59e0b"
+        },
+        {
+          "label": "Hedgefonds",
+          "value": 1,
+          "color": "#8b5cf6"
+        }
+      ],
+      "note": "Die Finanzagentur schätzt die Bestände aus Handelsdaten der Mitglieder der Bietergruppe Bundesemissionen. Real Money umfasst Asset Manager, Versicherungen, Pensionsfonds, Privatanleger und nichtfinanzielle Unternehmen.",
+      "source": {
+        "label": "Zur Gläubigerstatistik der Finanzagentur.",
+        "url": "https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/der-bund-als-emittent/glaeubigerstruktur"
+      }
+    },
+    "holder-regions": {
+      "type": "donut",
+      "title": "Wo sitzen die Investoren?",
+      "subtitle": "Geschätzte Anteile nach Region · 31. März 2026",
+      "total": 100,
+      "totalDisplay": "100%",
+      "totalLabel": "geschätzte Verteilung",
+      "showValues": false,
+      "legendLabel": "Geschätzte Verteilung der Bundeswertpapiere nach Region",
+      "segments": [
+        {
+          "label": "Euroraum",
+          "value": 61,
+          "color": "#2563eb"
+        },
+        {
+          "label": "Übriges Europa",
+          "value": 20,
+          "color": "#0f172a"
+        },
+        {
+          "label": "Asien",
+          "value": 16,
+          "color": "#0f9f8f"
+        },
+        {
+          "label": "Amerika",
+          "value": 3,
+          "color": "#f59e0b"
+        }
+      ],
+      "note": "Übriges Europa bezeichnet Europa außerhalb des Euroraums. Afrika und arabische Staaten werden von der Finanzagentur als Sonstige ausgewiesen und lagen in der veröffentlichten, gerundeten Grafik bei 0%.",
+      "source": {
+        "label": "Zur regionalen Gläubigerstruktur der Finanzagentur.",
+        "url": "https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/der-bund-als-emittent/glaeubigerstruktur"
+      }
+    }
+  },
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste the raw AdSense script into the body.",
+  "contentNotes": "Bei einer neuen Finanzagentur-Veröffentlichung beide 100%-Verteilungen, Peildatum, Begleittext und dateModified/dateReviewed gemeinsam aktualisieren. Eurostat-Gesamtstaatsschuld separat aktualisieren. Bundesbank-Beispiel nur ersetzen, wenn ein neuer Bericht dieselbe Bankenabgrenzung veröffentlicht.",
+  "body": "<p class='article-intro'>Deutschlands Staatsschuld liegt nicht bei einem einzigen Gläubiger. Bundeswertpapiere werden täglich gehandelt und verteilen sich auf Zentralbanken, öffentliche Institutionen, Fonds, Versicherer, Pensionskassen, Banken, Broker und andere Investoren in vielen Regionen der Welt.</p><p>Die Deutsche Finanzagentur veröffentlicht seit 2026 eine neue Schätzung dieser Gläubigerstruktur. Zum 31. März 2026 entfielen demnach <strong>51% der Bundeswertpapiere auf Zentralbanken und öffentliche Institutionen</strong>. Regional lagen <strong>61% im Euroraum</strong>. Beide Zahlen beschreiben Bundeswertpapiere des Bundes – nicht automatisch die gesamte deutsche Staatsschuld.</p><blockquote><strong>Datenstand:</strong> Die Gläubigeranteile stammen aus der Finanzagentur-Statistik für den 31. März 2026. Der Vergleich zur gesamten deutschen Maastricht-Schuld verwendet vorläufige Eurostat-Daten für Q1 2026. Angaben zu Staatsanleihen deutscher Banken beziehen sich auf Ende 2024 und haben eine andere Abgrenzung.</blockquote><div class='articleKeyNumbers'><div class='articleKeyNumber'><strong>51%</strong><span>Zentralbanken und öffentliche Institutionen</span></div><div class='articleKeyNumber'><strong>61%</strong><span>Investoren mit Sitz im Euroraum</span></div></div><h2>Zuerst die wichtigste Abgrenzung</h2><p>Im Alltag werden Bundesschuld, Bundeswertpapiere und deutsche Staatsschuld häufig gleichgesetzt. Statistisch sind sie jedoch nicht identisch.</p><ul><li><strong>Bundeswertpapiere</strong> sind handelbare Schuldtitel des Bundes, zum Beispiel Bundesanleihen, Bundesobligationen, Bundesschatzanweisungen und unverzinsliche Schatzanweisungen.</li><li><strong>Die Maastricht-Schuld</strong> umfasst die konsolidierte Bruttoschuld des gesamten Staates: Bund, Länder, Gemeinden und Sozialversicherung einschließlich zugehöriger Extrahaushalte.</li><li><strong>Die Gläubigerstatistik der Finanzagentur</strong> schätzt, wer die Bundeswertpapiere hält. Sie verteilt daher nicht jeden Kredit und nicht sämtliche Schulden aller deutschen Staatsebenen.</li></ul><p>Eurostat bezifferte Deutschlands gesamte Maastricht-Schuld am Ende des ersten Quartals 2026 auf <strong>2.902,035 Milliarden Euro</strong> beziehungsweise <strong>64,4% des Bruttoinlandsprodukts</strong>. Diese vorläufige Gesamtsumme ist größer als das Volumen der Bundeswertpapiere, dessen Halterstruktur hier untersucht wird.</p><div class='articleDefinition'><strong>Merksatz:</strong> Die folgenden Kreisdiagramme beantworten, wer Bundeswertpapiere hält. Sie sind keine vollständige Bilanz aller deutschen öffentlichen Schulden.</div><h2>Wie wird die Gläubigerstruktur geschätzt?</h2><p>Bundeswertpapiere sind Inhaberschuldverschreibungen. Beim Handel wird nicht in einem zentralen Register dauerhaft festgehalten, welche konkrete Person oder Institution jedes Papier besitzt. Die Finanzagentur kann deshalb keine vollständige Namensliste veröffentlichen.</p><p>Die ab 2026 verwendete Statistik beruht auf Handelsdaten der Mitglieder der Bietergruppe Bundesemissionen. Aus Käufen und Verkäufen an Endinvestoren sowie den bekannten Fälligkeiten schätzt die Finanzagentur Bestände nach Investorentyp und Region. Öffentliche Daten, darunter Wertpapierstatistiken der Europäischen Zentralbank, Investorengespräche und weitere Quellen dienen zur Plausibilisierung.</p><p>Das Ergebnis ist die derzeit beste offizielle Näherung, bleibt aber eine <strong>Schätzung</strong>. Die Prozentwerte dürfen daher nicht als Grundbuch der deutschen Staatsschuld gelesen werden.</p><h2>Welche Investorentypen halten Bundeswertpapiere?</h2><!-- ARTICLE_VISUAL:holder-types --><h3>Zentralbanken und öffentliche Institutionen: 51%</h3><p>Die größte Gruppe besteht aus Zentralbanken und öffentlichen Institutionen. Dazu können neben Zentralbanken auch staatliche Reserveverwalter und Staatsfonds gehören. Die Finanzagentur nennt für Ende Q1 2026 rund 1.030 Milliarden Euro und damit ungefähr die Hälfte der Bundeswertpapiere.</p><p>Der hohe Anteil wird unter anderem durch die noch umfangreichen, langsam sinkenden Bestände des Eurosystems beeinflusst. Er bedeutet nicht, dass die Hälfte der deutschen Staatsschuld unmittelbar bei ausländischen Regierungen liegt: Auch das Eurosystem und andere öffentliche Institutionen gehören zu dieser Sammelkategorie.</p><h3>Real Money: 21%</h3><p>Als Real Money fasst die Finanzagentur Asset Manager, Versicherungen, Pensionsfonds und weitere langfristig orientierte Investoren zusammen. Dazu zählen auch Privatanleger und nichtfinanzielle Unternehmen. Zusammen hielten sie geschätzt 21%; im Begleittext nennt die Finanzagentur rund 427 Milliarden Euro.</p><p>Diese Anleger suchen häufig liquide Wertpapiere mit verlässlichen Zahlungsströmen. Bundeswertpapiere erfüllen in vielen Portfolios außerdem die Funktion einer vergleichsweise risikoarmen Referenzanlage.</p><h3>Banken und Broker: 17%</h3><p>Banken und Broker hielten geschätzt 17% beziehungsweise rund 338 Milliarden Euro. Banken benötigen liquide Staatsanleihen unter anderem für ihre Liquiditätssteuerung, als Sicherheiten und für den Handel. Der Anteil sagt jedoch nicht, dass nur deutsche Banken diese Papiere besitzen; die regionale Verteilung ist eine separate statistische Dimension.</p><h3>Eigenbestand der Finanzagentur: 10%</h3><p>Etwa 10% lagen im Eigenbestand des Bundes bei der Finanzagentur. Dieser Bestand dient der Marktpflege. Knapp gehandelte Papiere können in den Sekundär- oder Repomarkt gegeben werden, um die Liquidität zu unterstützen.</p><p>Der Eigenbestand ist deshalb anders zu interpretieren als ein externer Kreditgeber. Er ist bereits Teil des veröffentlichten Volumens der Bundeswertpapiere und darf nicht noch einmal als unabhängiges Vermögen gegen die Staatsschuld aufgerechnet werden.</p><h3>Hedgefonds: 1%</h3><p>Hedgefonds spielen im täglichen Handel eine größere Rolle als in den langfristigen Beständen. Zum Stichtag hielten sie geschätzt 1%. Die Finanzagentur nennt rund 25 Milliarden Euro.</p><!-- MID_ARTICLE_AD --><h2>Aus welchen Regionen kommen die Investoren?</h2><!-- ARTICLE_VISUAL:holder-regions --><p>Mit 61% lag die klare Mehrheit der Bundeswertpapiere bei Investoren im Euroraum. Weitere 20% entfielen auf das übrige Europa, also insbesondere europäische Finanzplätze außerhalb des Euroraums. Asiatische Investoren hielten 16%, amerikanische Investoren 3%.</p><p>Die regionale Grafik ordnet nach Sitz beziehungsweise Region des Investors. Sie zeigt nicht automatisch dessen Staatsangehörigkeit und schon gar nicht, dass dort jeweils eine Regierung der Eigentümer ist. Ein britischer Fonds, eine Schweizer Bank oder ein asiatischer Versicherer können genauso in einer Auslandskategorie erscheinen wie eine öffentliche Institution.</p><div class='articleDefinition'><strong>Wichtig:</strong> 39% außerhalb des Euroraums bedeutet nicht, dass ausländische Staaten 39% der deutschen Schuld besitzen. Es geht um Investorenstandorte und unterschiedliche Arten von Institutionen.</div><h2>Wie viel deutsche Staatsschuld liegt wirklich im Ausland?</h2><p>Eine exakte Antwort für die gesamte Maastricht-Schuld lässt sich aus diesen Daten nicht ableiten. Die Finanzagentur veröffentlicht regionale Anteile für Bundeswertpapiere, während Eurostat die gesamte Staatsschuld über alle Staatsebenen und mehrere Schuldinstrumente misst.</p><p>Für Bundeswertpapiere zeigt die regionale Verteilung, dass 61% im Euroraum lagen. Deutschland ist selbst Teil des Euroraums. Der Euroraum-Anteil trennt daher deutsche und andere Euroraum-Investoren nicht voneinander. Die übrigen 39% lagen außerhalb des Euroraums, aber auch das ist keine vollständige Kennzahl für ausländisches Eigentum.</p><p>Die seriöse Kurzantwort lautet deshalb: <strong>Bundeswertpapiere werden breit international gehalten, aber die veröffentlichte 2026-Grafik liefert keinen gesonderten Gesamtanteil für alle ausländischen Gläubiger.</strong></p><h2>Deutschland als Gläubiger anderer Staaten</h2><p>Deutschland steht nicht nur auf der Schuldnerseite. Deutsche Banken, Versicherer, Fonds, Unternehmen und Haushalte besitzen ebenfalls ausländische Wertpapiere. Doch auch hier gibt es keine einzelne Zahl, die spiegelbildlich zur Gläubigerstruktur des Bundes passt.</p><p>Ein belastbares Teilbild liefert der Finanzstabilitätsbericht 2025 der Bundesbank. Deutsche Banken hielten Ende 2024 rund <strong>368 Milliarden Euro an Staatsanleihen</strong>. Davon waren 33% deutsche, 25% stammten aus anderen EU-Staaten, 12% aus den Vereinigten Staaten und rund 30% aus übrigen Staaten. Rechnerisch entfielen damit etwa <strong>247 Milliarden Euro auf ausländische Staatsanleihen</strong>. Das ist eine abgeleitete Rundung und umfasst nur Banken, nicht alle deutschen Anleger.</p><p>Noch breiter ist der Auslandsvermögensstatus. Ende Q1 2026 lagen die gesamten Forderungen deutscher Inländer gegenüber dem Ausland bei 14,7 Billionen Euro, die Verbindlichkeiten bei 10,8 Billionen Euro. Das Netto-Auslandsvermögen betrug 3,9 Billionen Euro. Darin stecken jedoch Aktien, Kredite, Direktinvestitionen, Fondsanteile, Derivate und viele andere Positionen – nicht nur Staatspapiere.</p><h2>Die Bilanzfrage: Warum eine einfache Verrechnung falsch wäre</h2><div class='articleBalanceGrid'><div class='articleBalanceCard'><strong>2.902,0 Mrd. € Staatsschuld</strong><span>Gesamte deutsche Maastricht-Schuld, Q1 2026, Nominalwert und vorläufige Eurostat-Daten.</span></div><div class='articleBalanceCard'><strong>ca. 247 Mrd. € Auslands-Staatsanleihen</strong><span>Rechnerischer Anteil im Staatsanleihenportfolio deutscher Banken, Ende 2024 und zu Marktwerten.</span></div></div><p>Diese Beträge dürfen nicht voneinander abgezogen werden. Dafür unterscheiden sie sich zu stark:</p><ol><li>Links steht die Schuld des gesamten deutschen Staates; rechts nur das Wertpapiervermögen deutscher Banken.</li><li>Die Stichtage unterscheiden sich: Q1 2026 gegenüber Ende 2024.</li><li>Die Maastricht-Schuld wird zum Nominalwert gemessen; Bankportfolios orientieren sich an anderen Bilanz- und Marktwertkonzepten.</li><li>Die Gläubigerstruktur der Finanzagentur umfasst Bundeswertpapiere, nicht alle Schulden von Ländern, Gemeinden und Sozialversicherung.</li></ol><p>Eine echte nationale Nettobilanz müsste alle finanziellen Forderungen und Verbindlichkeiten sämtlicher Sektoren mit identischen Stichtagen und Bewertungsregeln zusammenführen. Der Auslandsvermögensstatus kommt diesem breiten Ziel näher, beantwortet aber eine andere Frage als „wer hält deutsche Staatsanleihen?“.</p><h2>Was bedeutet die Gläubigerstruktur für Deutschland?</h2><p>Eine breite internationale Anlegerbasis unterstützt einen liquiden Markt. Das erleichtert dem Bund die regelmäßige Platzierung großer Emissionsvolumina. Gleichzeitig können globale Zinsbewegungen, Wechselkurserwartungen und die Risikoneigung internationaler Investoren die Nachfrage und damit die Finanzierungskosten beeinflussen.</p><p>Der hohe Anteil von Zentralbanken und öffentlichen Institutionen kann stabilisierend wirken, ist aber nicht unveränderlich. Wenn Bestände aus Ankaufprogrammen allmählich sinken, müssen andere Anleger zusätzliche Papiere aufnehmen. Deshalb sind die Entwicklung der Nachfrage, die Laufzeitenstruktur und der Zinsaufwand mindestens so wichtig wie eine einzelne Momentaufnahme.</p><p>Wer die Tragfähigkeit der deutschen Schuld beurteilen möchte, sollte die Gläubigerstruktur zusammen mit Schuldquote, Wirtschaftswachstum, Primärsaldo, Zinskosten und Laufzeiten betrachten. Die <a href='/de/country/de'>Deutschland-Seite mit Live-Schätzung</a> zeigt den aktuellen Schuldenstand; die <a href='/de/debt-to-gdp'>EU-Rangliste zur Schuldenquote</a> ordnet Deutschland im europäischen Vergleich ein.</p><h2>Wann wird dieser Artikel aktualisiert?</h2><p>Die Gläubigerverteilung wird aktualisiert, sobald die Deutsche Finanzagentur eine neue, methodisch vergleichbare Aufteilung veröffentlicht. Dann ändern wir beide Diagramme, den Stichtag, die Erläuterungen sowie dateModified und dateReviewed gemeinsam.</p><p>Die Maastricht-Schuld folgt dem Eurostat-Kalender. Die nächste reguläre Veröffentlichung für Q2 2026 ist für den 21. Oktober 2026 angekündigt. Das Bundesbank-Beispiel wird nur ersetzt, wenn eine neuere Veröffentlichung dieselbe Abgrenzung für deutsche Banken bietet.</p><h2>Fazit</h2><p>Zentralbanken und öffentliche Institutionen waren am 31. März 2026 mit 51% die größte geschätzte Haltergruppe von Bundeswertpapieren. Real-Money-Investoren folgten mit 21%, Banken und Broker mit 17%, der Eigenbestand der Finanzagentur mit 10% und Hedgefonds mit 1%.</p><p>Regional lagen 61% im Euroraum, 20% im übrigen Europa, 16% in Asien und 3% in Amerika. Diese Verteilung macht deutlich, wie international der Markt ist. Sie ist jedoch keine vollständige Bilanz der gesamten deutschen Staatsschuld und kein Beweis dafür, dass ausländische Regierungen einen bestimmten Anteil besitzen.</p><h2>Quellen und Methodik</h2><p>Die Prozentverteilungen wurden direkt aus den offiziellen Grafiken der Deutschen Finanzagentur für den 31. März 2026 übernommen. Die Segmente addieren sich jeweils auf 100%. Die Gesamtschuld stammt aus Eurostats vorläufiger Maastricht-Schuldenstatistik. Das Gegenbeispiel zu ausländischen Staatspapieren basiert auf dem Staatsanleihenportfolio deutscher Banken und wird ausdrücklich nicht mit der Staatsschuld saldiert.</p><ul><li><a href='https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/der-bund-als-emittent/glaeubigerstruktur' rel='nofollow'>Deutsche Finanzagentur: Gläubigerstruktur nach Investorentyp und Region</a></li><li><a href='https://www.deutsche-finanzagentur.de/finanzierung-des-bundes/schuldenstatistik/umlaufvolumen' rel='nofollow'>Deutsche Finanzagentur: Umlaufvolumen und Eigenbestände</a></li><li><a href='https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21072026-ap' rel='nofollow'>Eurostat: Staatsschulden am Ende des ersten Quartals 2026</a></li><li><a href='https://publikationen.bundesbank.de/publikationen-de/berichte-studien/finanzstabilitaetsberichte/finanzstabilitaetsbericht-2025-968826?article=stabilitaetslage-im-deutschen-finanzsystem-968818' rel='nofollow'>Deutsche Bundesbank: Finanzstabilitätsbericht 2025</a></li><li><a href='https://www.bundesbank.de/de/statistiken/aussenwirtschaft/auslandsvermoegen-und-verschuldung/auslandsvermoegensstatus-775722' rel='nofollow'>Deutsche Bundesbank: Auslandsvermögensstatus</a></li><li><a href='/de/methodology'>Methodik von EU Debt Map</a></li></ul>"
+}

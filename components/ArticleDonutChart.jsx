@@ -68,7 +68,7 @@ export default function ArticleDonutChart({ data, lang = "en" }) {
           style={{ backgroundImage: `conic-gradient(${gradientStops.join(", ")})` }}
         >
           <div className="articleDonutCenter" aria-hidden="true">
-            <strong>{formatAmount(total)}</strong>
+            <strong>{data.totalDisplay || formatAmount(total)}</strong>
             <span>{data.totalLabel || "Totaal"}</span>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function ArticleDonutChart({ data, lang = "en" }) {
                 />
                 <span className="articleDonutLegendLabel">{segment.label}</span>
                 <strong>{percentFormatter.format((segment.value / total) * 100)}%</strong>
-                <small>{formatAmount(segment.value)}</small>
+                {data.showValues !== false && <small>{formatAmount(segment.value)}</small>}
               </li>
             );
           })}

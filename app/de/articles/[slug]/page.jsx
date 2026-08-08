@@ -286,9 +286,9 @@ export default function ArticleDetailPage({ params }) {
         
         <div style={{ marginBottom: 40 }}>
             <ShareBar url={url} title={article.title} summary={article.summary} />
-            {/* Bronvermelding uit originele Duitse code */}
             <div className="source-note">
-              Quelle: Eurostat (gov_10q_ggdebt). Bildungsvisualisierung, keine offizielle Statistik.
+              {article.sourceNote ||
+                "Quelle: Eurostat (gov_10q_ggdebt). Bildungsvisualisierung, keine offizielle Statistik."}
             </div>
         </div>
 

@@ -202,6 +202,38 @@ test("all localized article routes use the shared body and schema helpers", () =
   }
 });
 
+test("the German article route preserves article-specific source attribution", () => {
+  const route = fs.readFileSync(
+    path.join(ROOT, "app", "de", "articles", "[slug]", "page.jsx"),
+    "utf8"
+  );
+
+  assert.match(route, /article\.sourceNote\s*\|\|/);
+  assert.match(route, /Quelle: Eurostat \(gov_10q_ggdebt\)/);
+});
+
+test("the German debt ownership analysis keeps its scope and assets explicit", () => {
+  const articlePath = path.join(
+    ROOT,
+    "content",
+    "articles",
+    "de",
+    "wer-haelt-deutsche-staatsschulden-2026.json"
+  );
+  const article = JSON.parse(fs.readFileSync(articlePath, "utf8"));
+
+  assert.deepEqual(article.relatedCountries, ["DE"]);
+  assert.equal(article.articleType, "analysis");
+  assert.match(article.sourceNote, /Deutsche Finanzagentur/);
+  assert.match(article.body, /Bundeswertpapiere/);
+  assert.match(article.body, /Maastricht-Schuld/);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.equal(
+    fs.existsSync(path.join(ROOT, "public", article.image.replace(/^\//, ""))),
+    true
+  );
+});
+
 test("article donut visualizations are internally consistent", () => {
   const contentRoot = path.join(ROOT, "content", "articles");
   const stack = [contentRoot];
