@@ -70,6 +70,35 @@ test("shared metadata uses the localized SEO title and hreflang routes", () => {
     metadata.alternates.languages["x-default"],
     "https://www.eudebtmap.com/articles/example"
   );
+  assert.equal(metadata.openGraph.images[0].width, undefined);
+  assert.equal(metadata.openGraph.images[0].height, undefined);
+});
+
+test("article metadata publishes measured image dimensions instead of a fixed guess", () => {
+  const article = {
+    title: "Measured image",
+    summary: "Summary",
+    image: "/images/measured.jpg",
+    imageWidth: 1672,
+    imageHeight: 941,
+  };
+  const metadata = buildArticleMetadata({
+    article,
+    slug: "measured-image",
+    ogImage: "https://www.eudebtmap.com/images/measured.jpg",
+  });
+  const schema = buildArticleJsonLd({
+    article,
+    url: "https://www.eudebtmap.com/articles/measured-image",
+  });
+
+  assert.deepEqual(metadata.openGraph.images[0], {
+    url: "https://www.eudebtmap.com/images/measured.jpg",
+    width: 1672,
+    height: 941,
+  });
+  assert.equal(schema.image[0].width, 1672);
+  assert.equal(schema.image[0].height, 941);
 });
 
 test("hreflang uses one stable x-default when a translation group has no English article", () => {
@@ -132,6 +161,8 @@ test("shared schema distinguishes analysis from news and preserves review data",
   assert.equal(schema.dateReviewed, "2026-07-31T22:00:00.000Z");
   assert.equal(schema.publisher.logo.url, "https://www.eudebtmap.com/eu_favicon_512.png");
   assert.equal(schema.image[0].url, "https://www.eudebtmap.com/images/example.jpg");
+  assert.equal(schema.image[0].width, undefined);
+  assert.equal(schema.image[0].height, undefined);
   assert.equal(schema.keywords, "EU debt, Eurostat");
 
   const newsSchema = buildArticleJsonLd({
