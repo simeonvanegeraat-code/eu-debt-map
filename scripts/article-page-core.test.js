@@ -270,6 +270,48 @@ test("the German debt ownership analysis keeps its scope and assets explicit", (
   );
 });
 
+test("localized 2026 debt-per-capita articles use identical country data and explicit consolidation context", () => {
+  const articleFiles = {
+    en: "content/articles/en/2026/eu-debt-per-capita-2026-inequality-report.json",
+    de: "content/articles/de/eu-pro-kopf-verschuldung-2026-analyse.json",
+    fr: "content/articles/fr/dette-publique-ue-par-habitant-2026-analyse.json",
+  };
+
+  function tableAmounts(body) {
+    const tableBody = body.match(/<tbody>([\s\S]*?)<\/tbody>/)?.[1] || "";
+    return [...tableBody.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map((row) => {
+      const cells = [...row[1].matchAll(/<td>([\s\S]*?)<\/td>/g)];
+      return Number(cells.at(-1)?.[1].replace(/[^0-9]/g, ""));
+    });
+  }
+
+  const articles = Object.fromEntries(
+    Object.entries(articleFiles).map(([lang, file]) => [
+      lang,
+      JSON.parse(fs.readFileSync(path.join(ROOT, file), "utf8")),
+    ])
+  );
+  const expectedAmounts = tableAmounts(articles.en.body);
+
+  assert.equal(expectedAmounts.length, 27);
+  for (const lang of ["de", "fr"]) {
+    const article = articles[lang];
+    assert.equal(article.contentStandard, "discover-2026-v1");
+    assert.equal(article.lang, lang);
+    assert.equal(article.image, "/images/articles/eu-debt-per-capita-2026-editorial-v2.jpg");
+    assert.equal(article.imageWidth, 1672);
+    assert.equal(article.imageHeight, 941);
+    assert.equal(article.sources.length, 3);
+    assert.equal(article.relatedLinks.length, 3);
+    assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+    assert.deepEqual(tableAmounts(article.body), expectedAmounts);
+    assert.match(article.body, /15[,.]91/);
+    assert.match(article.body, /15[,.]704/);
+    assert.match(article.body, /209[,.]247/);
+    assert.doesNotMatch(article.body, /pagead2\.googlesyndication|adsbygoogle/);
+  }
+});
+
 test("article donut visualizations are internally consistent", () => {
   const contentRoot = path.join(ROOT, "content", "articles");
   const stack = [contentRoot];

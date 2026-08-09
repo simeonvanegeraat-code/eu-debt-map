@@ -107,6 +107,16 @@ test("legacy duplicate and retired article routes permanently redirect", async (
         destination: "/nl/articles/eu-staatsschuld-per-inwoner-2026-analyse",
         permanent: true,
       },
+      {
+        source: "/de/articles/europas-schuld-pro-person-2025",
+        destination: "/de/articles/eu-pro-kopf-verschuldung-2026-analyse",
+        permanent: true,
+      },
+      {
+        source: "/fr/articles/dette-europeenne-par-personne-2025",
+        destination: "/fr/articles/dette-publique-ue-par-habitant-2026-analyse",
+        permanent: true,
+      },
     ]
   );
 });
@@ -118,6 +128,8 @@ test("retired debt articles are removed after their permanent redirects are conf
   assert.equal(exists("content/articles/en/2025/highest-debt-per-capita-europe.json"), false);
   assert.equal(exists("content/articles/en/2025/european-debt-per-person-2025-en.json"), false);
   assert.equal(exists("content/articles/nl/2025/european-debt-per-person-2025.json"), false);
+  assert.equal(exists("content/articles/de/european-debt-per-person-2025.json"), false);
+  assert.equal(exists("content/articles/fr/european-debt-per-person-2025.json"), false);
 });
 
 test("metadata never concatenates a URL object into canonical URLs", () => {

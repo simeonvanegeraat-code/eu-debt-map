@@ -51,6 +51,16 @@ const nextConfig = {
         destination: "/nl/articles/eu-staatsschuld-per-inwoner-2026-analyse",
         permanent: true,
       },
+      {
+        source: "/de/articles/europas-schuld-pro-person-2025",
+        destination: "/de/articles/eu-pro-kopf-verschuldung-2026-analyse",
+        permanent: true,
+      },
+      {
+        source: "/fr/articles/dette-europeenne-par-personne-2025",
+        destination: "/fr/articles/dette-publique-ue-par-habitant-2026-analyse",
+        permanent: true,
+      },
     ];
   },
 
