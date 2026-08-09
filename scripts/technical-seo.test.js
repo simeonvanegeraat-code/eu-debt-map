@@ -55,7 +55,7 @@ test("localized debt-vs-deficit pages use the intended public routes", () => {
   assert.equal(exists("app/fr/fr/debt-vs-deficit/page.jsx"), false);
 });
 
-test("legacy duplicate locale routes permanently redirect", async () => {
+test("legacy duplicate and retired article routes permanently redirect", async () => {
   const configUrl = pathToFileURL(path.join(ROOT, "next.config.mjs")).href;
   const config = (await import(configUrl)).default;
   const redirects = await config.redirects();
@@ -77,8 +77,41 @@ test("legacy duplicate locale routes permanently redirect", async () => {
         destination: "/fr/debt-vs-deficit",
         permanent: true,
       },
+      {
+        source: "/articles/eu-debt-to-gdp-2025",
+        destination: "/debt-to-gdp",
+        permanent: true,
+      },
+      {
+        source: "/articles/eu-debt-thermometer-q2-2025",
+        destination: "/articles/eu-debt-burden-2026",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/eu-schuldthermometer-q2-2025",
+        destination: "/nl/articles/eu-debt-burden-2026",
+        permanent: true,
+      },
+      {
+        source: "/articles/highest-debt-per-capita-europe-2025",
+        destination: "/articles/eu-debt-per-capita-2026-inequality-report",
+        permanent: true,
+      },
+      {
+        source: "/articles/european-debt-per-person-2025",
+        destination: "/articles/eu-debt-per-capita-2026-inequality-report",
+        permanent: true,
+      },
     ]
   );
+});
+
+test("retired debt articles are removed after their permanent redirects are configured", () => {
+  assert.equal(exists("content/articles/en/2025/eu-debt-to-gdp-2025.json"), false);
+  assert.equal(exists("content/articles/en/2025/eu-debt-thermometer-q2-2025.json"), false);
+  assert.equal(exists("content/articles/nl/2025/eu-schuldthermometer-q2-2025.json"), false);
+  assert.equal(exists("content/articles/en/2025/highest-debt-per-capita-europe.json"), false);
+  assert.equal(exists("content/articles/en/2025/european-debt-per-person-2025-en.json"), false);
 });
 
 test("metadata never concatenates a URL object into canonical URLs", () => {
