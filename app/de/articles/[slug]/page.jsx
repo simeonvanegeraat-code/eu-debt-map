@@ -235,7 +235,7 @@ export default function ArticleDetailPage({ params }) {
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       {/* BELANGRIJK: Hier gebruiken we nu article-container i.p.v. card/container */}
-      <article className="article-container">
+      <article className="article-container" lang={article.lang}>
         {/* Header Section */}
         <header>
           <div className="metaRow">

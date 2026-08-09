@@ -46,6 +46,11 @@ const nextConfig = {
         destination: "/articles/eu-debt-per-capita-2026-inequality-report",
         permanent: true,
       },
+      {
+        source: "/nl/articles/europese-schuld-per-persoon-2025",
+        destination: "/nl/articles/eu-staatsschuld-per-inwoner-2026-analyse",
+        permanent: true,
+      },
     ];
   },
 

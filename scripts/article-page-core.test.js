@@ -216,6 +216,11 @@ test("all localized article routes use the shared body and schema helpers", () =
     assert.match(source, /body=\{article\.body\}/, route);
     assert.match(source, /visualizations=\{article\.visualizations\}/, route);
     assert.match(source, /lang=\{article\.lang\}/, route);
+    assert.match(
+      source,
+      /<article className="article-container" lang=\{article\.lang\}>/,
+      route
+    );
     assert.match(source, /buildArticleMetadata\(/, route);
     assert.match(source, /buildArticleJsonLd\(/, route);
     assert.match(
@@ -336,4 +341,17 @@ test("homepage article cards use isolated responsive styles and descriptive link
 
   assert.match(homepage, /<ul className="eu-home-articles-list">/);
   assert.match(homepage, /<ArticleCard key=\{article\.slug\} article=\{article\} \/>/);
+});
+
+test("article recommendations localize their supporting text", () => {
+  const rail = fs.readFileSync(
+    path.join(ROOT, "components", "ArticleRail.jsx"),
+    "utf8"
+  );
+
+  assert.match(rail, /nl: "Analyses en data die je mogelijk hebt gemist"/);
+  assert.match(rail, /de: "Analysen und Daten, die Sie vielleicht verpasst haben"/);
+  assert.match(rail, /fr: "Analyses et données que vous avez peut-être manquées"/);
+  assert.match(rail, /RAIL_SUBTITLES\[lang\] \|\| RAIL_SUBTITLES\.en/);
+  assert.match(rail, /<p className="rail-subtitle">\{subtitle\}<\/p>/);
 });

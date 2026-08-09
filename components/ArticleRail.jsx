@@ -36,12 +36,21 @@ function summaryFor(article) {
   return article.summary || article.excerpt || "";
 }
 
+const RAIL_SUBTITLES = {
+  en: "Analysis and data you might have missed",
+  nl: "Analyses en data die je mogelijk hebt gemist",
+  de: "Analysen und Daten, die Sie vielleicht verpasst haben",
+  fr: "Analyses et données que vous avez peut-être manquées",
+};
+
 export default function ArticleRail({
   articles = [],
   title = "Further Reading",
   lang = "en",
 }) {
   if (!articles.length) return null;
+
+  const subtitle = RAIL_SUBTITLES[lang] || RAIL_SUBTITLES.en;
 
   return (
     <section className="rail-wrapper">
@@ -185,7 +194,7 @@ export default function ArticleRail({
 
       <div className="rail-header">
         <h3 className="rail-title">{title}</h3>
-        <p className="rail-subtitle">Analysis and data you might have missed</p>
+        <p className="rail-subtitle">{subtitle}</p>
       </div>
 
       <div className="rail-grid">

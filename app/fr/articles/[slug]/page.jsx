@@ -221,7 +221,7 @@ export default function ArticleDetailPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
-      <article className="article-container">
+      <article className="article-container" lang={article.lang}>
         <header>
           <div className="metaRow">
             {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
