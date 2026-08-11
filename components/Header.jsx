@@ -33,6 +33,7 @@ const TEXT = {
     active: "Active",
     brandHome: "EU Debt Map – Home",
     toggleMenu: "Toggle menu",
+    closeMenu: "Close menu",
   },
   nl: {
     nav: {
@@ -48,6 +49,7 @@ const TEXT = {
     active: "Actief",
     brandHome: "EU Debt Map – Home",
     toggleMenu: "Menu openen",
+    closeMenu: "Menu sluiten",
   },
   de: {
     nav: {
@@ -63,6 +65,7 @@ const TEXT = {
     active: "Aktiv",
     brandHome: "EU Debt Map – Startseite",
     toggleMenu: "Menü umschalten",
+    closeMenu: "Menü schließen",
   },
   fr: {
     nav: {
@@ -78,6 +81,7 @@ const TEXT = {
     active: "Actif",
     brandHome: "EU Debt Map – Accueil",
     toggleMenu: "Ouvrir le menu",
+    closeMenu: "Fermer le menu",
   },
 };
 
@@ -461,7 +465,7 @@ function LanguageDropdown({ t }) {
 }
 
 /* ---------------- MOBILE DRAWER VIA PORTAL ---------------- */
-function MobileDrawer({ open, onClose, children }) {
+function MobileDrawer({ open, onClose, closeLabel, children }) {
   const [mounted, setMounted] = useState(false);
   const [el, setEl] = useState(null);
 
@@ -476,14 +480,49 @@ function MobileDrawer({ open, onClose, children }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event) {
+      if (event.key === "Escape") onClose();
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, onClose]);
+
   if (!mounted || !el) return null;
 
   return createPortal(
     <div
       className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}
       onClick={onClose}
+      aria-hidden={!open}
     >
-      <div className="nav-drawer-inner" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="nav-drawer-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-label={closeLabel}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="drawer-header">
+          <span className="drawer-title">EU Debt Map</span>
+          <button
+            className="drawer-close"
+            type="button"
+            onClick={onClose}
+            aria-label={closeLabel}
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
         {children}
       </div>
     </div>,
@@ -536,7 +575,8 @@ export default function Header() {
           </nav>
 
           <button
-            className="hamburger"
+            className={`hamburger${open ? " hamburger--open" : ""}`}
+            type="button"
             aria-label={t.toggleMenu}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -548,8 +588,13 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileDrawer open={open} onClose={() => setOpen(false)}>
-        {NAV.map((item) => (
+      <MobileDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        closeLabel={t.closeMenu}
+      >
+        <nav className="drawer-nav" aria-label={t.toggleMenu}>
+          {NAV.map((item) => (
           <Link
             key={item.href}
             href={localeAwareHref(item.href, locale)}
@@ -565,7 +610,8 @@ export default function Header() {
           >
             {t.nav[item.key]}
           </Link>
-        ))}
+          ))}
+        </nav>
         <div
           style={{
             padding: "12px 16px",
