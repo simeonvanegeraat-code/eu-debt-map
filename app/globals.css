@@ -81,6 +81,9 @@ html,body{
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
 }
+html{
+  scrollbar-gutter: stable;
+}
 
 /* Belangrijk: maak <img> voorspelbaar en NIET fullscreen */
 img{ display:block; max-width:100%; height:auto; }
@@ -239,6 +242,7 @@ p{ margin: var(--sp-3) 0; }
   min-height:72px;
 }
 .site-header .header-inner{
+  max-width:1500px;
   padding:14px var(--sp-6);
 }
 
@@ -281,7 +285,7 @@ p{ margin: var(--sp-3) 0; }
   border:0;
   text-decoration:none;
   color:var(--header-fg);
-  font-weight:500;
+  font-weight:600;
   background:transparent;
   transition: background .18s ease, color .18s ease;
 }
@@ -291,7 +295,6 @@ p{ margin: var(--sp-3) 0; }
 .nav-link--active{
   color:#1d4ed8;
   background:rgba(37,99,235,.08);
-  font-weight:650;
 }
 
 /* Hamburger */

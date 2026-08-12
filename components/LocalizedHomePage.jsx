@@ -787,11 +787,6 @@ export default function LocalizedHomePage({ lang = "en" }) {
           align-items: start;
         }
 
-        .site-header .container,
-        .site-header .header-inner {
-          max-width: 1500px !important;
-        }
-
         .eu-home-hero,
         .eu-home-card,
         .eu-home-quick-wrap .card {

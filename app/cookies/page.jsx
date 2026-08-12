@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function CookiesPage() {
   return (
-    <main className="container card" style={{ padding: "24px 0 36px" }}>
+    <main className="container card" style={{ paddingTop: 24, paddingBottom: 36 }}>
       <h2 style={{ marginBottom: 8 }}>Cookie Policy</h2>
       <p className="tag" style={{ marginBottom: 16 }}>
         We use cookies to operate our website and to understand how it is used.
