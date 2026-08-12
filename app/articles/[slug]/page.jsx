@@ -48,6 +48,9 @@ export default function ArticleDetailPage({ params }) {
   const url = `${SITE}${prefix}/articles/${params.slug}`;
 
   const publishDate = article.datePublished || article.date;
+  const modifiedDate = article.dateModified && article.dateModified !== publishDate
+    ? article.dateModified
+    : null;
   const dateFmt = new Intl.DateTimeFormat("en-GB", { dateStyle: "long" });
 
   const candidateHero =
@@ -242,6 +245,12 @@ export default function ArticleDetailPage({ params }) {
               {dateFmt.format(new Date(publishDate))}
             </time>
 
+            {modifiedDate && (
+              <time dateTime={modifiedDate}>
+                Updated {dateFmt.format(new Date(modifiedDate))}
+              </time>
+            )}
+
             {article.author && (
               <span>
                 by{" "}
@@ -260,7 +269,7 @@ export default function ArticleDetailPage({ params }) {
         </header>
 
         <div style={{ margin: "20px 0" }}>
-          <ShareBar url={url} title={article.title} />
+          <ShareBar url={url} title={article.title} summary={article.summary} lang={LANG} />
         </div>
 
         {shouldRenderHero && (
@@ -270,8 +279,8 @@ export default function ArticleDetailPage({ params }) {
               alt={article.imageAlt || article.title}
               loading="eager"
               decoding="async"
-              width={1200}
-              height={675}
+              width={article.imageWidth || 1200}
+              height={article.imageHeight || 675}
             />
           </figure>
         )}
@@ -291,7 +300,12 @@ export default function ArticleDetailPage({ params }) {
         />
 
         <div style={{ marginBottom: 40 }}>
-          <ShareBar url={url} title={article.title} />
+          <ShareBar url={url} title={article.title} summary={article.summary} lang={LANG} />
+          {article.sourceNote && (
+            <div className="source-note" style={{ marginTop: 16, color: "#6b7280", fontSize: ".85rem" }}>
+              {article.sourceNote}
+            </div>
+          )}
         </div>
 
         <ArticleRailServer

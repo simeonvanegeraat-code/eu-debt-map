@@ -223,6 +223,8 @@ test("all localized article routes use the shared body and schema helpers", () =
     );
     assert.match(source, /buildArticleMetadata\(/, route);
     assert.match(source, /buildArticleJsonLd\(/, route);
+    assert.match(source, /modifiedDate/, route);
+    assert.match(source, /<ShareBar[^>]+lang=\{LANG\}/, route);
     assert.match(
       source,
       /<style dangerouslySetInnerHTML=\{\{ __html: css \}\} \/>/,
@@ -235,6 +237,57 @@ test("all localized article routes use the shared body and schema helpers", () =
     );
     assert.doesNotMatch(source, /<style>\{css\}<\/style>/, route);
     assert.doesNotMatch(source, /"@type": "NewsArticle"/, route);
+  }
+});
+
+test("localized route layouts set the document language during initial load and navigation", () => {
+  const component = fs.readFileSync(
+    path.join(ROOT, "components", "DocumentLanguage.jsx"),
+    "utf8"
+  );
+
+  assert.match(component, /document\.documentElement\.lang = safeLang/);
+  assert.match(component, /dangerouslySetInnerHTML/);
+
+  for (const lang of ["nl", "de", "fr"]) {
+    const layout = fs.readFileSync(
+      path.join(ROOT, "app", lang, "layout.jsx"),
+      "utf8"
+    );
+    assert.match(layout, new RegExp(`<DocumentLanguage lang="${lang}" \\/>`));
+  }
+});
+
+test("the euro area debt analysis is complete and aligned in all four languages", () => {
+  const files = {
+    en: "content/articles/en/2025/eurozone-hidden-debt-timebomb-extended.json",
+    nl: "content/articles/nl/2025/eurozone-hidden-debt-timebomb-extended.json",
+    de: "content/articles/de/eurozone-hidden-debt-timebomb-extended.json",
+    fr: "content/articles/fr/eurozone-hidden-debt-timebomb-extended.json",
+  };
+  const expectedNumbers = [
+    "88.9", "87.7", "82.9", "143.5", "138.9", "117.6", "109.1",
+    "101.6", "43.8", "64.4", "85.3",
+  ];
+
+  for (const [lang, file] of Object.entries(files)) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, file), "utf8"));
+    const normalizedBody = article.body.replace(/,/g, ".");
+
+    assert.equal(article.lang, lang);
+    assert.equal(article.contentStandard, "discover-2026-v1");
+    assert.equal(article.image, "/images/articles/eurozone-debt-risks-2026.jpg");
+    assert.equal(article.imageWidth, 1672);
+    assert.equal(article.imageHeight, 941);
+    assert.equal(article.sources.length, 5);
+    assert.deepEqual(article.relatedCountries, ["GR", "IT", "FR", "BE", "ES", "DE", "NL"]);
+    assert.doesNotMatch(article.body, /contentReference|oaicite/);
+    assert.match(article.body, /<caption>/);
+    assert.match(article.body, /scope='col'/);
+
+    for (const value of expectedNumbers) {
+      assert.match(normalizedBody, new RegExp(value.replace(".", "\\.")), `${lang}: ${value}`);
+    }
   }
 });
 

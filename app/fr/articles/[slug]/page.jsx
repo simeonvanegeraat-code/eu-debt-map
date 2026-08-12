@@ -46,6 +46,9 @@ export default function ArticleDetailPage({ params }) {
   const url = `${SITE}${prefix}/articles/${params.slug}`;
   
   const publishDate = article.datePublished || article.date;
+  const modifiedDate = article.dateModified && article.dateModified !== publishDate
+    ? article.dateModified
+    : null;
   // Franse datum notatie
   const dateFmt = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" });
 
@@ -226,6 +229,11 @@ export default function ArticleDetailPage({ params }) {
           <div className="metaRow">
             {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
             <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
+            {modifiedDate && (
+              <time dateTime={modifiedDate}>
+                Mis à jour le {dateFmt.format(new Date(modifiedDate))}
+              </time>
+            )}
             {article.author && (
                <span>par {typeof article.author === 'string' ? article.author : article.author.name}</span>
             )}
@@ -241,7 +249,7 @@ export default function ArticleDetailPage({ params }) {
         </header>
 
         <div style={{ margin: "20px 0" }}>
-          <ShareBar url={url} title={article.title} summary={article.summary} />
+          <ShareBar url={url} title={article.title} summary={article.summary} lang={LANG} />
         </div>
 
         {shouldRenderHero && (
@@ -251,8 +259,8 @@ export default function ArticleDetailPage({ params }) {
               alt={article.imageAlt || article.title}
               loading="eager"
               decoding="async"
-              width={1200}
-              height={675}
+              width={article.imageWidth || 1200}
+              height={article.imageHeight || 675}
             />
           </figure>
         )}
@@ -266,7 +274,7 @@ export default function ArticleDetailPage({ params }) {
         <hr style={{ margin: "40px 0 24px", border: 0, borderTop: "1px solid #e5e7eb" }} />
         
         <div style={{ marginBottom: 40 }}>
-            <ShareBar url={url} title={article.title} summary={article.summary} />
+            <ShareBar url={url} title={article.title} summary={article.summary} lang={LANG} />
             <div className="source-note">
               Source : Eurostat (gov_10q_ggdebt). Visualisation éducative, statistique non officielle.
             </div>

@@ -567,11 +567,24 @@ p{ margin: var(--sp-3) 0; }
   border:1px solid #e2e8f0;
   border-radius:12px;
 }
+.articleDataTableWrap:focus-visible{
+  outline:3px solid rgba(37,99,235,.35);
+  outline-offset:3px;
+}
 .articleProse .articleDataTable{
   width:100%;
   border-collapse:collapse;
   font-family:var(--font-sans, sans-serif);
   font-size:.9rem;
+}
+.articleDataTable caption{
+  padding:.85rem .9rem;
+  background:#fff;
+  color:#475569;
+  font-size:.82rem;
+  font-weight:600;
+  line-height:1.4;
+  text-align:left;
 }
 .articleDataTable th,
 .articleDataTable td{
