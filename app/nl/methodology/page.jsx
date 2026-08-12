@@ -591,11 +591,6 @@ if now > latest_reference_timestamp:
           align-items: start;
         }
 
-        .site-header .container,
-        .site-header .header-inner {
-          max-width: 1500px !important;
-        }
-
         .method-hero,
         .method-card,
         .method-related {

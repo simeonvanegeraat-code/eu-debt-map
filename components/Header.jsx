@@ -177,6 +177,7 @@ function localeAwareHref(hrefBase, locale) {
 
 function isActivePath(pathname, hrefBase, locale) {
   const target = localeAwareHref(hrefBase, locale);
+  if (hrefBase === "/") return pathname === target;
   return pathname === target || pathname.startsWith(target + "/");
 }
 
