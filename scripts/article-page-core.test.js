@@ -323,6 +323,37 @@ test("the German debt ownership analysis keeps its scope and assets explicit", (
   );
 });
 
+test("the German live debt article distinguishes official data from its model", () => {
+  const articlePath = path.join(
+    ROOT,
+    "content",
+    "articles",
+    "de",
+    "Staatschuld.json"
+  );
+  const article = JSON.parse(fs.readFileSync(articlePath, "utf8"));
+
+  assert.equal(article.contentStandard, "discover-2026-v1");
+  assert.equal(article.articleType, "analysis");
+  assert.deepEqual(article.relatedCountries, ["DE"]);
+  assert.equal(article.image, "/images/articles/deutschland-staatsverschuldung-2026-editorial.jpg");
+  assert.equal(article.imageWidth, 1672);
+  assert.equal(article.imageHeight, 941);
+  assert.equal(article.sources.length, 5);
+  assert.equal(article.relatedLinks.length, 3);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.match(article.sourceNote, /keine offizielle Echtzeitmessung/);
+  assert.match(article.body, /2\.902,035 Milliarden Euro/);
+  assert.match(article.body, /2\.726,5 Milliarden Euro/);
+  assert.match(article.body, /lineare Extrapolation/);
+  assert.match(article.body, /8\.204 Euro pro Sekunde/);
+  assert.match(article.body, /href='\/de\/country\/de'/);
+  assert.equal(
+    fs.existsSync(path.join(ROOT, "public", article.image.replace(/^\//, ""))),
+    true
+  );
+});
+
 test("localized 2026 debt-per-capita articles use identical country data and explicit consolidation context", () => {
   const articleFiles = {
     en: "content/articles/en/2026/eu-debt-per-capita-2026-inequality-report.json",
