@@ -354,6 +354,39 @@ test("the German live debt article distinguishes official data from its model", 
   );
 });
 
+test("the Dutch live debt article explains the falling model without calling it a forecast", () => {
+  const articlePath = path.join(
+    ROOT,
+    "content",
+    "articles",
+    "nl",
+    "2025",
+    "Staatschuld.json"
+  );
+  const article = JSON.parse(fs.readFileSync(articlePath, "utf8"));
+
+  assert.equal(article.contentStandard, "discover-2026-v1");
+  assert.equal(article.articleType, "analysis");
+  assert.deepEqual(article.relatedCountries, ["NL"]);
+  assert.equal(article.image, "/images/articles/nederland-staatsschuld-2026-editorial.jpg");
+  assert.equal(article.imageWidth, 1672);
+  assert.equal(article.imageHeight, 941);
+  assert.equal(article.sources.length, 5);
+  assert.equal(article.relatedLinks.length, 3);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.match(article.sourceNote, /geen officiële realtime meting/);
+  assert.match(article.body, /€517,377 miljard/);
+  assert.match(article.body, /€6,343 miljard/);
+  assert.match(article.body, /−€815,72 per seconde/);
+  assert.match(article.body, /46,9% eind 2026/);
+  assert.match(article.body, /geen voorspelling voor heel 2026/);
+  assert.match(article.body, /href='\/nl\/country\/nl'/);
+  assert.equal(
+    fs.existsSync(path.join(ROOT, "public", article.image.replace(/^\//, ""))),
+    true
+  );
+});
+
 test("localized 2026 debt-per-capita articles use identical country data and explicit consolidation context", () => {
   const articleFiles = {
     en: "content/articles/en/2026/eu-debt-per-capita-2026-inequality-report.json",
