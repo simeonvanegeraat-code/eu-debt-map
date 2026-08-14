@@ -106,6 +106,11 @@ const nextConfig = {
         destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
         permanent: true,
       },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-2026-schuldenbremse-live",
+        destination: "/de/articles/deutsches-schuldenparadox-schuldenbremse-zwickmuehle",
+        permanent: true,
+      },
     ];
   },
 

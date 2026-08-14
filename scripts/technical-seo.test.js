@@ -162,6 +162,11 @@ test("legacy duplicate and retired article routes permanently redirect", async (
         destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
         permanent: true,
       },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-2026-schuldenbremse-live",
+        destination: "/de/articles/deutsches-schuldenparadox-schuldenbremse-zwickmuehle",
+        permanent: true,
+      },
     ]
   );
 });
@@ -184,6 +189,7 @@ test("retired debt articles are removed after their permanent redirects are conf
   assert.equal(exists("content/articles/de/schuldenuhr-deutschland-live-aktueller-stand-2026.json"), false);
   assert.equal(exists("content/articles/de/schuldenuhr-deutschland-live-pro-kopf-2026.json"), false);
   assert.equal(exists("content/articles/de/Deutschlands Staatsverschuldung 2026.json"), false);
+  assert.equal(exists("content/articles/de/schuldenuhr-deutschland-2026-schuldenbremse-live.json"), false);
 });
 
 test("metadata never concatenates a URL object into canonical URLs", () => {
