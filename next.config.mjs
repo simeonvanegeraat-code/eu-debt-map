@@ -37,6 +37,31 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/nl/articles/staatschuld-nederland-2025",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/nederlandse-staatsschuld-live-teller-europa",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/analyse-nederlandse-staatsschuld-2025",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/nederlandse-staatsschuld-actueel",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/staatsschuld-nederland-live-eurostat-update",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
         source: "/articles/highest-debt-per-capita-europe-2025",
         destination: "/articles/eu-debt-per-capita-2026-inequality-report",
         permanent: true,

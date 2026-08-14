@@ -93,6 +93,31 @@ test("legacy duplicate and retired article routes permanently redirect", async (
         permanent: true,
       },
       {
+        source: "/nl/articles/staatschuld-nederland-2025",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/nederlandse-staatsschuld-live-teller-europa",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/analyse-nederlandse-staatsschuld-2025",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/nederlandse-staatsschuld-actueel",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
+        source: "/nl/articles/staatsschuld-nederland-live-eurostat-update",
+        destination: "/nl/articles/actuele-staatsschuld-nederland-live-inzicht",
+        permanent: true,
+      },
+      {
         source: "/articles/highest-debt-per-capita-europe-2025",
         destination: "/articles/eu-debt-per-capita-2026-inequality-report",
         permanent: true,
@@ -130,6 +155,11 @@ test("retired debt articles are removed after their permanent redirects are conf
   assert.equal(exists("content/articles/nl/2025/european-debt-per-person-2025.json"), false);
   assert.equal(exists("content/articles/de/european-debt-per-person-2025.json"), false);
   assert.equal(exists("content/articles/fr/european-debt-per-person-2025.json"), false);
+  assert.equal(exists("content/articles/nl/2025/staatschuld-nederland-2025.json"), false);
+  assert.equal(exists("content/articles/nl/2025/eudebtmap_netherlands_articles.json"), false);
+  assert.equal(exists("content/articles/nl/2025/analyse-nederlandse-staatsschuld-2025.json"), false);
+  assert.equal(exists("content/articles/nl/2025/nederlandse-staatsschuld-actueel.json"), false);
+  assert.equal(exists("content/articles/nl/2026/staatschuld-update-april.json"), false);
 });
 
 test("metadata never concatenates a URL object into canonical URLs", () => {
