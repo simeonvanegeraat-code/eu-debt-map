@@ -86,6 +86,26 @@ const nextConfig = {
         destination: "/fr/articles/dette-publique-ue-par-habitant-2026-analyse",
         permanent: true,
       },
+      {
+        source: "/de/articles/deutschland-staatsverschuldung-2025",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-live-aktueller-stand-2026",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-live-pro-kopf-2026",
+        destination: "/de/articles/eu-pro-kopf-verschuldung-2026-analyse",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/deutschlands-staatsverschuldung-2026-aktuell",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
     ];
   },
 

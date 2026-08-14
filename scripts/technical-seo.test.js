@@ -142,6 +142,26 @@ test("legacy duplicate and retired article routes permanently redirect", async (
         destination: "/fr/articles/dette-publique-ue-par-habitant-2026-analyse",
         permanent: true,
       },
+      {
+        source: "/de/articles/deutschland-staatsverschuldung-2025",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-live-aktueller-stand-2026",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/schuldenuhr-deutschland-live-pro-kopf-2026",
+        destination: "/de/articles/eu-pro-kopf-verschuldung-2026-analyse",
+        permanent: true,
+      },
+      {
+        source: "/de/articles/deutschlands-staatsverschuldung-2026-aktuell",
+        destination: "/de/articles/aktuelle-staatsverschuldung-deutschland-live-schuldenuhr",
+        permanent: true,
+      },
     ]
   );
 });
@@ -160,6 +180,10 @@ test("retired debt articles are removed after their permanent redirects are conf
   assert.equal(exists("content/articles/nl/2025/analyse-nederlandse-staatsschuld-2025.json"), false);
   assert.equal(exists("content/articles/nl/2025/nederlandse-staatsschuld-actueel.json"), false);
   assert.equal(exists("content/articles/nl/2026/staatschuld-update-april.json"), false);
+  assert.equal(exists("content/articles/de/deutschland-staatsverschuldung-2025.json"), false);
+  assert.equal(exists("content/articles/de/schuldenuhr-deutschland-live-aktueller-stand-2026.json"), false);
+  assert.equal(exists("content/articles/de/schuldenuhr-deutschland-live-pro-kopf-2026.json"), false);
+  assert.equal(exists("content/articles/de/Deutschlands Staatsverschuldung 2026.json"), false);
 });
 
 test("metadata never concatenates a URL object into canonical URLs", () => {
