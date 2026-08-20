@@ -1,4 +1,5 @@
 {
+  "contentStandard": "discover-2026-v1",
   "slug": "eu-debt-burden-2026",
   "title": "Dette de l’UE en 2026 : quels pays ont les ratios les plus élevés ?",
   "seoTitle": "Dette de l’UE 2026 : les ratios dette/PIB les plus élevés",
@@ -11,20 +12,23 @@
   "tags": ["EU debt", "dette/PIB", "dette publique", "Eurostat", "règles budgétaires"],
   "lang": "fr",
   "datePublished": "2026-04-28T20:00:00+02:00",
-  "dateModified": "2026-08-01T00:00:00+02:00",
-  "dateReviewed": "2026-08-01T00:00:00+02:00",
+  "dateModified": "2026-08-19T12:00:00+02:00",
+  "dateReviewed": "2026-08-19T12:00:00+02:00",
   "author": {
     "name": "EU Debt Map Research",
-    "url": "https://www.eudebtmap.com/about"
+    "url": "https://www.eudebtmap.com/fr/about"
   },
   "reviewedBy": {
     "name": "EU Debt Map Research",
     "url": "https://www.eudebtmap.com/fr/methodology"
   },
   "readingMinutes": 7,
-  "image": "/images/articles/eu-debt-burden-2026.jpg",
-  "imageAlt": "Carte stylisée de l’Union européenne avec des graphiques financiers représentant la pression de la dette publique dans les pays de l’UE",
-  "imageCredit": "Original editorial image created for EU Debt Map",
+  "image": "/images/articles/eu-debt-burden-2026-editorial.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "Analystes examinant une carte européenne et des dossiers de finances publiques sans données inventées",
+  "imageCredit": "Illustration éditoriale originale créée pour EU Debt Map",
+  "sourceNote": "Les ratios du premier trimestre 2026 sont des données provisoires d’Eurostat publiées le 21 juillet. Les compteurs d’EU Debt Map sont des estimations entre publications et ne sont pas des statistiques officielles en temps réel.",
   "relatedLinks": [
     {
       "label": "Carte en direct de la dette européenne",
@@ -43,17 +47,17 @@
     {
       "name": "Publication trimestrielle d’Eurostat sur la dette publique, T1 2026",
       "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21072026-ap",
-      "accessed": "2026-08-01"
+      "accessed": "2026-08-19"
     },
     {
       "name": "Publication trimestrielle d’Eurostat sur le déficit public, T1 2026",
       "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21072026-bp",
-      "accessed": "2026-08-01"
+      "accessed": "2026-08-19"
     },
     {
       "name": "Méthodologie d’EU Debt Map",
       "url": "https://www.eudebtmap.com/fr/methodology",
-      "accessed": "2026-08-01"
+      "accessed": "2026-08-19"
     }
   ],
   "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste the raw AdSense script into the body.",
