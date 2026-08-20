@@ -1,4 +1,5 @@
 {
+  "contentStandard": "discover-2026-v1",
   "slug": "wer-haelt-deutsche-staatsschulden-2026",
   "title": "Wer hält Deutschlands Staatsschulden? Zentralbanken, Banken und internationale Investoren",
   "seoTitle": "Wer hält Deutschlands Staatsschulden 2026?",
@@ -10,8 +11,8 @@
   "tags": ["deutsche Staatsschulden", "Bundeswertpapiere", "Gläubigerstruktur", "Staatsanleihen", "Finanzagentur"],
   "lang": "de",
   "datePublished": "2026-08-08T12:00:00+02:00",
-  "dateModified": "2026-08-08T12:00:00+02:00",
-  "dateReviewed": "2026-08-08T12:00:00+02:00",
+  "dateModified": "2026-08-20T12:00:00+02:00",
+  "dateReviewed": "2026-08-20T12:00:00+02:00",
   "author": {
     "name": "EU Debt Map Research",
     "url": "https://www.eudebtmap.com/de/about"
@@ -22,8 +23,10 @@
   },
   "readingMinutes": 11,
   "image": "/images/articles/wer-haelt-deutsche-staatsschulden-2026.jpg",
+  "imageWidth": 1200,
+  "imageHeight": 675,
   "imageAlt": "Illustration deutscher Bundeswertpapiere, die mit Zentralbanken, Banken, Fonds und internationalen Investoren verbunden sind",
-  "imageCredit": "Original editorial image created for EU Debt Map",
+  "imageCredit": "Redaktionelle Originalillustration von EU Debt Map",
   "sourceNote": "Quellen: Deutsche Finanzagentur, Eurostat und Deutsche Bundesbank. Die Gläubigeranteile sind Schätzungen für Bundeswertpapiere; Gesamtstaatsschuld und Vergleichszahlen haben andere Abgrenzungen.",
   "relatedLinks": [
     {
