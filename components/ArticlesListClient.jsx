@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const TEXT = {
@@ -114,13 +114,13 @@ export default function ArticlesListClient({ articles = [], pageSize = 12 }) {
     };
   }, []);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (!hasMore) return;
 
     setVisible((current) =>
       Math.min(current + pageSize, safeArticles.length)
     );
-  };
+  }, [hasMore, pageSize, safeArticles.length]);
 
   useEffect(() => {
     if (!hasMore) return;
@@ -147,7 +147,7 @@ export default function ArticlesListClient({ articles = [], pageSize = 12 }) {
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [autoLoading, hasMore, pageSize, safeArticles.length]);
+  }, [autoLoading, handleLoadMore, hasMore]);
 
   if (!safeArticles.length) {
     return (

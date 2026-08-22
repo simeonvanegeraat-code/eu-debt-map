@@ -6,14 +6,12 @@ import { usePathname } from "next/navigation";
 import { countryName } from "@/lib/countries";
 import { getLocaleFromPathname } from "@/lib/locale";
 
-// Toegestane talen
+// Supported language values.
 const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
-// NB: in jullie setup is "" = Engels op root. We normaliseren hieronder.
+// The empty locale is English at the root; normalize it below.
 
 export default function CountryIntro({ country, lang }) {
-  if (!country) return null;
-
-  // 1) Taal bepalen: prop > URL > "en"
+  // Resolve language from the prop, URL, then the English fallback.
   const pathname = usePathname() || "/";
   const detected = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
   const effLang = useMemo(() => {
@@ -25,7 +23,9 @@ export default function CountryIntro({ country, lang }) {
     return "en";
   }, [lang, detected]);
 
-  // 2) Vertaalde weergavenaam
+  if (!country) return null;
+
+  // Resolve the localized display name.
   const name = countryName(country.code, effLang);
 
   if (effLang === "nl") {
