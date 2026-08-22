@@ -14,7 +14,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const code = String(params.code).toLowerCase();
+  const { code: routeCode } = await params;
+  const code = String(routeCode).toLowerCase();
   const name = countryName(code.toUpperCase(), "nl") || code.toUpperCase();
   const country = countries.find((item) => item.code === code.toUpperCase());
   const ratio = Number(country?.official_debt_to_gdp_pct);
@@ -49,7 +50,8 @@ export async function generateMetadata({ params }) {
 
 export const dynamic = "error";
 
-export default function CountryPageNL({ params: { code } }) {
+export default async function CountryPageNL({ params }) {
+  const { code } = await params;
   const cc = String(code).toLowerCase();
   const country = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === cc

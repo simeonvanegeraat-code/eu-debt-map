@@ -1,5 +1,6 @@
 // app/rss.xml/route.js
 export const runtime = "nodejs";        // nodig als listArticles fs gebruikt
+export const dynamic = "force-static";  // Next 15 caches GET handlers only when explicitly requested
 export const revalidate = 1800;         // 30 min cache
 
 const SITE = "https://www.eudebtmap.com";

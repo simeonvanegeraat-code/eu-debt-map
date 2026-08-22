@@ -19,14 +19,14 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "next": "14.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-simple-maps": "3.0.0",
-    "recharts": "2.12.7"
+    "next": "15.5.21",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-simple-maps": "npm:@vnedyalk0v/react19-simple-maps@2.0.10",
+    "recharts": "2.15.4"
   },
   "devDependencies": {
     "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "15.5.21"
   }
 }

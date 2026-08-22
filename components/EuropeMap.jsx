@@ -3,10 +3,10 @@
 import { useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import geographyData from "@/public/maps/countries-110m.json";
 import { countries as DATA, livePerSecondFor } from "@/lib/data";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
 
-const GEO_URL = "/maps/countries-110m.json";
 
 const STYLE = {
   stroke: "#ffffff",
@@ -248,7 +248,7 @@ export default function EuropeMap() {
         projectionConfig={{ rotate: [-10, -52, 0], scale: 900 }}
         aria-label="Interactive map of EU government debt by country"
       >
-        <Geographies geography={GEO_URL}>
+        <Geographies geography={geographyData}>
           {({ geographies }) =>
             geographies
               .map((geo) => {

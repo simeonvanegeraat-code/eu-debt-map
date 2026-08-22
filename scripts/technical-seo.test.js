@@ -333,6 +333,8 @@ test("both homepage EU debt actions preserve the selected language", () => {
 test("RSS article links use their actual locale and are deduplicated", () => {
   const rss = read("app/rss.xml/route.js");
 
+  assert.match(rss, /export const dynamic = "force-static"/);
+  assert.match(rss, /export const revalidate = 1800/);
   assert.match(rss, /const LOCALE_PREFIX/);
   assert.match(rss, /function articleUrl/);
   assert.match(rss, /seenLinks/);

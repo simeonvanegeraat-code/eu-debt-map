@@ -24,7 +24,7 @@ function bodyStartsWithImage(html = "") {
 /* ---------- SEO ---------- */
 
 export async function generateMetadata({ params }) {
-  const slug = params.slug;
+  const { slug } = await params;
   const article = getArticle({ slug, lang: LANG });
 
   return buildArticleMetadata({
@@ -41,11 +41,12 @@ export async function generateMetadata({ params }) {
 
 /* ---------- page ---------- */
 
-export default function ArticleDetailPage({ params }) {
-  const article = getArticle({ slug: params.slug, lang: LANG });
+export default async function ArticleDetailPage({ params }) {
+  const { slug } = await params;
+  const article = getArticle({ slug, lang: LANG });
   if (!article) return notFound();
 
-  const url = `${SITE}${prefix}/articles/${params.slug}`;
+  const url = `${SITE}${prefix}/articles/${slug}`;
 
   const publishDate = article.datePublished || article.date;
   const modifiedDate = article.dateModified && article.dateModified !== publishDate

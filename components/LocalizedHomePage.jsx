@@ -1,24 +1,11 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import QuickList from "@/components/QuickList";
 import ArticleCard from "@/components/ArticleCard";
 import EUTotalTicker from "@/components/EUTotalTicker";
+import EuropeMap from "@/components/EuropeMapClient";
 import { listArticles } from "@/lib/articles";
 import { countries, debtDataSummary, trendFor, livePerSecondFor } from "@/lib/data";
 import { countryName } from "@/lib/countries";
-
-const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
-  ssr: false,
-  loading: () => (
-    <div
-      style={{ height: 420, display: "grid", placeItems: "center" }}
-      className="card"
-      aria-busy="true"
-    >
-      Loading map…
-    </div>
-  ),
-});
 
 const TEXT = {
   en: {

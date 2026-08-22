@@ -22,7 +22,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const code = String(params.code).toLowerCase();
+  const { code: routeCode } = await params;
+  const code = String(routeCode).toLowerCase();
   const c = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === code
   );
@@ -68,7 +69,8 @@ export async function generateMetadata({ params }) {
 
 export const dynamic = "error";
 
-export default function CountryPageFR({ params: { code } }) {
+export default async function CountryPageFR({ params }) {
+  const { code } = await params;
   const cc = String(code).toLowerCase();
   const country = (Array.isArray(countries) ? countries : []).find(
     (x) => String(x.code).toLowerCase() === cc

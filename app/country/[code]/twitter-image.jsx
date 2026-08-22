@@ -12,8 +12,9 @@ function findCountry(code) {
 }
 
 export default async function TwitterImage({ params }) {
-  const c = findCountry(params.code) ?? {
-    code: params.code?.toUpperCase?.() ?? "??",
+  const { code } = await params;
+  const c = findCountry(code) ?? {
+    code: code?.toUpperCase?.() ?? "??",
     name: "Unknown country",
     flag: "🌍",
     last_value_eur: 0,
