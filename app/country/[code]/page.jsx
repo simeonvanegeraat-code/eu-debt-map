@@ -56,7 +56,7 @@ export async function generateMetadata({ params }) {
       type: "website",
       images: [
         {
-          url: `${base}/og/country-${code.toLowerCase()}.png`,
+          url: `${base}/country/${code.toLowerCase()}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${name} public debt live`,

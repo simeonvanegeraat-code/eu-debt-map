@@ -413,7 +413,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
     publisher: {
       "@type": "Organization",
       name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png` },
+      logo: { "@type": "ImageObject", url: `${SITE}/eu_favicon_512.png` },
     },
   };
 

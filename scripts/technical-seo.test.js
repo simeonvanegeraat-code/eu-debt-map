@@ -206,6 +206,25 @@ test("metadata never concatenates a URL object into canonical URLs", () => {
   assert.deepEqual(riskyPages, []);
 });
 
+test("SEO image references resolve to existing image routes and assets", () => {
+  const englishCountryPage = read("app/country/[code]/page.jsx");
+  const germanCountryPage = read("app/de/country/[code]/page.jsx");
+  const localizedDebtPage = read("components/LocalizedEUDebtPage.jsx");
+
+  for (const countryPage of [englishCountryPage, germanCountryPage]) {
+    assert.match(
+      countryPage,
+      /\/country\/\$\{code\.toLowerCase\(\)\}\/opengraph-image/
+    );
+    assert.doesNotMatch(countryPage, /\/og\/country-/);
+  }
+
+  assert.equal(exists("app/country/[code]/opengraph-image.jsx"), true);
+  assert.equal(exists("public/eu_favicon_512.png"), true);
+  assert.match(localizedDebtPage, /\/eu_favicon_512\.png/);
+  assert.doesNotMatch(localizedDebtPage, /\/icons\/icon-512\.png/);
+});
+
 test("localized explainer routes are included in the sitemap", () => {
   const sitemap = read("app/sitemap.js");
   assert.match(sitemap, /path: "\/debt-vs-deficit"/);
