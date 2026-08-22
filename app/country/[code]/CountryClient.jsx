@@ -196,7 +196,6 @@ export default function CountryClient({
     const interval = prefersReducedMotion ? 500 : 120;
     timerRef.current = setInterval(() => setNowMs(Date.now()), interval);
     return () => timerRef.current && clearInterval(timerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
 
   // Nummerformattering

@@ -45,8 +45,9 @@ export default async function OgImage({ params }) {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
-              display: "grid",
-              placeItems: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               width: 44,
               height: 44,
               borderRadius: 12,
@@ -94,7 +95,7 @@ export default async function OgImage({ params }) {
             Live ticking estimate based on Eurostat last two quarters.
           </div>
           <div style={{ textAlign: "right" }}>
-            {c.prev_date} → {c.last_date}
+            {`${c.prev_date} → ${c.last_date}`}
           </div>
         </div>
       </div>

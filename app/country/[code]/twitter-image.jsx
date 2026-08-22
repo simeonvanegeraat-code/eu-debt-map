@@ -53,7 +53,7 @@ export default async function TwitterImage({ params }) {
         </div>
 
         <div style={{ fontSize: 26, opacity: 0.9 }}>
-          Eurostat last two quarters: {c.prev_date} → {c.last_date}
+          {`Eurostat last two quarters: ${c.prev_date} → ${c.last_date}`}
         </div>
 
         <div
@@ -68,8 +68,9 @@ export default async function TwitterImage({ params }) {
         >
           <div
             style={{
-              display: "grid",
-              placeItems: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               width: 40,
               height: 40,
               borderRadius: 10,

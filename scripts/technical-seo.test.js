@@ -225,6 +225,18 @@ test("SEO image references resolve to existing image routes and assets", () => {
   assert.doesNotMatch(localizedDebtPage, /\/icons\/icon-512\.png/);
 });
 
+test("dynamic social images use renderer-supported flex layouts", () => {
+  const socialImageRoutes = [
+    read("app/country/[code]/opengraph-image.jsx"),
+    read("app/country/[code]/twitter-image.jsx"),
+  ];
+
+  for (const socialImageRoute of socialImageRoutes) {
+    assert.match(socialImageRoute, /display: "flex"/);
+    assert.doesNotMatch(socialImageRoute, /display: "grid"/);
+  }
+});
+
 test("Germany debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
   const germanCountryPage = read("app/de/country/[code]/page.jsx");
   const dutchCountryPage = read("app/nl/country/[code]/page.jsx");

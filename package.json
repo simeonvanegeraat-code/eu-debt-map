@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js scripts/article-page-core.test.js scripts/article-quality-core.test.js scripts/article-archive-pagination.test.js scripts/raw-style-hydration.test.js scripts/layout-stability.test.js scripts/technical-seo.test.js scripts/consent-config.test.js scripts/related-articles.test.js",
     "update:debt": "node scripts/update-eurostat-debt.js",
     "update:ratios": "node scripts/update-eurostat-ratios.js",
@@ -19,14 +19,14 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "next": "15.5.21",
+    "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-simple-maps": "npm:@vnedyalk0v/react19-simple-maps@2.0.10",
     "recharts": "2.15.4"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
-    "eslint-config-next": "15.5.21"
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.2"
   }
 }
