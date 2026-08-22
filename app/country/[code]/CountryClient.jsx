@@ -161,6 +161,7 @@ export default function CountryClient({
   lang = "en",
   introSlot = null,
   relatedArticleSlot = null,
+  titleOverride = null,
 
   // Optioneel: kan via SSR worden meegegeven
   gdpAbs: gdpAbsProp = null,
@@ -296,7 +297,7 @@ export default function CountryClient({
   const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
 
   const finalYearLabel = gdpPeriod || yearLabel;
-  const pageTitle = pageTitleFor(effLang, displayName);
+  const pageTitle = titleOverride || pageTitleFor(effLang, displayName);
 
   return (
     <>

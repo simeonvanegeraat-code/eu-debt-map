@@ -225,6 +225,41 @@ test("SEO image references resolve to existing image routes and assets", () => {
   assert.doesNotMatch(localizedDebtPage, /\/icons\/icon-512\.png/);
 });
 
+test("Germany debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
+  const germanCountryPage = read("app/de/country/[code]/page.jsx");
+  const dutchCountryPage = read("app/nl/country/[code]/page.jsx");
+  const countryClient = read("app/country/[code]/CountryClient.jsx");
+  const breadcrumbs = read("components/GermanyDebtClockBreadcrumbs.jsx");
+
+  assert.match(germanCountryPage, /const isGermany = code === "DE"/);
+  assert.match(
+    germanCountryPage,
+    /Schuldenuhr Deutschland live \$\{ratioYear\} \| EU Debt Map/
+  );
+  assert.match(germanCountryPage, /titleOverride=/);
+  assert.match(germanCountryPage, /GermanyDebtClockIntro/);
+  assert.match(germanCountryPage, /GermanyDebtClockBreadcrumbs/);
+  assert.match(germanCountryPage, /preferredSlug=/);
+
+  assert.doesNotMatch(dutchCountryPage, /titleOverride=/);
+  assert.doesNotMatch(dutchCountryPage, /preferredSlug=/);
+  assert.doesNotMatch(dutchCountryPage, /GermanyDebtClock/);
+  assert.match(
+    dutchCountryPage,
+    /Staatsschuld \$\{name\}: live en \$\{ratioText\} van bbp/
+  );
+  assert.match(dutchCountryPage, /canonical: url/);
+  assert.match(dutchCountryPage, /nl: `\$\{SITE\}\/nl\/country\/\$\{code\}`/);
+
+  assert.match(countryClient, /titleOverride = null/);
+  assert.match(
+    countryClient,
+    /titleOverride \|\| pageTitleFor\(effLang, displayName\)/
+  );
+  assert.match(breadcrumbs, /"@type": "BreadcrumbList"/);
+  assert.match(breadcrumbs, /item: `\$\{SITE\}\/de\/country\/de`/);
+});
+
 test("localized explainer routes are included in the sitemap", () => {
   const sitemap = read("app/sitemap.js");
   assert.match(sitemap, /path: "\/debt-vs-deficit"/);

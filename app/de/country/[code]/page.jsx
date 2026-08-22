@@ -3,8 +3,13 @@ import { countries } from "@/lib/data";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
+import GermanyDebtClockBreadcrumbs from "@/components/GermanyDebtClockBreadcrumbs";
+import GermanyDebtClockIntro from "@/components/GermanyDebtClockIntro";
 import { countryName } from "@/lib/countries";
 import { withLocale } from "@/lib/locale";
+
+const GERMANY_ARTICLE_SLUG =
+  "aktuelle-staatsverschuldung-deutschland-live-schuldenuhr";
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -25,14 +30,21 @@ export async function generateMetadata({ params }) {
         maximumFractionDigits: 1,
       })}%`
     : null;
+  const isGermany = code === "DE";
 
   const base = "https://www.eudebtmap.com";
   const path = `/country/${code.toLowerCase()}`;
 
-  const title = ratioText
+  const title = isGermany
+    ? `Schuldenuhr Deutschland live ${ratioYear} | EU Debt Map`
+    : ratioText
     ? `${name} Staatsschulden: live & ${ratioText} des BIP (${ratioYear}) | EU Debt Map`
     : `${name} Schuldenuhr (live) | EU Debt Map`;
-  const desc = ratioText
+  const desc = isGermany
+    ? ratioText
+      ? `Schuldenuhr Deutschland live: geschätzte Staatsverschuldung pro Sekunde, offizielle Eurostat-Schuldenquote von ${ratioText} für ${ratioPeriod} und transparente Methodik.`
+      : "Schuldenuhr Deutschland live: geschätzte Staatsverschuldung pro Sekunde auf Basis offizieller Eurostat-Daten und transparenter Methodik."
+    : ratioText
     ? `Verfolgen Sie die Staatsschulden von ${name} live und sehen Sie die offizielle Eurostat-Schuldenquote von ${ratioText} für ${ratioPeriod}.`
     : `Verfolge die Staatsverschuldung von ${name} live mit einer aktuellen Schätzung auf Basis von Eurostat. Inklusive Schuldenstand und BIP-Verhältnis.`;
 
@@ -59,7 +71,9 @@ export async function generateMetadata({ params }) {
           url: `${base}/country/${code.toLowerCase()}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: `${name} Schuldenuhr live`,
+          alt: isGermany
+            ? "Schuldenuhr Deutschland live"
+            : `${name} Schuldenuhr live`,
         },
         {
           url: `${base}/og/eu-debt-map.jpg`,
@@ -86,16 +100,31 @@ export default async function CountryPageDE({ params: { code } }) {
 
   const lang = "de";
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
+  const isGermany = localizedCountry.code === "DE";
 
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      {isGermany ? <GermanyDebtClockBreadcrumbs /> : null}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <CountryClient
           country={localizedCountry}
           lang={lang}
-          introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+          titleOverride={
+            isGermany ? "Schuldenuhr Deutschland (live)" : null
+          }
+          introSlot={
+            isGermany ? (
+              <GermanyDebtClockIntro />
+            ) : (
+              <CountryIntro country={localizedCountry} lang={lang} />
+            )
+          }
           relatedArticleSlot={
-            <CountryRelatedArticleServer code={localizedCountry.code} lang={lang} />
+            <CountryRelatedArticleServer
+              code={localizedCountry.code}
+              lang={lang}
+              preferredSlug={isGermany ? GERMANY_ARTICLE_SLUG : null}
+            />
           }
         />
       </section>

@@ -65,6 +65,54 @@ test("an explicit country match wins over a newer general fallback", () => {
   assert.equal(Object.hasOwn(result, "body"), false);
 });
 
+test("an optional preferred slug wins without changing the default selection", () => {
+  const articles = [
+    {
+      lang: "de",
+      slug: "newer-germany-analysis",
+      title: "Neuere Deutschland-Analyse",
+      dateModified: "2026-08-20",
+      relatedCountries: ["DE"],
+    },
+    {
+      lang: "de",
+      slug: "schuldenuhr-deutschland",
+      title: "Schuldenuhr Deutschland",
+      dateModified: "2026-08-10",
+      relatedCountries: ["DE"],
+    },
+  ];
+
+  assert.equal(
+    selectCountryRelatedArticle({
+      articles,
+      lang: "de",
+      countryCode: "DE",
+    }).slug,
+    "newer-germany-analysis"
+  );
+
+  assert.equal(
+    selectCountryRelatedArticle({
+      articles,
+      lang: "de",
+      countryCode: "DE",
+      preferredSlug: "schuldenuhr-deutschland",
+    }).slug,
+    "schuldenuhr-deutschland"
+  );
+
+  assert.equal(
+    selectCountryRelatedArticle({
+      articles,
+      lang: "de",
+      countryCode: "DE",
+      preferredSlug: "missing-or-unrelated",
+    }).slug,
+    "newer-germany-analysis"
+  );
+});
+
 test("selection never crosses languages and safely rejects invalid countries", () => {
   const articles = [
     {
