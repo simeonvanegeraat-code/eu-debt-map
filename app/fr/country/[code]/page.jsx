@@ -5,8 +5,16 @@ import { countryName } from "@/lib/countries";
 import CountryClient from "@/app/country/[code]/CountryClient";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
+import FranceDebtClockBreadcrumbs from "@/components/FranceDebtClockBreadcrumbs";
+import FranceDebtClockIntro from "@/components/FranceDebtClockIntro";
 
 const SITE = "https://www.eudebtmap.com";
+const FRANCE_ARTICLE_SLUG = "dette-publique-france-compteur-live-record";
+
+function formatFrenchQuarter(value) {
+  const match = /^(\d{4})-?Q([1-4])$/i.exec(String(value || "").trim());
+  return match ? `T${match[2]} ${match[1]}` : value;
+}
 
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
@@ -29,13 +37,21 @@ export async function generateMetadata({ params }) {
         maximumFractionDigits: 1,
       })} %`
     : null;
+  const isFrance = code === "fr";
+  const ratioPeriodText = formatFrenchQuarter(ratioPeriod);
   const url = `${SITE}/fr/country/${code}`;
 
   return {
-    title: ratioText
+    title: isFrance
+      ? `Dette publique de la France en direct ${ratioYear} | EU Debt Map`
+      : ratioText
       ? `Dette publique ${name} : direct et ${ratioText} du PIB (${ratioYear}) | EU Debt Map`
       : `Dette publique ${name} (en direct) | EU Debt Map`,
-    description: ratioText
+    description: isFrance
+      ? ratioText
+        ? `Dette publique de la France en direct : estimation par seconde fondée sur Eurostat, ratio officiel de ${ratioText} au ${ratioPeriodText} et méthode transparente.`
+        : "Dette publique de la France en direct : estimation par seconde fondée sur les données officielles d’Eurostat et méthode transparente."
+      : ratioText
       ? `Suivez la dette publique de ${name} en direct et consultez le ratio officiel d’Eurostat de ${ratioText} pour ${ratioPeriod}.`
       : `Suivez la dette publique de ${name} en direct avec une estimation actuelle basée sur Eurostat. Inclut le niveau de dette et le ratio dette/PIB.`,
     alternates: {
@@ -60,15 +76,31 @@ export default function CountryPageFR({ params: { code } }) {
 
   if (!country) return notFound();
 
+  const isFrance = country.code === "FR";
+
   return (
     <main className="container grid" style={{ alignItems: "start" }}>
+      {isFrance ? <FranceDebtClockBreadcrumbs /> : null}
       <section className="card" style={{ gridColumn: "1 / -1" }}>
         <CountryClient
           country={country}
           lang="fr"
-          introSlot={<CountryIntro country={country} lang="fr" />}
+          titleOverride={
+            isFrance ? "Compteur de la dette publique française (en direct)" : null
+          }
+          introSlot={
+            isFrance ? (
+              <FranceDebtClockIntro country={country} />
+            ) : (
+              <CountryIntro country={country} lang="fr" />
+            )
+          }
           relatedArticleSlot={
-            <CountryRelatedArticleServer code={country.code} lang="fr" />
+            <CountryRelatedArticleServer
+              code={country.code}
+              lang="fr"
+              preferredSlug={isFrance ? FRANCE_ARTICLE_SLUG : null}
+            />
           }
         />
       </section>

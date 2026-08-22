@@ -260,6 +260,49 @@ test("Germany debt-clock SEO is route-scoped and preserves the Dutch country pag
   assert.match(breadcrumbs, /item: `\$\{SITE\}\/de\/country\/de`/);
 });
 
+test("France debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
+  const frenchCountryPage = read("app/fr/country/[code]/page.jsx");
+  const dutchCountryPage = read("app/nl/country/[code]/page.jsx");
+  const countryClient = read("app/country/[code]/CountryClient.jsx");
+  const breadcrumbs = read("components/FranceDebtClockBreadcrumbs.jsx");
+  const intro = read("components/FranceDebtClockIntro.jsx");
+
+  assert.match(frenchCountryPage, /const isFrance = code === "fr"/);
+  assert.match(
+    frenchCountryPage,
+    /Dette publique de la France en direct \$\{ratioYear\} \| EU Debt Map/
+  );
+  assert.match(frenchCountryPage, /titleOverride=/);
+  assert.match(frenchCountryPage, /FranceDebtClockIntro/);
+  assert.match(frenchCountryPage, /FranceDebtClockBreadcrumbs/);
+  assert.match(frenchCountryPage, /preferredSlug=/);
+  assert.match(
+    frenchCountryPage,
+    /dette-publique-france-compteur-live-record/
+  );
+
+  assert.doesNotMatch(dutchCountryPage, /titleOverride=/);
+  assert.doesNotMatch(dutchCountryPage, /preferredSlug=/);
+  assert.doesNotMatch(dutchCountryPage, /FranceDebtClock/);
+  assert.match(
+    dutchCountryPage,
+    /Staatsschuld \$\{name\}: live en \$\{ratioText\} van bbp/
+  );
+  assert.match(dutchCountryPage, /canonical: url/);
+  assert.match(dutchCountryPage, /nl: `\$\{SITE\}\/nl\/country\/\$\{code\}`/);
+
+  assert.match(countryClient, /titleOverride = null/);
+  assert.match(
+    countryClient,
+    /titleOverride \|\| pageTitleFor\(effLang, displayName\)/
+  );
+  assert.match(breadcrumbs, /"@type": "BreadcrumbList"/);
+  assert.match(breadcrumbs, /item: `\$\{SITE\}\/fr\/country\/fr`/);
+  assert.match(intro, /country\?\.last_value_eur/);
+  assert.match(intro, /country\?\.official_debt_to_gdp_pct/);
+  assert.doesNotMatch(intro, /3[\s\u202f]536,1/);
+});
+
 test("localized explainer routes are included in the sitemap", () => {
   const sitemap = read("app/sitemap.js");
   assert.match(sitemap, /path: "\/debt-vs-deficit"/);
