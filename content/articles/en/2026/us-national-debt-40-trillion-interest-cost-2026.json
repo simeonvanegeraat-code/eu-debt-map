@@ -1,0 +1,87 @@
+{
+  "contentStandard": "discover-2026-v1",
+  "slug": "us-national-debt-40-trillion-interest-cost-2026",
+  "title": "U.S. National Debt Passes $40 Trillion: What the Interest Bill Actually Costs",
+  "seoTitle": "U.S. National Debt Hits $40 Trillion: Interest Cost Explained",
+  "summary": "U.S. federal debt passed $40 trillion in August 2026. Treasury and CBO data show why the $963 billion interest bill is the more important number.",
+  "excerpt": "America's federal debt has passed $40 trillion. Here is what that total includes, how much interest costs and why the distinction matters.",
+  "primaryTopic": "U.S. national debt and federal interest costs",
+  "countryPageFallback": false,
+  "relatedCountries": [],
+  "articleType": "news",
+  "tags": [
+    "U.S. national debt",
+    "40 trillion debt",
+    "federal interest costs",
+    "Treasury debt",
+    "debt held by the public",
+    "Congressional Budget Office"
+  ],
+  "lang": "en",
+  "datePublished": "2026-08-23T12:15:00+02:00",
+  "dateModified": "2026-08-23T12:15:00+02:00",
+  "dateReviewed": "2026-08-23T12:15:00+02:00",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/methodology"
+  },
+  "readingMinutes": 9,
+  "image": "/images/articles/us-national-debt-40-trillion-interest-cost-2026.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "Isometric United States silhouette made from blank Treasury securities with a gold stream representing federal interest payments",
+  "imageCredit": "Original editorial image created for EU Debt Map",
+  "sourceNote": "Data reviewed 23 August 2026. Treasury's daily series first recorded total federal debt above $40 trillion on 18 August; the latest observation used here is 20 August. The $963 billion interest figure covers October 2025 through July 2026 and is not a full-year total.",
+  "relatedLinks": [
+    {
+      "label": "Can the US carry more debt than Europe?",
+      "url": "https://www.eudebtmap.com/articles/eu-vs-us-debt-capacity-2025"
+    },
+    {
+      "label": "Compare EU debt-to-GDP ratios",
+      "url": "https://www.eudebtmap.com/debt-to-gdp"
+    },
+    {
+      "label": "Explore EU government debt amounts",
+      "url": "https://www.eudebtmap.com/eu-debt"
+    },
+    {
+      "label": "EU Debt Map methodology",
+      "url": "https://www.eudebtmap.com/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "U.S. Treasury FiscalData: Debt to the Penny",
+      "url": "https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/",
+      "accessed": "2026-08-23"
+    },
+    {
+      "name": "Congressional Budget Office: Monthly Budget Review, July 2026",
+      "url": "https://www.cbo.gov/publication/61983",
+      "accessed": "2026-08-23"
+    },
+    {
+      "name": "Congressional Budget Office: The Budget and Economic Outlook, 2026 to 2036",
+      "url": "https://www.cbo.gov/publication/62105",
+      "accessed": "2026-08-23"
+    },
+    {
+      "name": "U.S. Government Accountability Office: The Nation's Fiscal Health",
+      "url": "https://www.gao.gov/products/gao-26-108610",
+      "accessed": "2026-08-23"
+    },
+    {
+      "name": "U.S. Government Accountability Office: Federal Debt Management",
+      "url": "https://www.gao.gov/products/gao-26-107529",
+      "accessed": "2026-08-23"
+    }
+  ],
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste the raw AdSense script into the body.",
+  "contentNotes": "Time-sensitive article. Check the Treasury daily series and the next CBO Monthly Budget Review before changing headline figures. Keep gross federal debt, debt held by the public, intragovernmental holdings, gross interest and net interest clearly separated.",
+  "body": "<p class='article-intro'>The United States has crossed a new fiscal milestone. Treasury's daily series put total federal debt at <strong>$40.033 trillion on 20 August 2026</strong>, after first recording a value above $40 trillion on 18 August. The round number is striking, but the more consequential development is the price of carrying the debt: net federal interest outlays reached <strong>$963 billion in the first ten months of fiscal year 2026</strong>.</p><p>Those figures describe different things. The $40 trillion total includes debt sold to investors as well as obligations held inside the federal government. The $963 billion is a budget outlay for net interest over a defined ten-month period. Understanding that distinction is the difference between a useful debt analysis and a frightening but incomplete headline.</p><blockquote><strong>Data status, 23 August 2026:</strong> Treasury updates Debt to the Penny after business days, so the total can move above or below a round threshold. The latest observation available for this review is 20 August. CBO's interest figure covers 1 October 2025 through 31 July 2026 and should not be presented as a completed annual bill.</blockquote><div class='articleKeyNumbers'><div class='articleKeyNumber'><strong>$40.033tn</strong><span>total federal debt on 20 August 2026</span></div><div class='articleKeyNumber'><strong>$32.279tn</strong><span>debt held by the public</span></div><div class='articleKeyNumber'><strong>$963bn</strong><span>net interest, October through July</span></div></div><h2>When did the debt pass $40 trillion?</h2><p>Treasury's official daily observations show $39.987 trillion on 17 August and $40.047 trillion on 18 August. The total then moved to $40.013 trillion on 19 August and $40.033 trillion on 20 August. That sequence matters because federal debt is not a smooth counter that only rises. Cash balances, redemptions and new issuance can make the published total fall on an individual day even when the longer-term trend is upward.</p><div class='articleDataTableWrap' tabindex='0' role='region' aria-label='Daily United States federal debt observations around 40 trillion dollars; horizontally scrollable'><table class='articleDataTable'><caption>Treasury Debt to the Penny observations</caption><thead><tr><th scope='col'>Record date</th><th scope='col'>Total federal debt</th><th scope='col'>Position versus $40tn</th></tr></thead><tbody><tr><td>17 August 2026</td><td>$39.987tn</td><td>Below</td></tr><tr><td>18 August 2026</td><td>$40.047tn</td><td>First daily observation above</td></tr><tr><td>19 August 2026</td><td>$40.013tn</td><td>Above</td></tr><tr><td>20 August 2026</td><td>$40.033tn</td><td>Above</td></tr></tbody></table></div><p>The milestone is therefore real, but false precision should be avoided. Saying the debt is “about $40 trillion” is more informative for most readers than treating one day's exact cents as a stable total.</p><h2>What is inside the $40 trillion?</h2><p>Treasury divides total public debt outstanding into two components. On 20 August, <strong>$32.279 trillion, or 80.6%</strong>, was debt held by the public. The remaining <strong>$7.754 trillion, or 19.4%</strong>, was intragovernmental holdings.</p><div class='articleDataTableWrap' tabindex='0' role='region' aria-label='Components of United States total federal debt on 20 August 2026; horizontally scrollable'><table class='articleDataTable'><caption>What makes up the $40.033 trillion total</caption><thead><tr><th scope='col'>Treasury measure</th><th scope='col'>Amount</th><th scope='col'>What it broadly represents</th></tr></thead><tbody><tr><td>Debt held by the public</td><td>$32.279tn</td><td>Treasury securities held outside federal government accounts, including investors, the Federal Reserve and foreign governments</td></tr><tr><td>Intragovernmental holdings</td><td>$7.754tn</td><td>Securities held by federal trust funds, revolving funds and special funds</td></tr><tr><td>Total public debt outstanding</td><td>$40.033tn</td><td>The sum of both categories</td></tr></tbody></table></div><p>“Held by the public” does not mean only American households. Treasury's definition includes individuals, companies, banks, state and local governments, Federal Reserve Banks, foreign governments and other entities outside federal government accounts. Intragovernmental holdings are still legal Treasury obligations, but on consolidated federal statements they largely represent one part of government owing another.</p><p>This is why analysts often use debt held by the public when assessing federal borrowing from financial markets. The headline total and the market-facing measure are both valid; they answer different questions.</p><!-- MID_ARTICLE_AD --><h2>The interest bill is the bigger story</h2><p>CBO estimated net interest outlays of $963 billion from October 2025 through July 2026. That was $117 billion, or 14%, more than in the same ten months of the previous fiscal year. CBO attributed the increase to a larger debt stock and higher long-term rates, partly offset by lower short-term rates.</p><p>EU Debt Map calculates that $963 billion over the 304 calendar days in that period averages approximately <strong>$3.17 billion per day, $132 million per hour and $2.2 million per minute</strong>. These are explanatory averages, not readings from a government interest clock. Payments are not distributed evenly through every day.</p><p>For a like-for-like budget comparison, CBO recorded $763 billion of Department of Defense military outlays over the same October-to-July period. Net interest was therefore $200 billion higher, or about 26%. That comparison is more defensible than mixing a ten-month interest figure with a full-year figure from another accounting source.</p><h2>Why net interest is not the same as every interest payment</h2><p>Net interest is the federal budget measure used by CBO. It primarily reflects interest paid on Treasury debt held by the public, minus certain interest income received by the government. It is not simply the advertised coupon on $40 trillion multiplied by one rate.</p><p>The average cost changes gradually because Treasury securities mature at different times. Old low-rate debt does not become expensive immediately; its cost changes when it is refinanced or replaced. Inflation-linked securities, the maturity mix, Federal Reserve remittances and government interest income can also affect the net figure.</p><p>GAO reported more than $970 billion of net interest for the completed 2025 fiscal year. A separate gross interest expense can be higher because it uses a different accounting scope. Articles that switch between gross and net interest without a label can make a correct number misleading.</p><h2>Why the cost is rising</h2><p>There are two central drivers: the government is borrowing more, and part of the existing debt is being refinanced at different market rates. CBO estimates the average interest rate on debt held by the public at 3.4% in 2026 and projects it to reach about 3.9% in the final years of its 2026–2036 baseline.</p><p>The effect compounds. Larger deficits require more borrowing; more debt generates more interest; and borrowing to finance that interest adds to future debt. CBO's February baseline projected net interest at 3.3% of GDP in 2026 and 4.6% in 2036. It projected debt held by the public to rise from 101% to 120% of GDP over the same period.</p><p>Those projections are conditional, not predictions carved in stone. They reflect the laws and economic assumptions specified by CBO at the time. Congress, inflation, economic growth and market rates can all change the path.</p><h2>What could this mean for households?</h2><p>The $40 trillion is not a personal invoice divided equally among Americans. Treasury creditors own securities with legal payment terms; citizens do not each receive an individual bill for a per-capita share. Per-person calculations can illustrate scale, but they should not be described as household liability.</p><p>The effects are indirect. Rising interest costs consume revenue that cannot simultaneously fund public services, tax reductions, investment or emergency responses. GAO also warns that an unsustainable trajectory could lead investors to demand higher Treasury yields. Over time, heavier federal borrowing can put upward pressure on wider borrowing costs and reduce private investment, although mortgage and business rates are also shaped by inflation, Federal Reserve policy, risk and global capital flows.</p><p>The responsible conclusion is not that crossing $40 trillion immediately raises every mortgage rate. It is that a larger and more expensive debt stock reduces fiscal flexibility and makes the budget more sensitive to future rates.</p><h2>Why markets still finance the United States</h2><p>The United States issues debt in the world's main reserve currency and operates the deepest sovereign-bond market. Treasury securities are used globally as reserves, collateral and liquid assets. Those structural advantages help Washington absorb borrowing that would be much harder for a smaller issuer.</p><p>They do not make interest costs irrelevant. Strong demand can coexist with higher yields, and reserve-currency status does not close persistent deficits. Our separate analysis, <a href='/articles/eu-vs-us-debt-capacity-2025'>Can the US really carry more debt than Europe?</a>, compares those institutional advantages with the more fragmented European system.</p><h2>What to watch next</h2><ul><li><strong>Treasury's daily total:</strong> useful for the latest stock, but volatile around round milestones.</li><li><strong>Debt held by the public:</strong> the market-facing measure used in many CBO sustainability comparisons.</li><li><strong>Monthly net interest:</strong> shows how quickly financing costs are entering the budget.</li><li><strong>The effective average rate and maturity mix:</strong> indicate how rapidly market yields reach the existing debt stock.</li><li><strong>Deficits before interest:</strong> reveal whether new borrowing would continue even without the interest bill.</li></ul><p>For a comparable European reference, use the <a href='/debt-to-gdp'>EU debt-to-GDP ranking</a> rather than comparing the U.S. headline total directly with one country's debt. The <a href='/methodology'>methodology page</a> explains why definitions, reference periods and currencies must match.</p><h2>FAQ</h2><h3>Is the U.S. national debt exactly $40 trillion?</h3><p>It was slightly above $40 trillion in Treasury's observations from 18 through 20 August 2026. The figure changes on business days, so $40 trillion is a milestone and rounded description rather than a permanent exact total.</p><h3>How much interest does the United States pay per day?</h3><p>CBO recorded $963 billion of net interest over the first ten months of fiscal 2026. Dividing that period by calendar days gives an EU Debt Map average of about $3.17 billion per day. It is not a live official daily payment figure.</p><h3>Does the government pay interest on all $40 trillion in the same way?</h3><p>No. The headline total combines debt held by the public with intragovernmental holdings. Securities have different maturities, rates and accounting treatment. CBO's net interest measure is therefore not one uniform rate applied to the headline total.</p><h3>Is $40 trillion proof of an immediate debt crisis?</h3><p>No single nominal threshold establishes a crisis. Affordability depends on interest costs, economic growth, revenues, deficits, maturity, investor demand and institutions. The rising interest burden is a concrete warning sign, but the round number alone does not predict a date of failure.</p><h2>The bottom line</h2><p>The United States passing $40 trillion is a historic marker, not a complete diagnosis. About four-fifths of the total was held outside federal government accounts, while one-fifth consisted of intragovernmental holdings. The budget consequence is clearer: net interest reached $963 billion in only ten months and was already larger than military outlays over the same period.</p><p>The number to follow is therefore not only how high the debt counter climbs. It is how much revenue the government must devote to interest, how quickly old debt is refinanced and whether future budgets narrow the gap between spending and revenue.</p><h2>Sources and methodology</h2><p>Debt amounts and daily dates come from the U.S. Treasury's Debt to the Penny dataset. October–July outlays come from CBO's August Monthly Budget Review. Long-term debt and interest projections are CBO's February 2026 baseline. Fiscal-risk and debt-management context comes from GAO. EU Debt Map calculated the category shares and time averages from those published observations; totals may differ slightly because of rounding.</p><ul><li><a href='https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/' rel='nofollow'>U.S. Treasury: Debt to the Penny</a></li><li><a href='https://www.cbo.gov/publication/61983' rel='nofollow'>CBO: Monthly Budget Review, July 2026</a></li><li><a href='https://www.cbo.gov/publication/62105' rel='nofollow'>CBO: Budget and Economic Outlook, 2026–2036</a></li><li><a href='https://www.gao.gov/products/gao-26-108610' rel='nofollow'>GAO: The Nation's Fiscal Health</a></li><li><a href='https://www.gao.gov/products/gao-26-107529' rel='nofollow'>GAO: Federal Debt Management</a></li></ul>"
+}

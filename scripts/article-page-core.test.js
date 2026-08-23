@@ -291,6 +291,42 @@ test("the euro area debt analysis is complete and aligned in all four languages"
   }
 });
 
+test("the US 40 trillion debt article keeps its definitions and figures aligned in all four languages", () => {
+  const files = {
+    en: "content/articles/en/2026/us-national-debt-40-trillion-interest-cost-2026.json",
+    nl: "content/articles/nl/2026/amerikaanse-staatsschuld-40-biljoen-rentekosten-2026.json",
+    de: "content/articles/de/2026/us-staatsschulden-40-billionen-zinskosten-2026.json",
+    fr: "content/articles/fr/2026/dette-americaine-40000-milliards-cout-interets-2026.json",
+  };
+  const localizedNumbers = {
+    en: ["40.033", "32.279", "7.754", "$963", "$763", "$3.17"],
+    nl: ["40,033", "32,279", "7,754", "$963", "$763", "$3,17"],
+    de: ["40,033", "32,279", "7,754", "963", "763", "3,17"],
+    fr: ["40 033", "32 279", "7 754", "963", "763", "3,17"],
+  };
+
+  for (const [lang, file] of Object.entries(files)) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, file), "utf8"));
+
+    assert.equal(article.lang, lang);
+    assert.equal(article.contentStandard, "discover-2026-v1");
+    assert.equal(article.articleType, "news");
+    assert.equal(article.image, "/images/articles/us-national-debt-40-trillion-interest-cost-2026.jpg");
+    assert.equal(article.imageWidth, 1672);
+    assert.equal(article.imageHeight, 941);
+    assert.equal(article.sources.length, 5);
+    assert.equal(article.relatedLinks.length, 4);
+    assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+    assert.match(article.body, /Debt to the Penny/);
+    assert.match(article.body, /CBO/);
+    assert.doesNotMatch(article.body, /contentReference|oaicite|pagead2\.googlesyndication|adsbygoogle/);
+
+    for (const value of localizedNumbers[lang]) {
+      assert.ok(article.body.includes(value), `${lang}: missing ${value}`);
+    }
+  }
+});
+
 test("the German article route preserves article-specific source attribution", () => {
   const route = fs.readFileSync(
     path.join(ROOT, "app", "de", "articles", "[slug]", "page.jsx"),
