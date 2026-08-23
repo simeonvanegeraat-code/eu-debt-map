@@ -339,14 +339,17 @@ test("the German live debt article distinguishes official data from its model", 
   assert.equal(article.image, "/images/articles/deutschland-staatsverschuldung-2026-editorial.jpg");
   assert.equal(article.imageWidth, 1672);
   assert.equal(article.imageHeight, 941);
-  assert.equal(article.sources.length, 5);
-  assert.equal(article.relatedLinks.length, 3);
+  assert.equal(article.sources.length, 6);
+  assert.equal(article.relatedLinks.length, 4);
   assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
   assert.match(article.sourceNote, /keine offizielle Echtzeitmessung/);
   assert.match(article.body, /2\.902,035 Milliarden Euro/);
   assert.match(article.body, /2\.726,5 Milliarden Euro/);
   assert.match(article.body, /lineare Extrapolation/);
   assert.match(article.body, /8\.204 Euro pro Sekunde/);
+  assert.match(article.body, /6\.918 Euro neuer Schulden pro Sekunde/);
+  assert.match(article.body, /geplante Nettokreditaufnahme/);
+  assert.match(article.body, /schulden-pro-kopf-deutschland-2026/);
   assert.match(article.body, /href='\/de\/country\/de'/);
   assert.equal(
     fs.existsSync(path.join(ROOT, "public", article.image.replace(/^\//, ""))),
