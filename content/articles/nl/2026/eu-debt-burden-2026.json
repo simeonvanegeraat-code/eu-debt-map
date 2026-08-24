@@ -1,4 +1,5 @@
 {
+  "contentStandard": "discover-2026-v1",
   "slug": "eu-debt-burden-2026",
   "title": "EU-schuldenlast 2026: welke landen hebben de hoogste schuldquote?",
   "seoTitle": "Staatsschuld EU-landen 2026: hoogste schuldquotes",
@@ -23,8 +24,11 @@
   },
   "readingMinutes": 7,
   "image": "/images/articles/eu-debt-burden-2026.jpg",
+  "imageWidth": 1200,
+  "imageHeight": 630,
   "imageAlt": "Gestileerde kaart van de Europese Unie met financiële grafieken die de druk van staatsschuld per EU-land tonen",
   "imageCredit": "Original editorial image created for EU Debt Map",
+  "sourceNote": "De gegevens zijn op 1 augustus 2026 gecontroleerd met Eurostats publicaties over overheidsschuld en overheidstekort in Q1 2026. De kwartaalcijfers zijn voorlopig; de bewegende tellers van EU Debt Map zijn schattingen en geen officiële realtime statistieken.",
   "relatedLinks": [
     {
       "label": "Live EU-schuldenkaart",

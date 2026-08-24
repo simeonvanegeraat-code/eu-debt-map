@@ -1,4 +1,5 @@
 {
+  "contentStandard": "discover-2026-v1",
   "slug": "eu-debt-burden-2026",
   "title": "EU Debt Burden in 2026: Which Countries Are Under the Most Pressure?",
   "seoTitle": "EU Debt Burden 2026: Highest Debt-to-GDP Countries",
@@ -23,8 +24,11 @@
   },
   "readingMinutes": 7,
   "image": "/images/articles/eu-debt-burden-2026.jpg",
+  "imageWidth": 1200,
+  "imageHeight": 630,
   "imageAlt": "Stylized map of the European Union with financial charts representing public debt pressure across EU countries",
   "imageCredit": "Original editorial image created for EU Debt Map",
+  "sourceNote": "Data reviewed 1 August 2026 using Eurostat’s Q1 2026 government debt and deficit releases. Quarterly observations are provisional; EU Debt Map’s moving counters remain estimates rather than official real-time statistics.",
   "relatedLinks": [
     {
       "label": "Live EU debt map",
