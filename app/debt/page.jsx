@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { countries, debtDataSummary } from "@/lib/data";
+import { editorialDisplay } from "@/lib/editorial-font";
 import { DebtBuilder, DebtMechanismStory } from "./DebtExperience";
 import styles from "./debt.module.css";
 
@@ -191,7 +192,7 @@ export default function DebtExplainer() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${editorialDisplay.variable}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />

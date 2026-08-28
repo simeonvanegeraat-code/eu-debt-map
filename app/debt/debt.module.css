@@ -1,9 +1,10 @@
 .page {
+  --font-display: var(--font-editorial-display);
   --ink: #071426;
   --ink-soft: #20324a;
-  --paper: #f7f8fb;
+  --paper: #f4f7fb;
   --paper-blue: #edf3ff;
-  --line: #cfdaea;
+  --line: #d4deeb;
   --blue: #246bfe;
   --blue-bright: #72a6ff;
   --mint: #64e3b1;
@@ -22,15 +23,17 @@
 
 .page h2 {
   color: var(--ink);
-  font-size: clamp(2rem, 4vw, 4.75rem);
-  letter-spacing: -0.055em;
-  line-height: 0.98;
+  font-size: clamp(2rem, 3.5vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
 }
 
 .page h3 {
   color: var(--ink);
   font-size: clamp(1.35rem, 2.2vw, 2rem);
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .page a {
@@ -50,12 +53,24 @@
 
 .hero {
   isolation: isolate;
-  min-height: min(820px, calc(100svh - 74px));
+  min-height: min(760px, calc(100svh - 74px));
   position: relative;
   background:
-    linear-gradient(120deg, rgba(36, 107, 254, 0.16), transparent 45%),
-    #071426;
+    radial-gradient(circle at 86% 12%, rgba(65, 124, 236, 0.38), transparent 40%),
+    linear-gradient(116deg, #071a34 0%, #0a2448 58%, #143f7f 100%);
   color: #fff;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 72px;
+  background: linear-gradient(to bottom, transparent, var(--paper));
+  pointer-events: none;
 }
 
 .hero::before {
@@ -88,14 +103,16 @@
 }
 
 .heroInner {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(440px, 0.95fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(440px, 1.05fr);
   align-items: center;
-  gap: clamp(3rem, 7vw, 8rem);
-  width: min(1440px, calc(100% - 3rem));
+  gap: clamp(3rem, 5vw, 6rem);
+  width: min(1380px, calc(100% - 3rem));
   min-height: inherit;
   margin: 0 auto;
-  padding: clamp(5rem, 10vw, 9rem) 0;
+  padding: clamp(4.75rem, 8vw, 7rem) 0 clamp(7rem, 10vw, 9rem);
 }
 
 .heroCopy {
@@ -107,24 +124,24 @@
 }
 
 .heroCopy h1 {
-  max-width: 9ch;
-  margin: 0 0 1.75rem;
+  max-width: 14ch;
+  margin: 0 0 1.5rem;
   color: #fff;
-  font-size: clamp(4.25rem, 8.8vw, 8.7rem);
-  font-weight: 700;
-  letter-spacing: -0.075em;
-  line-height: 0.84;
+  font-size: clamp(3.6rem, 5vw, 4.75rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.97;
 }
 
 .heroThesis {
-  max-width: 25ch;
+  max-width: 34ch;
   margin: 0;
   color: #fff;
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 2.7vw, 2.65rem);
+  font-size: clamp(1.3rem, 1.9vw, 1.75rem);
   font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1.15;
+  letter-spacing: -0.025em;
+  line-height: 1.24;
 }
 
 .heroIntro {
@@ -142,7 +159,7 @@
   color: #8fa3bc;
   font-family: var(--font-display);
   font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.035em;
   text-transform: uppercase;
 }
 
@@ -173,7 +190,7 @@
   min-height: 50px;
   padding: 0.85rem 1.15rem;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 10px;
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 650;
@@ -213,9 +230,9 @@
   position: relative;
   padding: clamp(1.35rem, 3vw, 2.4rem);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
-  background: rgba(11, 31, 57, 0.74);
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.28);
+  border-radius: 16px;
+  background: rgba(7, 27, 57, 0.76);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(18px);
 }
 
@@ -344,7 +361,7 @@
   top: 74px;
   overflow-x: auto;
   border-bottom: 1px solid var(--line);
-  background: rgba(247, 248, 251, 0.92);
+  background: rgba(244, 247, 251, 0.94);
   backdrop-filter: blur(14px);
 }
 
@@ -388,7 +405,7 @@
 }
 
 .definitionSection {
-  padding: clamp(6rem, 12vw, 11rem) 0 clamp(5rem, 10vw, 8rem);
+  padding: clamp(5rem, 9vw, 8rem) 0 clamp(5rem, 8vw, 7rem);
 }
 
 .definitionLead {
@@ -435,8 +452,10 @@
   padding: 1.25rem;
   flex-direction: column;
   justify-content: space-between;
-  border-top: 2px solid var(--line);
-  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid var(--line);
+  border-top-width: 2px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .definitionStrip > b {
@@ -554,7 +573,7 @@
   overflow: hidden;
   min-height: 560px;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--ink);
   box-shadow: 0 30px 80px rgba(7, 20, 38, 0.15);
   color: #fff;
@@ -715,9 +734,10 @@
 .modelVisual {
   min-height: 520px;
   padding: clamp(1.4rem, 3vw, 2.5rem);
-  border-radius: 12px;
+  border: 1px solid rgba(212, 222, 235, 0.85);
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 26px 70px rgba(31, 55, 87, 0.11);
+  box-shadow: 0 22px 55px rgba(31, 55, 87, 0.09);
 }
 
 .modelSummary {
@@ -1054,6 +1074,7 @@
 .ratioVisual {
   padding: clamp(2rem, 5vw, 4.5rem);
   border: 1px solid var(--line);
+  border-radius: 16px;
   background: #fff;
 }
 
@@ -1234,7 +1255,7 @@
 .nextSection {
   width: 100%;
   padding: clamp(5rem, 9vw, 8rem) max(1.5rem, calc((100% - 1320px) / 2));
-  background: #eaf1ff;
+  background: #e8f0fd;
 }
 
 .nextSection > div:first-child {
@@ -1379,9 +1400,9 @@
 
 @media (max-width: 560px) {
   .hero { min-height: auto; }
-  .heroInner { width: calc(100% - 2rem); padding: 4.5rem 0 5rem; }
-  .heroCopy h1 { font-size: clamp(3.6rem, 18vw, 5.5rem); }
-  .heroThesis { font-size: 1.45rem; }
+  .heroInner { width: calc(100% - 2rem); padding: 4rem 0 6.5rem; }
+  .heroCopy h1 { font-size: clamp(3rem, 13vw, 3.5rem); line-height: 0.98; }
+  .heroThesis { font-size: 1.25rem; line-height: 1.28; }
   .heroMeta { display: grid; }
   .heroMeta span::after { display: none !important; }
   .heroActions { align-items: stretch; flex-direction: column; }
