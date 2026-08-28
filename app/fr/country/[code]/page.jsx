@@ -81,31 +81,27 @@ export default async function CountryPageFR({ params }) {
   const isFrance = country.code === "FR";
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      {isFrance ? <FranceDebtClockBreadcrumbs /> : null}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient
-          country={country}
+    <CountryClient
+      country={country}
+      lang="fr"
+      breadcrumbSlot={isFrance ? <FranceDebtClockBreadcrumbs /> : null}
+      titleOverride={
+        isFrance ? "Compteur de la dette publique française (en direct)" : null
+      }
+      introSlot={
+        isFrance ? (
+          <FranceDebtClockIntro country={country} />
+        ) : (
+          <CountryIntro country={country} lang="fr" />
+        )
+      }
+      relatedArticleSlot={
+        <CountryRelatedArticleServer
+          code={country.code}
           lang="fr"
-          titleOverride={
-            isFrance ? "Compteur de la dette publique française (en direct)" : null
-          }
-          introSlot={
-            isFrance ? (
-              <FranceDebtClockIntro country={country} />
-            ) : (
-              <CountryIntro country={country} lang="fr" />
-            )
-          }
-          relatedArticleSlot={
-            <CountryRelatedArticleServer
-              code={country.code}
-              lang="fr"
-              preferredSlug={isFrance ? FRANCE_ARTICLE_SLUG : null}
-            />
-          }
+          preferredSlug={isFrance ? FRANCE_ARTICLE_SLUG : null}
         />
-      </section>
-    </main>
+      }
+    />
   );
 }

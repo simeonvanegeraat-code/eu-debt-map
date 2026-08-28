@@ -260,6 +260,49 @@ test("dynamic social images use renderer-supported flex layouts", () => {
   }
 });
 
+test("all localized country routes share one experience without changing their SEO owners", () => {
+  const routes = [
+    "app/country/[code]/page.jsx",
+    "app/nl/country/[code]/page.jsx",
+    "app/de/country/[code]/page.jsx",
+    "app/fr/country/[code]/page.jsx",
+  ];
+  const client = read("app/country/[code]/CountryClient.jsx");
+  const experience = read("components/country/CountryPageExperience.jsx");
+  const copy = read("components/country/country-copy.js");
+  const preview = read("app/preview/country-de/page.jsx");
+
+  for (const route of routes) {
+    const source = read(route);
+    assert.match(source, /generateStaticParams/);
+    assert.match(source, /generateMetadata/);
+    assert.match(source, /<CountryClient/);
+  }
+
+  assert.match(client, /CountryPageExperience/);
+  assert.match(client, /data-ad-client="ca-pub-9252617114074571"/);
+  assert.match(client, /data-ad-slot="8705915822"/);
+  assert.match(client, /gdpAbs=\{gdpAbs\}/);
+  assert.match(client, /relatedArticleSlot=\{relatedArticleSlot\}/);
+
+  assert.match(experience, /getCountryCopy/);
+  assert.match(experience, /localeBase/);
+  assert.match(experience, /id="country-page-title"/);
+  assert.match(experience, /isPreview \? \(/);
+  assert.match(experience, /\(60 \/ maxComparison\) \* 100/);
+  assert.match(experience, /styles\.compareRowLink/);
+  assert.match(experience, /href=\{`\$\{base\}\/country\/\$\{item\.code\.toLowerCase\(\)\}`\}/);
+  assert.match(experience, /aria-current="true"/);
+
+  for (const lang of ["en", "nl", "de", "fr"]) {
+    assert.match(copy, new RegExp(`\\n  ${lang}: \\{`));
+  }
+
+  assert.match(preview, /index: false/);
+  assert.match(preview, /follow: false/);
+  assert.match(preview, /isPreview/);
+});
+
 test("Germany debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
   const germanCountryPage = read("app/de/country/[code]/page.jsx");
   const dutchCountryPage = read("app/nl/country/[code]/page.jsx");

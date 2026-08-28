@@ -1,42 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { interpolateDebt } from "@/lib/data";
-
+import { useEffect, useState } from "react";
+import CountryPageExperience from "@/components/country/CountryPageExperience";
 import MapCTA from "@/components/MapCTA";
 import ShareBar from "@/components/ShareBar";
-import CountryExploreStrip from "@/components/CountryExploreStrip";
-import CountryFacts from "./CountryFacts";
-
 import { countryName } from "@/lib/countries";
-import { getLocaleFromPathname } from "@/lib/locale";
 
-// Toegestane talen ("" = EN op root)
-const SUPPORTED = new Set(["", "en", "nl", "de", "fr"]);
-const norm = (x) => (x === "" ? "en" : x);
+const GDP_TTL_MS = 6 * 60 * 60 * 1000;
 
-// UI labels
-const LIVE_LABELS = {
-  en: "Estimated public debt (live):",
-  nl: "Staatsschuld (live):",
-  de: "Schuldenuhr (live):",
-  fr: "Dette publique estimée (en direct) :",
-};
-
-const BACK_LABELS = {
-  en: "← Back",
-  nl: "← Terug",
-  de: "← Zurück",
-  fr: "← Retour",
-};
-
-const INFO_LABELS = {
-  en: "Live estimate based on the latest Eurostat debt data and the change between the last two official reference periods.",
-  nl: "Live schatting op basis van de laatste Eurostat-schulddata en de verandering tussen de laatste twee officiële referentieperiodes.",
-  de: "Live-Schätzung auf Basis der neuesten Eurostat-Schuldendaten und der Veränderung zwischen den letzten zwei offiziellen Referenzperioden.",
-  fr: "Estimation en direct fondée sur les dernières données de dette d’Eurostat et l’évolution entre les deux dernières périodes officielles.",
+const UNKNOWN_COUNTRY = {
+  en: "Unknown country",
+  nl: "Onbekend land",
+  de: "Unbekanntes Land",
+  fr: "Pays inconnu",
 };
 
 const SHARE_TITLES = {
@@ -44,13 +20,6 @@ const SHARE_TITLES = {
   nl: (name) => `${name} staatsschuld`,
   de: (name) => `${name} Staatsschulden`,
   fr: (name) => `Dette publique ${name}`,
-};
-
-const UNKNOWN_COUNTRY = {
-  en: "Unknown country",
-  nl: "Onbekend land",
-  de: "Unbekanntes Land",
-  fr: "Pays inconnu",
 };
 
 const AD_LABELS = {
@@ -67,21 +36,20 @@ function pageTitleFor(lang, name) {
   return `${name} public debt (live)`;
 }
 
-// Kleine client cache voor GDP-API
-const GDP_TTL_MS = 6 * 60 * 60 * 1000; // 6 uur
 function readGDPCache(iso2) {
   try {
     const raw = sessionStorage.getItem(`gdp:${iso2}`);
     if (!raw) return null;
-    const obj = JSON.parse(raw);
-    if (!obj || typeof obj !== "object") return null;
-    if (Date.now() - (obj.ts || 0) > GDP_TTL_MS) return null;
-    if (!Number.isFinite(obj.value)) return null;
-    return { value: obj.value, period: obj.period || null };
+    const value = JSON.parse(raw);
+    if (!value || typeof value !== "object") return null;
+    if (Date.now() - (value.ts || 0) > GDP_TTL_MS) return null;
+    if (!Number.isFinite(value.value)) return null;
+    return { value: value.value, period: value.period || null };
   } catch {
     return null;
   }
 }
+
 function writeGDPCache(iso2, value, period) {
   try {
     sessionStorage.setItem(
@@ -89,60 +57,42 @@ function writeGDPCache(iso2, value, period) {
       JSON.stringify({ value, period: period || null, ts: Date.now() })
     );
   } catch {
-    /* ignore */
+    // Storage may be unavailable in privacy modes; the page still works without the cache.
   }
 }
 
-// Visually hidden style
-const SR_ONLY = {
-  position: "absolute",
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  border: 0,
-};
-
-// Handmatige advertentie component
-function ManualAd({ lang = "en" }) {
+function ManualAd({ lang }) {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error("AdSense error:", err);
+    } catch (error) {
+      console.error("AdSense error:", error);
     }
   }, []);
-
-  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
-  const adLabel = AD_LABELS[effLang] || AD_LABELS.en;
 
   return (
     <div
       style={{
-        margin: "24px 0",
-        textAlign: "center",
-        minHeight: "100px",
+        minHeight: 100,
         width: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "transparent",
         overflow: "hidden",
+        textAlign: "center",
       }}
     >
       <span
         style={{
-          fontSize: "10px",
-          color: "#cbd5e1",
-          marginBottom: "4px",
+          marginBottom: 4,
+          color: "#94a3b8",
+          fontSize: 10,
+          letterSpacing: "0.08em",
           textTransform: "uppercase",
         }}
       >
-        {adLabel}
+        {AD_LABELS[lang] || AD_LABELS.en}
       </span>
       <ins
         className="adsbygoogle"
@@ -151,7 +101,7 @@ function ManualAd({ lang = "en" }) {
         data-ad-slot="8705915822"
         data-ad-format="horizontal"
         data-full-width-responsive="true"
-      ></ins>
+      />
     </div>
   );
 }
@@ -161,240 +111,85 @@ export default function CountryClient({
   lang = "en",
   introSlot = null,
   relatedArticleSlot = null,
+  breadcrumbSlot = null,
   titleOverride = null,
-
-  // Optioneel: kan via SSR worden meegegeven
   gdpAbs: gdpAbsProp = null,
   gdpPeriod: gdpPeriodProp = null,
   yearLabel = "Latest",
 }) {
-  const safeCountry = country ?? null;
-
-  // 1) Taal bepalen
-  const pathname = usePathname() || "/";
-  const fromUrl = getLocaleFromPathname ? getLocaleFromPathname(pathname) : "";
-  const effLang = useMemo(() => {
-    const p = norm(lang);
-    const u = norm(fromUrl);
-    if (SUPPORTED.has(p)) return p;
-    if (SUPPORTED.has(u)) return u;
-    return "en";
-  }, [lang, fromUrl]);
-
-  // 2) Vertaalde weergavenaam
-  const displayName = safeCountry ? countryName(safeCountry.code, effLang) : "";
-
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const [nowMs, setNowMs] = useState(() => Date.now());
-  const timerRef = useRef(null);
-
-  useEffect(() => {
-    const interval = prefersReducedMotion ? 500 : 120;
-    timerRef.current = setInterval(() => setNowMs(Date.now()), interval);
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, [prefersReducedMotion]);
-
-  // Nummerformattering
-  const nf = useMemo(() => {
-    const localeMap = {
-      nl: "nl-NL",
-      de: "de-DE",
-      fr: "fr-FR",
-      en: "en-GB",
-    };
-    return new Intl.NumberFormat(localeMap[effLang] || "en-GB");
-  }, [effLang]);
-
-  const current = useMemo(() => {
-    if (!safeCountry) return 0;
-    return interpolateDebt(safeCountry, nowMs);
-  }, [safeCountry, nowMs]);
-
-  // ---------- GDP Logic ----------
+  const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
+  const safeCountry = country || null;
   const serverGdp = safeCountry?.gdp || gdpAbsProp;
   const serverPeriod = safeCountry?.gdpPeriod || gdpPeriodProp;
   const hasOfficialRatio =
     Number.isFinite(Number(safeCountry?.official_debt_to_gdp_pct)) &&
     Number(safeCountry?.official_debt_to_gdp_pct) > 0;
-
-  const [gdpAbs, setGdpAbs] = useState(
-    Number.isFinite(serverGdp) ? serverGdp : null
-  );
+  const [gdpAbs, setGdpAbs] = useState(Number.isFinite(serverGdp) ? serverGdp : null);
   const [gdpPeriod, setGdpPeriod] = useState(serverPeriod || null);
 
   useEffect(() => {
-    if (!safeCountry) return;
-
-    // Officiële ratio heeft voorrang. De oude GDP-route blijft alleen als terugval bestaan.
-    if (hasOfficialRatio || Number.isFinite(serverGdp)) {
-      return;
-    }
+    if (!safeCountry || hasOfficialRatio || Number.isFinite(serverGdp)) return undefined;
 
     const geo = String(safeCountry.code || "").toUpperCase();
-    const cached = typeof window !== "undefined" ? readGDPCache(geo) : null;
+    const cached = readGDPCache(geo);
     if (cached) {
-      setGdpAbs(cached.value);
-      setGdpPeriod(cached.period);
-      return;
+      const timer = window.setTimeout(() => {
+        setGdpAbs(cached.value);
+        setGdpPeriod(cached.period);
+      }, 0);
+      return () => window.clearTimeout(timer);
     }
 
     let cancelled = false;
-    const ctrl = new AbortController();
+    const controller = new AbortController();
 
-    (async () => {
+    async function loadGDP() {
       try {
-        const res = await fetch(`/api/gdp?geo=${encodeURIComponent(geo)}`, {
+        const response = await fetch(`/api/gdp?geo=${encodeURIComponent(geo)}`, {
           method: "GET",
           cache: "no-store",
-          signal: ctrl.signal,
+          signal: controller.signal,
         });
-        const json = await res.json();
+        const json = await response.json();
         if (!cancelled && json?.ok && Number.isFinite(json.gdp_eur)) {
           setGdpAbs(json.gdp_eur);
           setGdpPeriod(json.period || null);
           writeGDPCache(geo, json.gdp_eur, json.period || null);
         }
       } catch {
-        // stil falen
+        // The official ratio remains the primary path; this fallback may fail silently.
       }
-    })();
+    }
 
+    loadGDP();
     return () => {
       cancelled = true;
-      try {
-        ctrl.abort();
-      } catch {}
+      controller.abort();
     };
-  }, [safeCountry, serverGdp, hasOfficialRatio]);
+  }, [safeCountry, hasOfficialRatio, serverGdp]);
 
   if (!safeCountry) {
-    return (
-      <div className="container card">
-        {UNKNOWN_COUNTRY[effLang] || UNKNOWN_COUNTRY.en}
-      </div>
-    );
+    return <div className="container card">{UNKNOWN_COUNTRY[effLang]}</div>;
   }
 
-  const subtitleId = "country-live-explainer";
-  const liveLabel = LIVE_LABELS[effLang] || LIVE_LABELS.en;
-  const infoLabel = INFO_LABELS[effLang] || INFO_LABELS.en;
-
-  const backHref =
-    effLang === "nl"
-      ? "/nl"
-      : effLang === "de"
-      ? "/de"
-      : effLang === "fr"
-      ? "/fr"
-      : "/";
-
-  const backText = BACK_LABELS[effLang] || BACK_LABELS.en;
-  const shareTitle = (SHARE_TITLES[effLang] || SHARE_TITLES.en)(displayName);
-
-  const finalYearLabel = gdpPeriod || yearLabel;
-  const pageTitle = titleOverride || pageTitleFor(effLang, displayName);
+  const displayName = countryName(safeCountry.code, effLang);
+  const title = titleOverride || pageTitleFor(effLang, displayName);
+  const shareTitle = SHARE_TITLES[effLang](displayName);
 
   return (
-    <>
-      <div style={{ marginBottom: 8 }}>
-        <Link className="btn" href={backHref} prefetch>
-          {backText}
-        </Link>
-      </div>
-
-      <header
-        style={{
-          display: "grid",
-          gap: 8,
-          justifyItems: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <h1 style={{ margin: 0 }}>
-          {safeCountry.flag ? (
-            <span style={{ marginRight: 8 }}>{safeCountry.flag}</span>
-          ) : null}
-          {pageTitle}
-        </h1>
-
-        <p
-          id={subtitleId}
-          style={{
-            margin: 0,
-            maxWidth: 760,
-            color: "rgb(71,85,105)",
-            fontSize: 14,
-            lineHeight: 1.65,
-          }}
-        >
-          {infoLabel}
-        </p>
-      </header>
-
-      <div
-        className="mono"
-        style={{
-          marginTop: 16,
-          textAlign: "center",
-          width: "100%",
-        }}
-        aria-live="polite"
-        aria-describedby={subtitleId}
-      >
-        <span style={SR_ONLY}>{liveLabel}</span>
-
-        <span
-          className="ticker-hero num"
-          suppressHydrationWarning
-          style={{
-            display: "inline-block",
-            lineHeight: 1.05,
-            fontWeight: 800,
-            fontSize: "clamp(28px, 7vw, 72px)",
-            letterSpacing: "0.2px",
-            textShadow: "0 1px 0 rgba(15,23,42,0.18)",
-            maxWidth: "100%",
-            wordBreak: "keep-all",
-          }}
-        >
-          €{nf.format(Math.round(current))}
-        </span>
-      </div>
-
-      <CountryExploreStrip code={safeCountry.code} lang={effLang} />
-
-      <div style={{ marginTop: 16 }}>
-        <CountryFacts
-          code={safeCountry.code}
-          gdpAbs={Number.isFinite(gdpAbs) ? gdpAbs : undefined}
-          yearLabel={finalYearLabel}
-          liveDebt={current}
-          lang={effLang}
-        />
-      </div>
-
-      <ManualAd lang={effLang} />
-
-      {introSlot}
-
-      <div style={{ marginTop: 8 }}>
-        <ShareBar title={shareTitle} lang={effLang} />
-      </div>
-
-      <div
-        className="grid"
-        style={{ gridTemplateColumns: "1fr", gap: 16, marginTop: 16 }}
-      >
-        <div className="grid" style={{ gap: 16 }}>
-          <MapCTA code={safeCountry.code} name={displayName} lang={effLang} />
-          {relatedArticleSlot}
-        </div>
-      </div>
-    </>
+    <CountryPageExperience
+      country={safeCountry}
+      lang={effLang}
+      title={title}
+      displayName={displayName}
+      gdpAbs={gdpAbs}
+      gdpPeriod={gdpPeriod || yearLabel}
+      breadcrumbSlot={breadcrumbSlot}
+      introSlot={introSlot}
+      adSlot={<ManualAd lang={effLang} />}
+      shareSlot={<ShareBar title={shareTitle} lang={effLang} />}
+      mapSlot={<MapCTA code={safeCountry.code} name={displayName} lang={effLang} />}
+      relatedArticleSlot={relatedArticleSlot}
+    />
   );
 }

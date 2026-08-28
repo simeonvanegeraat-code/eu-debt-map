@@ -105,31 +105,25 @@ export default async function CountryPageDE({ params }) {
   const isGermany = localizedCountry.code === "DE";
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      {isGermany ? <GermanyDebtClockBreadcrumbs /> : null}
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient
-          country={localizedCountry}
+    <CountryClient
+      country={localizedCountry}
+      lang={lang}
+      breadcrumbSlot={isGermany ? <GermanyDebtClockBreadcrumbs /> : null}
+      titleOverride={isGermany ? "Schuldenuhr Deutschland (live)" : null}
+      introSlot={
+        isGermany ? (
+          <GermanyDebtClockIntro />
+        ) : (
+          <CountryIntro country={localizedCountry} lang={lang} />
+        )
+      }
+      relatedArticleSlot={
+        <CountryRelatedArticleServer
+          code={localizedCountry.code}
           lang={lang}
-          titleOverride={
-            isGermany ? "Schuldenuhr Deutschland (live)" : null
-          }
-          introSlot={
-            isGermany ? (
-              <GermanyDebtClockIntro />
-            ) : (
-              <CountryIntro country={localizedCountry} lang={lang} />
-            )
-          }
-          relatedArticleSlot={
-            <CountryRelatedArticleServer
-              code={localizedCountry.code}
-              lang={lang}
-              preferredSlug={isGermany ? GERMANY_ARTICLE_SLUG : null}
-            />
-          }
+          preferredSlug={isGermany ? GERMANY_ARTICLE_SLUG : null}
         />
-      </section>
-    </main>
+      }
+    />
   );
 }

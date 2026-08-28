@@ -201,14 +201,19 @@ test("all 27 country pages receive a valid article in their own language", () =>
 
 test("country routes render the server-selected slot after content and advertising", () => {
   const client = read("app/country/[code]/CountryClient.jsx");
-  const manualAdIndex = client.indexOf("<ManualAd");
-  const introIndex = client.indexOf("{introSlot}");
-  const mapIndex = client.indexOf("<MapCTA");
-  const relatedIndex = client.indexOf("{relatedArticleSlot}");
+  const experience = read("components/country/CountryPageExperience.jsx");
+  const adIndex = experience.indexOf(": adSlot ? (");
+  const introIndex = experience.indexOf("{introSlot ?");
+  const mapIndex = experience.indexOf("{mapSlot}");
+  const relatedIndex = experience.indexOf("{relatedArticleSlot}");
 
   assert.equal(client.includes("LatestArticles"), false);
-  assert.ok(manualAdIndex >= 0);
-  assert.ok(manualAdIndex < introIndex);
+  assert.match(client, /adSlot=\{<ManualAd/);
+  assert.match(client, /introSlot=\{introSlot\}/);
+  assert.match(client, /mapSlot=\{<MapCTA/);
+  assert.match(client, /relatedArticleSlot=\{relatedArticleSlot\}/);
+  assert.ok(adIndex >= 0);
+  assert.ok(adIndex < introIndex);
   assert.ok(introIndex < mapIndex);
   assert.ok(mapIndex < relatedIndex);
 

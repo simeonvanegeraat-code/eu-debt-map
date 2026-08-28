@@ -59,17 +59,13 @@ export default async function CountryPageNL({ params }) {
   if (!country) return notFound();
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      <section className="card" style={{ gridColumn: "1 / -1" }}>
-        <CountryClient
-          country={country}
-          lang="nl"
-          introSlot={<CountryIntro country={country} lang="nl" />}
-          relatedArticleSlot={
-            <CountryRelatedArticleServer code={country.code} lang="nl" />
-          }
-        />
-      </section>
-    </main>
+    <CountryClient
+      country={country}
+      lang="nl"
+      introSlot={<CountryIntro country={country} lang="nl" />}
+      relatedArticleSlot={
+        <CountryRelatedArticleServer code={country.code} lang="nl" />
+      }
+    />
   );
 }

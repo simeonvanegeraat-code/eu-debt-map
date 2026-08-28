@@ -90,17 +90,13 @@ export default async function CountryPage({ params }) {
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
-      <section className="card" style={{ gridColumn: "1 / -1", minHeight: "600px" }}>
-        <CountryClient
-          country={localizedCountry}
-          lang={lang}
-          introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
-          relatedArticleSlot={
-            <CountryRelatedArticleServer code={localizedCountry.code} lang={lang} />
-          }
-        />
-      </section>
-    </main>
+    <CountryClient
+      country={localizedCountry}
+      lang={lang}
+      introSlot={<CountryIntro country={localizedCountry} lang={lang} />}
+      relatedArticleSlot={
+        <CountryRelatedArticleServer code={localizedCountry.code} lang={lang} />
+      }
+    />
   );
 }
