@@ -206,6 +206,29 @@ test("metadata never concatenates a URL object into canonical URLs", () => {
   assert.deepEqual(riskyPages, []);
 });
 
+test("the government debt guide keeps its SEO contract and progressive content", () => {
+  const page = read("app/debt/page.jsx");
+  const experience = read("app/debt/DebtExperience.jsx");
+  const styles = read("app/debt/debt.module.css");
+
+  assert.match(page, /const PATH = "\/debt"/);
+  assert.match(page, /canonical: `\$\{SITE\}\$\{PATH\}`/);
+  assert.match(page, /nl: `\$\{SITE\}\/nl\$\{PATH\}`/);
+  assert.match(page, /de: `\$\{SITE\}\/de\$\{PATH\}`/);
+  assert.match(page, /fr: `\$\{SITE\}\/fr\$\{PATH\}`/);
+  assert.match(page, /<h1 id="page-title">What is government debt\?<\/h1>/);
+  assert.match(page, /"@type": "Article"/);
+  assert.match(page, /"@type": "BreadcrumbList"/);
+  assert.match(page, /"@type": "FAQPage"/);
+  assert.match(page, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
+  assert.match(page, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
+  assert.match(page, /This is EU Debt Map’s sum of national Eurostat observations for scale/);
+
+  assert.match(experience, /"IntersectionObserver" in window/);
+  assert.match(experience, /Illustrative calculation, not a forecast/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+});
+
 test("SEO image references resolve to existing image routes and assets", () => {
   const englishCountryPage = read("app/country/[code]/page.jsx");
   const germanCountryPage = read("app/de/country/[code]/page.jsx");

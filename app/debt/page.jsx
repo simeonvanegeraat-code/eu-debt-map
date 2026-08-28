@@ -1,42 +1,44 @@
-// app/debt/page.jsx
 import Link from "next/link";
+import { countries, debtDataSummary } from "@/lib/data";
+import { DebtBuilder, DebtMechanismStory } from "./DebtExperience";
+import styles from "./debt.module.css";
+
+const SITE = "https://www.eudebtmap.com";
+const PATH = "/debt";
+const REVIEW_DATE = "2026-08-28";
 
 export async function generateMetadata() {
-  const base = "https://www.eudebtmap.com";
-  const path = "/debt";
-  const title =
-    "What Is Government Debt? Public Debt, Deficits and Bonds Explained | EU Debt Map";
+  const title = "What Is Government Debt? Debt, Deficits and Bonds Explained";
   const description =
-    "A simple guide to government debt: what public debt is, how it differs from a deficit, how bonds work, who lends to governments, and why debt-to-GDP matters.";
+    "Understand government debt visually: see how deficits become bonds and public debt, who holds it, when it matters, and why debt-to-GDP is used.";
 
   return {
-    metadataBase: new URL(base),
+    metadataBase: new URL(SITE),
     title,
     description,
     alternates: {
-      canonical: `${base}${path}`,
+      canonical: `${SITE}${PATH}`,
       languages: {
-        en: `${base}${path}`,
-        nl: `${base}/nl${path}`,
-        de: `${base}/de${path}`,
-        fr: `${base}/fr${path}`,
-        "x-default": `${base}${path}`,
+        en: `${SITE}${PATH}`,
+        nl: `${SITE}/nl${PATH}`,
+        de: `${SITE}/de${PATH}`,
+        fr: `${SITE}/fr${PATH}`,
+        "x-default": `${SITE}${PATH}`,
       },
     },
     openGraph: {
       title,
       description,
       type: "article",
-      url: `${base}${path}`,
+      url: `${SITE}${PATH}`,
       siteName: "EU Debt Map",
-      images: [
-        {
-          url: "/og/debt-explainer-1200x630.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Government debt explainer",
-        },
-      ],
+      modifiedTime: REVIEW_DATE,
+      images: [{
+        url: "/og/debt-explainer-1200x630.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Visual guide explaining government debt, deficits and bonds",
+      }],
     },
     twitter: {
       card: "summary_large_image",
@@ -48,465 +50,302 @@ export async function generateMetadata() {
   };
 }
 
-function Term({ children, title }) {
-  return (
-    <abbr
-      title={title}
-      style={{
-        textDecoration: "none",
-        borderBottom: "1px dotted var(--border)",
-        cursor: "help",
-      }}
-    >
-      {children}
-    </abbr>
+function formatTrillions(value) {
+  return new Intl.NumberFormat("en-GB", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value / 1_000_000_000_000);
+}
+
+function formatBillions(value) {
+  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(
+    value / 1_000_000_000
   );
 }
 
-function MiniCard({ label, text }) {
+function ArrowIcon() {
   return (
-    <div className="card" style={{ margin: 0 }}>
-      <div className="tag">{label}</div>
-      <p style={{ margin: "8px 0 0 0", lineHeight: 1.65 }}>{text}</p>
-    </div>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 12h14M14 7l5 5-5 5" />
+    </svg>
   );
 }
 
-function CompareCard({ leftTitle, leftText, rightTitle, rightText }) {
+function HeroLedger() {
   return (
-    <div
-      style={{
-        display: "grid",
-        gap: 12,
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        marginTop: 8,
-      }}
-    >
-      <div className="card" style={{ margin: 0 }}>
-        <div className="tag">{leftTitle}</div>
-        <p style={{ margin: "8px 0 0 0", lineHeight: 1.65 }}>{leftText}</p>
+    <div className={styles.heroLedger} aria-label="Illustration showing a budget deficit adding to government debt" role="img">
+      <div className={styles.ledgerTopline}>
+        <span>Illustrative public budget</span>
+        <span>One period</span>
       </div>
-      <div className="card" style={{ margin: 0 }}>
-        <div className="tag">{rightTitle}</div>
-        <p style={{ margin: "8px 0 0 0", lineHeight: 1.65 }}>{rightText}</p>
-      </div>
-    </div>
-  );
-}
-
-function StepGrid({ steps }) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gap: 12,
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        marginTop: 10,
-      }}
-    >
-      {steps.map((step, i) => (
-        <div key={i} className="card" style={{ margin: 0 }}>
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 999,
-              display: "grid",
-              placeItems: "center",
-              fontWeight: 700,
-              background: "rgba(37,99,235,0.10)",
-              color: "#1d4ed8",
-              marginBottom: 10,
-            }}
-          >
-            {i + 1}
-          </div>
-          <strong>{step.title}</strong>
-          <p style={{ margin: "8px 0 0 0", lineHeight: 1.6 }}>{step.text}</p>
+      <div className={styles.ledgerRows}>
+        <div className={styles.ledgerRow}>
+          <div><span>Revenue</span><strong>€94</strong></div>
+          <div className={styles.ledgerTrack}><span className={styles.revenueBar} /></div>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function RatioBand() {
-  return (
-    <div
-      className="card"
-      style={{
-        marginTop: 10,
-        display: "grid",
-        gap: 10,
-      }}
-    >
-      <div className="tag">Debt-to-GDP in one glance</div>
-
-      <div
-        role="img"
-        aria-label="Illustrative debt-to-GDP scale with a 60% reference point"
-        style={{ marginTop: 2 }}
-      >
-        <div
-          style={{
-            position: "relative",
-            height: 16,
-            borderRadius: 999,
-            overflow: "hidden",
-            background: "#e5e7eb",
-            border: "1px solid var(--border)",
-          }}
-        >
-          <div style={{ position: "absolute", inset: 0, width: "60%", background: "rgba(16,185,129,0.55)" }} />
-          <div style={{ position: "absolute", top: 0, bottom: 0, left: "60%", width: "30%", background: "rgba(245,158,11,0.45)" }} />
-          <div style={{ position: "absolute", top: 0, bottom: 0, left: "90%", width: "10%", background: "rgba(239,68,68,0.45)" }} />
-          <div
-            style={{
-              position: "absolute",
-              top: -4,
-              bottom: -4,
-              left: "60%",
-              width: 2,
-              background: "#0f172a",
-              opacity: 0.7,
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "60% 30% 10%",
-            fontSize: 12,
-            color: "var(--muted)",
-            marginTop: 8,
-            gap: 8,
-          }}
-        >
-          <span>&lt;60% reference zone</span>
-          <span>60–90% watch zone</span>
-          <span>&gt;90%</span>
+        <div className={styles.ledgerRow}>
+          <div><span>Spending</span><strong>€100</strong></div>
+          <div className={styles.ledgerTrack}><span className={styles.spendingBar} /></div>
         </div>
       </div>
-
-      <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
-        The debt-to-GDP ratio compares total public debt with yearly economic output. It does not tell the full story, but it helps compare countries of very different sizes.
-      </p>
+      <div className={styles.ledgerResult}>
+        <div><span>Annual deficit</span><strong>€6</strong></div>
+        <div className={styles.ledgerArrow} aria-hidden="true"><i /><i /><i /></div>
+        <div><span>Added to debt</span><strong>+€6</strong></div>
+      </div>
     </div>
+  );
+}
+
+function DefinitionStrip() {
+  return (
+    <div className={styles.definitionStrip} aria-label="The relationship between revenue, spending, deficit, borrowing and debt">
+      <div><span>01</span><strong>Revenue</strong><small>Money coming in</small></div>
+      <b aria-hidden="true">−</b>
+      <div><span>02</span><strong>Spending</strong><small>Money going out</small></div>
+      <b aria-hidden="true">=</b>
+      <div className={styles.definitionAccent}><span>03</span><strong>Deficit</strong><small>The period’s gap</small></div>
+      <b aria-hidden="true">→</b>
+      <div><span>04</span><strong>Borrowing</strong><small>Bonds and loans</small></div>
+      <b aria-hidden="true">→</b>
+      <div className={styles.definitionFinal}><span>05</span><strong>Debt</strong><small>The remaining stock</small></div>
+    </div>
+  );
+}
+
+function SourceLink({ href, children }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}<span aria-hidden="true"> ↗</span>
+    </a>
   );
 }
 
 export default function DebtExplainer() {
+  const latestPeriod = debtDataSummary.dominantLatestTime;
+  const currentCountries = countries.filter(
+    (country) => country.official_latest_time === latestPeriod && country.last_value_eur > 0
+  );
+  const summedDebt = currentCountries.reduce((sum, country) => sum + country.last_value_eur, 0);
+  const largestCountries = [...currentCountries]
+    .sort((a, b) => b.last_value_eur - a.last_value_eur)
+    .slice(0, 5);
+  const largestValue = largestCountries[0]?.last_value_eur || 1;
+
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "What Is Government Debt? Public Debt, Deficits and Bonds Explained",
+    headline: "What Is Government Debt? Debt, Deficits and Bonds Explained",
+    description: "A visual guide to government debt, deficits, government bonds, debt holders and debt-to-GDP.",
     inLanguage: "en",
-    isPartOf: { "@type": "WebSite", name: "EU Debt Map", url: "https://www.eudebtmap.com/" },
-    mainEntityOfPage: "https://www.eudebtmap.com/debt",
-    about: [
-      "government debt",
-      "public debt",
-      "debt vs deficit",
-      "government bonds",
-      "debt-to-GDP",
-    ],
+    dateModified: REVIEW_DATE,
+    isAccessibleForFree: true,
+    author: { "@type": "Organization", name: "EU Debt Map", url: SITE },
+    publisher: {
+      "@type": "Organization",
+      name: "EU Debt Map",
+      url: SITE,
+      logo: { "@type": "ImageObject", url: `${SITE}/eu_favicon_512.png` },
+    },
+    mainEntityOfPage: `${SITE}${PATH}`,
+    about: ["government debt", "public debt", "debt vs deficit", "government bonds", "debt-to-GDP"],
   };
-
-  const webPageLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "What Is Government Debt? Public Debt, Deficits and Bonds Explained",
-    url: "https://www.eudebtmap.com/debt",
-    description:
-      "A simple guide to government debt: what public debt is, how it differs from a deficit, how bonds work, who lends to governments, and why debt-to-GDP matters.",
-    inLanguage: "en",
-  };
-
   const breadcrumbsLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.eudebtmap.com/" },
-      { "@type": "ListItem", position: 2, name: "Government Debt Guide", item: "https://www.eudebtmap.com/debt" },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE },
+      { "@type": "ListItem", position: 2, name: "Government debt guide", item: `${SITE}${PATH}` },
     ],
   };
-
+  const faqItems = [
+    {
+      question: "Is all government debt bad?",
+      answer: "No. Borrowing can finance investment or help stabilise the economy during a downturn. What matters is why the money is borrowed, the interest cost, the growth of the economy and whether the debt remains manageable.",
+    },
+    {
+      question: "What is the difference between government debt and a deficit?",
+      answer: "A deficit is the shortfall during one budget period when expenditure exceeds revenue. Government debt is the outstanding stock left by past borrowing, after repayments and other changes.",
+    },
+    {
+      question: "Who owns government debt?",
+      answer: "Government bonds can be held by banks, pension funds, insurers, investment funds, households, foreign investors and central banks. The mix differs by country and maturity.",
+    },
+    {
+      question: "Do governments have to repay all debt at once?",
+      answer: "No. Bonds mature at different dates. Governments normally repay or refinance maturing debt over time, while continuing to issue new debt when funding is needed.",
+    },
+    {
+      question: "Why is debt compared with GDP?",
+      answer: "Debt-to-GDP compares the debt stock with the size of the economy. It is more useful for comparing countries than the raw debt amount alone, although it does not by itself determine whether debt is sustainable.",
+    },
+  ];
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What is government debt?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Government debt is the total amount a state owes after years of borrowing. It usually increases when public spending exceeds public revenue.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is the difference between debt and deficit?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "A deficit is the shortfall in one budget period when spending is higher than revenue. Debt is the total stock built up over time.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Who buys government bonds?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Government bonds are usually bought by banks, pension funds, insurers, investment funds, foreign investors and sometimes central banks.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Why does debt-to-GDP matter?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Debt-to-GDP compares public debt with the size of the economy. It helps show how heavy the debt burden is relative to a country's economic capacity.",
-        },
-      },
-    ],
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
+    <div className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      <section className="card section" style={{ gridColumn: "1 / -1" }}>
-        <header style={{ display: "grid", gap: 14 }}>
-          <h1
-            className="hero-title"
-            style={{
-              fontSize: "clamp(1.9rem, 4vw + 1rem, 3.1rem)",
-              background: "linear-gradient(90deg, #2563eb, #00875a)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              margin: 0,
-            }}
-          >
-            What Is Government Debt?
-          </h1>
-
-          <div style={{ maxWidth: "70ch", display: "grid", gap: 10 }}>
-            <p className="hero-lede" style={{ margin: 0 }}>
-              Government debt is the total money a state owes after years of borrowing. If a government spends more than it collects, it usually fills the gap by issuing bonds.
-            </p>
-
-            <p className="tag" style={{ margin: 0, lineHeight: 1.7 }}>
-              This guide focuses on <strong>public debt</strong>, not personal finance. It explains what government debt is, how it differs from a deficit, who lends to governments, and why the <Term title="Government debt as a share of annual economic output">debt-to-GDP ratio</Term> is the key comparison metric.
-            </p>
-
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4 }}>
-              <Link href="/" className="btn">Open the live EU debt map →</Link>
-              <Link href="/debt-to-gdp" className="btn">Debt-to-GDP explained →</Link>
+      <section className={styles.hero} aria-labelledby="page-title">
+        <div className={styles.heroGlow} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroEyebrow}>EU Debt Map · Visual guide 01</p>
+            <h1 id="page-title">What is government debt?</h1>
+            <p className={styles.heroThesis}>It starts as a gap in one budget and becomes a financial promise that can last for decades.</p>
+            <p className={styles.heroIntro}>Trace how deficits become bonds, how bonds become public debt and why the size of the economy matters as much as the number itself.</p>
+            <div className={styles.heroMeta}>
+              <span>Reviewed 28 August 2026</span><span>8-minute visual guide</span><span>Official EU definitions</span>
+            </div>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryAction} href="#government-debt-in-one-sentence">Start the explanation <ArrowIcon /></a>
+              <Link className={styles.secondaryAction} href="/">Open the live EU map</Link>
             </div>
           </div>
-
-          <div
-            style={{
-              display: "grid",
-              gap: 12,
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              marginTop: 6,
-            }}
-          >
-            <MiniCard
-              label="Debt"
-              text="The total stock of money a government still owes."
-            />
-            <MiniCard
-              label="Deficit"
-              text="The shortfall in one budget period when spending is higher than revenue."
-            />
-            <MiniCard
-              label="Bond"
-              text="The main IOU governments sell when they borrow from investors."
-            />
-            <MiniCard
-              label="Debt-to-GDP"
-              text="Debt compared with the size of the economy, not just the raw amount."
-            />
-          </div>
-        </header>
+          <HeroLedger />
+        </div>
       </section>
 
-      <article className="card section" style={{ gridColumn: "1 / -1" }}>
-        <section>
-          <h2 className="article-title">Government debt in one sentence</h2>
-          <p className="article-body">
-            Government debt is the accumulated result of past borrowing. A country runs deficits from time to time, finances them with bonds, and carries the outstanding debt forward until those bonds are repaid or refinanced.
-          </p>
-          <div className="tag" style={{ marginTop: 8 }}>
-            Think of it like this: a <strong>deficit</strong> is one year’s gap, while <strong>debt</strong> is the running total left after many years.
-          </div>
-        </section>
-
-        <section>
-          <h2 className="article-title">Debt vs deficit</h2>
-          <CompareCard
-            leftTitle="Deficit"
-            leftText="A flow. It measures how much new borrowing is needed in one budget period when government spending exceeds government revenue."
-            rightTitle="Debt"
-            rightText="A stock. It measures the total outstanding amount the state still owes after years of borrowing."
-          />
-        </section>
-
-        <section>
-          <h2 className="article-title">How governments borrow</h2>
-          <p className="article-body">
-            Governments mainly borrow by issuing <strong>bonds</strong>. A bond is a formal promise to repay investors later, usually with regular interest payments in the meantime.
-          </p>
-
-          <StepGrid
-            steps={[
-              {
-                title: "The state issues bonds",
-                text: "The government offers debt securities to the market to raise money.",
-              },
-              {
-                title: "Investors buy them",
-                text: "Banks, pension funds, insurers, funds and foreign buyers provide cash upfront.",
-              },
-              {
-                title: "Interest is paid",
-                text: "Bond holders receive interest over time as compensation for lending.",
-              },
-              {
-                title: "Old debt matures",
-                text: "At maturity, bonds are repaid or replaced with newly issued bonds.",
-              },
-            ]}
-          />
-        </section>
-
-        <section>
-          <h2 className="article-title">Who holds government debt?</h2>
-          <div
-            style={{
-              display: "grid",
-              gap: 12,
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              marginTop: 8,
-            }}
-          >
-            <MiniCard
-              label="Domestic investors"
-              text="Local banks, insurers, pension funds and sometimes households often hold a large share."
-            />
-            <MiniCard
-              label="Foreign investors"
-              text="International funds and overseas institutions can also be important lenders."
-            />
-            <MiniCard
-              label="Central banks"
-              text="In some periods, central banks hold government bonds as part of monetary policy."
-            />
-          </div>
-        </section>
-
-        <section>
-          <h2 className="article-title">When does debt become a problem?</h2>
-          <div
-            style={{
-              display: "grid",
-              gap: 12,
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              marginTop: 8,
-            }}
-          >
-            <MiniCard
-              label="Interest costs rise"
-              text="More tax revenue goes to debt service instead of public services or investment."
-            />
-            <MiniCard
-              label="Growth stays weak"
-              text="If the economy grows slowly, carrying the same debt burden becomes harder."
-            />
-            <MiniCard
-              label="Market confidence falls"
-              text="Investors may demand higher yields, which pushes borrowing costs up further."
-            />
-          </div>
-        </section>
-
-        <section>
-          <h2 className="article-title">Why debt-to-GDP matters</h2>
-          <p className="article-body">
-            Raw debt alone can be misleading. A debt figure that looks huge for one country may be manageable for a much larger economy. That is why economists compare debt with yearly output using the debt-to-GDP ratio.
-          </p>
-          <RatioBand />
-          <p className="tag" style={{ marginTop: 10 }}>
-            A country with strong growth, low interest costs and credible institutions can often carry more debt than a smaller or weaker economy.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="article-title">Frequently asked questions</h2>
-
-          <details className="debt-faq">
-            <summary>Is all government debt bad?</summary>
-            <p className="tag" style={{ marginTop: 8 }}>
-              No. Borrowing can finance long-term investment and help stabilise the economy during recessions. The key question is whether the debt remains manageable over time.
-            </p>
-          </details>
-
-          <details className="debt-faq">
-            <summary>Do countries have to pay off all their debt?</summary>
-            <p className="tag" style={{ marginTop: 8 }}>
-              Usually not. Most governments refinance part of their debt as bonds mature. The real goal is sustainability, not zero debt.
-            </p>
-          </details>
-
-          <details className="debt-faq">
-            <summary>Why can a rich country carry more debt than a poor one?</summary>
-            <p className="tag" style={{ marginTop: 8 }}>
-              Because repayment capacity depends on the size and strength of the economy, not just on the debt amount itself.
-            </p>
-          </details>
-
-          <details className="debt-faq">
-            <summary>Why does EU Debt Map focus so much on debt-to-GDP?</summary>
-            <p className="tag" style={{ marginTop: 8 }}>
-              It is the clearest way to compare countries of very different sizes and to judge debt against economic output rather than raw euro totals alone.
-            </p>
-          </details>
-        </section>
-      </article>
-
-      <section
-        className="card section"
-        style={{
-          gridColumn: "1 / -1",
-          display: "grid",
-          gap: 14,
-        }}
-      >
-        <h2 className="article-title" style={{ marginBottom: 0 }}>Next steps</h2>
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Link href="/" className="btn">View the live EU map →</Link>
-          <Link href="/debt-to-gdp" className="btn">Debt-to-GDP explained →</Link>
-          <Link href="/debt-vs-deficit" className="btn">Debt vs Deficit →</Link>
-          <Link href="/methodology" className="btn">Methodology →</Link>
+      <nav className={styles.chapterNav} aria-label="On this page">
+        <div>
+          <span>Explore</span>
+          <a href="#government-debt-in-one-sentence">Definition</a>
+          <a href="#how-government-debt-works">Borrowing cycle</a>
+          <a href="#debt-vs-deficit">Debt vs deficit</a>
+          <a href="#who-holds-government-debt">Debt holders</a>
+          <a href="#why-debt-to-gdp-matters">Debt-to-GDP</a>
         </div>
+      </nav>
 
-        <div className="tag" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <Link href="/country/de" className="nav-link">Germany</Link>
-          <Link href="/country/fr" className="nav-link">France</Link>
-          <Link href="/country/it" className="nav-link">Italy</Link>
-          <Link href="/country/es" className="nav-link">Spain</Link>
-          <Link href="/country/nl" className="nav-link">Netherlands</Link>
+      <section className={styles.definitionSection} id="government-debt-in-one-sentence" aria-labelledby="definition-title">
+        <div className={styles.definitionLead}>
+          <p className={styles.eyebrow}>Government debt in one sentence</p>
+          <h2 id="definition-title">Government debt is the outstanding amount a state still owes after borrowing.</h2>
+          <p>In EU statistics, government debt is measured as consolidated gross debt at nominal value. It covers the currency and deposits, debt securities and loans that remain outstanding for the general government sector.</p>
+          <SourceLink href="https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm">Eurostat definition of quarterly government debt</SourceLink>
         </div>
-
-        <p className="tag" style={{ margin: 0 }}>
-          Sources: Eurostat government finance data and national public finance institutions. Educational overview, not investment advice.
-        </p>
+        <DefinitionStrip />
       </section>
-    </main>
+
+      <DebtMechanismStory />
+      <DebtBuilder />
+
+      <section className={styles.holdersSection} id="who-holds-government-debt" aria-labelledby="holders-title">
+        <div className={styles.holdersGraphic} aria-hidden="true">
+          <div className={styles.holderOrbit}>
+            <div className={styles.holderCore}><span>Government</span><strong>BOND</strong><small>principal + interest</small></div>
+            <span className={`${styles.holder} ${styles.holderBanks}`}>Banks</span>
+            <span className={`${styles.holder} ${styles.holderPensions}`}>Pension funds</span>
+            <span className={`${styles.holder} ${styles.holderForeign}`}>Foreign investors</span>
+            <span className={`${styles.holder} ${styles.holderCentral}`}>Central banks</span>
+            <span className={`${styles.holder} ${styles.holderHouseholds}`}>Households</span>
+          </div>
+        </div>
+        <div className={styles.holdersCopy}>
+          <p className={styles.eyebrow}>Who holds government debt?</p>
+          <h2 id="holders-title">A government’s liability is someone else’s asset.</h2>
+          <p>Banks, pension funds, insurers, investment funds, households, foreign investors and central banks can all hold government bonds. Some investors buy them for income, others for liquidity, collateral or long-term matching of liabilities.</p>
+          <p>The ownership mix matters because it affects demand, refinancing conditions and how financial stress can spread between governments, banks and markets.</p>
+          <SourceLink href="https://www.ecb.europa.eu/press/economic-bulletin/articles/2021/html/ecb.ebart202103_02~6612ab7923.en.html">ECB analysis of government debt holders</SourceLink>
+        </div>
+      </section>
+
+      <section className={styles.riskSection} aria-labelledby="risk-title">
+        <div className={styles.riskHeading}>
+          <p className={styles.eyebrow}>When does debt become a problem?</p>
+          <h2 id="risk-title">The number alone is not the verdict.</h2>
+          <p>Debt pressure emerges from the interaction between the debt stock, borrowing costs, economic growth and confidence in public institutions.</p>
+        </div>
+        <div className={styles.riskLines}>
+          <div><span>01</span><h3>Interest costs</h3><p>Higher yields gradually raise the cost of refinancing and can absorb more public revenue.</p></div>
+          <div><span>02</span><h3>Economic growth</h3><p>A growing economy can make an unchanged debt stock easier to carry relative to national income.</p></div>
+          <div><span>03</span><h3>Debt maturity</h3><p>Longer maturities slow the speed at which market rates feed into the government’s interest bill.</p></div>
+          <div><span>04</span><h3>Market confidence</h3><p>Credible institutions and fiscal plans influence whether investors continue to lend at manageable rates.</p></div>
+        </div>
+      </section>
+
+      <section className={styles.euSection} aria-labelledby="eu-context-title">
+        <div className={styles.euHeader}>
+          <div><p className={styles.eyebrow}>EU context · {latestPeriod || "latest quarter"}</p><h2 id="eu-context-title">Public debt is shared unevenly across Europe.</h2></div>
+          <div className={styles.euTotal}>
+            <span>Sum of available national observations</span>
+            <strong>€{formatTrillions(summedDebt)}tn</strong>
+            <small>{currentCountries.length} EU countries at the common reference period</small>
+          </div>
+        </div>
+        <div className={styles.countryBars}>
+          {largestCountries.map((country, index) => (
+            <Link href={`/country/${country.code.toLowerCase()}`} className={styles.countryBarRow} key={country.code}>
+              <span className={styles.countryRank}>{String(index + 1).padStart(2, "0")}</span>
+              <span className={styles.countryName}>{country.name}</span>
+              <span className={styles.countryTrack}><i style={{ width: `${(country.last_value_eur / largestValue) * 100}%` }} /></span>
+              <strong>€{formatBillions(country.last_value_eur)}bn</strong>
+            </Link>
+          ))}
+        </div>
+        <p className={styles.euMethodNote}>This is EU Debt Map’s sum of national Eurostat observations for scale, not Eurostat’s separately consolidated EU aggregate. Loans between Member States can require different consolidation in an official EU aggregate.<Link href="/methodology"> Read the methodology.</Link></p>
+      </section>
+
+      <section className={styles.ratioSection} id="why-debt-to-gdp-matters" aria-labelledby="ratio-title">
+        <div className={styles.ratioCopy}>
+          <p className={styles.eyebrow}>Why debt-to-GDP matters</p>
+          <h2 id="ratio-title">€500 billion does not mean the same thing in every economy.</h2>
+          <p>Debt-to-GDP compares the debt stock with one year of economic output. It does not measure affordability perfectly, but it provides a common scale for countries of very different sizes.</p>
+          <p>The EU treaty reference value is 60% of GDP. It is a fiscal reference, not an automatic line between “safe” and “unsafe”: direction, interest costs, maturity, growth and institutional credibility still matter.</p>
+          <div className={styles.ratioLinks}>
+            <Link href="/debt-to-gdp">Explore the EU debt-to-GDP ranking <ArrowIcon /></Link>
+            <SourceLink href="https://eur-lex.europa.eu/eli/treaty/tfeu_2016/pro_12/oj/eng">Protocol No 12 on the excessive deficit procedure</SourceLink>
+          </div>
+        </div>
+        <div className={styles.ratioVisual} role="img" aria-label="Illustrative debt-to-GDP scale with the EU 60 percent reference value">
+          <div className={styles.ratioNumber}>60<span>%</span></div>
+          <div className={styles.ratioRule}><span /><i /></div>
+          <div className={styles.ratioLabels}><span>0%</span><strong>EU reference value</strong><span>120%+</span></div>
+          <p>Reference point, not a standalone sustainability test.</p>
+        </div>
+      </section>
+
+      <section className={styles.faqSection} aria-labelledby="faq-title">
+        <div className={styles.faqHeading}><p className={styles.eyebrow}>Questions, answered</p><h2 id="faq-title">Government debt FAQ</h2></div>
+        <div className={styles.faqList}>
+          {faqItems.map((item, index) => (
+            <details key={item.question}>
+              <summary><span>{String(index + 1).padStart(2, "0")}</span>{item.question}<i aria-hidden="true" /></summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.sourcesSection} aria-labelledby="sources-title">
+        <div><p className={styles.eyebrow}>Evidence and definitions</p><h2 id="sources-title">Primary sources</h2><p>The guide was reviewed against official European statistical definitions and institutional documentation on 28 August 2026.</p></div>
+        <ol>
+          <li><SourceLink href="https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm">Eurostat — Quarterly government debt metadata</SourceLink></li>
+          <li><SourceLink href="https://ec.europa.eu/eurostat/cache/metadata/en/gov_10dd_esms.htm">Eurostat — Government deficit and debt definitions</SourceLink></li>
+          <li><SourceLink href="https://commission.europa.eu/strategy-and-policy/eu-budget/eu-borrower-investor-relations/how-eu-issuance-works_en">European Commission — How EU bond issuance works</SourceLink></li>
+          <li><SourceLink href="https://eur-lex.europa.eu/eli/treaty/tfeu_2016/pro_12/oj/eng">EUR-Lex — Protocol No 12 on the excessive deficit procedure</SourceLink></li>
+        </ol>
+      </section>
+
+      <section className={styles.nextSection} aria-labelledby="next-title">
+        <div><p className={styles.eyebrow}>Continue exploring</p><h2 id="next-title">See the mechanism in real EU data.</h2></div>
+        <div className={styles.nextLinks}>
+          <Link href="/"><span>01</span><strong>Live EU debt map</strong><ArrowIcon /></Link>
+          <Link href="/debt-to-gdp"><span>02</span><strong>Debt-to-GDP ranking</strong><ArrowIcon /></Link>
+          <Link href="/debt-vs-deficit"><span>03</span><strong>Debt vs deficit</strong><ArrowIcon /></Link>
+          <Link href="/methodology"><span>04</span><strong>Data methodology</strong><ArrowIcon /></Link>
+        </div>
+      </section>
+    </div>
   );
 }
