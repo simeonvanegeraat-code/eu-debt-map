@@ -1,9 +1,10 @@
-import LocalizedHomePage, { generateLocalizedHomeMetadata } from "@/components/LocalizedHomePage";
+import { generateLocalizedHomeMetadata } from "@/components/LocalizedHomePage";
+import HomePageExperience from "@/components/HomePageExperience";
 
 export async function generateMetadata() {
   return generateLocalizedHomeMetadata("nl");
 }
 
 export default function HomePageNL() {
-  return <LocalizedHomePage lang="nl" />;
+  return <HomePageExperience lang="nl" />;
 }

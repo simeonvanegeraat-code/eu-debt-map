@@ -210,6 +210,7 @@ test("the government debt guide keeps its SEO contract and progressive content",
   const page = read("app/debt/page.jsx");
   const experience = read("app/debt/DebtExperience.jsx");
   const styles = read("app/debt/debt.module.css");
+  const editorialFont = read("lib/editorial-font.js");
 
   assert.match(page, /const PATH = "\/debt"/);
   assert.match(page, /canonical: `\$\{SITE\}\$\{PATH\}`/);
@@ -223,6 +224,8 @@ test("the government debt guide keeps its SEO contract and progressive content",
   assert.match(page, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
   assert.match(page, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
   assert.match(page, /This is EU Debt Map’s sum of national Eurostat observations for scale/);
+  assert.match(page, /editorialDisplay\.variable/);
+  assert.match(editorialFont, /IBM_Plex_Sans/);
 
   assert.match(experience, /"IntersectionObserver" in window/);
   assert.match(experience, /Illustrative calculation, not a forecast/);
@@ -301,6 +304,95 @@ test("all localized country routes share one experience without changing their S
   assert.match(preview, /index: false/);
   assert.match(preview, /follow: false/);
   assert.match(preview, /isPreview/);
+});
+
+test("the homepage experience preserves live SEO and isolates preview routes", () => {
+  const rootPreview = read("app/preview/home/page.jsx");
+  const localizedPreviews = [
+    "app/nl/preview/home/page.jsx",
+    "app/de/preview/home/page.jsx",
+    "app/fr/preview/home/page.jsx",
+  ];
+  const experience = read("components/home-preview/HomePreviewExperience.jsx");
+  const map = read("components/home-preview/HomeMapPreview.jsx");
+  const ticker = read("components/home-preview/PreviewEUTicker.jsx");
+  const trend = read("components/home-preview/HomeTrendPreview.jsx");
+  const finish = read("components/home-preview/HomePreviewFinish.jsx");
+  const copy = read("components/home-preview/home-preview-copy.js");
+  const wrapper = read("components/HomePageExperience.jsx");
+  const metadataOwner = read("components/LocalizedHomePage.jsx");
+  const previewData = read("components/home-preview/home-preview-data.js");
+  const liveRoutes = [
+    "app/page.jsx",
+    "app/nl/page.jsx",
+    "app/de/page.jsx",
+    "app/fr/page.jsx",
+  ];
+
+  assert.match(rootPreview, /index: false/);
+  assert.match(rootPreview, /follow: false/);
+  assert.match(rootPreview, /alternates: \{ canonical: null \}/);
+  assert.match(rootPreview, /<HomePageExperience lang="en" preview/);
+
+  for (const [index, preview] of localizedPreviews.entries()) {
+    const source = read(preview);
+    assert.match(source, /index: false/);
+    assert.match(source, /follow: false/);
+    assert.match(source, /alternates: \{ canonical: null \}/);
+    assert.match(source, new RegExp(`<HomePageExperience lang="${["nl", "de", "fr"][index]}" preview`));
+  }
+
+  assert.match(experience, /HomeMapPreview/);
+  assert.match(experience, /preview = false/);
+  assert.match(experience, /preview && \(/);
+  assert.match(experience, /<h1 id="home-title">\{copy\.heroTitle\}<\/h1>/);
+  assert.match(experience, /const MODES = \["ratio", "trend", "total"\]/);
+  assert.match(experience, /official_latest_time === commonPeriod/);
+  assert.match(experience, /commonCountries\.reduce\(\(sum, country\) => sum \+ livePerSecondFor\(country\), 0\)/);
+  assert.match(experience, /copy\.countryDirectoryTitle/);
+  assert.match(experience, /data\.localizedCountries\.map/);
+  assert.match(experience, /href=\{`\$\{copy\.base\}\/country\/\$\{country\.code\.toLowerCase\(\)\}`\}/);
+  assert.match(map, /<a[\s\S]*href=\{countryHref\}/);
+  assert.match(map, /<title>\{copy\.countryLinkText\(localizedName\)\}<\/title>/);
+  assert.doesNotMatch(map, /styles\.mapHint/);
+  assert.match(map, /projection="geoAzimuthalEqualArea"/);
+  assert.doesNotMatch(ticker, /<i aria-hidden="true"/);
+  assert.match(ticker, /prefers-reduced-motion: reduce/);
+  assert.match(ticker, /officialTotal \+ perSecond \* elapsedSeconds/);
+  assert.match(trend, /EUROSTAT_DEBT_HISTORY/);
+  assert.match(trend, /copy\.base\}\/eu-debt/);
+  assert.match(trend, /role="img"/);
+  assert.match(finish, /copy\.methodologyCta/);
+  assert.match(finish, /copy\.viewAllArticles/);
+  assert.match(finish, /preview && \(/);
+  assert.match(finish, /copy\.whyTitle/);
+  assert.match(finish, /copy\.faqTitle/);
+  assert.match(wrapper, /editorialDisplay\.variable/);
+  assert.match(wrapper, /getHomeArticles\(lang\)/);
+  assert.match(previewData, /import "server-only"/);
+  assert.match(previewData, /listArticles\(\{ lang \}\)\.slice\(0, 3\)/);
+
+  assert.match(copy, /Live EU government debt, country by country\./);
+  assert.match(copy, /Live staatsschuld in de EU, land voor land\./);
+  assert.match(copy, /EU-Staatsschulden live, Land für Land\./);
+  assert.match(copy, /La dette publique de l’UE en direct, pays par pays\./);
+  assert.match(copy, /Explore the EU debt map through three financial lenses\./);
+  assert.match(copy, /Government debt across all 27 EU countries\./);
+  assert.match(copy, /Waarom de staatsschuld van de EU ertoe doet\./);
+  assert.match(copy, /Häufige Fragen zu EU-Staatsschulden\./);
+  assert.match(copy, /Questions fréquentes sur la dette publique de l’UE\./);
+
+  assert.match(metadataOwner, /EU Debt Map \| Live Government Debt by Country/);
+  assert.match(metadataOwner, /EU Schuldenkaart \| Live staatsschuld per land/);
+  assert.match(metadataOwner, /EU-Schuldenkarte \| Live-Staatsschulden nach Land/);
+  assert.match(metadataOwner, /Carte de la dette de l’UE \| Dette publique en direct par pays/);
+  assert.match(metadataOwner, /"x-default": "https:\/\/www\.eudebtmap\.com\/"/);
+
+  for (const [index, route] of liveRoutes.entries()) {
+    const source = read(route);
+    assert.match(source, /generateLocalizedHomeMetadata/);
+    assert.match(source, new RegExp(`<HomePageExperience lang="${["en", "nl", "de", "fr"][index]}"`));
+  }
 });
 
 test("Germany debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
