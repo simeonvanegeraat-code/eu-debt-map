@@ -97,7 +97,6 @@ export default function CountryPageExperience({
   breadcrumbSlot = null,
   adSlot = null,
   shareSlot = null,
-  mapSlot = null,
   relatedArticleSlot = null,
   isPreview = false,
 }) {
@@ -181,6 +180,35 @@ export default function CountryPageExperience({
     return () => window.clearInterval(interval);
   }, [country.isDebtTickerFrozen]);
 
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopPointer = window.matchMedia("(min-width: 701px) and (pointer: fine)");
+    if (reducedMotion.matches || !desktopPointer.matches) return undefined;
+
+    const hero = document.getElementById("country-hero");
+    const snapshot = document.getElementById("snapshot");
+    if (!hero || !snapshot) return undefined;
+
+    const handleHeroWheel = (event) => {
+      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+      if (event.ctrlKey || delta < 24) return;
+
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      const snapshotTop = snapshot.getBoundingClientRect().top;
+      if (heroBottom <= 148 || snapshotTop <= window.innerHeight * 0.33) return;
+
+      hero.removeEventListener("wheel", handleHeroWheel);
+      window.requestAnimationFrame(() => {
+        snapshot.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+
+    hero.addEventListener("wheel", handleHeroWheel, { passive: true });
+    return () => {
+      hero.removeEventListener("wheel", handleHeroWheel);
+    };
+  }, []);
+
   const liveDebt = useMemo(() => interpolateDebt(country, now), [country, now]);
   const quarterlyChange = officialDebt - previousDebt;
   const shownDebt = showOfficial ? officialDebt : liveDebt;
@@ -206,7 +234,7 @@ export default function CountryPageExperience({
 
   return (
     <article className={styles.page}>
-      <section className={styles.hero} aria-labelledby="country-page-title">
+      <section className={styles.hero} id="country-hero" aria-labelledby="country-page-title">
         <div className={styles.heroInner}>
           {isPreview ? (
             <div className={styles.previewBar}>
@@ -343,9 +371,11 @@ export default function CountryPageExperience({
         </div>
       </nav>
 
-      <section className={styles.snapshot} id="snapshot">
+      <section className={styles.snapshot}>
         <div className={styles.sectionIntro}>
-          <p className={styles.eyebrow}>{copy.snapshotEyebrow}</p>
+          <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="snapshot">
+            {copy.snapshotEyebrow}
+          </p>
           <h2>{copy.snapshotTitle}</h2>
           <p>{copy.snapshotIntro}</p>
         </div>
@@ -379,10 +409,12 @@ export default function CountryPageExperience({
           />
         </div>
 
-        <div className={styles.exploreModule} id="compare">
+        <div className={styles.exploreModule}>
           <div className={styles.exploreHeader}>
             <div>
-              <p className={styles.eyebrow}>{copy.compareEyebrow}</p>
+              <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="compare">
+                {copy.compareEyebrow}
+              </p>
               <h2>{copy.compareTitle(name)}</h2>
               <p>{copy.compareIntro}</p>
             </div>
@@ -450,10 +482,12 @@ export default function CountryPageExperience({
         {introSlot ? <div className={styles.introSlot}>{introSlot}</div> : null}
       </section>
 
-      <section className={styles.movement} id="movement">
+      <section className={styles.movement}>
         <div className={styles.movementGrid}>
           <div className={styles.movementCopy}>
-            <p className={styles.eyebrow}>{copy.movementEyebrow}</p>
+            <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="movement">
+              {copy.movementEyebrow}
+            </p>
             <h2>{copy.movementTitle}</h2>
             <p>
               {copy.movementIntro(
@@ -494,10 +528,12 @@ export default function CountryPageExperience({
         </div>
       </section>
 
-      <section className={styles.context} id="context">
+      <section className={styles.context}>
         <div className={styles.contextHeader}>
           <div>
-            <p className={styles.eyebrow}>{copy.contextEyebrow}</p>
+            <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="context">
+              {copy.contextEyebrow}
+            </p>
             <h2>{copy.contextTitle(name)}</h2>
           </div>
           <div className={styles.contextStatement}>
@@ -564,9 +600,11 @@ export default function CountryPageExperience({
         <p className={styles.chartNote}>{copy.chartNote}</p>
       </section>
 
-      <section className={styles.method} id="method">
+      <section className={styles.method}>
         <div className={styles.methodCard}>
-          <p className={styles.eyebrow}>{copy.methodEyebrow}</p>
+          <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="method">
+            {copy.methodEyebrow}
+          </p>
           <h2>{copy.methodTitle}</h2>
           <div className={styles.methodSteps}>
             {copy.methodSteps.map(([heading, text], index) => (
@@ -617,13 +655,10 @@ export default function CountryPageExperience({
         </aside>
       </section>
 
-      {shareSlot || mapSlot || relatedArticleSlot ? (
+      {shareSlot || relatedArticleSlot ? (
         <section className={styles.supportingContent}>
+          {relatedArticleSlot}
           {shareSlot ? <div className={styles.shareSlot}>{shareSlot}</div> : null}
-          <div className={styles.supportingGrid}>
-            {mapSlot}
-            {relatedArticleSlot}
-          </div>
         </section>
       ) : null}
     </article>

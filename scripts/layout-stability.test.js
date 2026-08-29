@@ -75,3 +75,23 @@ test("cookie pages preserve responsive horizontal container padding", () => {
     assert.match(source, /paddingBottom:\s*36/);
   }
 });
+
+test("country chapter navigation lands on headings without trapping mobile scrolling", () => {
+  const experience = read("components/country/CountryPageExperience.jsx");
+  const css = read("components/country/country-page.module.css");
+
+  for (const id of ["snapshot", "compare", "movement", "context", "method"]) {
+    assert.match(
+      experience,
+      new RegExp(`className=\\{\\\`\\$\\{styles\\.eyebrow\\} \\$\\{styles\\.chapterTarget\\}\\\`\\} id="${id}"`)
+    );
+  }
+
+  assert.match(experience, /id="country-hero"/);
+  assert.match(experience, /hero\.addEventListener\("wheel", handleHeroWheel, \{ passive: true \}\)/);
+  assert.match(experience, /prefers-reduced-motion: reduce/);
+  assert.match(css, /\.chapterTarget\s*\{[^}]*scroll-margin-top:\s*156px;/s);
+  assert.match(css, /scroll-snap-type:\s*y proximity;/);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.chapterTarget\s*\{\s*scroll-margin-top:\s*82px;/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*scroll-snap-type:\s*none;/);
+});

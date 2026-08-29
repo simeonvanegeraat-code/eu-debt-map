@@ -16,6 +16,10 @@
   overflow-x: clip;
 }
 
+:global(html):has(.page) {
+  scroll-behavior: smooth;
+}
+
 .page * {
   box-sizing: border-box;
 }
@@ -516,12 +520,13 @@
   padding: clamp(88px, 12vw, 150px) 0;
 }
 
-.snapshot,
-.exploreModule,
-.movement,
-.context,
-.method {
-  scroll-margin-top: 148px;
+.chapterTarget {
+  scroll-margin-top: 156px;
+}
+
+@media (min-width: 701px) and (prefers-reduced-motion: no-preference) {
+  :global(html):has(.page) { scroll-snap-type: y proximity; }
+  .chapterTarget { scroll-snap-align: start; }
 }
 
 .sectionIntro {
@@ -1260,18 +1265,7 @@
 }
 
 .shareSlot {
-  margin-bottom: 18px;
-}
-
-.supportingGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  align-items: stretch;
-}
-
-.supportingGrid > * {
-  min-width: 0;
+  margin-top: 22px;
 }
 
 @media (min-width: 1061px) and (max-height: 800px) {
@@ -1293,7 +1287,6 @@
   .heroGrid,
   .movementGrid,
   .method { grid-template-columns: 1fr; }
-  .supportingGrid { grid-template-columns: 1fr; }
   .heroGrid { padding-top: 62px; }
   .livePanel { max-width: 700px; }
   .metricsGrid { grid-template-columns: repeat(2, 1fr); }
@@ -1388,15 +1381,14 @@
   .countryChoice small { grid-column: 2; margin-top: 0; }
   .adPreviewLabel { align-items: flex-start; flex-direction: column; gap: 3px; }
   .adPreviewCanvas { min-height: 104px; }
-  .snapshot,
-  .exploreModule,
-  .movement,
-  .context,
-  .method { scroll-margin-top: 82px; }
+  .chapterTarget { scroll-margin-top: 82px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page { scroll-behavior: auto; }
+  :global(html):has(.page) {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
   .overviewLink,
   .countryChoice,
   .compareRowLink { transition: none; }

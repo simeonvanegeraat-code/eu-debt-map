@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import CountryPageExperience from "@/components/country/CountryPageExperience";
-import MapCTA from "@/components/MapCTA";
 import ShareBar from "@/components/ShareBar";
 import { countryName } from "@/lib/countries";
 
@@ -175,6 +174,8 @@ export default function CountryClient({
   const displayName = countryName(safeCountry.code, effLang);
   const title = titleOverride || pageTitleFor(effLang, displayName);
   const shareTitle = SHARE_TITLES[effLang](displayName);
+  const shareBase = effLang === "en" ? "" : `/${effLang}`;
+  const shareUrl = `https://www.eudebtmap.com${shareBase}/country/${safeCountry.code.toLowerCase()}`;
 
   return (
     <CountryPageExperience
@@ -187,8 +188,15 @@ export default function CountryClient({
       breadcrumbSlot={breadcrumbSlot}
       introSlot={introSlot}
       adSlot={<ManualAd lang={effLang} />}
-      shareSlot={<ShareBar title={shareTitle} lang={effLang} />}
-      mapSlot={<MapCTA code={safeCountry.code} name={displayName} lang={effLang} />}
+      shareSlot={
+        <ShareBar
+          url={shareUrl}
+          title={shareTitle}
+          summary={title}
+          lang={effLang}
+          variant="country"
+        />
+      }
       relatedArticleSlot={relatedArticleSlot}
     />
   );

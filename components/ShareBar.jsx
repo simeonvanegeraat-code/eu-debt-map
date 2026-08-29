@@ -2,6 +2,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import styles from "./ShareBar.module.css";
 
 const TEXT = {
   en: {
@@ -13,6 +14,12 @@ const TEXT = {
     ariaLinkedIn: "Share on LinkedIn",
     ariaWhatsApp: "Share on WhatsApp",
     ariaReddit: "Share on Reddit",
+    heading: "Share this country profile",
+    hint: "Send the official figures and live estimate to someone else.",
+    share: "Share",
+    more: "More options",
+    fewer: "Fewer options",
+    ariaShare: "Share this country profile",
   },
   nl: {
     copy: "Kopieer link",
@@ -23,6 +30,12 @@ const TEXT = {
     ariaLinkedIn: "Delen op LinkedIn",
     ariaWhatsApp: "Delen op WhatsApp",
     ariaReddit: "Delen op Reddit",
+    heading: "Deel dit landenprofiel",
+    hint: "Stuur de officiële cijfers en live schatting eenvoudig door.",
+    share: "Delen",
+    more: "Meer opties",
+    fewer: "Minder opties",
+    ariaShare: "Deel dit landenprofiel",
   },
   de: {
     copy: "Link kopieren",
@@ -33,6 +46,12 @@ const TEXT = {
     ariaLinkedIn: "Auf LinkedIn teilen",
     ariaWhatsApp: "Auf WhatsApp teilen",
     ariaReddit: "Auf Reddit teilen",
+    heading: "Dieses Länderprofil teilen",
+    hint: "Teile die offiziellen Zahlen und die Live-Schätzung.",
+    share: "Teilen",
+    more: "Mehr Optionen",
+    fewer: "Weniger Optionen",
+    ariaShare: "Dieses Länderprofil teilen",
   },
   fr: {
     copy: "Copier le lien",
@@ -43,6 +62,12 @@ const TEXT = {
     ariaLinkedIn: "Partager sur LinkedIn",
     ariaWhatsApp: "Partager sur WhatsApp",
     ariaReddit: "Partager sur Reddit",
+    heading: "Partager ce profil pays",
+    hint: "Partagez les chiffres officiels et l’estimation en direct.",
+    share: "Partager",
+    more: "Plus d’options",
+    fewer: "Moins d’options",
+    ariaShare: "Partager ce profil pays",
   },
 };
 
@@ -114,12 +139,14 @@ export default function ShareBar({
   title = "",
   summary,
   lang = "en",
+  variant = "default",
 }) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const t = TEXT[effLang] || TEXT.en;
 
   const [copied, setCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState(providedUrl || "");
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!providedUrl && typeof window !== "undefined") {
@@ -169,6 +196,79 @@ export default function ShareBar({
       text: [title, shareUrl].filter(Boolean).join(" "),
     });
   }, [shareUrl, title]);
+
+  const share = useCallback(async () => {
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({
+          title,
+          text: summary || title,
+          url: shareUrl || providedUrl,
+        });
+        return;
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+      }
+    }
+    setExpanded(true);
+  }, [providedUrl, shareUrl, summary, title]);
+
+  if (variant === "country") {
+    const networks = [
+      ["x", t.x, xUrl, t.ariaX],
+      ["linkedin", "LinkedIn", linkedInUrl, t.ariaLinkedIn],
+      ["whatsapp", "WhatsApp", whatsAppUrl, t.ariaWhatsApp],
+      ["reddit", "Reddit", redditUrl, t.ariaReddit],
+    ];
+
+    return (
+      <div className={styles.countryShare}>
+        <div className={styles.copy}>
+          <strong>{t.heading}</strong>
+          <span>{t.hint}</span>
+        </div>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            onClick={share}
+            className={`${styles.button} ${styles.primary}`}
+            aria-label={t.ariaShare}
+          >
+            {t.share}
+          </button>
+          <button type="button" onClick={copy} className={styles.button} aria-label={t.ariaCopy}>
+            <Icon name="link" />
+            {copied ? t.copied : t.copy}
+          </button>
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            className={styles.button}
+            aria-expanded={expanded}
+          >
+            {expanded ? t.fewer : t.more}
+          </button>
+        </div>
+        {expanded ? (
+          <div className={styles.networks}>
+            {networks.map(([icon, label, href, ariaLabel]) => (
+              <a
+                key={icon}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+                aria-label={ariaLabel}
+              >
+                <Icon name={icon} />
+                <span>{label}</span>
+              </a>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className="share-bar">
