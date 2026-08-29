@@ -612,24 +612,73 @@ test("debug pages and responses are explicitly excluded from indexing", async ()
   ]);
 });
 
-test("the debt-to-GDP redesign preview is isolated and keeps a search-led content structure", () => {
+test("the multilingual debt-to-GDP experience is indexable while its preview stays isolated", () => {
   const route = read("app/preview/debt-to-gdp/page.jsx");
   const preview = read("components/debt-to-gdp-preview/DebtToGDPPreviewPage.jsx");
+  const copy = read("components/debt-to-gdp-preview/debt-to-gdp-copy.js");
   const styles = read("components/debt-to-gdp-preview/debt-to-gdp-preview.module.css");
 
   assert.match(route, /alternates: \{ canonical: null \}/);
   assert.match(route, /index: false/);
   assert.match(route, /follow: false/);
-  assert.match(preview, /<h1 id="preview-debt-ratio-title">EU countries by debt-to-GDP ratio\.<\/h1>/);
-  assert.match(preview, /<h2 id="ranking-title">EU debt-to-GDP ranking by country<\/h2>/);
-  assert.match(preview, /What debt-to-GDP tells you—and what it doesn’t\./);
-  assert.match(preview, /The 60% line is a reference value, not a safety certificate\./);
+  assert.match(route, /<DebtToGDPPreviewPage preview \/>/);
+  assert.match(preview, /<h1 id="debt-ratio-title">\{copy\.hero\.title\}<\/h1>/);
+  assert.match(preview, /<h2 id="ranking-title">\{copy\.ranking\.title\}<\/h2>/);
   assert.match(preview, /officialDebtToGDPRatio/);
   assert.match(preview, /estimatedLiveDebtToGDPRatio/);
   assert.match(preview, /ec\.europa\.eu\/eurostat\/web\/products-euro-indicators/);
   assert.match(preview, /ec\.europa\.eu\/eurostat\/cache\/metadata/);
+  assert.match(preview, /"@type": "BreadcrumbList"/);
+  assert.match(copy, /EU countries by debt-to-GDP ratio\./);
+  assert.match(copy, /EU-landen naar schuldquote/);
+  assert.match(copy, /EU-Länder nach Schuldenquote/);
+  assert.match(copy, /Pays de l’UE par ratio dette\/PIB/);
+  assert.match(copy, /"x-default"/);
+  for (const [locale, lang] of [["", "en"], ["nl/", "nl"], ["de/", "de"], ["fr/", "fr"]]) {
+    const productionRoute = read(`app/${locale}debt-to-gdp/page.jsx`);
+    assert.match(productionRoute, new RegExp(`generateDebtToGDPMetadata\\(\\"${lang}\\"\\)`));
+    assert.match(productionRoute, new RegExp(`<DebtToGDPPage lang=\\"${lang}\\" \\/>`));
+  }
   assert.match(styles, /left:\s*37\.5%;/);
   assert.match(styles, /@media \(max-width: 760px\)/);
+});
+
+test("the multilingual Stability and Growth Pact guide is current, source-led, and safely previewed", () => {
+  const route = read("app/preview/stability-and-growth-pact/page.jsx");
+  const preview = read(
+    "components/stability-pact-preview/StabilityPactPreviewPage.jsx"
+  );
+  const copy = read("components/stability-pact-preview/stability-pact-copy.js");
+  const styles = read(
+    "components/stability-pact-preview/stability-pact-preview.module.css"
+  );
+
+  assert.match(route, /alternates: \{ canonical: null \}/);
+  assert.match(route, /index: false/);
+  assert.match(route, /follow: false/);
+  assert.match(route, /<StabilityPactPreviewPage preview \/>/);
+  assert.match(preview, /<h1 id="sgp-page-title">\{copy\.hero\.title\}<\/h1>/);
+  assert.match(preview, /"@type": "Article"/);
+  assert.match(preview, /"@type": "FAQPage"/);
+  assert.match(preview, /"@type": "BreadcrumbList"/);
+  assert.match(preview, /Regulation \(EU\) 2024\/1263/);
+  assert.match(preview, /eur-lex\.europa\.eu\/legal-content\/EN\/ALL/);
+  assert.match(preview, /ec\.europa\.eu\/eurostat\/web\/products-euro-indicators/);
+  assert.match(copy, /EU Stability and Growth Pact: how the rules work\./);
+  assert.match(copy, /Stabiliteits- en Groeipact: zo werken de regels\./);
+  assert.match(copy, /EU-Stabilitäts- und Wachstumspakt: So funktionieren die Regeln\./);
+  assert.match(copy, /Pacte de stabilité et de croissance : comment fonctionnent les règles\./);
+  assert.match(copy, /Content reviewed 30 August 2026/);
+  assert.match(copy, /"x-default"/);
+  for (const [locale, lang] of [["", "en"], ["nl/", "nl"], ["de/", "de"], ["fr/", "fr"]]) {
+    const productionRoute = read(`app/${locale}stability-and-growth-pact/page.jsx`);
+    assert.match(productionRoute, new RegExp(`generateStabilityPactMetadata\\(\\"${lang}\\"\\)`));
+    assert.match(productionRoute, new RegExp(`<StabilityPactPage lang=\\"${lang}\\" \\/>`));
+  }
+  assert.match(styles, /\.processSection\s*\{[\s\S]{0,120}width:\s*100%;/);
+  assert.match(styles, /\.todaySection\s*\{[\s\S]{0,120}width:\s*100%;/);
+  assert.match(styles, /\.sourcesSection\s*\{[\s\S]{0,120}width:\s*100%;/);
+  assert.match(styles, /@media \(max-width: 560px\)/);
 });
 
 test("phase 3A preserves production AdSense identifiers", () => {

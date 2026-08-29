@@ -16,7 +16,7 @@ export const metadata = {
 export default function DebtToGDPPreview() {
   return (
     <div className={editorialDisplay.variable}>
-      <DebtToGDPPreviewPage />
+      <DebtToGDPPreviewPage preview />
     </div>
   );
 }
