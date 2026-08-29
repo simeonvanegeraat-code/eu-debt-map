@@ -232,6 +232,50 @@ test("the government debt guide keeps its SEO contract and progressive content",
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
+test("localized government debt guides share the visual experience without changing SEO ownership", () => {
+  const localizedRoutes = [
+    ["nl", "app/nl/debt/page.jsx", "/nl/debt"],
+    ["de", "app/de/debt/page.jsx", "/de/debt"],
+    ["fr", "app/fr/debt/page.jsx", "/fr/debt"],
+  ];
+  const guide = read("components/debt-guide/LocalizedDebtGuidePage.jsx");
+  const copy = read("components/debt-guide/debt-guide-copy.js");
+  const experience = read("app/debt/DebtExperience.jsx");
+
+  for (const [lang, route, path] of localizedRoutes) {
+    const source = read(route);
+    assert.match(source, new RegExp(`const path = "${path}"`));
+    assert.match(source, /canonical: `\$\{base\}\$\{path\}`/);
+    assert.match(source, /"x-default": `\$\{base\}\/debt`/);
+    assert.match(source, new RegExp(`<LocalizedDebtGuidePage lang="${lang}"`));
+    assert.match(source, /robots: \{ index: true, follow: true/);
+  }
+
+  const dutchRoute = read("app/nl/debt/page.jsx");
+  assert.match(dutchRoute, /de: `\$\{base\}\/de\/debt`/);
+  assert.match(dutchRoute, /fr: `\$\{base\}\/fr\/debt`/);
+  assert.doesNotMatch(dutchRoute, /\/de\$\{path\}/);
+  assert.doesNotMatch(dutchRoute, /\/fr\$\{path\}/);
+
+  assert.match(guide, /<h1 id="page-title">\{copy\.hero\.title\}<\/h1>/);
+  assert.match(guide, /"@type": "Article"/);
+  assert.match(guide, /"@type": "WebPage"/);
+  assert.match(guide, /"@type": "BreadcrumbList"/);
+  assert.match(guide, /"@type": "FAQPage"/);
+  assert.match(guide, /countryName\(country\.code, lang\)/);
+  assert.match(guide, /href=\{`\$\{copy\.base\}\/country\/\$\{country\.code\.toLowerCase\(\)\}`\}/);
+  assert.match(guide, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
+  assert.match(guide, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
+  assert.match(copy, /Wat is overheidsschuld\?/);
+  assert.match(copy, /Was sind Staatsschulden\?/);
+  assert.match(copy, /Qu’est-ce que la dette publique \?/);
+  assert.match(copy, /Referentiepunt, geen zelfstandige houdbaarheidstest\./);
+  assert.match(copy, /Referenzpunkt, kein eigenständiger Tragfähigkeitstest\./);
+  assert.match(copy, /Point de référence, pas un test autonome de soutenabilité\./);
+  assert.match(experience, /copy = DEFAULT_STORY_COPY/);
+  assert.match(experience, /copy = DEFAULT_BUILDER_COPY/);
+});
+
 test("SEO image references resolve to existing image routes and assets", () => {
   const englishCountryPage = read("app/country/[code]/page.jsx");
   const germanCountryPage = read("app/de/country/[code]/page.jsx");

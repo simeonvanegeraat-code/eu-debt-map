@@ -26,6 +26,37 @@ const STORY_STEPS = [
   },
 ];
 
+const DEFAULT_STORY_COPY = {
+  eyebrow: "The borrowing cycle",
+  title: "How government debt works",
+  intro: "Follow one euro of new borrowing from the budget gap to the outstanding debt stock. Scroll through the four stages; the diagram stays fixed while the mechanism changes.",
+  cycleLabel: "One borrowing cycle",
+  stageLabel: "Stage",
+  steps: STORY_STEPS,
+  nodes: [
+    { label: "Public budget", detail: "Revenue falls short" },
+    { label: "Treasury", detail: "Issues a bond" },
+    { label: "Investors", detail: "Provide cash" },
+    { label: "Future budgets", detail: "Pay interest or refinance" },
+  ],
+};
+
+const DEFAULT_BUILDER_COPY = {
+  eyebrow: "Interactive model",
+  title: "A deficit is a flow. Debt is the stock it leaves behind.",
+  intro: "Move the controls to see how repeated annual deficits add to the outstanding debt balance. This simplified model excludes interest, growth, inflation, repayments and valuation changes.",
+  openingDebt: "Opening debt",
+  annualDeficit: "Annual deficit",
+  billions: "bn",
+  perYear: "/ year",
+  note: "Illustrative calculation, not a forecast. A surplus or repayment would reduce the stock instead.",
+  afterYears: "After 10 years",
+  addedDebt: "Added debt",
+  now: "Now",
+  tenYears: "+10y",
+  chartAria: "Illustrative debt rises from {opening} billion euro to {end} billion euro after ten years",
+};
+
 function FlowNode({ number, label, detail, active }) {
   return (
     <div className={`${styles.flowNode} ${active ? styles.flowNodeActive : ""}`}>
@@ -36,9 +67,10 @@ function FlowNode({ number, label, detail, active }) {
   );
 }
 
-export function DebtMechanismStory() {
+export function DebtMechanismStory({ copy = DEFAULT_STORY_COPY }) {
   const [activeStep, setActiveStep] = useState(0);
   const stepRefs = useRef([]);
+  const storySteps = copy.steps || STORY_STEPS;
 
   useEffect(() => {
     const nodes = stepRefs.current.filter(Boolean);
@@ -62,17 +94,14 @@ export function DebtMechanismStory() {
   return (
     <section className={styles.storySection} id="how-government-debt-works" aria-labelledby="story-title">
       <div className={styles.sectionIntro}>
-        <p className={styles.eyebrow}>The borrowing cycle</p>
-        <h2 id="story-title">How government debt works</h2>
-        <p>
-          Follow one euro of new borrowing from the budget gap to the outstanding debt stock.
-          Scroll through the four stages; the diagram stays fixed while the mechanism changes.
-        </p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <h2 id="story-title">{copy.title}</h2>
+        <p>{copy.intro}</p>
       </div>
 
       <div className={styles.storyGrid}>
         <div className={styles.storyCopy}>
-          {STORY_STEPS.map((step, index) => (
+          {storySteps.map((step, index) => (
             <article
               className={`${styles.storyStep} ${activeStep === index ? styles.storyStepActive : ""}`}
               data-story-step={index}
@@ -91,33 +120,33 @@ export function DebtMechanismStory() {
         <div className={styles.storyVisualColumn}>
           <div className={styles.storyVisual} data-stage={activeStep} aria-live="polite">
             <div className={styles.visualHeader}>
-              <span>One borrowing cycle</span>
-              <span className={styles.visualStatus}>Stage {activeStep + 1} / 4</span>
+              <span>{copy.cycleLabel}</span>
+              <span className={styles.visualStatus}>{copy.stageLabel} {activeStep + 1} / {storySteps.length}</span>
             </div>
 
             <div className={styles.flowCanvas}>
               <FlowNode
                 number="01"
-                label="Public budget"
-                detail="Revenue falls short"
+                label={copy.nodes[0].label}
+                detail={copy.nodes[0].detail}
                 active={activeStep === 0}
               />
               <FlowNode
                 number="02"
-                label="Treasury"
-                detail="Issues a bond"
+                label={copy.nodes[1].label}
+                detail={copy.nodes[1].detail}
                 active={activeStep === 1}
               />
               <FlowNode
                 number="03"
-                label="Investors"
-                detail="Provide cash"
+                label={copy.nodes[2].label}
+                detail={copy.nodes[2].detail}
                 active={activeStep === 1 || activeStep === 2}
               />
               <FlowNode
                 number="04"
-                label="Future budgets"
-                detail="Pay interest or refinance"
+                label={copy.nodes[3].label}
+                detail={copy.nodes[3].detail}
                 active={activeStep >= 2}
               />
 
@@ -133,7 +162,7 @@ export function DebtMechanismStory() {
 
             <div className={styles.visualFooter}>
               <span className={styles.legendDot} />
-              {STORY_STEPS[activeStep].title}
+              {storySteps[activeStep].title}
             </div>
           </div>
         </div>
@@ -142,11 +171,11 @@ export function DebtMechanismStory() {
   );
 }
 
-function formatBillions(value) {
-  return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(value);
+function formatBillions(value, locale) {
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);
 }
 
-export function DebtBuilder() {
+export function DebtBuilder({ copy = DEFAULT_BUILDER_COPY, locale = "en-GB" }) {
   const [openingDebt, setOpeningDebt] = useState(800);
   const [annualDeficit, setAnnualDeficit] = useState(30);
   const years = 10;
@@ -162,18 +191,15 @@ export function DebtBuilder() {
   return (
     <section className={styles.modelSection} id="debt-vs-deficit" aria-labelledby="model-title">
       <div className={styles.modelCopy}>
-        <p className={styles.eyebrow}>Interactive model</p>
-        <h2 id="model-title">A deficit is a flow. Debt is the stock it leaves behind.</h2>
-        <p>
-          Move the controls to see how repeated annual deficits add to the outstanding debt balance.
-          This simplified model excludes interest, growth, inflation, repayments and valuation changes.
-        </p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <h2 id="model-title">{copy.title}</h2>
+        <p>{copy.intro}</p>
 
         <div className={styles.controls}>
           <label className={styles.control}>
             <span>
-              Opening debt
-              <strong>€{formatBillions(openingDebt)}bn</strong>
+              {copy.openingDebt}
+              <strong>€{formatBillions(openingDebt, locale)} {copy.billions}</strong>
             </span>
             <input
               type="range"
@@ -187,8 +213,8 @@ export function DebtBuilder() {
 
           <label className={styles.control}>
             <span>
-              Annual deficit
-              <strong>€{formatBillions(annualDeficit)}bn / year</strong>
+              {copy.annualDeficit}
+              <strong>€{formatBillions(annualDeficit, locale)} {copy.billions} {copy.perYear}</strong>
             </span>
             <input
               type="range"
@@ -202,19 +228,25 @@ export function DebtBuilder() {
         </div>
 
         <p className={styles.modelNote}>
-          Illustrative calculation, not a forecast. A surplus or repayment would reduce the stock instead.
+          {copy.note}
         </p>
       </div>
 
-      <div className={styles.modelVisual} role="img" aria-label={`Illustrative debt rises from ${openingDebt} billion euro to ${endDebt} billion euro after ten years`}>
+      <div
+        className={styles.modelVisual}
+        role="img"
+        aria-label={copy.chartAria
+          .replace("{opening}", String(openingDebt))
+          .replace("{end}", String(endDebt))}
+      >
         <div className={styles.modelSummary}>
           <div>
-            <span>After 10 years</span>
-            <strong>€{formatBillions(endDebt)}bn</strong>
+            <span>{copy.afterYears}</span>
+            <strong>€{formatBillions(endDebt, locale)} {copy.billions}</strong>
           </div>
           <div>
-            <span>Added debt</span>
-            <strong className={styles.modelIncrease}>+€{formatBillions(increase)}bn</strong>
+            <span>{copy.addedDebt}</span>
+            <strong className={styles.modelIncrease}>+€{formatBillions(increase, locale)} {copy.billions}</strong>
           </div>
         </div>
 
@@ -225,7 +257,7 @@ export function DebtBuilder() {
                 className={styles.modelBar}
                 style={{ height: `${Math.max(12, (value / maxValue) * 100)}%` }}
               />
-              <span>{year === 0 ? "Now" : year === years ? "+10y" : ""}</span>
+              <span>{year === 0 ? copy.now : year === years ? copy.tenYears : ""}</span>
             </div>
           ))}
         </div>
