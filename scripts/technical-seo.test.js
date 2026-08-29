@@ -612,6 +612,26 @@ test("debug pages and responses are explicitly excluded from indexing", async ()
   ]);
 });
 
+test("the debt-to-GDP redesign preview is isolated and keeps a search-led content structure", () => {
+  const route = read("app/preview/debt-to-gdp/page.jsx");
+  const preview = read("components/debt-to-gdp-preview/DebtToGDPPreviewPage.jsx");
+  const styles = read("components/debt-to-gdp-preview/debt-to-gdp-preview.module.css");
+
+  assert.match(route, /alternates: \{ canonical: null \}/);
+  assert.match(route, /index: false/);
+  assert.match(route, /follow: false/);
+  assert.match(preview, /<h1 id="preview-debt-ratio-title">EU countries by debt-to-GDP ratio\.<\/h1>/);
+  assert.match(preview, /<h2 id="ranking-title">EU debt-to-GDP ranking by country<\/h2>/);
+  assert.match(preview, /What debt-to-GDP tells you—and what it doesn’t\./);
+  assert.match(preview, /The 60% line is a reference value, not a safety certificate\./);
+  assert.match(preview, /officialDebtToGDPRatio/);
+  assert.match(preview, /estimatedLiveDebtToGDPRatio/);
+  assert.match(preview, /ec\.europa\.eu\/eurostat\/web\/products-euro-indicators/);
+  assert.match(preview, /ec\.europa\.eu\/eurostat\/cache\/metadata/);
+  assert.match(styles, /left:\s*37\.5%;/);
+  assert.match(styles, /@media \(max-width: 760px\)/);
+});
+
 test("phase 3A preserves production AdSense identifiers", () => {
   assert.match(read("app/layout.jsx"), /ca-pub-9252617114074571/);
   assert.match(read("app/layout.jsx"), /pagead\/js\/adsbygoogle\.js/);
