@@ -13,8 +13,8 @@ const COPY = {
     hero: {
       eyebrow: "EU Debt Map · Visuele gids 01",
       title: "Wat is overheidsschuld?",
-      thesis: "Het begint als een gat in één begroting en wordt een financiële belofte die tientallen jaren kan blijven bestaan.",
-      intro: "Volg hoe tekorten veranderen in obligaties, hoe obligaties overheidsschuld vormen en waarom de omvang van de economie net zo belangrijk is als het bedrag zelf.",
+      thesis: "Een begrotingstekort moet worden gefinancierd en kan zo de uitstaande overheidsschuld vergroten.",
+      intro: "Volg hoe tekorten meestal via obligaties en leningen worden gefinancierd, hoe die verplichtingen als overheidsschuld blijven uitstaan en waarom de omvang van de economie net zo belangrijk is als het bedrag zelf.",
       meta: ["Beoordeeld op 28 augustus 2026", "Visuele gids van 8 minuten", "Officiële EU-definities"],
       primaryAction: "Start de uitleg",
       secondaryAction: "Open de live EU-kaart",
@@ -35,8 +35,8 @@ const COPY = {
     },
     definition: {
       eyebrow: "Overheidsschuld in één zin",
-      title: "Overheidsschuld is het openstaande bedrag dat een staat na het lenen nog verschuldigd is.",
-      text: "In EU-statistieken wordt overheidsschuld gemeten als geconsolideerde bruto schuld tegen nominale waarde. De definitie omvat chartaal geld en deposito’s, schuldbewijzen en leningen die voor de sector overheid openstaan.",
+      title: "Overheidsschuld is de uitstaande voorraad van eerdere leningen.",
+      text: "In EU-statistieken wordt overheidsschuld gemeten als geconsolideerde bruto schuld tegen nominale waarde. De definitie omvat chartaal geld en deposito’s, schuldbewijzen en leningen die door de sector overheid zijn uitgegeven of aangegaan.",
       source: "Eurostat-definitie van de driemaandelijkse overheidsschuld",
       stripAria: "De relatie tussen inkomsten, uitgaven, tekort, lenen en schuld",
       strip: [
@@ -57,7 +57,7 @@ const COPY = {
         { kicker: "01 — Het gat", title: "Uitgaven zijn hoger dan inkomsten", text: "Een tekort ontstaat wanneer de overheidsuitgaven in een begrotingsperiode hoger zijn dan de inkomsten. Dat tekort is een stroomgrootheid: het wordt over een periode gemeten." },
         { kicker: "02 — De obligatie", title: "De overheid leent", text: "De schatkist haalt geld op door schuldbewijzen uit te geven of leningen aan te gaan. Beleggers verstrekken nu geld in ruil voor toekomstige terugbetaling en rente." },
         { kicker: "03 — De kosten", title: "Rente komt in de begroting", text: "Rentebetalingen worden onderdeel van toekomstige uitgaven. De kosten hangen af van het geleende bedrag, de looptijd en het rendement dat beleggers vragen." },
-        { kicker: "04 — De voorraad", title: "Tekorten stapelen zich op als schuld", text: "Openstaande leningen blijven op de balans tot ze zijn afgelost. Aflopende obligaties worden vaak geherfinancierd, waardoor schuld kan blijven bestaan." },
+        { kicker: "04 — De voorraad", title: "Nieuwe leningen worden onderdeel van de schuldvoorraad", text: "Nieuwe leningen verhogen de bruto schuld, terwijl aflossingen haar verlagen. Aflopende obligaties worden vaak geherfinancierd, waardoor de schuld kan blijven bestaan." },
       ],
       nodes: [
         { label: "Overheidsbegroting", detail: "Inkomsten schieten tekort" },

@@ -241,6 +241,7 @@ test("localized government debt guides share the visual experience without chang
   const guide = read("components/debt-guide/LocalizedDebtGuidePage.jsx");
   const copy = read("components/debt-guide/debt-guide-copy.js");
   const experience = read("app/debt/DebtExperience.jsx");
+  const styles = read("app/debt/debt.module.css");
 
   for (const [lang, route, path] of localizedRoutes) {
     const source = read(route);
@@ -258,6 +259,8 @@ test("localized government debt guides share the visual experience without chang
   assert.doesNotMatch(dutchRoute, /\/fr\$\{path\}/);
 
   assert.match(guide, /<h1 id="page-title">\{copy\.hero\.title\}<\/h1>/);
+  assert.match(guide, /<Fragment key=\{label\}>/);
+  assert.match(guide, /styles\.definitionExplanation/);
   assert.match(guide, /"@type": "Article"/);
   assert.match(guide, /"@type": "WebPage"/);
   assert.match(guide, /"@type": "BreadcrumbList"/);
@@ -267,6 +270,8 @@ test("localized government debt guides share the visual experience without chang
   assert.match(guide, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
   assert.match(guide, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
   assert.match(copy, /Wat is overheidsschuld\?/);
+  assert.match(copy, /Overheidsschuld is de uitstaande voorraad van eerdere leningen\./);
+  assert.match(copy, /Nieuwe leningen worden onderdeel van de schuldvoorraad/);
   assert.match(copy, /Was sind Staatsschulden\?/);
   assert.match(copy, /Qu’est-ce que la dette publique \?/);
   assert.match(copy, /Referentiepunt, geen zelfstandige houdbaarheidstest\./);
@@ -274,6 +279,11 @@ test("localized government debt guides share the visual experience without chang
   assert.match(copy, /Point de référence, pas un test autonome de soutenabilité\./);
   assert.match(experience, /copy = DEFAULT_STORY_COPY/);
   assert.match(experience, /copy = DEFAULT_BUILDER_COPY/);
+  assert.match(styles, /:global\(html\):has\(\.page\)[\s\S]{0,120}overflow-x:\s*clip/);
+  assert.match(styles, /\.chapterNav\s*\{[\s\S]{0,120}position:\s*sticky/);
+  assert.match(styles, /\.page section\[id\]\s*\{[\s\S]{0,80}scroll-margin-top:\s*150px/);
+  assert.match(styles, /\.definitionStrip\s*\{[\s\S]{0,140}repeat\(5, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.modelVisual\s*\{[\s\S]{0,220}background:\s*var\(--ink\)/);
 });
 
 test("SEO image references resolve to existing image routes and assets", () => {
@@ -679,6 +689,52 @@ test("the multilingual Stability and Growth Pact guide is current, source-led, a
   assert.match(styles, /\.todaySection\s*\{[\s\S]{0,120}width:\s*100%;/);
   assert.match(styles, /\.sourcesSection\s*\{[\s\S]{0,120}width:\s*100%;/);
   assert.match(styles, /@media \(max-width: 560px\)/);
+});
+
+test("the methodology redesign is published with preserved SEO contracts and model guardrails", () => {
+  const route = read("app/preview/methodology/page.jsx");
+  const productionRoute = read("app/methodology/page.jsx");
+  const preview = read(
+    "components/methodology-preview/MethodologyPreviewPage.jsx"
+  );
+  const copy = read("components/methodology-preview/methodology-copy.js");
+  const styles = read(
+    "components/methodology-preview/methodology-preview.module.css"
+  );
+
+  assert.match(route, /alternates: \{ canonical: null \}/);
+  assert.match(route, /index: false/);
+  assert.match(route, /follow: false/);
+  assert.match(route, /<MethodologyPreviewPage preview \/>/);
+  assert.match(productionRoute, /canonical: `\$\{SITE\}\$\{PATH\}`/);
+  assert.match(productionRoute, /nl: `\$\{SITE\}\/nl\$\{PATH\}`/);
+  assert.match(productionRoute, /de: `\$\{SITE\}\/de\$\{PATH\}`/);
+  assert.match(productionRoute, /fr: `\$\{SITE\}\/fr\$\{PATH\}`/);
+  assert.match(productionRoute, /"x-default": `\$\{SITE\}\$\{PATH\}`/);
+  assert.match(productionRoute, /<MethodologyPreviewPage \/>/);
+  assert.doesNotMatch(read("app/nl/methodology/page.jsx"), /MethodologyPreviewPage/);
+  assert.doesNotMatch(read("app/de/methodology/page.jsx"), /MethodologyPreviewPage/);
+  assert.doesNotMatch(read("app/fr/methodology/page.jsx"), /MethodologyPreviewPage/);
+  assert.match(preview, /google-anno-skip/);
+  assert.match(preview, /<h1 id="methodology-title">\{copy\.title\}<\/h1>/);
+  assert.match(preview, /livePerSecondFor/);
+  assert.match(preview, /officialDebtToGDPRatio/);
+  assert.match(preview, /EUROSTAT_UPDATED_AT/);
+  assert.match(preview, /EUROSTAT_RATIO_UPDATED_AT/);
+  assert.match(preview, /gov_10q_ggdebt/);
+  assert.match(preview, /"@type": "TechArticle"/);
+  assert.match(preview, /"@type": "Dataset"/);
+  assert.match(preview, /"@type": "BreadcrumbList"/);
+  assert.match(copy, /€50,000\/s hard cap/);
+  assert.match(copy, /Stale-country freeze/);
+  assert.match(copy, /official ratio × \(modelled debt now ÷ official debt at the reference date\)/);
+  assert.match(copy, /Currency and deposits/);
+  assert.match(copy, /Debt securities/);
+  assert.match(copy, /Loans/);
+  assert.match(styles, /position:\s*sticky/);
+  assert.match(styles, /top:\s*72px/);
+  assert.match(styles, /overflow-x:\s*clip/);
+  assert.match(styles, /@media \(max-width: 760px\)/);
 });
 
 test("phase 3A preserves production AdSense identifiers", () => {

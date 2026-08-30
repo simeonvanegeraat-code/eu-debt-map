@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { countries, debtDataSummary } from "@/lib/data";
 import { countryName } from "@/lib/countries";
 import { editorialDisplay } from "@/lib/editorial-font";
@@ -75,14 +76,14 @@ function DefinitionStrip({ copy }) {
   return (
     <div className={styles.definitionStrip} aria-label={copy.stripAria}>
       {copy.strip.map(([label, detail], index) => (
-        <div key={label} style={{ display: "contents" }}>
+        <Fragment key={label}>
           <div className={index === 2 ? styles.definitionAccent : index === 4 ? styles.definitionFinal : undefined}>
             <span>{String(index + 1).padStart(2, "0")}</span>
             <strong>{label}</strong>
             <small>{detail}</small>
           </div>
           {operators[index] ? <b aria-hidden="true">{operators[index]}</b> : null}
-        </div>
+        </Fragment>
       ))}
     </div>
   );
@@ -189,8 +190,10 @@ export default function LocalizedDebtGuidePage({ lang }) {
         <div className={styles.definitionLead}>
           <p className={styles.eyebrow}>{copy.definition.eyebrow}</p>
           <h2 id="definition-title">{copy.definition.title}</h2>
-          <p>{copy.definition.text}</p>
-          <SourceLink href={SOURCE_URLS[0]}>{copy.definition.source}</SourceLink>
+          <div className={styles.definitionExplanation}>
+            <p>{copy.definition.text}</p>
+            <SourceLink href={SOURCE_URLS[0]}>{copy.definition.source}</SourceLink>
+          </div>
         </div>
         <DefinitionStrip copy={copy.definition} />
       </section>
