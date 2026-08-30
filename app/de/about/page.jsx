@@ -31,7 +31,7 @@ export async function generateMetadata() {
 }
 
 export default function AboutPageDE() {
-  const email = "firenature23@gmail.com";
+  const email = "info@eudebtmap.com";
   const personLd = {
     "@context": "https://schema.org",
     "@type": "Person",

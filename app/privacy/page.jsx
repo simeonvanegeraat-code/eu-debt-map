@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default function PrivacyPage() {
-  const email = "firenature23@gmail.com";
+  const email = "info@eudebtmap.com";
   const lastUpdated = "August 1, 2026";
 
   return (

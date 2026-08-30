@@ -36,7 +36,7 @@ export async function generateMetadata() {
 }
 
 export default function AboutPage() {
-  const email = "firenature23@gmail.com";
+  const email = "info@eudebtmap.com";
 
   // JSON-LD (Person) voor eenvoudige 'about' markup
   const personLd = {
