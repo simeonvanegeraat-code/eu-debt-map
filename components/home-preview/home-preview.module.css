@@ -12,6 +12,10 @@
   background: var(--paper);
 }
 
+:global(body):has(.page) {
+  overflow-x: clip;
+}
+
 .hero {
   position: relative;
   min-height: 520px;

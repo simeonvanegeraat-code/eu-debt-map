@@ -284,6 +284,8 @@ test("localized government debt guides share the visual experience without chang
   assert.match(styles, /\.page section\[id\]\s*\{[\s\S]{0,80}scroll-margin-top:\s*150px/);
   assert.match(styles, /\.definitionStrip\s*\{[\s\S]{0,140}repeat\(5, minmax\(0, 1fr\)\)/);
   assert.match(styles, /\.modelVisual\s*\{[\s\S]{0,220}background:\s*var\(--ink\)/);
+  assert.match(styles, /\.faqSection\s*\{[\s\S]{0,180}minmax\(360px, 0\.76fr\) minmax\(0, 1fr\)/);
+  assert.match(styles, /\.faqHeading h2\s*\{[\s\S]{0,160}font-size:\s*clamp\(2\.35rem, 3\.3vw, 3\.25rem\)/);
 });
 
 test("SEO image references resolve to existing image routes and assets", () => {
@@ -376,6 +378,7 @@ test("the homepage experience preserves live SEO and isolates preview routes", (
   const wrapper = read("components/HomePageExperience.jsx");
   const metadataOwner = read("components/LocalizedHomePage.jsx");
   const previewData = read("components/home-preview/home-preview-data.js");
+  const styles = read("components/home-preview/home-preview.module.css");
   const liveRoutes = [
     "app/page.jsx",
     "app/nl/page.jsx",
@@ -425,6 +428,7 @@ test("the homepage experience preserves live SEO and isolates preview routes", (
   assert.match(wrapper, /getHomeArticles\(lang\)/);
   assert.match(previewData, /import "server-only"/);
   assert.match(previewData, /listArticles\(\{ lang \}\)\.slice\(0, 3\)/);
+  assert.match(styles, /:global\(body\):has\(\.page\)\s*\{[\s\S]{0,80}overflow-x:\s*clip/);
 
   assert.match(copy, /Live EU government debt, country by country\./);
   assert.match(copy, /Live staatsschuld in de EU, land voor land\./);
