@@ -76,7 +76,7 @@ test("cookie pages preserve responsive horizontal container padding", () => {
   }
 });
 
-test("country chapter navigation lands on headings without trapping mobile scrolling", () => {
+test("country chapter navigation lands on headings without overriding manual scrolling", () => {
   const experience = read("components/country/CountryPageExperience.jsx");
   const css = read("components/country/country-page.module.css");
 
@@ -88,10 +88,11 @@ test("country chapter navigation lands on headings without trapping mobile scrol
   }
 
   assert.match(experience, /id="country-hero"/);
-  assert.match(experience, /hero\.addEventListener\("wheel", handleHeroWheel, \{ passive: true \}\)/);
-  assert.match(experience, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(experience, /addEventListener\(["']wheel["']/);
+  assert.doesNotMatch(experience, /scrollIntoView/);
   assert.match(css, /\.chapterTarget\s*\{[^}]*scroll-margin-top:\s*156px;/s);
-  assert.match(css, /scroll-snap-type:\s*y proximity;/);
+  assert.doesNotMatch(css, /scroll-snap-type:/);
+  assert.doesNotMatch(css, /scroll-snap-align:/);
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.chapterTarget\s*\{\s*scroll-margin-top:\s*82px;/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*scroll-snap-type:\s*none;/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*scroll-behavior:\s*auto;/);
 });

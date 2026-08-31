@@ -180,35 +180,6 @@ export default function CountryPageExperience({
     return () => window.clearInterval(interval);
   }, [country.isDebtTickerFrozen]);
 
-  useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const desktopPointer = window.matchMedia("(min-width: 701px) and (pointer: fine)");
-    if (reducedMotion.matches || !desktopPointer.matches) return undefined;
-
-    const hero = document.getElementById("country-hero");
-    const snapshot = document.getElementById("snapshot");
-    if (!hero || !snapshot) return undefined;
-
-    const handleHeroWheel = (event) => {
-      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
-      if (event.ctrlKey || delta < 24) return;
-
-      const heroBottom = hero.getBoundingClientRect().bottom;
-      const snapshotTop = snapshot.getBoundingClientRect().top;
-      if (heroBottom <= 148 || snapshotTop <= window.innerHeight * 0.33) return;
-
-      hero.removeEventListener("wheel", handleHeroWheel);
-      window.requestAnimationFrame(() => {
-        snapshot.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    };
-
-    hero.addEventListener("wheel", handleHeroWheel, { passive: true });
-    return () => {
-      hero.removeEventListener("wheel", handleHeroWheel);
-    };
-  }, []);
-
   const liveDebt = useMemo(() => interpolateDebt(country, now), [country, now]);
   const quarterlyChange = officialDebt - previousDebt;
   const shownDebt = showOfficial ? officialDebt : liveDebt;
