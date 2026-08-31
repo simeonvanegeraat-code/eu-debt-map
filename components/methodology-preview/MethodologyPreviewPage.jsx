@@ -63,16 +63,16 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
   const ratio = officialDebtToGDPRatio(example);
   const period = debtDataSummary.dominantLatestTime || example?.official_latest_time || "—";
   const coverage = debtDataSummary.dominantCoverage || 0;
-  const path = "/methodology";
+  const path = `${copy.base}/methodology`;
 
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: "How EU Debt Map calculates live government debt estimates",
+    headline: copy.schema.headline,
     description: copy.lede,
     dateModified: "2026-08-30",
     datePublished: "2025-10-27",
-    inLanguage: "en",
+    inLanguage: lang,
     mainEntityOfPage: `${SITE}${path}`,
     author: { "@type": "Organization", name: "EU Debt Map", url: SITE },
     citation: [EUROSTAT_METADATA, EUROSTAT_DATASET],
@@ -80,11 +80,11 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
   const datasetLd = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Eurostat quarterly government debt used by EU Debt Map",
-    description: "Validated EU-27 quarterly general government gross debt observations used as official anchors for EU Debt Map.",
+    name: copy.schema.datasetName,
+    description: copy.schema.datasetDescription,
     creator: { "@type": "Organization", name: "Eurostat" },
     isBasedOn: EUROSTAT_METADATA,
-    spatialCoverage: "European Union",
+    spatialCoverage: copy.schema.spatialCoverage,
     temporalCoverage: period,
     measurementTechnique: "Eurostat gov_10q_ggdebt; Q, S13, GD, MIO_EUR and PC_GDP",
     license: "https://ec.europa.eu/eurostat/about/policies/copyright",
@@ -94,8 +94,8 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE },
-      { "@type": "ListItem", position: 2, name: "Methodology", item: `${SITE}${path}` },
+      { "@type": "ListItem", position: 1, name: copy.schema.home, item: `${SITE}${copy.base || "/"}` },
+      { "@type": "ListItem", position: 2, name: copy.schema.page, item: `${SITE}${path}` },
     ],
   };
 
@@ -114,7 +114,7 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
           {preview ? (
             <div className={styles.previewBar}>
               <span>{copy.previewLabel}</span>
-              <Link href="/methodology">{copy.currentPage}</Link>
+              <Link href={path}>{copy.currentPage}</Link>
             </div>
           ) : null}
 
@@ -144,10 +144,10 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
           </div>
 
           <dl className={styles.heroFacts}>
-            <div><dt>Source</dt><dd>Eurostat</dd><small>gov_10q_ggdebt</small></div>
-            <div><dt>Coverage</dt><dd>EU-27</dd><small>{coverage}/27 in the shared period</small></div>
-            <div><dt>Latest reference</dt><dd>{period}</dd><small>Official quarter-end stock</small></div>
-            <div><dt>Last fetched</dt><dd>{formatDate(EUROSTAT_UPDATED_AT, copy.locale)}</dd><small>Stored, validated snapshot</small></div>
+            <div><dt>{copy.facts.source}</dt><dd>Eurostat</dd><small>gov_10q_ggdebt</small></div>
+            <div><dt>{copy.facts.coverage}</dt><dd>EU-27</dd><small>{copy.facts.coverageNote(coverage)}</small></div>
+            <div><dt>{copy.facts.reference}</dt><dd>{period}</dd><small>{copy.facts.referenceNote}</small></div>
+            <div><dt>{copy.facts.fetched}</dt><dd>{formatDate(EUROSTAT_UPDATED_AT, copy.locale)}</dd><small>{copy.facts.fetchedNote}</small></div>
           </dl>
         </div>
       </section>
@@ -234,7 +234,7 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
             <div><dt>{copy.calculation.previous}</dt><dd>{formatMoney(previousDebt, copy.locale)}</dd></div>
             <div><dt>{copy.calculation.latest}</dt><dd>{formatMoney(latestDebt, copy.locale)}</dd></div>
             <div><dt>{copy.calculation.movement}</dt><dd className={movement >= 0 ? styles.positive : styles.negative}>{formatSignedMoney(movement, copy.locale)}</dd></div>
-            <div><dt>{copy.calculation.elapsed}</dt><dd>{elapsedDays} days</dd></div>
+            <div><dt>{copy.calculation.elapsed}</dt><dd>{copy.calculation.days(elapsedDays)}</dd></div>
             <div><dt>{copy.calculation.pace}</dt><dd className={pace >= 0 ? styles.positive : styles.negative}>{formatRate(pace, copy.locale)}</dd></div>
           </dl>
           <small>{copy.calculation.exampleNote}</small>
@@ -292,9 +292,9 @@ estimate_now = latest_debt + rate_per_second * seconds_since_latest`}</code></pr
         <div className={styles.citationGrid}>
           <article><p>{copy.sources.citationTitle}</p><blockquote>{copy.sources.citation}</blockquote><small>{copy.sources.copyHint}</small></article>
           <div className={styles.auditLinks}>
-            <a href={EUROSTAT_METADATA} target="_blank" rel="noreferrer"><span>Official metadata</span><strong>{copy.sources.primary}</strong><ArrowIcon /></a>
-            <a href={EUROSTAT_DATASET} target="_blank" rel="noreferrer"><span>Dataset</span><strong>{copy.sources.dataset}</strong><ArrowIcon /></a>
-            <a href={EUROSTAT_API} target="_blank" rel="noreferrer"><span>JSON API</span><strong>{copy.sources.api}</strong><ArrowIcon /></a>
+            <a href={EUROSTAT_METADATA} target="_blank" rel="noreferrer"><span>{copy.sources.linkLabels[0]}</span><strong>{copy.sources.primary}</strong><ArrowIcon /></a>
+            <a href={EUROSTAT_DATASET} target="_blank" rel="noreferrer"><span>{copy.sources.linkLabels[1]}</span><strong>{copy.sources.dataset}</strong><ArrowIcon /></a>
+            <a href={EUROSTAT_API} target="_blank" rel="noreferrer"><span>{copy.sources.linkLabels[2]}</span><strong>{copy.sources.api}</strong><ArrowIcon /></a>
           </div>
         </div>
         <div className={styles.nextPanel}>

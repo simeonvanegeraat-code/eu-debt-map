@@ -716,9 +716,11 @@ test("the methodology redesign is published with preserved SEO contracts and mod
   assert.match(productionRoute, /fr: `\$\{SITE\}\/fr\$\{PATH\}`/);
   assert.match(productionRoute, /"x-default": `\$\{SITE\}\$\{PATH\}`/);
   assert.match(productionRoute, /<MethodologyPreviewPage \/>/);
-  assert.doesNotMatch(read("app/nl/methodology/page.jsx"), /MethodologyPreviewPage/);
-  assert.doesNotMatch(read("app/de/methodology/page.jsx"), /MethodologyPreviewPage/);
-  assert.doesNotMatch(read("app/fr/methodology/page.jsx"), /MethodologyPreviewPage/);
+  for (const lang of ["nl", "de", "fr"]) {
+    const localizedRoute = read(`app/${lang}/methodology/page.jsx`);
+    assert.match(localizedRoute, new RegExp(`<MethodologyPreviewPage lang="${lang}" \\/>`));
+    assert.match(localizedRoute, new RegExp(`canonical: .*\\/${lang}.*PATH`));
+  }
   assert.match(preview, /google-anno-skip/);
   assert.match(preview, /<h1 id="methodology-title">\{copy\.title\}<\/h1>/);
   assert.match(preview, /livePerSecondFor/);
@@ -729,6 +731,11 @@ test("the methodology redesign is published with preserved SEO contracts and mod
   assert.match(preview, /"@type": "TechArticle"/);
   assert.match(preview, /"@type": "Dataset"/);
   assert.match(preview, /"@type": "BreadcrumbList"/);
+  assert.match(preview, /inLanguage: lang/);
+  assert.match(preview, /const path = `\$\{copy\.base\}\/methodology`/);
+  assert.match(copy, /base: "\/nl"/);
+  assert.match(copy, /base: "\/de"/);
+  assert.match(copy, /base: "\/fr"/);
   assert.match(copy, /€50,000\/s hard cap/);
   assert.match(copy, /Stale-country freeze/);
   assert.match(copy, /official ratio × \(modelled debt now ÷ official debt at the reference date\)/);
