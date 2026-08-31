@@ -311,7 +311,7 @@ test("the US 40 trillion debt article keeps its definitions and figures aligned 
     assert.equal(article.lang, lang);
     assert.equal(article.contentStandard, "discover-2026-v1");
     assert.equal(article.articleType, "news");
-    assert.equal(article.image, "/images/articles/us-national-debt-40-trillion-interest-cost-2026.jpg");
+    assert.equal(article.image, "/images/articles/us-national-debt-40-trillion-interest-cost-2026-editorial-v2.jpg");
     assert.equal(article.imageWidth, 1672);
     assert.equal(article.imageHeight, 941);
     assert.equal(article.sources.length, 5);

@@ -21,10 +21,12 @@ the draft is being written.
    comparison. Do not use clickbait or exaggeration.
 2. Prefer primary and authoritative sources. Record the source name, URL and the
    date on which it was checked.
-3. Use an original, relevant hero image. It should be at least 1,200 pixels wide
-   and more than 300,000 pixels in total. A 16:9 crop is preferred. Record the
+3. Choose the appropriate visual lane in `docs/article-image-style.md` and use an
+   original, relevant hero image. It should be at least 1,200 pixels wide and
+   more than 300,000 pixels in total. A 16:9 crop is preferred. Record the
    measured `imageWidth` and `imageHeight`; the audit compares these values with
-   the real file.
+   the real file. Generated scenes are credited as editorial illustrations and
+   must not be presented as photographs of real events.
 4. Write meaningful alternative text and keep the large-image preview enabled.
 5. Add descriptive internal links to the relevant country page, debt-to-GDP page
    and methodology.
