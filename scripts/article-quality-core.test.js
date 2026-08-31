@@ -21,7 +21,7 @@ const GERMAN_HERO = path.join(
   "public",
   "images",
   "articles",
-  "wer-haelt-deutsche-staatsschulden-2026.jpg"
+  "wer-haelt-deutsche-staatsschulden-2026-editorial-v2.jpg"
 );
 
 function completeArticle(overrides = {}) {
@@ -48,9 +48,9 @@ function completeArticle(overrides = {}) {
       url: "https://www.eudebtmap.com/methodology",
     },
     readingMinutes: 7,
-    image: "/images/articles/wer-haelt-deutsche-staatsschulden-2026.jpg",
-    imageWidth: 1200,
-    imageHeight: 675,
+    image: "/images/articles/wer-haelt-deutsche-staatsschulden-2026-editorial-v2.jpg",
+    imageWidth: 1672,
+    imageHeight: 941,
     imageAlt: "Editorial illustration of public debt holders",
     imageCredit: "Original editorial image created for EU Debt Map",
     sourceNote: "Based on an official statistical release.",
@@ -71,8 +71,8 @@ function completeArticle(overrides = {}) {
 
 test("quality checker reads the real editorial image dimensions", () => {
   assert.deepEqual(readImageDimensions(GERMAN_HERO), {
-    width: 1200,
-    height: 675,
+    width: 1672,
+    height: 941,
   });
 });
 

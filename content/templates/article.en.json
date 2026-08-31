@@ -23,11 +23,11 @@
     "url": "https://www.eudebtmap.com/methodology"
   },
   "readingMinutes": 5,
-  "image": "/images/articles/eu-debt-burden-2026.jpg",
-  "imageWidth": 1200,
-  "imageHeight": 630,
-  "imageAlt": "Stylized map of the European Union with financial charts representing public debt pressure across EU countries",
-  "imageCredit": "Original editorial image created for EU Debt Map",
+  "image": "/images/articles/eu-debt-burden-2026-editorial-v2.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "EU country debt folders arranged around a central ledger with differing coin stacks",
+  "imageCredit": "Original editorial illustration created for EU Debt Map",
   "relatedLinks": [
     {
       "label": "Live EU debt map",

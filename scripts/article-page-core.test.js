@@ -276,7 +276,7 @@ test("the euro area debt analysis is complete and aligned in all four languages"
 
     assert.equal(article.lang, lang);
     assert.equal(article.contentStandard, "discover-2026-v1");
-    assert.equal(article.image, "/images/articles/eurozone-debt-risks-2026.jpg");
+    assert.equal(article.image, "/images/articles/eurozone-debt-risks-2026-editorial-v2.jpg");
     assert.equal(article.imageWidth, 1672);
     assert.equal(article.imageHeight, 941);
     assert.equal(article.sources.length, 5);
@@ -372,7 +372,7 @@ test("the German live debt article distinguishes official data from its model", 
   assert.equal(article.contentStandard, "discover-2026-v1");
   assert.equal(article.articleType, "analysis");
   assert.deepEqual(article.relatedCountries, ["DE"]);
-  assert.equal(article.image, "/images/articles/deutschland-staatsverschuldung-2026-editorial.jpg");
+  assert.equal(article.image, "/images/articles/deutschland-staatsverschuldung-2026-editorial-v2.jpg");
   assert.equal(article.imageWidth, 1672);
   assert.equal(article.imageHeight, 941);
   assert.equal(article.sources.length, 6);
@@ -407,7 +407,7 @@ test("the Dutch live debt article explains the falling model without calling it 
   assert.equal(article.contentStandard, "discover-2026-v1");
   assert.equal(article.articleType, "analysis");
   assert.deepEqual(article.relatedCountries, ["NL"]);
-  assert.equal(article.image, "/images/articles/nederland-staatsschuld-2026-editorial.jpg");
+  assert.equal(article.image, "/images/articles/nederland-staatsschuld-2026-editorial-v2.jpg");
   assert.equal(article.imageWidth, 1672);
   assert.equal(article.imageHeight, 941);
   assert.equal(article.sources.length, 5);
@@ -454,7 +454,7 @@ test("localized 2026 debt-per-capita articles use identical country data and exp
     const article = articles[lang];
     assert.equal(article.contentStandard, "discover-2026-v1");
     assert.equal(article.lang, lang);
-    assert.equal(article.image, "/images/articles/eu-debt-per-capita-2026-editorial-v2.jpg");
+    assert.equal(article.image, "/images/articles/eu-debt-per-capita-2026-editorial-v3.jpg");
     assert.equal(article.imageWidth, 1672);
     assert.equal(article.imageHeight, 941);
     assert.equal(article.sources.length, 3);
