@@ -322,6 +322,66 @@
   letter-spacing: -0.08em;
 }
 
+.mapTapCue {
+  position: absolute;
+  top: 24px;
+  right: 26px;
+  z-index: 3;
+  width: 78px;
+  height: 78px;
+  color: #1d4ed8;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgba(29, 78, 216, 0.2));
+}
+
+.mapTapHand {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 58px;
+  height: 58px;
+  overflow: visible;
+  stroke: currentColor;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: mapTapHand 5.2s ease-in-out infinite;
+}
+
+.mapTapPulse {
+  position: absolute;
+  left: 3px;
+  bottom: 4px;
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(37, 99, 235, 0.72);
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.14);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+  opacity: 0;
+  animation: mapTapPulse 5.2s ease-out infinite;
+}
+
+@keyframes mapTapHand {
+  0%, 7%, 18%, 28%, 39%, 100% { transform: translate3d(0, 0, 0); }
+  12%, 33% { transform: translate3d(-5px, 5px, 0); }
+}
+
+@keyframes mapTapPulse {
+  0%, 8%, 19%, 29%, 40%, 100% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  11%, 32% {
+    opacity: 0.72;
+    transform: scale(0.55);
+  }
+  17%, 38% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
 .mapSvg {
   position: relative;
   z-index: 1;
@@ -1296,6 +1356,14 @@
     margin-left: -15%;
   }
   .mapWatermark { top: 18px; left: 18px; font-size: 4.5rem; }
+  .mapTapCue {
+    top: 14px;
+    right: 14px;
+    width: 62px;
+    height: 62px;
+    transform: scale(0.84);
+    transform-origin: top right;
+  }
   .legend { gap: 8px 14px; padding: 13px 2px 0; }
   .legend i { width: 16px; }
 
@@ -1345,6 +1413,16 @@
   .homeFaqList details > p { padding-left: 40px; }
   .trustSection { gap: 30px; margin-bottom: 54px; padding: 42px 0; }
   .trustList li { grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapTapHand,
+  .mapTapPulse {
+    animation: none;
+  }
+
+  .mapTapHand { transform: translate3d(-3px, 3px, 0); }
+  .mapTapPulse { opacity: 0.42; transform: scale(0.8); }
 }
 
 @media (max-width: 410px) {

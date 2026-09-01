@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import geographyData from "@/public/maps/countries-110m.json";
 import { countries, trendFor } from "@/lib/data";
@@ -108,6 +108,7 @@ function metricText(country, mode, locale) {
 
 export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
   const copy = getHomePreviewCopy(lang);
+  const [showTapCue, setShowTapCue] = useState(true);
   const countriesByCode = useMemo(
     () => new Map(countries.map((country) => [country.code, country])),
     []
@@ -117,9 +118,31 @@ export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
     []
   );
 
+  function previewCountry(iso2) {
+    if (iso2) setShowTapCue(false);
+    onPreview(iso2);
+  }
+
   return (
-    <div className={styles.mapFrame}>
+    <div className={styles.mapFrame} onPointerDown={() => setShowTapCue(false)}>
       <span className={styles.mapWatermark} aria-hidden="true">EU-27</span>
+      {showTapCue && (
+        <span className={styles.mapTapCue} aria-hidden="true">
+          <span className={styles.mapTapPulse} />
+          <svg
+            className={styles.mapTapHand}
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g transform="rotate(-135 32 32)">
+              <path d="M22 32V14a5 5 0 0 1 10 0v16" />
+              <path d="M32 27v-6a5 5 0 0 1 10 0v11" />
+              <path d="M42 29v-3a5 5 0 0 1 10 0v12c0 11.05-8.95 20-20 20h-5.5c-7.15 0-12.23-3.16-16.1-9.05L4.8 40.4a5 5 0 0 1 8.16-5.77L22 45" />
+            </g>
+          </svg>
+        </span>
+      )}
       <ComposableMap
         className={styles.mapSvg}
         projection="geoAzimuthalEqualArea"
@@ -164,7 +187,7 @@ export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
                     key={geo.rsmKey}
                     href={countryHref}
                     aria-label={copy.countryAria(localizedName, metric)}
-                    onFocus={() => onPreview(iso2)}
+                    onFocus={() => previewCountry(iso2)}
                     onBlur={() => onPreview(null)}
                   >
                     <title>{copy.countryLinkText(localizedName)}</title>
@@ -172,7 +195,7 @@ export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
                       geography={geo}
                       className={styles.mapCountry}
                       data-country={iso2}
-                      onMouseEnter={() => onPreview(iso2)}
+                      onMouseEnter={() => previewCountry(iso2)}
                       onMouseLeave={() => onPreview(null)}
                       stroke={isActive ? "#5ce5bf" : "#ffffff"}
                       strokeWidth={isActive ? 2.2 : 0.8}
