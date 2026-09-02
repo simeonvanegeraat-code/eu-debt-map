@@ -6,16 +6,49 @@ import { usePathname } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
 
-const CONSENT_SETTINGS_LABELS = {
-  en: "Privacy and cookie settings",
-  nl: "Privacy- en cookie-instellingen",
-  de: "Datenschutz- und Cookie-Einstellungen",
-  fr: "Paramètres de confidentialité et de cookies",
+const FOOTER_COPY = {
+  en: {
+    tagline: "Independent educational visualization based on Eurostat data.",
+    navLabel: "Footer",
+    about: "About",
+    methodology: "Methodology",
+    privacy: "Privacy",
+    cookies: "Cookie Policy",
+    consentSettings: "Privacy and cookie settings",
+  },
+  nl: {
+    tagline: "Onafhankelijke educatieve visualisatie op basis van Eurostat-gegevens.",
+    navLabel: "Voettekst",
+    about: "Over",
+    methodology: "Methodologie",
+    privacy: "Privacy",
+    cookies: "Cookiebeleid",
+    consentSettings: "Privacy- en cookie-instellingen",
+  },
+  de: {
+    tagline: "Unabhängige Bildungsvisualisierung auf Basis von Eurostat-Daten.",
+    navLabel: "Fußzeile",
+    about: "Über",
+    methodology: "Methodik",
+    privacy: "Datenschutz",
+    cookies: "Cookie-Richtlinie",
+    consentSettings: "Datenschutz- und Cookie-Einstellungen",
+  },
+  fr: {
+    tagline: "Visualisation pédagogique indépendante fondée sur les données d’Eurostat.",
+    navLabel: "Pied de page",
+    about: "À propos",
+    methodology: "Méthodologie",
+    privacy: "Confidentialité",
+    cookies: "Politique relative aux cookies",
+    consentSettings: "Paramètres de confidentialité et de cookies",
+  },
 };
 
 export default function Footer() {
   const pathname = usePathname() || "/";
   const locale = getLocaleFromPathname(pathname);
+  const copy = FOOTER_COPY[locale] || FOOTER_COPY.en;
   const year = new Date().getFullYear();
 
   return (
@@ -53,13 +86,13 @@ export default function Footer() {
             © {year} <strong style={{ color: "var(--fg)" }}>EU Debt Map</strong>
           </span>
           <span style={{ opacity: 0.9 }}>
-            Independent educational visualization based on Eurostat data.
+            {copy.tagline}
           </span>
         </div>
 
         {/* Onderste rij: navigatie */}
         <nav
-          aria-label="Footer"
+          aria-label={copy.navLabel}
           style={{
             display: "flex",
             alignItems: "center",
@@ -73,20 +106,20 @@ export default function Footer() {
           }}
         >
           <Link href={withLocale("/about", locale)} className="footer-link">
-            About
+            {copy.about}
           </Link>
           <Link href={withLocale("/methodology", locale)} className="footer-link">
-            Methodology
+            {copy.methodology}
           </Link>
           <Link href={withLocale("/privacy", locale)} className="footer-link">
-            Privacy
+            {copy.privacy}
           </Link>
           <Link href={withLocale("/cookies", locale)} className="footer-link">
-            Cookie Policy
+            {copy.cookies}
           </Link>
 
           <GoogleConsentSettingsLink className="footer-link">
-            {CONSENT_SETTINGS_LABELS[locale] || CONSENT_SETTINGS_LABELS.en}
+            {copy.consentSettings}
           </GoogleConsentSettingsLink>
         </nav>
       </div>

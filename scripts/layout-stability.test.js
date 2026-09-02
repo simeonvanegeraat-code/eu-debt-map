@@ -76,6 +76,33 @@ test("cookie pages preserve responsive horizontal container padding", () => {
   }
 });
 
+test("the shared footer and skip link stay localized in every supported language", () => {
+  const footer = read("components/Footer.jsx");
+  const skipLink = read("components/LocalizedSkipLink.jsx");
+  const layout = read("app/layout.jsx");
+
+  for (const expected of [
+    "Independent educational visualization based on Eurostat data.",
+    "Onafhankelijke educatieve visualisatie op basis van Eurostat-gegevens.",
+    "Unabhängige Bildungsvisualisierung auf Basis von Eurostat-Daten.",
+    "Visualisation pédagogique indépendante fondée sur les données d’Eurostat.",
+  ]) {
+    assert.match(footer, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  for (const expected of [
+    "Skip to content",
+    "Ga naar de inhoud",
+    "Zum Inhalt springen",
+    "Aller au contenu",
+  ]) {
+    assert.match(skipLink, new RegExp(expected));
+  }
+
+  assert.match(layout, /<LocalizedSkipLink\s*\/>/);
+  assert.doesNotMatch(layout, />Skip to content<\/a>/);
+});
+
 test("country chapter navigation lands on headings without overriding manual scrolling", () => {
   const experience = read("components/country/CountryPageExperience.jsx");
   const css = read("components/country/country-page.module.css");

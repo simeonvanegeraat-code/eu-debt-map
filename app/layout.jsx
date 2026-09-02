@@ -5,6 +5,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LocalizedSkipLink from "@/components/LocalizedSkipLink";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -113,7 +114,7 @@ export default function RootLayout({ children }) {
           spaceGrotesk.variable = de class die --font-display invult.
       */}
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
-        <a href="#content" className="visually-hidden">Skip to content</a>
+        <LocalizedSkipLink />
         <Header />
         <main id="content" role="main">{children}</main>
         <Footer />
