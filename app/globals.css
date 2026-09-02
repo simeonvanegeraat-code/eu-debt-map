@@ -603,6 +603,21 @@ p{ margin: var(--sp-3) 0; }
 .articleDataTable tr:last-child td{ border-bottom:0; }
 .articleDataTable td:nth-child(n+2),
 .articleDataTable th:nth-child(n+2){ text-align:right; white-space:nowrap; }
+/* Editorial comparison matrices contain prose, so keep their columns readable on narrow screens. */
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] .articleDataTable{
+  min-width:920px;
+  table-layout:fixed;
+}
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(n+2),
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] td:nth-child(n+2){
+  text-align:left;
+  white-space:normal;
+}
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(1){ width:20%; }
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(2){ width:14%; }
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(3){ width:20%; }
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(4){ width:18%; }
+.articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] th:nth-child(5){ width:28%; }
 .articleKeyNumbers,
 .articleBalanceGrid{
   display:grid;
@@ -651,6 +666,10 @@ p{ margin: var(--sp-3) 0; }
   .articleBalanceGrid{ grid-template-columns:1fr; }
   .articleDataTable th,
   .articleDataTable td{ padding:.65rem .7rem; }
+  .articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] .articleDataTable{
+    min-width:760px;
+    font-size:.82rem;
+  }
 }
 
 /* Figures */
