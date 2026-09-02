@@ -234,7 +234,7 @@ export default async function ArticleDetailPage({ params }) {
   });
 
   return (
-    <main style={{ paddingBottom: 60 }}>
+    <div style={{ paddingBottom: 60 }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
@@ -309,6 +309,6 @@ export default async function ArticleDetailPage({ params }) {
           title="Weitere Artikel" 
         />
       </article>
-    </main>
+    </div>
   );
 }

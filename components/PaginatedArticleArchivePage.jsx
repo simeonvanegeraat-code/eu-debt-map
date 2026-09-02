@@ -146,7 +146,7 @@ export default function PaginatedArticleArchivePage({ lang = "en", page }) {
   };
 
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -177,6 +177,6 @@ export default function PaginatedArticleArchivePage({ lang = "en", page }) {
           totalPages={archive.data.totalPages}
         />
       </div>
-    </main>
+    </div>
   );
 }

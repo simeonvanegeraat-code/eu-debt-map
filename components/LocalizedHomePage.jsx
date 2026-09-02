@@ -532,7 +532,7 @@ export default function LocalizedHomePage({ lang = "en" }) {
   const topArticles = listArticles({ lang }).slice(0, 3);
 
   return (
-    <main className="eu-home-v2">
+    <div className="eu-home-v2">
       <section className="eu-home-hero">
         <div className="eu-home-hero-copy">
           <h1 className="eu-home-title">
@@ -1508,6 +1508,6 @@ export default function LocalizedHomePage({ lang = "en" }) {
   }
 }
       `}</style>
-    </main>
+    </div>
   );
 }

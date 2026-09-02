@@ -121,7 +121,7 @@ export default function DebtVsDeficitFR() {
   };
 
   return (
-    <main className="container grid" style={{ alignItems: "start" }}>
+    <div className="container grid" style={{ alignItems: "start" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} />
@@ -209,6 +209,6 @@ export default function DebtVsDeficitFR() {
           </div>
         </section>
       </article>
-    </main>
+    </div>
   );
 }

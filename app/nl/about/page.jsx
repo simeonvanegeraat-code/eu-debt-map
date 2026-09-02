@@ -44,7 +44,7 @@ export default function AboutPageNL() {
   };
 
   return (
-    <main className="container grid gap-6 py-10">
+    <div className="container grid gap-6 py-10">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
 
       {/* Intro */}
@@ -99,6 +99,6 @@ export default function AboutPageNL() {
           </a>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

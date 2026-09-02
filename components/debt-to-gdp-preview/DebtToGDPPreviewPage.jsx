@@ -70,7 +70,7 @@ export default function DebtToGDPPreviewPage({ lang = "en", preview = false }) {
   const navHrefs = ["#ranking", "#meaning", "#reference", "#method"];
 
   return (
-    <main className={`${styles.page} ${editorialDisplay.variable}`}>
+    <div className={`${styles.page} ${editorialDisplay.variable}`}>
       {!preview ? <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} /></> : null}
       <section className={styles.hero} aria-labelledby="debt-ratio-title">
         <div className={styles.heroInner}>
@@ -101,6 +101,6 @@ export default function DebtToGDPPreviewPage({ lang = "en", preview = false }) {
       <section className={styles.referenceSection} id="reference" aria-labelledby="reference-title"><div className={styles.referenceCopy}><p className={styles.eyebrow}>{copy.reference.eyebrow}</p><h2 id="reference-title">{copy.reference.title}</h2><p>{copy.reference.text}</p><Link href={`${copy.base}/stability-and-growth-pact`}>{copy.reference.link} <ArrowIcon /></Link></div><dl className={styles.referenceStats}>{[[copy.ranking.below, counts.below], [copy.ranking.middle, counts.reference], [copy.ranking.above, counts.high]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd><small>{copy.reference.countrySuffix(period)}</small></div>)}</dl></section>
 
       <section className={styles.methodSection} aria-labelledby="method-title"><header className={styles.anchorTarget} id="method"><p className={styles.eyebrow}>{copy.method.eyebrow}</p><h2 id="method-title">{copy.method.title}</h2><p>{copy.method.text}</p></header><div className={styles.methodLinks}><a href={EUROSTAT_RELEASE} target="_blank" rel="noreferrer"><span>{copy.method.primary}</span><strong>{copy.method.release(period)}</strong><ArrowIcon /></a><a href={EUROSTAT_METHOD} target="_blank" rel="noreferrer"><span>{copy.method.definition}</span><strong>{copy.method.metadata}</strong><ArrowIcon /></a><Link href={`${copy.base}/methodology`}><span>{copy.method.site}</span><strong>{copy.method.methodology}</strong><ArrowIcon /></Link></div></section>
-    </main>
+    </div>
   );
 }

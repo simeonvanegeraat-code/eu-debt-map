@@ -21,7 +21,7 @@ export default function DebugEurostat() {
   });
 
   return (
-    <main className="container card">
+    <div className="container card">
       <h2>Eurostat Debug</h2>
       <p className="tag">
         Updated at: {EUROSTAT_UPDATED_AT ? new Date(EUROSTAT_UPDATED_AT).toLocaleString("en-GB") : "no data"}
@@ -58,6 +58,6 @@ export default function DebugEurostat() {
           </tbody>
         </table>
       </div>
-    </main>
+    </div>
   );
 }

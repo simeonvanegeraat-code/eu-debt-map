@@ -103,6 +103,19 @@ test("the shared footer and skip link stay localized in every supported language
   assert.doesNotMatch(layout, />Skip to content<\/a>/);
 });
 
+test("the root layout owns the only main landmark", () => {
+  const layoutPath = path.join(ROOT, "app", "layout.jsx");
+  const layout = fs.readFileSync(layoutPath, "utf8");
+  const offenders = [...jsxFiles("app"), ...jsxFiles("components")]
+    .filter((filePath) => filePath !== layoutPath)
+    .filter((filePath) => /<main(?:\s|>)/.test(fs.readFileSync(filePath, "utf8")))
+    .map((filePath) => path.relative(ROOT, filePath));
+
+  assert.equal((layout.match(/<main(?:\s|>)/g) || []).length, 1);
+  assert.match(layout, /<main id="content">\{children\}<\/main>/);
+  assert.deepEqual(offenders, []);
+});
+
 test("country chapter navigation lands on headings without overriding manual scrolling", () => {
   const experience = read("components/country/CountryPageExperience.jsx");
   const css = read("components/country/country-page.module.css");

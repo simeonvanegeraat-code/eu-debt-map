@@ -116,7 +116,7 @@ export default function RootLayout({ children }) {
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <LocalizedSkipLink />
         <Header />
-        <main id="content" role="main">{children}</main>
+        <main id="content">{children}</main>
         <Footer />
         <Analytics />
       </body>

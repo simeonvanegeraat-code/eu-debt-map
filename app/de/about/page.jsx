@@ -43,7 +43,7 @@ export default function AboutPageDE() {
   };
 
   return (
-    <main className="container grid gap-6 py-10">
+    <div className="container grid gap-6 py-10">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
 
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
@@ -94,6 +94,6 @@ export default function AboutPageDE() {
           </a>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function AdsTestPage() {
   return (
-    <main className="container card" style={{ padding: 24 }}>
+    <div className="container card" style={{ padding: 24 }}>
       <h1>Ads Test</h1>
       <p className="tag">
         Deze pagina forceert handmatige advertentieblokken en toont live je Consent Mode status.
@@ -29,6 +29,6 @@ export default function AdsTestPage() {
 
       {/* Live inzage in Google CMP- en dataLayer-signalen */}
       <ConsentDebug />
-    </main>
+    </div>
   );
 }

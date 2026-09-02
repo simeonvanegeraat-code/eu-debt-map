@@ -418,7 +418,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -501,6 +501,6 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
           <p className="note">{t.note}</p>
         </div>
       </article>
-    </main>
+    </div>
   );
 }

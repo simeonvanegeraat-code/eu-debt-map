@@ -13,7 +13,7 @@ export default function PrivacyPage() {
   const lastUpdated = "August 1, 2026";
 
   return (
-    <main className="container grid gap-6 py-10">
+    <div className="container grid gap-6 py-10">
       <section className="rounded-2xl border border-gray-700/50 p-6 bg-[#0b1220]/60">
         <h1 className="text-3xl font-extrabold tracking-tight">Privacy & Cookies Policy</h1>
         <p className="mt-2 text-sm text-gray-400">Last updated: {lastUpdated}</p>
@@ -87,6 +87,6 @@ export default function PrivacyPage() {
           .
         </p>
       </section>
-    </main>
+    </div>
   );
 }

@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function CookiesPageDE() {
   return (
-    <main className="container card" style={{ paddingTop: 24, paddingBottom: 36 }}>
+    <div className="container card" style={{ paddingTop: 24, paddingBottom: 36 }}>
       <h2 style={{ marginBottom: 8 }}>Cookie-Richtlinie</h2>
       <p className="tag" style={{ marginBottom: 16 }}>
         Wir verwenden Cookies, um unsere Website zu betreiben und zu verstehen, wie sie genutzt wird.
@@ -49,6 +49,6 @@ export default function CookiesPageDE() {
       </GoogleConsentSettingsLink>
 
       <div style={{ marginTop: 32 }} />
-    </main>
+    </div>
   );
 }

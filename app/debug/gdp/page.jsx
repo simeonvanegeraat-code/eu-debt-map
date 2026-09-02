@@ -27,7 +27,7 @@ export default async function DebugGDPPage() {
   }
 
   return (
-    <main className="container card">
+    <div className="container card">
       <h1 style={{marginTop:0}}>Eurostat GDP Debug</h1>
       <p className="tag">Test live GDP via Eurostat (nama_10_gdp, B1GQ, CP_MEUR)</p>
 
@@ -48,6 +48,6 @@ export default async function DebugGDPPage() {
         </select>
         <button className="btn" type="submit">Open /api/gdp</button>
       </form>
-    </main>
+    </div>
   );
 }

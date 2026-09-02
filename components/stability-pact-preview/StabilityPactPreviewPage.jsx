@@ -30,7 +30,7 @@ export default function StabilityPactPreviewPage({ lang = "en", preview = false 
   const navHrefs = ["#what-changed", "#how-it-works", "#numbers", "#today", "#sources"];
 
   return (
-    <main className={`${styles.page} ${editorialDisplay.variable}`}>
+    <div className={`${styles.page} ${editorialDisplay.variable}`}>
       {!preview ? <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} /></> : null}
       <section className={styles.hero} aria-labelledby="sgp-page-title">
         <div className={styles.heroInner}>
@@ -89,6 +89,6 @@ export default function StabilityPactPreviewPage({ lang = "en", preview = false 
         <div className={styles.sourceGrid}>{[[SOURCES.regulation, copy.sources.labels[0]], [SOURCES.legalBasis, copy.sources.labels[1]], [SOURCES.annualData, copy.sources.labels[2]]].map(([href, label], index) => <a href={href} target="_blank" rel="noreferrer" key={href}><span>{copy.sources.categories[index]}</span><strong>{label}</strong><ArrowIcon /></a>)}<Link href={`${copy.base}/methodology`}><span>{copy.sources.categories[3]}</span><strong>{copy.sources.labels[3]}</strong><ArrowIcon /></Link></div>
         <p className={styles.reviewNote}>{copy.sources.reviewed}</p>
       </section>
-    </main>
+    </div>
   );
 }
