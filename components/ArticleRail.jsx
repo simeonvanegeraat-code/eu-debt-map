@@ -1,6 +1,9 @@
 // components/ArticleRail.jsx
 
 import Link from "next/link";
+import articleDateCore from "@/lib/articleDateCore.cjs";
+
+const { formatArticleDate } = articleDateCore;
 
 function hrefFor(article) {
   if (!article) return "#";
@@ -11,25 +14,11 @@ function hrefFor(article) {
 }
 
 function formatDate(iso, lang = "en") {
-  if (!iso) return "";
-
-  const locale =
-    {
-      en: "en-GB",
-      nl: "nl-NL",
-      de: "de-DE",
-      fr: "fr-FR",
-    }[lang] || "en-GB";
-
-  try {
-    return new Intl.DateTimeFormat(locale, {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+  return formatArticleDate(iso, lang, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function summaryFor(article) {

@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import articleDateCore from "@/lib/articleDateCore.cjs";
+
+const { formatArticleDate } = articleDateCore;
 
 const TEXT = {
   en: {
@@ -40,24 +43,11 @@ function localeForArticles(articles) {
 }
 
 function formatDate(iso, lang = "en") {
-  if (!iso) return "";
-
-  const locale = {
-    en: "en-GB",
-    nl: "nl-NL",
-    de: "de-DE",
-    fr: "fr-FR",
-  }[lang] || "en-GB";
-
-  try {
-    return new Intl.DateTimeFormat(locale, {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+  return formatArticleDate(iso, lang, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function hrefFor(article) {

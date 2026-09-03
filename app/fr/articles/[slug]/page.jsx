@@ -7,12 +7,14 @@ import { articleOgImage, articleImage } from "@/lib/media";
 import ArticleRailServer from "@/components/ArticleRailServer";
 import ArticleBody from "@/components/ArticleBody";
 import articlePageCore from "@/lib/articlePageCore.cjs";
+import articleDateCore from "@/lib/articleDateCore.cjs";
 
 const SITE = "https://www.eudebtmap.com";
 const LANG = "fr"; // Taal: Frans
 const ROUTE_PREFIX = { en: "", nl: "/nl", de: "/de", fr: "/fr" };
 const prefix = ROUTE_PREFIX[LANG] ?? "";
 const { buildArticleJsonLd, buildArticleMetadata } = articlePageCore;
+const { formatArticleDate } = articleDateCore;
 
 /* ---------- SEO ---------- */
 export async function generateMetadata({ params }) {
@@ -50,9 +52,6 @@ export default async function ArticleDetailPage({ params }) {
   const modifiedDate = article.dateModified && article.dateModified !== publishDate
     ? article.dateModified
     : null;
-  // Franse datum notatie
-  const dateFmt = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" });
-
   const candidateHero =
     articleImage(article, "hero") ||
     articleImage(article, "cover") ||
@@ -229,10 +228,10 @@ export default async function ArticleDetailPage({ params }) {
         <header>
           <div className="metaRow">
             {article.tags?.[0] && <span className="tag">{article.tags[0]}</span>}
-            <time dateTime={publishDate}>{dateFmt.format(new Date(publishDate))}</time>
+            <time dateTime={publishDate}>{formatArticleDate(publishDate, LANG, { dateStyle: "long" })}</time>
             {modifiedDate && (
               <time dateTime={modifiedDate}>
-                Mis à jour le {dateFmt.format(new Date(modifiedDate))}
+                Mis à jour le {formatArticleDate(modifiedDate, LANG, { dateStyle: "long" })}
               </time>
             )}
             {article.author && (

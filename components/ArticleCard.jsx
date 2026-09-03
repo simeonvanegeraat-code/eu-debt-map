@@ -1,12 +1,8 @@
 import Link from "next/link";
 import styles from "./ArticleCard.module.css";
+import articleDateCore from "@/lib/articleDateCore.cjs";
 
-const DATE_LOCALES = {
-  en: "en-GB",
-  nl: "nl-NL",
-  de: "de-DE",
-  fr: "fr-FR",
-};
+const { formatArticleDate } = articleDateCore;
 
 function articleHref(article) {
   if (!article) return "#";
@@ -17,17 +13,11 @@ function articleHref(article) {
 }
 
 function formatDate(iso, lang = "en") {
-  if (!iso) return "";
-
-  try {
-    return new Intl.DateTimeFormat(DATE_LOCALES[lang] || DATE_LOCALES.en, {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+  return formatArticleDate(iso, lang, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export default function ArticleCard({ article }) {

@@ -3,8 +3,10 @@ import { listArticles } from "@/lib/articles";
 import ArticlesListClient from "@/components/ArticlesListClient";
 import ArticleArchivePagination from "@/components/ArticleArchivePagination";
 import paginationCore from "@/lib/articleArchivePagination.cjs";
+import articleDateCore from "@/lib/articleDateCore.cjs";
 
 const { paginateArchive } = paginationCore;
+const { formatArticleDate } = articleDateCore;
 
 export const runtime = "nodejs";
 
@@ -53,16 +55,11 @@ export const metadata = {
 };
 
 function formatDate(iso) {
-  if (!iso) return "";
-  try {
-    return new Intl.DateTimeFormat("fr-FR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+  return formatArticleDate(iso, LANG, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function hrefForArticle(article) {

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import styles from "./CountryRelatedArticle.module.css";
+import articleDateCore from "@/lib/articleDateCore.cjs";
+
+const { formatArticleDate } = articleDateCore;
 
 const TEXT = {
   en: {
@@ -39,18 +42,11 @@ function articleHref(article) {
 }
 
 function formatDate(value, lang) {
-  if (!value) return "";
-  const locale = { en: "en-GB", nl: "nl-NL", de: "de-DE", fr: "fr-FR" }[lang] || "en-GB";
-
-  try {
-    return new Intl.DateTimeFormat(locale, {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(value));
-  } catch {
-    return "";
-  }
+  return formatArticleDate(value, lang, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function ArticleDate({ article, lang }) {

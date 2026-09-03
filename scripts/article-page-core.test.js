@@ -10,8 +10,20 @@ const {
   safeIsoDate,
   splitArticleBody,
 } = require("../lib/articlePageCore.cjs");
+const {
+  formatArticleDate,
+} = require("../lib/articleDateCore.cjs");
 
 const ROOT = path.resolve(__dirname, "..");
+
+test("article dates use the publisher timezone around midnight", () => {
+  const published = "2026-09-03T00:10:19+02:00";
+
+  assert.equal(
+    formatArticleDate(published, "de", { dateStyle: "long" }),
+    "3. September 2026"
+  );
+});
 
 test("article body without a marker remains unchanged", () => {
   assert.deepEqual(splitArticleBody("<p>Body</p>"), {
