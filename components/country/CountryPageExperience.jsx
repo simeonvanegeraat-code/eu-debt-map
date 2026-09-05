@@ -451,6 +451,17 @@ export default function CountryPageExperience({
         ) : null}
 
         {introSlot ? <div className={styles.introSlot}>{introSlot}</div> : null}
+
+        {effLang === "nl" && country.code === "NL" && !isPreview ? (
+          <Link className={styles.bondGuideLink} href="/nl/staatsobligaties-nederland">
+            <span>
+              <small>Praktische gids</small>
+              <strong>Nederlandse staatsobligaties kopen: hoe werkt dat?</strong>
+            </span>
+            <p>Kooproute, ISIN, marktprijs, kosten en risico’s uitgelegd.</p>
+            <b aria-hidden="true">→</b>
+          </Link>
+        ) : null}
       </section>
 
       <section className={styles.movement}>

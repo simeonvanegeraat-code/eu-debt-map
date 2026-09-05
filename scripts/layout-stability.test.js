@@ -101,6 +101,7 @@ test("the shared footer and skip link stay localized in every supported language
 
   assert.match(layout, /<LocalizedSkipLink\s*\/>/);
   assert.doesNotMatch(layout, />Skip to content<\/a>/);
+  assert.match(layout, /<html lang="en" suppressHydrationWarning>/);
 });
 
 test("the root layout owns the only main landmark", () => {

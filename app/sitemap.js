@@ -197,6 +197,14 @@ export default async function sitemap() {
     }
   }
 
+  // Dutch-only financial guide. Add language alternates when localized versions exist.
+  pushUrl({
+    url: `${SITE}/nl/staatsobligaties-nederland`,
+    lastModified: new Date("2026-09-05T00:00:00Z"),
+    changeFrequency: "monthly",
+    priority: 0.75,
+  });
+
   // 2. Country pages in all languages.
   if (Array.isArray(countries) && countries.length) {
     for (const country of countries) {
