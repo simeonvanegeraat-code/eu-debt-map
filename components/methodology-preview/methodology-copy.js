@@ -3,7 +3,7 @@ const COPY = {
     base: "",
     locale: "en-GB",
     schema: {
-      headline: "How EU Debt Map calculates live government debt estimates",
+      headline: "Public finances: sources and methodology.",
       datasetName: "Eurostat quarterly government debt used by EU Debt Map",
       datasetDescription: "Validated EU-27 quarterly general government gross debt observations used as official anchors for EU Debt Map.",
       spatialCoverage: "European Union",
@@ -13,11 +13,10 @@ const COPY = {
     previewLabel: "Methodology design study · isolated preview",
     currentPage: "View current page",
     eyebrow: "Data provenance · Calculation · Limitations",
-    title: "From Eurostat data to live EU debt estimates.",
-    lede:
-      "EU Debt Map separates published facts from modelled movement. This page shows every important step—from the original quarterly observation to the number moving on screen.",
-    heroAction: "Follow the data",
-    heroNote: "Method version 2.0 · reviewed 30 August 2026",
+    title: "Public finances: sources and methodology.",
+    lede: "Trace European government debt, budget balances, interest, spending and revenue back to Eurostat. Official observations, EU Debt Map calculations and live estimates are clearly separated.",
+    heroAction: "Explore the sources",
+    heroNote: "Source registry reviewed 7 September 2026 · debt model unchanged",
     sourcePanel: "The data lineage",
     sourceSteps: [
       ["01", "Eurostat", "Official quarterly observations"],
@@ -27,12 +26,12 @@ const COPY = {
       ["05", "Display", "Official and estimated values labelled separately"],
     ],
     facts: {
-      source: "Source",
+      source: "Quarterly debt source",
       coverage: "Coverage",
       coverageNote: (coverage) => `${coverage}/27 in the shared period`,
-      reference: "Latest reference",
+      reference: "Debt reference period",
       referenceNote: "Official quarter-end stock",
-      fetched: "Last fetched",
+      fetched: "Debt snapshot fetched",
       fetchedNote: "Stored, validated snapshot",
     },
     navLabel: "Methodology",
@@ -109,8 +108,7 @@ const COPY = {
       elapsed: "Time between anchors",
       days: (days) => `${days} days`,
       pace: "Modelled pace",
-      exampleNote:
-        "Rounded display values may not reproduce the exact rate. The calculation uses the full stored euro amounts and UTC quarter-end timestamps.",
+      exampleNote: "Rounded displays may not reproduce the exact rate. Country counters use full stored euro amounts and date-only quarter-end anchors parsed at 00:00 UTC, rather than the original end-of-day timestamp.",
       ratioTitle: "How the live debt-to-GDP estimate works",
       ratioText:
         "Eurostat’s published ratio is the official starting point. The optional live view scales that ratio by the change in the modelled debt total while holding the implied GDP denominator constant.",
@@ -128,7 +126,7 @@ const COPY = {
         ["Missing-history fallback", "Without two usable observations, movement defaults to zero until a valid comparison exists."],
         ["Period consistency", "Quarter labels are converted to UTC quarter-end dates before elapsed time is calculated."],
         ["Shared EU period", "The EU-27 history advances only with complete 27-country coverage, preventing false total comparisons."],
-        ["No silent substitution", "Official debt and official debt-to-GDP remain separate series; a missing ratio is not invented from another source."],
+        ["No silent substitution", "Official debt and official ratios remain separate series. A country-page fallback derived from GDP, if needed, is a calculation rather than a published Eurostat ratio."],
       ],
     },
     limitations: {
@@ -157,6 +155,7 @@ const COPY = {
       ],
       changelogTitle: "Method record",
       changelog: [
+        ["2026-09", "2026-09-07", "Added the fiscal source registry, calculation labels, source dates and current live-display limitations."],
         ["Version 2.0", "30 Aug 2026", "Adds live-ratio logic, stale-data freezes, exact guardrails, revisions and foreign-exchange limitations."],
         ["1.2", "Jul 2026", "Documents validated snapshots, official ratios and last-known-good country updates."],
       ],
@@ -194,7 +193,7 @@ const COPY = {
     base: "/nl",
     locale: "nl-NL",
     schema: {
-      headline: "Hoe EU Debt Map live schattingen van de overheidsschuld berekent",
+      headline: "Overheidsfinanciën: bronnen en methodologie.",
       datasetName: "Driemaandelijkse Eurostat-overheidsschuld gebruikt door EU Debt Map",
       datasetDescription: "Gevalideerde driemaandelijkse waarnemingen van de geconsolideerde bruto overheidsschuld van de EU-27 die EU Debt Map als officiële ankerpunten gebruikt.",
       spatialCoverage: "Europese Unie",
@@ -204,11 +203,10 @@ const COPY = {
     previewLabel: "Ontwerpstudie methodologie · geïsoleerde preview",
     currentPage: "Bekijk huidige pagina",
     eyebrow: "Dataherkomst · Berekening · Beperkingen",
-    title: "Van Eurostat-data naar live-schattingen van de EU-staatsschuld.",
-    lede:
-      "EU Debt Map houdt gepubliceerde feiten en gemodelleerde beweging uit elkaar. Deze pagina toont elke belangrijke stap: van de oorspronkelijke kwartaalwaarneming tot het getal dat op het scherm beweegt.",
-    heroAction: "Volg de data",
-    heroNote: "Methodeversie 2.0 · beoordeeld op 30 augustus 2026",
+    title: "Overheidsfinanciën: bronnen en methodologie.",
+    lede: "Herleid Europese overheidsschuld, begrotingssaldi, rente, uitgaven en inkomsten tot Eurostat. Officiële waarnemingen, berekeningen van EU Debt Map en live schattingen worden duidelijk onderscheiden.",
+    heroAction: "Bekijk de bronnen",
+    heroNote: "Bronnenregister gecontroleerd op 7 september 2026 · schuldmodel ongewijzigd",
     sourcePanel: "De herkomst van de data",
     sourceSteps: [
       ["01", "Eurostat", "Officiële kwartaalwaarnemingen"],
@@ -218,12 +216,12 @@ const COPY = {
       ["05", "Weergave", "Officiële waarden en schattingen afzonderlijk gelabeld"],
     ],
     facts: {
-      source: "Bron",
+      source: "Bron kwartaalschuld",
       coverage: "Dekking",
       coverageNote: (coverage) => `${coverage}/27 in de gezamenlijke periode`,
-      reference: "Nieuwste referentie",
+      reference: "Schuldperiode",
       referenceNote: "Officiële schuldstand aan het einde van het kwartaal",
-      fetched: "Laatst opgehaald",
+      fetched: "Schuldgegevens opgehaald",
       fetchedNote: "Opgeslagen, gevalideerde momentopname",
     },
     navLabel: "Methodologie",
@@ -300,8 +298,7 @@ const COPY = {
       elapsed: "Tijd tussen ankerpunten",
       days: (days) => `${days} dagen`,
       pace: "Gemodelleerd tempo",
-      exampleNote:
-        "Afgeronde weergavewaarden leveren mogelijk niet exact hetzelfde tempo op. De berekening gebruikt de volledige opgeslagen eurobedragen en UTC-tijdstippen aan het einde van het kwartaal.",
+      exampleNote: "Afgeronde waarden kunnen afwijken van het exacte tempo. Landentellers gebruiken volledige eurobedragen en kwartaaleinddatums, gelezen als 00:00 UTC, in plaats van het oorspronkelijke tijdstip aan het einde van de dag.",
       ratioTitle: "Zo werkt de live-schatting van de schuldquote",
       ratioText:
         "De gepubliceerde Eurostat-ratio is het officiële uitgangspunt. De optionele live weergave schaalt die ratio met de verandering in de gemodelleerde schuldstand, terwijl de afgeleide bbp-noemer constant blijft.",
@@ -319,7 +316,7 @@ const COPY = {
         ["Terugval bij ontbrekende historie", "Zonder twee bruikbare waarnemingen wordt de beweging nul totdat een geldige vergelijking beschikbaar is."],
         ["Consistente perioden", "Kwartaalcodes worden omgezet naar UTC-datums aan het einde van het kwartaal voordat de verstreken tijd wordt berekend."],
         ["Gezamenlijke EU-periode", "De EU-27-historie schuift alleen door bij volledige dekking van 27 landen, zodat misleidende totaalvergelijkingen worden voorkomen."],
-        ["Geen stille vervanging", "Officiële schuld en officiële schuldquote blijven afzonderlijke reeksen; een ontbrekende ratio wordt niet uit een andere bron verzonnen."],
+        ["Geen stille vervanging", "Officiële schuld en officiële ratio’s blijven afzonderlijke reeksen. Een eventuele terugval op bbp op de landenpagina is een berekening, geen gepubliceerde Eurostat-ratio."],
       ],
     },
     limitations: {
@@ -348,6 +345,7 @@ const COPY = {
       ],
       changelogTitle: "Methoderegister",
       changelog: [
+        ["2026-09", "2026-09-07", "Bronnenregister, berekeningslabels, brondatums en huidige beperkingen van de live weergave toegevoegd."],
         ["Versie 2.0", "30 aug. 2026", "Voegt logica voor de live schuldquote, bevriezing van verouderde data, exacte waarborgen, herzieningen en wisselkoersbeperkingen toe."],
         ["1.2", "jul. 2026", "Documenteert gevalideerde momentopnamen, officiële ratio’s en updates met de laatst bekende geldige landdata."],
       ],
@@ -385,7 +383,7 @@ const COPY = {
     base: "/de",
     locale: "de-DE",
     schema: {
-      headline: "Wie EU Debt Map Live-Schätzungen der Staatsverschuldung berechnet",
+      headline: "Staatsfinanzen: Quellen und Methodik.",
       datasetName: "Vierteljährliche Eurostat-Staatsschulden, die EU Debt Map verwendet",
       datasetDescription: "Validierte vierteljährliche Beobachtungen des konsolidierten Bruttoschuldenstands der EU-27, die EU Debt Map als offizielle Ankerpunkte verwendet.",
       spatialCoverage: "Europäische Union",
@@ -395,11 +393,10 @@ const COPY = {
     previewLabel: "Methodik-Entwurfsstudie · isolierte Vorschau",
     currentPage: "Aktuelle Seite ansehen",
     eyebrow: "Datenherkunft · Berechnung · Grenzen",
-    title: "Von Eurostat-Daten zu Live-Schätzungen der EU-Staatsschulden.",
-    lede:
-      "EU Debt Map trennt veröffentlichte Fakten von modellierten Bewegungen. Diese Seite zeigt jeden wichtigen Schritt: von der ursprünglichen Quartalsbeobachtung bis zu der Zahl, die sich auf dem Bildschirm bewegt.",
-    heroAction: "Dem Datenweg folgen",
-    heroNote: "Methodenversion 2.0 · geprüft am 30. August 2026",
+    title: "Staatsfinanzen: Quellen und Methodik.",
+    lede: "Europäische Staatsschulden, Haushaltssalden, Zinsen, Ausgaben und Einnahmen bis zu Eurostat zurückverfolgen. Offizielle Beobachtungen, Berechnungen von EU Debt Map und Live-Schätzungen bleiben klar getrennt.",
+    heroAction: "Quellen ansehen",
+    heroNote: "Quellenregister geprüft am 7. September 2026 · Schuldenmodell unverändert",
     sourcePanel: "Der Weg der Daten",
     sourceSteps: [
       ["01", "Eurostat", "Offizielle vierteljährliche Beobachtungen"],
@@ -409,12 +406,12 @@ const COPY = {
       ["05", "Anzeige", "Offizielle Werte und Schätzungen getrennt gekennzeichnet"],
     ],
     facts: {
-      source: "Quelle",
+      source: "Quelle der Quartalsschulden",
       coverage: "Abdeckung",
       coverageNote: (coverage) => `${coverage}/27 im gemeinsamen Zeitraum`,
-      reference: "Neuester Referenzwert",
+      reference: "Schuldenzeitraum",
       referenceNote: "Offizieller Schuldenstand zum Quartalsende",
-      fetched: "Zuletzt abgerufen",
+      fetched: "Schuldendaten abgerufen",
       fetchedNote: "Gespeicherter, validierter Datenstand",
     },
     navLabel: "Methodik",
@@ -491,8 +488,7 @@ const COPY = {
       elapsed: "Zeit zwischen den Ankerpunkten",
       days: (days) => `${days} Tage`,
       pace: "Modellierte Rate",
-      exampleNote:
-        "Gerundete Anzeigewerte ergeben möglicherweise nicht exakt dieselbe Rate. Die Berechnung verwendet die vollständig gespeicherten Eurobeträge und UTC-Zeitstempel zum Quartalsende.",
+      exampleNote: "Gerundete Werte können vom exakten Tempo abweichen. Länderzähler verwenden vollständige Eurobeträge und Quartalsenddaten als 00:00 UTC, nicht den ursprünglichen Zeitstempel am Tagesende.",
       ratioTitle: "So funktioniert die Live-Schätzung der Schuldenquote",
       ratioText:
         "Eurostats veröffentlichte Quote ist der offizielle Ausgangspunkt. Die optionale Live-Ansicht skaliert diese Quote mit der Veränderung des modellierten Schuldenstands und hält dabei den abgeleiteten BIP-Nenner konstant.",
@@ -510,7 +506,7 @@ const COPY = {
         ["Rückfall bei fehlender Historie", "Ohne zwei nutzbare Beobachtungen wird die Bewegung auf null gesetzt, bis ein gültiger Vergleich vorliegt."],
         ["Konsistente Zeiträume", "Quartalskennungen werden in UTC-Daten zum Quartalsende umgewandelt, bevor die verstrichene Zeit berechnet wird."],
         ["Gemeinsamer EU-Zeitraum", "Die EU-27-Historie wird nur bei vollständiger Abdeckung aller 27 Länder fortgeschrieben; so werden falsche Gesamtvergleiche verhindert."],
-        ["Keine stille Ersetzung", "Offizielle Schulden und offizielle Schuldenquote bleiben getrennte Reihen; eine fehlende Quote wird nicht aus einer anderen Quelle erfunden."],
+        ["Keine stille Ersetzung", "Offizielle Schulden und Quoten bleiben getrennte Reihen. Ein gegebenenfalls auf BIP beruhender Ersatz auf der Länderseite ist eine Berechnung, keine veröffentlichte Eurostat-Quote."],
       ],
     },
     limitations: {
@@ -539,6 +535,7 @@ const COPY = {
       ],
       changelogTitle: "Methodenprotokoll",
       changelog: [
+        ["2026-09", "2026-09-07", "Quellenregister, Berechnungskennzeichnungen, Quelldaten und aktuelle Grenzen der Live-Anzeige ergänzt."],
         ["Version 2.0", "30. Aug. 2026", "Ergänzt Live-Quotenlogik, Stopps bei veralteten Daten, genaue Schutzregeln, Revisionen und Wechselkursgrenzen."],
         ["1.2", "Juli 2026", "Dokumentiert validierte Datenstände, offizielle Quoten und Aktualisierungen mit zuletzt bekannten gültigen Länderwerten."],
       ],
@@ -576,7 +573,7 @@ const COPY = {
     base: "/fr",
     locale: "fr-FR",
     schema: {
-      headline: "Comment EU Debt Map calcule ses estimations en direct de la dette publique",
+      headline: "Finances publiques : sources et méthodologie.",
       datasetName: "Dette publique trimestrielle d’Eurostat utilisée par EU Debt Map",
       datasetDescription: "Observations trimestrielles validées de la dette brute consolidée des administrations publiques de l’UE-27, utilisées comme points d’ancrage officiels par EU Debt Map.",
       spatialCoverage: "Union européenne",
@@ -586,11 +583,10 @@ const COPY = {
     previewLabel: "Étude de conception de la méthodologie · aperçu isolé",
     currentPage: "Voir la page actuelle",
     eyebrow: "Origine des données · Calcul · Limites",
-    title: "Des données Eurostat aux estimations en direct de la dette de l’UE.",
-    lede:
-      "EU Debt Map distingue les faits publiés des mouvements modélisés. Cette page présente chaque étape importante : de l’observation trimestrielle d’origine au chiffre qui évolue à l’écran.",
-    heroAction: "Suivre le parcours des données",
-    heroNote: "Version 2.0 de la méthode · vérifiée le 30 août 2026",
+    title: "Finances publiques : sources et méthodologie.",
+    lede: "Retrouvez chez Eurostat l’origine des dettes publiques, soldes budgétaires, intérêts, dépenses et recettes européens. Observations officielles, calculs d’EU Debt Map et estimations en direct restent distincts.",
+    heroAction: "Explorer les sources",
+    heroNote: "Registre vérifié le 7 septembre 2026 · modèle de dette inchangé",
     sourcePanel: "Le parcours des données",
     sourceSteps: [
       ["01", "Eurostat", "Observations trimestrielles officielles"],
@@ -600,12 +596,12 @@ const COPY = {
       ["05", "Affichage", "Valeurs officielles et estimations étiquetées séparément"],
     ],
     facts: {
-      source: "Source",
+      source: "Source de la dette trimestrielle",
       coverage: "Couverture",
       coverageNote: (coverage) => `${coverage}/27 sur la période commune`,
-      reference: "Dernière référence",
+      reference: "Période de la dette",
       referenceNote: "Encours officiel en fin de trimestre",
-      fetched: "Dernière récupération",
+      fetched: "Données de dette consultées",
       fetchedNote: "Instantané stocké et validé",
     },
     navLabel: "Méthodologie",
@@ -682,8 +678,7 @@ const COPY = {
       elapsed: "Temps entre les points d’ancrage",
       days: (days) => `${days} jours`,
       pace: "Rythme modélisé",
-      exampleNote:
-        "Les valeurs d’affichage arrondies peuvent ne pas reproduire exactement le même rythme. Le calcul utilise les montants complets en euros stockés et les horodatages UTC de fin de trimestre.",
+      exampleNote: "Les valeurs arrondies peuvent différer du rythme exact. Les compteurs nationaux utilisent les montants complets et les dates de fin de trimestre à 00:00 UTC, plutôt que l’horodatage original de fin de journée.",
       ratioTitle: "Fonctionnement de l’estimation en direct du ratio dette/PIB",
       ratioText:
         "Le ratio publié par Eurostat constitue le point de départ officiel. La vue en direct facultative ajuste ce ratio selon la variation de la dette modélisée tout en maintenant constant le dénominateur implicite du PIB.",
@@ -701,7 +696,7 @@ const COPY = {
         ["Repli en cas d’historique insuffisant", "Sans deux observations utilisables, le mouvement est fixé à zéro jusqu’à ce qu’une comparaison valide soit possible."],
         ["Cohérence des périodes", "Les libellés trimestriels sont convertis en dates UTC de fin de trimestre avant le calcul du temps écoulé."],
         ["Période commune de l’UE", "L’historique de l’UE-27 n’avance qu’avec une couverture complète des 27 pays, ce qui évite de fausses comparaisons de totaux."],
-        ["Aucune substitution silencieuse", "La dette officielle et le ratio dette/PIB officiel restent des séries distinctes ; un ratio manquant n’est pas inventé à partir d’une autre source."],
+        ["Aucune substitution silencieuse", "La dette et les ratios officiels restent des séries distinctes. Un éventuel remplacement fondé sur le PIB dans une page nationale est un calcul, pas un ratio publié par Eurostat."],
       ],
     },
     limitations: {
@@ -730,6 +725,7 @@ const COPY = {
       ],
       changelogTitle: "Registre de la méthode",
       changelog: [
+        ["2026-09", "2026-09-07", "Ajout du registre, des calculs, des dates des sources et des limites actuelles de l’affichage en direct."],
         ["Version 2.0", "30 août 2026", "Ajoute la logique du ratio en direct, le gel des données anciennes, les garde-fous exacts, les révisions et les limites liées au change."],
         ["1.2", "juil. 2026", "Documente les instantanés validés, les ratios officiels et les mises à jour fondées sur les dernières données nationales valides."],
       ],

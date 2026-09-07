@@ -1,7 +1,20 @@
+import accountsSnapshot from "@/lib/fiscal/accounts.gen.json";
+import { METHODOLOGY_REVIEWED } from "@/lib/fiscal/methodology-registry";
+import { COUNTRY_DASHBOARD_REVIEWED } from "@/lib/fiscal/country-dashboard";
+import { ACCOUNTS } from "@/lib/fiscal/accounts";
 // app/sitemap.js
 // Hardened sitemap for EU Debt Map.
 // Includes static pages, localized pages, country pages, article hubs,
 // article detail pages and image sitemap data for articles.
+
+import interestSnapshot from "@/lib/fiscal/interest.gen.json";
+import { INTEREST } from "@/lib/fiscal/interest";
+import growthSnapshot from "@/lib/fiscal/growth.gen.json";
+import { GROWTH } from "@/lib/fiscal/growth";
+import capitaSnapshot from "@/lib/fiscal/per-capita.gen.json";
+import { PER_CAPITA } from "@/lib/fiscal/per-capita";
+import fiscalSnapshot from "@/lib/fiscal/balance.gen.json";
+import { BALANCE } from "@/lib/fiscal/indicators";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -171,6 +184,12 @@ export default async function sitemap() {
   }
 
   const DATA_LASTMOD = safeDate(EUROSTAT_UPDATED_AT);
+  const FISCAL_LASTMOD = new Date(Math.max(Date.parse(fiscalSnapshot.fetchedAt), Date.parse(BALANCE.contentReviewedAt)));
+  const CAPITA_LASTMOD = new Date(Math.max(Date.parse(capitaSnapshot.fetchedAt), Date.parse(PER_CAPITA.reviewedAt)));
+  const GROWTH_LASTMOD = new Date(Math.max(Date.parse(growthSnapshot.fetchedAt), Date.parse(GROWTH.reviewedAt)));
+  const INTEREST_LASTMOD = new Date(Math.max(Date.parse(interestSnapshot.fetchedAt), Date.parse(INTEREST.reviewedAt)));
+  const ACCOUNTS_LASTMOD = new Date(Math.max(Date.parse(accountsSnapshot.fetchedAt), Date.parse(ACCOUNTS.reviewedAt)));
+  const COUNTRY_LASTMOD = new Date(Math.max(DATA_LASTMOD.getTime(), FISCAL_LASTMOD.getTime(), CAPITA_LASTMOD.getTime(), GROWTH_LASTMOD.getTime(), INTEREST_LASTMOD.getTime(), ACCOUNTS_LASTMOD.getTime()));
   const seen = new Set();
   const urls = [];
 
@@ -189,12 +208,40 @@ export default async function sitemap() {
     for (const lang of ALL_LOCALES) {
       pushUrl({
         url: urlFor(item.path, lang),
-        lastModified: DATA_LASTMOD,
+        lastModified: item.path === "/methodology" ? new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(METHODOLOGY_REVIEWED))) : ["/", "/eu-debt"].includes(item.path) ? new Date(Math.max(DATA_LASTMOD.getTime(), GROWTH_LASTMOD.getTime())) : DATA_LASTMOD,
         changeFrequency: item.changeFrequency,
         priority: item.priority,
         alternates: { languages: alternates },
       });
     }
+  }
+
+  // Annual fiscal data has its own update date, independent of quarterly debt.
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/deficit", lang), lastModified: FISCAL_LASTMOD,
+      changeFrequency: "monthly", priority: 0.9,
+      alternates: { languages: { ...languageAlternatesFor("/deficit"), "x-default": urlFor("/deficit") } },
+    });
+  }
+
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/debt-per-capita", lang), lastModified: CAPITA_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+      alternates: { languages: { ...languageAlternatesFor("/debt-per-capita"), "x-default": urlFor("/debt-per-capita") } } });
+  }
+
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/debt-growth", lang), lastModified: GROWTH_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+      alternates: { languages: { ...languageAlternatesFor("/debt-growth"), "x-default": urlFor("/debt-growth") } } });
+  }
+
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/interest-cost", lang), lastModified: INTEREST_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+      alternates: { languages: { ...languageAlternatesFor("/interest-cost"), "x-default": urlFor("/interest-cost") } } });
+  }
+
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/government-spending", lang), lastModified: ACCOUNTS_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+      alternates: { languages: { ...languageAlternatesFor("/government-spending"), "x-default": urlFor("/government-spending") } } });
   }
 
   // Dutch-only financial guide. Add language alternates when localized versions exist.
@@ -217,7 +264,7 @@ export default async function sitemap() {
       for (const lang of ALL_LOCALES) {
         pushUrl({
           url: urlFor(path, lang),
-          lastModified: DATA_LASTMOD,
+          lastModified: new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(COUNTRY_DASHBOARD_REVIEWED))),
           changeFrequency: "daily",
           priority: 0.8,
           alternates: { languages: alternates },

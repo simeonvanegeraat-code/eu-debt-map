@@ -1,89 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createPortal } from "react-dom";
 import { getLocaleFromPathname } from "@/lib/locale";
 import { getArticleTranslationHref } from "@/lib/articleTranslations";
-
-/* ---------------- NAVIGATIE ---------------- */
-const NAV = [
-  { href: "/", key: "home" },
-  { href: "/debt-to-gdp", key: "debtToGdp" },
-  { href: "/debt", key: "whatIsDebt" },
-  { href: "/articles", key: "articles" },
-  { href: "/about", key: "about" },
-  { href: "/methodology", key: "methodology" },
-];
-
-/* ---------------- TEKSTEN ---------------- */
-const TEXT = {
-  en: {
-    nav: {
-      home: "Home",
-      debtToGdp: "Debt-to-GDP",
-      whatIsDebt: "What is Debt?",
-      articles: "Articles",
-      about: "About",
-      methodology: "Methodology",
-    },
-    changeLanguage: "Change language",
-    currentLanguage: "Current language",
-    active: "Active",
-    brandHome: "EU Debt Map – Home",
-    toggleMenu: "Toggle menu",
-    closeMenu: "Close menu",
-  },
-  nl: {
-    nav: {
-      home: "Home",
-      debtToGdp: "Schuld/bbp",
-      whatIsDebt: "Wat is schuld?",
-      articles: "Artikelen",
-      about: "Over",
-      methodology: "Methodologie",
-    },
-    changeLanguage: "Taal wijzigen",
-    currentLanguage: "Huidige taal",
-    active: "Actief",
-    brandHome: "EU Debt Map – Home",
-    toggleMenu: "Menu openen",
-    closeMenu: "Menu sluiten",
-  },
-  de: {
-    nav: {
-      home: "Startseite",
-      debtToGdp: "Schulden/BIP",
-      whatIsDebt: "Was sind Schulden?",
-      articles: "Artikel",
-      about: "Über",
-      methodology: "Methodik",
-    },
-    changeLanguage: "Sprache ändern",
-    currentLanguage: "Aktuelle Sprache",
-    active: "Aktiv",
-    brandHome: "EU Debt Map – Startseite",
-    toggleMenu: "Menü umschalten",
-    closeMenu: "Menü schließen",
-  },
-  fr: {
-    nav: {
-      home: "Accueil",
-      debtToGdp: "Dette/PIB",
-      whatIsDebt: "La dette",
-      articles: "Articles",
-      about: "À propos",
-      methodology: "Méthodologie",
-    },
-    changeLanguage: "Changer de langue",
-    currentLanguage: "Langue actuelle",
-    active: "Actif",
-    brandHome: "EU Debt Map – Accueil",
-    toggleMenu: "Ouvrir le menu",
-    closeMenu: "Fermer le menu",
-  },
-};
+import { COUNTRY_NAMES } from "@/lib/countries";
+import { navigationFor, localeAwareHref, isActivePath } from "@/lib/navigation";
 
 /* ---------------- CONSTANTEN ---------------- */
 const NO_LOCALE = new Set([]);
@@ -158,31 +81,33 @@ function firstSegment(pathname) {
   return seg;
 }
 
-function isExternal(href) {
-  return /^https?:\/\//i.test(href);
-}
-
-function localeAwareHref(hrefBase, locale) {
-  if (!hrefBase) return "/";
-  if (isExternal(hrefBase)) return hrefBase;
-
-  const clean = hrefBase.startsWith("/") ? hrefBase : `/${hrefBase}`;
-  const seg = firstSegment(clean);
-
-  if (NO_LOCALE.has(seg)) return clean;
-  if (!locale || locale === "en" || locale === "") return clean;
-  if (clean === "/") return `/${locale}`;
-  return `/${locale}${clean}`;
-}
-
-function isActivePath(pathname, hrefBase, locale) {
-  const target = localeAwareHref(hrefBase, locale);
-  if (hrefBase === "/") return pathname === target;
-  return pathname === target || pathname.startsWith(target + "/");
+// Ordinary disclosure links use Tab; Escape closes and returns focus to the trigger.
+function useDisclosureDismiss(open, onClose, rootRef, triggerRef) {
+  useEffect(() => {
+    if (!open) return;
+    function onOutside(event) {
+      if (!rootRef.current?.contains(event.target)) onClose();
+    }
+    function onEscape(event) {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+      triggerRef.current?.focus();
+    }
+    document.addEventListener('pointerdown', onOutside);
+    document.addEventListener('focusin', onOutside);
+    document.addEventListener('keydown', onEscape);
+    return () => {
+      document.removeEventListener('pointerdown', onOutside);
+      document.removeEventListener('focusin', onOutside);
+      document.removeEventListener('keydown', onEscape);
+    };
+  }, [open, onClose, rootRef, triggerRef]);
 }
 
 /* ---------------- LANGUAGE DROPDOWN ---------------- */
-function LanguageDropdown({ t }) {
+function LanguageDropdown({ t, inline = false, onNavigate }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
   const current = getLocaleFromPathname(pathname);
@@ -190,23 +115,9 @@ function LanguageDropdown({ t }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  useEffect(() => {
-    function onDocClick(e) {
-      if (!ref.current) return;
-      if (!ref.current.contains(e.target)) setOpen(false);
-    }
-
-    function onEsc(e) {
-      if (e.key === "Escape") setOpen(false);
-    }
-
-    document.addEventListener("click", onDocClick);
-    document.addEventListener("keydown", onEsc);
-    return () => {
-      document.removeEventListener("click", onDocClick);
-      document.removeEventListener("keydown", onEsc);
-    };
-  }, []);
+  const triggerRef = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  useDisclosureDismiss(open, close, ref, triggerRef);
 
   const currentLocale = LOCALES.find((l) => l.code === current) || LOCALES[0];
 
@@ -262,14 +173,16 @@ function LanguageDropdown({ t }) {
 
     const target = nextPath + url.search + url.hash;
     setOpen(false);
+    onNavigate?.();
     router.push(target);
   }
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
-      <button
+      {!inline && <button
+        ref={triggerRef}
         type="button"
-        aria-haspopup="menu"
+        aria-controls="desktop-languages"
         aria-expanded={open}
         aria-label={t.changeLanguage}
         onClick={() => setOpen((v) => !v)}
@@ -281,14 +194,14 @@ function LanguageDropdown({ t }) {
         </span>
         <span className="lang-trigger-code">{currentLocale.short}</span>
         <ChevronIcon open={open} />
-      </button>
+      </button>}
 
-      {open && (
         <ul
-          role="menu"
-          className="lang-menu"
+          id={inline ? "mobile-languages" : "desktop-languages"}
+          hidden={!open && !inline}
+          className={`lang-menu${inline ? " lang-menu--inline" : ""}`}
           aria-label={t.changeLanguage}
-          style={{
+          style={inline ? undefined : {
             position: "absolute",
             right: 0,
             top: "calc(100% + 10px)",
@@ -307,11 +220,10 @@ function LanguageDropdown({ t }) {
           {LOCALES.map((opt) => {
             const active = opt.code === current;
             return (
-              <li key={opt.code || "en"} role="none">
+              <li key={opt.code || "en"}>
                 <button
                   type="button"
-                  role="menuitemradio"
-                  aria-checked={active}
+                  aria-pressed={active}
                   onClick={() => onSelect(opt)}
                   className={`lang-item${active ? " lang-item--active" : ""}`}
                 >
@@ -335,9 +247,15 @@ function LanguageDropdown({ t }) {
             );
           })}
         </ul>
-      )}
 
       <style jsx>{`
+        .lang-menu { list-style: none; margin: 0; }
+        .lang-menu--inline { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 0; }
+        .lang-menu--inline .lang-item { padding: 12px 8px; gap: 4px; }
+        .lang-menu--inline .lang-item-main { gap: 7px; }
+        .lang-menu--inline .lang-item-label { font-size: 13px; }
+        .lang-menu--inline .lang-item-side { display: none; }
+        .lang-item:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
         .lang-trigger {
           display: inline-flex;
           align-items: center;
@@ -465,179 +383,178 @@ function LanguageDropdown({ t }) {
   );
 }
 
-/* ---------------- MOBILE DRAWER VIA PORTAL ---------------- */
-function MobileDrawer({ open, onClose, closeLabel, children }) {
-  const [mounted, setMounted] = useState(false);
-  const [el, setEl] = useState(null);
-
-  useEffect(() => {
-    const div = document.createElement("div");
-    document.body.appendChild(div);
-    setEl(div);
-    setMounted(true);
-
-    return () => {
-      document.body.removeChild(div);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!open) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    function onKeyDown(event) {
-      if (event.key === "Escape") onClose();
-    }
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!mounted || !el) return null;
-
-  return createPortal(
-    <div
-      className={`nav-drawer ${open ? "nav-drawer--open" : ""}`}
-      onClick={onClose}
-      aria-hidden={!open}
-    >
-      <div
-        className="nav-drawer-inner"
-        role="dialog"
-        aria-modal="true"
-        aria-label={closeLabel}
-        onClick={(e) => e.stopPropagation()}
+function NavigationLinks({ items, locale, pathname, onNavigate, className = 'nav-panel-link' }) {
+  return items.map(item => {
+    const active = isActivePath(pathname, item.href, locale);
+    return (
+      <Link
+        key={item.key}
+        href={localeAwareHref(item.href, locale)}
+        prefetch={false}
+        className={`${className}${active ? ` ${className}--active` : ''}`}
+        aria-current={active ? 'page' : undefined}
+        onClick={onNavigate}
       >
-        <div className="drawer-header">
-          <span className="drawer-title">EU Debt Map</span>
-          <button
-            className="drawer-close"
-            type="button"
-            onClick={onClose}
-            aria-label={closeLabel}
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+        {item.label}
+      </Link>
+    );
+  });
+}
+
+function DesktopGroup({ group, locale, pathname }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+  const triggerRef = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  useDisclosureDismiss(open, close, rootRef, triggerRef);
+  const active = group.items.some(item => isActivePath(pathname, item.href, locale));
+  const panelId = `navigation-${group.key}`;
+
+  return (
+    <div className="nav-group" ref={rootRef}>
+      <button
+        type="button"
+        ref={triggerRef}
+        className={`nav-link nav-group-trigger${active ? ' nav-link--active' : ''}`}
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen(value => !value)}
+      >
+        {group.label}<ChevronIcon open={open} />
+      </button>
+      <div id={panelId} className={`nav-panel${group.key === 'countries' ? ' nav-panel--countries' : ''}`} hidden={!open}>
+        <p className="nav-panel-intro">{group.intro}</p>
+        <div className="nav-panel-links">
+          <NavigationLinks items={group.items} locale={locale} pathname={pathname} onNavigate={close} />
         </div>
-        {children}
       </div>
-    </div>,
-    el
+    </div>
   );
 }
 
-/* ---------------- HEADER ---------------- */
-export default function Header() {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname() || "/";
-  const locale = getLocaleFromPathname(pathname);
-  const effLocale = locale || "en";
-  const t = useMemo(() => TEXT[effLocale] || TEXT.en, [effLocale]);
+function MobileDrawer({ open, onClose, label, closeLabel, children }) {
+  const dialogRef = useRef(null);
 
-  useEffect(() => setOpen(false), [pathname]);
+  function keepFocusInside(event) {
+    if (event.key !== 'Tab') return;
+    const dialog = dialogRef.current;
+    const controls = [...dialog.querySelectorAll('button:not([disabled]), a[href], summary')]
+      .filter(element => element.getClientRects().length > 0);
+    const first = controls[0], last = controls[controls.length - 1];
+    const current = document.activeElement;
+    if (event.shiftKey && (current === first || current === dialog)) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && current === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const dialog = dialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      id="mobile-navigation"
+      className="nav-drawer"
+      aria-label={label}
+      onKeyDown={keepFocusInside}
+      onCancel={event => { event.preventDefault(); onClose(); }}
+      onClick={event => { if (event.target === event.currentTarget) onClose(); }}
+    >
+      <div className="nav-drawer-inner">
+        <div className="drawer-header">
+          <span className="drawer-title">EU Debt Map</span>
+          <button className="drawer-close" type="button" onClick={onClose} aria-label={closeLabel} autoFocus>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        {open && children}
+      </div>
+    </dialog>
+  );
+}
+
+function HeaderNavigation({ pathname }) {
+  const [open, setOpen] = useState(false);
+  const locale = getLocaleFromPathname(pathname);
+  const { t, groups, links } = useMemo(() => navigationFor(locale || 'en', COUNTRY_NAMES), [locale]);
+  const close = useCallback(() => setOpen(false), []);
+  const brandRef = useRef(null);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1180px)');
+    function onResize() {
+      if (desktop.matches && open) {
+        close();
+        // The mobile trigger is hidden after this breakpoint.
+        requestAnimationFrame(() => brandRef.current?.focus());
+      }
+    }
+    desktop.addEventListener('change', onResize);
+    return () => desktop.removeEventListener('change', onResize);
+  }, [open, close]);
 
   return (
     <>
       <header className="site-header site-header--light">
         <div className="container header-inner">
-          <Link
-            href={localeAwareHref("/", locale)}
-            className="brand"
-            aria-label={t.brandHome}
-          >
+          <Link ref={brandRef} href={localeAwareHref('/', locale)} className="brand" aria-label={t.brandHome}>
             <span className="brand-logo">EU</span>
             <span className="brand-text">Debt Map</span>
           </Link>
-
-          <nav className="nav-desktop">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={localeAwareHref(item.href, locale)}
-                className={
-                  "nav-link" +
-                  (isActivePath(pathname, item.href, locale)
-                    ? " nav-link--active"
-                    : "")
-                }
-                aria-current={
-                  isActivePath(pathname, item.href, locale) ? "page" : undefined
-                }
-              >
-                {t.nav[item.key]}
-              </Link>
-            ))}
-            <LanguageDropdown t={t} />
+          <nav className="nav-desktop" aria-label={t.navigation}>
+            {groups.map(group => <DesktopGroup key={group.key} group={group} locale={locale} pathname={pathname} />)}
+            <NavigationLinks items={links} locale={locale} pathname={pathname} className="nav-link" />
+            <LanguageDropdown key={locale} t={t} />
           </nav>
-
           <button
-            className={`hamburger${open ? " hamburger--open" : ""}`}
+            className={`hamburger${open ? ' hamburger--open' : ''}`}
             type="button"
             aria-label={t.toggleMenu}
             aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
+            aria-controls="mobile-navigation"
+            onClick={() => setOpen(value => !value)}
           >
-            <span />
-            <span />
-            <span />
+            <span /><span /><span />
           </button>
         </div>
       </header>
-
-      <MobileDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        closeLabel={t.closeMenu}
-      >
-        <nav className="drawer-nav" aria-label={t.toggleMenu}>
-          {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={localeAwareHref(item.href, locale)}
-            className={
-              "drawer-link" +
-              (isActivePath(pathname, item.href, locale)
-                ? " drawer-link--active"
-                : "")
-            }
-            aria-current={
-              isActivePath(pathname, item.href, locale) ? "page" : undefined
-            }
-          >
-            {t.nav[item.key]}
-          </Link>
+      <MobileDrawer open={open} onClose={close} label={t.navigation} closeLabel={t.closeMenu}>
+        <nav className="drawer-nav" aria-label={t.navigation}>
+          {groups.map(group => (
+            <details className="drawer-group" key={`${pathname}-${group.key}`} open={group.items.some(item => isActivePath(pathname, item.href, locale))}>
+              <summary>{group.label}<ChevronIcon /></summary>
+              <div className={group.key === 'countries' ? 'drawer-countries' : undefined}>
+                <NavigationLinks items={group.items} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
+              </div>
+            </details>
           ))}
+          <div className="drawer-direct">
+            <NavigationLinks items={links} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
+          </div>
         </nav>
-        <div
-          style={{
-            padding: "12px 16px",
-            borderTop: "1px solid var(--header-border)",
-          }}
-        >
-          <LanguageDropdown t={t} />
+        <div className="drawer-languages">
+          <p>{t.language}</p>
+          <LanguageDropdown t={t} inline onNavigate={close} />
         </div>
       </MobileDrawer>
-
-      <style jsx>{`
-        @media (min-width: 901px) {
-          .brand {
-            flex-shrink: 0;
-          }
-
-          .brand-text {
-            white-space: nowrap;
-          }
-
-          .nav-link {
-            white-space: nowrap;
-          }
-        }
-      `}</style>
     </>
   );
+}
+
+export default function Header() {
+  const pathname = usePathname() || '/';
+  return <HeaderNavigation key={pathname} pathname={pathname} />;
 }

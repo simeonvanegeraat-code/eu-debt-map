@@ -1,0 +1,1944 @@
+{
+  "schemaVersion": 1,
+  "dataset": "gov_10dd_edpt1",
+  "filters": {
+    "balance": {
+      "freq": "A",
+      "sector": "S13",
+      "na_item": "B9",
+      "unit": "PC_GDP"
+    },
+    "debt": {
+      "freq": "A",
+      "sector": "S13",
+      "na_item": "GD",
+      "unit": "PC_GDP"
+    }
+  },
+  "fetchedAt": "2026-09-05T15:51:26.795Z",
+  "sourceUpdated": "2026-04-22T11:00:00+0200",
+  "sourceUrls": {
+    "balance": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10dd_edpt1?lang=EN&freq=A&sector=S13&na_item=B9&unit=PC_GDP&lastTimePeriod=11&geo=AT&geo=BE&geo=BG&geo=HR&geo=CY&geo=CZ&geo=DK&geo=EE&geo=FI&geo=FR&geo=DE&geo=EL&geo=HU&geo=IE&geo=IT&geo=LV&geo=LT&geo=LU&geo=MT&geo=NL&geo=PL&geo=PT&geo=RO&geo=SK&geo=SI&geo=ES&geo=SE&geo=EU27_2020",
+    "debt": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10dd_edpt1?lang=EN&freq=A&sector=S13&na_item=GD&unit=PC_GDP&lastTimePeriod=11&geo=AT&geo=BE&geo=BG&geo=HR&geo=CY&geo=CZ&geo=DK&geo=EE&geo=FI&geo=FR&geo=DE&geo=EL&geo=HU&geo=IE&geo=IT&geo=LV&geo=LT&geo=LU&geo=MT&geo=NL&geo=PL&geo=PT&geo=RO&geo=SK&geo=SI&geo=ES&geo=SE&geo=EU27_2020"
+  },
+  "years": [
+    "2015",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "latestCompleteYear": "2025",
+  "series": {
+    "AT": {
+      "2015": {
+        "balance": -0.5,
+        "debtRatio": 85.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1.5,
+        "debtRatio": 83.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.8,
+        "debtRatio": 79.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.2,
+        "debtRatio": 74.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.5,
+        "debtRatio": 71,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -8.2,
+        "debtRatio": 83.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -5.7,
+        "debtRatio": 82.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3.4,
+        "debtRatio": 78.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.6,
+        "debtRatio": 77.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -4.6,
+        "debtRatio": 80,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -4.2,
+        "debtRatio": 81.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "BE": {
+      "2015": {
+        "balance": -2.5,
+        "debtRatio": 105.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2.4,
+        "debtRatio": 105.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.8,
+        "debtRatio": 102.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -1,
+        "debtRatio": 100.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -2,
+        "debtRatio": 97.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -9,
+        "debtRatio": 111.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -5.4,
+        "debtRatio": 108.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3.5,
+        "debtRatio": 103.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -4.1,
+        "debtRatio": 102.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -4.4,
+        "debtRatio": 103.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -5.2,
+        "debtRatio": 107.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "BG": {
+      "2015": {
+        "balance": -1.9,
+        "debtRatio": 25.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.3,
+        "debtRatio": 29.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.6,
+        "debtRatio": 25.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 1.7,
+        "debtRatio": 22.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 2.2,
+        "debtRatio": 20.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -3.8,
+        "debtRatio": 24.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -4,
+        "debtRatio": 23.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -2.9,
+        "debtRatio": 22.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2,
+        "debtRatio": 22.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -3,
+        "debtRatio": 23.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -3.5,
+        "debtRatio": 29.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "HR": {
+      "2015": {
+        "balance": -3.5,
+        "debtRatio": 82.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1,
+        "debtRatio": 79.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 0.6,
+        "debtRatio": 76.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.1,
+        "debtRatio": 72.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.2,
+        "debtRatio": 70.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -7.2,
+        "debtRatio": 86.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -2.6,
+        "debtRatio": 78.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 0,
+        "debtRatio": 68.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -1.1,
+        "debtRatio": 60.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -2.3,
+        "debtRatio": 57.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -3,
+        "debtRatio": 56.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "CY": {
+      "2015": {
+        "balance": -0.8,
+        "debtRatio": 111.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.5,
+        "debtRatio": 106.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 2.1,
+        "debtRatio": 96.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -3.4,
+        "debtRatio": 100.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 1,
+        "debtRatio": 92.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.6,
+        "debtRatio": 113.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -1.6,
+        "debtRatio": 96.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 2.7,
+        "debtRatio": 80.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": 1.7,
+        "debtRatio": 71.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 4.1,
+        "debtRatio": 62.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": 3.4,
+        "debtRatio": 55,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "CZ": {
+      "2015": {
+        "balance": -0.7,
+        "debtRatio": 39.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.7,
+        "debtRatio": 36.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.5,
+        "debtRatio": 33.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.9,
+        "debtRatio": 31.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.3,
+        "debtRatio": 29.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.6,
+        "debtRatio": 36.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -5,
+        "debtRatio": 40.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3.1,
+        "debtRatio": 42.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -3.7,
+        "debtRatio": 42.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -2,
+        "debtRatio": 43.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.1,
+        "debtRatio": 44.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "DK": {
+      "2015": {
+        "balance": -0.9,
+        "debtRatio": 44.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.3,
+        "debtRatio": 41.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.7,
+        "debtRatio": 40.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.8,
+        "debtRatio": 38.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 4.3,
+        "debtRatio": 38.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": 0.4,
+        "debtRatio": 45.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": 4.1,
+        "debtRatio": 39.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 3.4,
+        "debtRatio": 33.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": 3.4,
+        "debtRatio": 33,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 4.5,
+        "debtRatio": 30.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": 2.9,
+        "debtRatio": 27.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "EE": {
+      "2015": {
+        "balance": 0.2,
+        "debtRatio": 10.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -0.1,
+        "debtRatio": 10.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.5,
+        "debtRatio": 9.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.6,
+        "debtRatio": 8.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -0.1,
+        "debtRatio": 9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.4,
+        "debtRatio": 19.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -2.5,
+        "debtRatio": 18.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -0.9,
+        "debtRatio": 19.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.7,
+        "debtRatio": 20.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -1.1,
+        "debtRatio": 23.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2,
+        "debtRatio": 24.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "FI": {
+      "2015": {
+        "balance": -2.4,
+        "debtRatio": 68.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1.7,
+        "debtRatio": 68.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.6,
+        "debtRatio": 66.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.9,
+        "debtRatio": 65.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -0.9,
+        "debtRatio": 65.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.5,
+        "debtRatio": 75.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -2.7,
+        "debtRatio": 73.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -0.2,
+        "debtRatio": 74,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.9,
+        "debtRatio": 77,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -4.4,
+        "debtRatio": 82.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -3.4,
+        "debtRatio": 88.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "FR": {
+      "2015": {
+        "balance": -3.9,
+        "debtRatio": 97,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -3.8,
+        "debtRatio": 98.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -3.4,
+        "debtRatio": 98.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -2.3,
+        "debtRatio": 98.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -2.4,
+        "debtRatio": 98.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -8.9,
+        "debtRatio": 114.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -6.6,
+        "debtRatio": 112.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -4.7,
+        "debtRatio": 111.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -5.4,
+        "debtRatio": 109.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -5.8,
+        "debtRatio": 112.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -5.1,
+        "debtRatio": 115.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "DE": {
+      "2015": {
+        "balance": 0.9,
+        "debtRatio": 71.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 1.1,
+        "debtRatio": 68.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.3,
+        "debtRatio": 64,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 1.9,
+        "debtRatio": 60.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 1.3,
+        "debtRatio": 58.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -4.4,
+        "debtRatio": 68,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -3.2,
+        "debtRatio": 67.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -1.9,
+        "debtRatio": 64.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.5,
+        "debtRatio": 62.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -2.7,
+        "debtRatio": 62.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.7,
+        "debtRatio": 63.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "GR": {
+      "2015": {
+        "balance": -5.9,
+        "debtRatio": 179.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.2,
+        "debtRatio": 183.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 0.7,
+        "debtRatio": 182.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.9,
+        "debtRatio": 189,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.8,
+        "debtRatio": 183.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -9.9,
+        "debtRatio": 209.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -7.2,
+        "debtRatio": 197.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -2.6,
+        "debtRatio": 177.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -1.4,
+        "debtRatio": 164.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 1.3,
+        "debtRatio": 154.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": 1.7,
+        "debtRatio": 146.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "HU": {
+      "2015": {
+        "balance": -2,
+        "debtRatio": 75.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1.8,
+        "debtRatio": 74.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -2.5,
+        "debtRatio": 72,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -2,
+        "debtRatio": 68.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -2,
+        "debtRatio": 65,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -7.5,
+        "debtRatio": 78.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -7.1,
+        "debtRatio": 76.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -6.2,
+        "debtRatio": 74.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -7,
+        "debtRatio": 73.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -5.1,
+        "debtRatio": 73.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -4.7,
+        "debtRatio": 74.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "IE": {
+      "2015": {
+        "balance": -2,
+        "debtRatio": 74,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -0.8,
+        "debtRatio": 72.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.3,
+        "debtRatio": 65.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.1,
+        "debtRatio": 61.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.4,
+        "debtRatio": 55.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5,
+        "debtRatio": 56.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -1.3,
+        "debtRatio": 52.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 1.6,
+        "debtRatio": 43,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": 1.4,
+        "debtRatio": 41.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 4.1,
+        "debtRatio": 38.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": 1.8,
+        "debtRatio": 32.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "IT": {
+      "2015": {
+        "balance": -2.5,
+        "debtRatio": 134.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2.4,
+        "debtRatio": 134.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -2.5,
+        "debtRatio": 133.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -2.2,
+        "debtRatio": 134.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -1.5,
+        "debtRatio": 133.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -9.4,
+        "debtRatio": 154.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -8.9,
+        "debtRatio": 145.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -8.1,
+        "debtRatio": 138.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -7.1,
+        "debtRatio": 133.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -3.4,
+        "debtRatio": 134.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -3.1,
+        "debtRatio": 137.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "LV": {
+      "2015": {
+        "balance": -1.5,
+        "debtRatio": 38.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0,
+        "debtRatio": 41.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.3,
+        "debtRatio": 40.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -1.4,
+        "debtRatio": 38.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -0.2,
+        "debtRatio": 37.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -4.1,
+        "debtRatio": 44,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -7.2,
+        "debtRatio": 45.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -4.9,
+        "debtRatio": 44.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.3,
+        "debtRatio": 44.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -1.8,
+        "debtRatio": 46.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.5,
+        "debtRatio": 46.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "LT": {
+      "2015": {
+        "balance": -0.8,
+        "debtRatio": 42.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0,
+        "debtRatio": 39.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 0.4,
+        "debtRatio": 39.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.5,
+        "debtRatio": 33.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.4,
+        "debtRatio": 35.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -6.4,
+        "debtRatio": 45.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -1.1,
+        "debtRatio": 43.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -0.7,
+        "debtRatio": 38.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -0.7,
+        "debtRatio": 37.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -1.3,
+        "debtRatio": 38,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -1.8,
+        "debtRatio": 39.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "LU": {
+      "2015": {
+        "balance": 1.3,
+        "debtRatio": 21.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 1.9,
+        "debtRatio": 19.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.4,
+        "debtRatio": 21.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 3.2,
+        "debtRatio": 20.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 2.7,
+        "debtRatio": 22.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -3.1,
+        "debtRatio": 24.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": 1.1,
+        "debtRatio": 24.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 0.2,
+        "debtRatio": 24.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -0.7,
+        "debtRatio": 24.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 0.9,
+        "debtRatio": 26.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2,
+        "debtRatio": 26.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "MT": {
+      "2015": {
+        "balance": -0.8,
+        "debtRatio": 55,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 1.1,
+        "debtRatio": 53.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 3.4,
+        "debtRatio": 45.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 1.9,
+        "debtRatio": 41.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.8,
+        "debtRatio": 39.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -8.7,
+        "debtRatio": 48.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -6.9,
+        "debtRatio": 49.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -5.3,
+        "debtRatio": 50.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -4.4,
+        "debtRatio": 46.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -3.4,
+        "debtRatio": 45.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.2,
+        "debtRatio": 46.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "NL": {
+      "2015": {
+        "balance": -1.8,
+        "debtRatio": 63.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.2,
+        "debtRatio": 60.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.4,
+        "debtRatio": 56,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 1.5,
+        "debtRatio": 51.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 1.9,
+        "debtRatio": 47.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -3.7,
+        "debtRatio": 53.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -2.3,
+        "debtRatio": 50.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 0,
+        "debtRatio": 48.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -0.4,
+        "debtRatio": 45.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -0.7,
+        "debtRatio": 43.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -1.6,
+        "debtRatio": 44.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "PL": {
+      "2015": {
+        "balance": -2.6,
+        "debtRatio": 51.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2.4,
+        "debtRatio": 54.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -1.5,
+        "debtRatio": 50.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.2,
+        "debtRatio": 48.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -0.7,
+        "debtRatio": 45.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -6.9,
+        "debtRatio": 56.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -1.7,
+        "debtRatio": 53,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3.4,
+        "debtRatio": 48.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -5.2,
+        "debtRatio": 49.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -6.4,
+        "debtRatio": 54.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -7.3,
+        "debtRatio": 59.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "PT": {
+      "2015": {
+        "balance": -4.5,
+        "debtRatio": 131,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1.9,
+        "debtRatio": 131.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -3,
+        "debtRatio": 126,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.4,
+        "debtRatio": 121.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.1,
+        "debtRatio": 116.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.8,
+        "debtRatio": 134.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -2.8,
+        "debtRatio": 123.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -0.3,
+        "debtRatio": 111.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": 1.1,
+        "debtRatio": 96.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": 0.6,
+        "debtRatio": 93.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": 0.7,
+        "debtRatio": 89.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "RO": {
+      "2015": {
+        "balance": -0.5,
+        "debtRatio": 37.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2.5,
+        "debtRatio": 37.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -2.5,
+        "debtRatio": 35.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -2.8,
+        "debtRatio": 34.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -4.4,
+        "debtRatio": 35.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -9.3,
+        "debtRatio": 46.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -7.2,
+        "debtRatio": 48.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -6.5,
+        "debtRatio": 48.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -6.6,
+        "debtRatio": 49.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -9.3,
+        "debtRatio": 54.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -7.9,
+        "debtRatio": 59.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "SK": {
+      "2015": {
+        "balance": -2.8,
+        "debtRatio": 51.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2.6,
+        "debtRatio": 52.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -1,
+        "debtRatio": 51.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -1,
+        "debtRatio": 49.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -1.2,
+        "debtRatio": 48,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -5.3,
+        "debtRatio": 58.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -5.1,
+        "debtRatio": 60.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -1.6,
+        "debtRatio": 57.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -5.3,
+        "debtRatio": 55.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -5.3,
+        "debtRatio": 59.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -4.5,
+        "debtRatio": 61.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "SI": {
+      "2015": {
+        "balance": -2.8,
+        "debtRatio": 83.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -2,
+        "debtRatio": 79.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 0.1,
+        "debtRatio": 74.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.9,
+        "debtRatio": 71,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.7,
+        "debtRatio": 66,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -7.7,
+        "debtRatio": 80.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -4.6,
+        "debtRatio": 74.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3,
+        "debtRatio": 72.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -2.6,
+        "debtRatio": 68.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -0.9,
+        "debtRatio": 66.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.5,
+        "debtRatio": 65.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "ES": {
+      "2015": {
+        "balance": -5.3,
+        "debtRatio": 102.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -4.2,
+        "debtRatio": 102,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -3.1,
+        "debtRatio": 101.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -2.6,
+        "debtRatio": 99.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -3.1,
+        "debtRatio": 97.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -9.9,
+        "debtRatio": 119.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -6.7,
+        "debtRatio": 115.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -4.6,
+        "debtRatio": 109.3,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -3.3,
+        "debtRatio": 105.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -3.2,
+        "debtRatio": 101.6,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -2.4,
+        "debtRatio": 100.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "SE": {
+      "2015": {
+        "balance": -0.3,
+        "debtRatio": 44.8,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": 0.8,
+        "debtRatio": 43.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": 1.3,
+        "debtRatio": 41.9,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": 0.7,
+        "debtRatio": 40.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": 0.4,
+        "debtRatio": 36,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -3.2,
+        "debtRatio": 40.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -0.2,
+        "debtRatio": 37.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": 1,
+        "debtRatio": 34.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -0.9,
+        "debtRatio": 32.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -1.5,
+        "debtRatio": 34.2,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -1.3,
+        "debtRatio": 35.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    },
+    "EU27_2020": {
+      "2015": {
+        "balance": -1.9,
+        "debtRatio": 85.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2016": {
+        "balance": -1.4,
+        "debtRatio": 84.1,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2017": {
+        "balance": -0.9,
+        "debtRatio": 81.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2018": {
+        "balance": -0.4,
+        "debtRatio": 79.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2019": {
+        "balance": -0.5,
+        "debtRatio": 77.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2020": {
+        "balance": -6.7,
+        "debtRatio": 89.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2021": {
+        "balance": -4.6,
+        "debtRatio": 86.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2022": {
+        "balance": -3.2,
+        "debtRatio": 82.4,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2023": {
+        "balance": -3.4,
+        "debtRatio": 80.5,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2024": {
+        "balance": -3.1,
+        "debtRatio": 80.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      },
+      "2025": {
+        "balance": -3.1,
+        "debtRatio": 81.7,
+        "balanceStatus": "",
+        "debtStatus": ""
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
 import { countryName } from "@/lib/countries";
 import { getCountryCopy, localeBase, localeFor } from "./country-copy";
+import { getCountryFiscalCopy } from "./country-fiscal-copy";
 import styles from "./country-page.module.css";
 
 const COMPARISON_CODES = ["GR", "IT", "FR", "NL", "EE"];
@@ -94,6 +95,14 @@ export default function CountryPageExperience({
   gdpAbs = null,
   gdpPeriod = null,
   introSlot = null,
+  fiscalBalanceSlot = null,
+  perCapitaSlot = null,
+  growthSlot = null,
+  interestSlot = null,
+  accountsSlot = null,
+  fiscalOverviewSlot = null,
+  fiscalTrendsSlot = null,
+  fiscalComparisonSlot = null,
   breadcrumbSlot = null,
   adSlot = null,
   shareSlot = null,
@@ -101,7 +110,8 @@ export default function CountryPageExperience({
   isPreview = false,
 }) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
-  const copy = getCountryCopy(effLang);
+  const fiscalCopy = getCountryFiscalCopy(effLang);
+  const copy = fiscalOverviewSlot ? { ...getCountryCopy(effLang), lede: fiscalCopy.lede, exploreSignals: fiscalCopy.overview, nav: fiscalCopy.nav } : getCountryCopy(effLang);
   const locale = localeFor(effLang);
   const base = localeBase(effLang);
   const name = displayName || countryName(country.code, effLang);
@@ -203,6 +213,58 @@ export default function CountryPageExperience({
     country.hasOfficialDebtSeries && country.official_previous_time && country.official_latest_time
   );
 
+  const quarterMovement = (
+<section className={styles.movement}>
+        <div className={styles.movementGrid}>
+          <div className={styles.movementCopy}>
+            <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id={fiscalTrendsSlot ? "quarter-movement" : "movement"}>
+              {copy.movementEyebrow}
+            </p>
+            <h2>{copy.movementTitle}</h2>
+            <p>
+              {copy.movementIntro(
+                name,
+                `€${compactFormatter.format(previousDebt)}`,
+                `€${compactFormatter.format(officialDebt)}`
+              )}
+            </p>
+            <p className={styles.callout}>{copy.movementCallout}</p>
+          </div>
+
+          <div className={styles.quarterVisual} aria-label={copy.quarterlyMovement}>
+            <div className={styles.quarterHeader}>
+              <span>{copy.officialDebtStock}</span>
+              <strong>{movementDirection}</strong>
+            </div>
+            <div className={styles.quarterBars}>
+              <div className={styles.barRow}>
+                <span>{formatQuarter(country.official_previous_time, effLang)}</span>
+                <div>
+                  <i style={{ width: `${(previousDebt / Math.max(previousDebt, officialDebt, 1)) * 100}%` }} />
+                </div>
+                <strong>€{compactFormatter.format(previousDebt)}</strong>
+              </div>
+              <div className={`${styles.barRow} ${styles.barRowLatest}`}>
+                <span>{formatQuarter(country.official_latest_time, effLang)}</span>
+                <div>
+                  <i style={{ width: `${(officialDebt / Math.max(previousDebt, officialDebt, 1)) * 100}%` }} />
+                </div>
+                <strong>€{compactFormatter.format(officialDebt)}</strong>
+              </div>
+            </div>
+            <div className={styles.deltaBadge}>
+              <span>{copy.quarterOnQuarter}</span>
+              <strong>{signedCompact(quarterlyChange)}</strong>
+            </div>
+            {fiscalOverviewSlot && <div className={styles.deltaBadge}>
+              <span>{copy.modelledPace}</span>
+              <strong>{country._perSecond > 0 ? "+" : country._perSecond < 0 ? "−" : ""}€{numberFormatter.format(Math.abs(country._perSecond))}/s</strong>
+            </div>}
+          </div>
+        </div>
+      </section>
+  );
+
   return (
     <article className={styles.page}>
       <section className={styles.hero} id="country-hero" aria-labelledby="country-page-title">
@@ -223,7 +285,7 @@ export default function CountryPageExperience({
               <p className={styles.eyebrow}>{copy.eyebrow(name)}</p>
               <h1
                 id="country-page-title"
-                className={pageTitle.length > 40 ? styles.heroTitleLong : undefined}
+                className={fiscalOverviewSlot ? styles.heroFiscalTitle : pageTitle.length > 40 ? styles.heroTitleLong : undefined}
               >
                 {pageTitle}
               </h1>
@@ -335,14 +397,16 @@ export default function CountryPageExperience({
         <div>
           <span>{name} / {country.code}</span>
           <a href="#snapshot">{copy.nav.snapshot}</a>
-          <a href="#compare">{copy.nav.compare}</a>
+          {!fiscalComparisonSlot && <a href="#compare">{copy.nav.compare}</a>}
           <a href="#movement">{copy.nav.movement}</a>
+          {fiscalTrendsSlot && <><a href="#country-balance-title">{copy.nav.balance}</a><a href="#country-interest-title">{copy.nav.interest}</a></>}
           <a href="#context">{copy.nav.context}</a>
           <a href="#method">{copy.nav.method}</a>
         </div>
       </nav>
 
       <section className={styles.snapshot}>
+        {fiscalOverviewSlot || <>
         <div className={styles.sectionIntro}>
           <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="snapshot">
             {copy.snapshotEyebrow}
@@ -380,7 +444,11 @@ export default function CountryPageExperience({
           />
         </div>
 
-        <div className={styles.exploreModule}>
+        {perCapitaSlot}
+        {fiscalBalanceSlot}
+        </>}
+
+        {!fiscalComparisonSlot && <div className={styles.exploreModule}>
           <div className={styles.exploreHeader}>
             <div>
               <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="compare">
@@ -433,7 +501,7 @@ export default function CountryPageExperience({
               );
             })}
           </nav>
-        </div>
+        </div>}
 
         {isPreview ? (
           <aside className={styles.adPreview} aria-label={copy.recommendedAd}>
@@ -450,7 +518,7 @@ export default function CountryPageExperience({
           <aside className={styles.adSlot} aria-label={copy.advertisement}>{adSlot}</aside>
         ) : null}
 
-        {introSlot ? <div className={styles.introSlot}>{introSlot}</div> : null}
+        {introSlot ? <div className={styles.introSlot}>{fiscalOverviewSlot ? <details className={styles.fiscalDisclosure}><summary>{fiscalCopy.legacyDetails}</summary>{introSlot}</details> : introSlot}</div> : null}
 
         {effLang === "nl" && country.code === "NL" && !isPreview ? (
           <Link className={styles.bondGuideLink} href="/nl/staatsobligaties-nederland">
@@ -464,53 +532,14 @@ export default function CountryPageExperience({
         ) : null}
       </section>
 
-      <section className={styles.movement}>
-        <div className={styles.movementGrid}>
-          <div className={styles.movementCopy}>
-            <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="movement">
-              {copy.movementEyebrow}
-            </p>
-            <h2>{copy.movementTitle}</h2>
-            <p>
-              {copy.movementIntro(
-                name,
-                `€${compactFormatter.format(previousDebt)}`,
-                `€${compactFormatter.format(officialDebt)}`
-              )}
-            </p>
-            <p className={styles.callout}>{copy.movementCallout}</p>
-          </div>
+      {fiscalTrendsSlot ? <details className={styles.quarterDisclosure}><summary>{fiscalCopy.quarterDetails}</summary>{quarterMovement}</details> : quarterMovement}
+      {fiscalTrendsSlot}
 
-          <div className={styles.quarterVisual} aria-label={copy.quarterlyMovement}>
-            <div className={styles.quarterHeader}>
-              <span>{copy.officialDebtStock}</span>
-              <strong>{movementDirection}</strong>
-            </div>
-            <div className={styles.quarterBars}>
-              <div className={styles.barRow}>
-                <span>{formatQuarter(country.official_previous_time, effLang)}</span>
-                <div>
-                  <i style={{ width: `${(previousDebt / Math.max(previousDebt, officialDebt, 1)) * 100}%` }} />
-                </div>
-                <strong>€{compactFormatter.format(previousDebt)}</strong>
-              </div>
-              <div className={`${styles.barRow} ${styles.barRowLatest}`}>
-                <span>{formatQuarter(country.official_latest_time, effLang)}</span>
-                <div>
-                  <i style={{ width: `${(officialDebt / Math.max(previousDebt, officialDebt, 1)) * 100}%` }} />
-                </div>
-                <strong>€{compactFormatter.format(officialDebt)}</strong>
-              </div>
-            </div>
-            <div className={styles.deltaBadge}>
-              <span>{copy.quarterOnQuarter}</span>
-              <strong>{signedCompact(quarterlyChange)}</strong>
-            </div>
-          </div>
-        </div>
-      </section>
+      {growthSlot}
+      {interestSlot}
+      {accountsSlot}
 
-      <section className={styles.context}>
+      {fiscalComparisonSlot || <section className={styles.context}>
         <div className={styles.contextHeader}>
           <div>
             <p className={`${styles.eyebrow} ${styles.chapterTarget}`} id="context">
@@ -580,7 +609,7 @@ export default function CountryPageExperience({
         </div>
 
         <p className={styles.chartNote}>{copy.chartNote}</p>
-      </section>
+      </section>}
 
       <section className={styles.method}>
         <div className={styles.methodCard}>

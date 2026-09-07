@@ -1,4 +1,12 @@
+import AccountsSource from "@/components/fiscal/AccountsSource";
+import DatasetRegistry from "./DatasetRegistry";
+import { registryCopy } from "./registry-copy";
+import { METHODOLOGY_REVIEWED } from "@/lib/fiscal/methodology-registry";
+import InterestSource from "@/components/fiscal/InterestSource";
 import Link from "next/link";
+import GrowthSource from "@/components/fiscal/GrowthSource";
+import PerCapitaSource from "@/components/fiscal/PerCapitaSource";
+import BalanceSource from "@/components/fiscal/BalanceSource";
 import { countries, debtDataSummary, livePerSecondFor, officialDebtToGDPRatio } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 import { EUROSTAT_RATIO_UPDATED_AT } from "@/lib/eurostat.ratio.gen";
@@ -70,12 +78,15 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
     "@type": "TechArticle",
     headline: copy.schema.headline,
     description: copy.lede,
-    dateModified: "2026-08-30",
+    dateModified: METHODOLOGY_REVIEWED.slice(0, 10),
     datePublished: "2025-10-27",
     inLanguage: lang,
     mainEntityOfPage: `${SITE}${path}`,
     author: { "@type": "Organization", name: "EU Debt Map", url: SITE },
-    citation: [EUROSTAT_METADATA, EUROSTAT_DATASET],
+    citation: [EUROSTAT_METADATA, EUROSTAT_DATASET,
+      "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10dd_esms.htm",
+      "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_main_esms.htm",
+      "https://ec.europa.eu/eurostat/cache/metadata/en/demo_gind_esms.htm"],
   };
   const datasetLd = {
     "@context": "https://schema.org",
@@ -124,7 +135,7 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
               <h1 id="methodology-title">{copy.title}</h1>
               <p className={styles.heroLede}>{copy.lede}</p>
               <div className={styles.heroActions}>
-                <a href="#overview">{copy.heroAction} <ArrowIcon /></a>
+                <a href="#dataset-registry">{copy.heroAction} <ArrowIcon /></a>
                 <span>{copy.heroNote}</span>
               </div>
             </div>
@@ -155,9 +166,12 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
       <nav className={styles.chapterNav} aria-label={copy.navLabel}>
         <div className={styles.shell}>
           <span>{copy.navLabel}</span>
+          <a href="#dataset-registry">{registryCopy(lang).nav}</a>
           {copy.nav.map((label, index) => <a href={NAV_HREFS[index]} key={label}>{label}</a>)}
         </div>
       </nav>
+
+      <div className={styles.shell}><DatasetRegistry lang={lang} /></div>
 
       <section className={`${styles.overviewSection} ${styles.shell}`} aria-labelledby="overview-title">
         <SectionIntro id="overview" eyebrow={copy.overview.eyebrow} title={copy.overview.title} intro={copy.overview.intro} />
@@ -271,6 +285,12 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
           </div>
         </div>
       </section>
+
+      <div className={styles.shell}><BalanceSource lang={lang} methodology /></div>
+      <div className={styles.shell}><PerCapitaSource lang={lang} methodology /></div>
+      <div className={styles.shell}><GrowthSource lang={lang} methodology /></div>
+      <div className={styles.shell}><InterestSource lang={lang} methodology /></div>
+      <div className={styles.shell}><AccountsSource lang={lang} methodology /></div>
 
       <section className={`${styles.sourcesSection} ${styles.shell}`} aria-labelledby="sources-title">
         <SectionIntro id="sources" eyebrow={copy.sources.eyebrow} title={copy.sources.title} intro={copy.sources.intro} />

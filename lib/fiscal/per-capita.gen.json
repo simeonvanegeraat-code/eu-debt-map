@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-09-05T20:29:24.286Z",
+  "debtYear": "2025",
+  "populationYear": "2026",
+  "debtDate": "2025-12-31",
+  "populationDate": "2026-01-01",
+  "sources": {
+    "debt": {
+      "dataset": "gov_10dd_edpt1",
+      "filters": {
+        "freq": "A",
+        "sector": "S13",
+        "na_item": "GD",
+        "unit": "MIO_EUR"
+      },
+      "updated": "2026-04-22T11:00:00+0200",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10dd_edpt1?lang=EN&freq=A&sector=S13&na_item=GD&unit=MIO_EUR&lastTimePeriod=3&geo=AT&geo=BE&geo=BG&geo=HR&geo=CY&geo=CZ&geo=DK&geo=EE&geo=FI&geo=FR&geo=DE&geo=EL&geo=HU&geo=IE&geo=IT&geo=LV&geo=LT&geo=LU&geo=MT&geo=NL&geo=PL&geo=PT&geo=RO&geo=SK&geo=SI&geo=ES&geo=SE"
+    },
+    "ratio": {
+      "dataset": "gov_10dd_edpt1",
+      "filters": {
+        "freq": "A",
+        "sector": "S13",
+        "na_item": "GD",
+        "unit": "PC_GDP"
+      },
+      "updated": "2026-04-22T11:00:00+0200",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10dd_edpt1?lang=EN&freq=A&sector=S13&na_item=GD&unit=PC_GDP&lastTimePeriod=3&geo=AT&geo=BE&geo=BG&geo=HR&geo=CY&geo=CZ&geo=DK&geo=EE&geo=FI&geo=FR&geo=DE&geo=EL&geo=HU&geo=IE&geo=IT&geo=LV&geo=LT&geo=LU&geo=MT&geo=NL&geo=PL&geo=PT&geo=RO&geo=SK&geo=SI&geo=ES&geo=SE"
+    },
+    "population": {
+      "dataset": "demo_gind",
+      "filters": {
+        "freq": "A",
+        "indic_de": "JAN"
+      },
+      "updated": "2026-07-21T23:00:00+0200",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_gind?lang=EN&freq=A&indic_de=JAN&lastTimePeriod=3&geo=AT&geo=BE&geo=BG&geo=HR&geo=CY&geo=CZ&geo=DK&geo=EE&geo=FI&geo=FR&geo=DE&geo=EL&geo=HU&geo=IE&geo=IT&geo=LV&geo=LT&geo=LU&geo=MT&geo=NL&geo=PL&geo=PT&geo=RO&geo=SK&geo=SI&geo=ES&geo=SE"
+    }
+  },
+  "countries": {
+    "AT": {
+      "debtMioEur": 418078.5,
+      "debtRatio": 81.5,
+      "population": 9215956,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "BE": {
+      "debtMioEur": 692460.8,
+      "debtRatio": 107.9,
+      "population": 11955308,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "p"
+    },
+    "BG": {
+      "debtMioEur": 34634.9,
+      "debtRatio": 29.9,
+      "population": 6423207,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "HR": {
+      "debtMioEur": 52370.8,
+      "debtRatio": 56.3,
+      "population": 3876002,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "CY": {
+      "debtMioEur": 20078.2,
+      "debtRatio": 55,
+      "population": 996571,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "p"
+    },
+    "CZ": {
+      "debtMioEur": 156217.8,
+      "debtRatio": 44.3,
+      "population": 10915839,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "DK": {
+      "debtMioEur": 114501.5,
+      "debtRatio": 27.9,
+      "population": 6025603,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "EE": {
+      "debtMioEur": 10035.2,
+      "debtRatio": 24.1,
+      "population": 1360745,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "FI": {
+      "debtMioEur": 248433,
+      "debtRatio": 88.5,
+      "population": 5652881,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "FR": {
+      "debtMioEur": 3460465.1,
+      "debtRatio": 115.6,
+      "population": 69112309,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "p"
+    },
+    "DE": {
+      "debtMioEur": 2838238.9,
+      "debtRatio": 63.5,
+      "population": 83467117,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "GR": {
+      "debtMioEur": 362925,
+      "debtRatio": 146.1,
+      "population": 10366586,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "ep"
+    },
+    "HU": {
+      "debtMioEur": 168536,
+      "debtRatio": 74.6,
+      "population": 9488428,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "IE": {
+      "debtMioEur": 209902.3,
+      "debtRatio": 32.9,
+      "population": 5510565,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "IT": {
+      "debtMioEur": 3095887.6,
+      "debtRatio": 137.1,
+      "population": 58942828,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "p"
+    },
+    "LV": {
+      "debtMioEur": 20173.9,
+      "debtRatio": 46.9,
+      "population": 1845096,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "LT": {
+      "debtMioEur": 33259,
+      "debtRatio": 39.5,
+      "population": 2887592,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "LU": {
+      "debtMioEur": 23695.1,
+      "debtRatio": 26.5,
+      "population": 690959,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "MT": {
+      "debtMioEur": 11397.1,
+      "debtRatio": 46.4,
+      "population": 588254,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "NL": {
+      "debtMioEur": 523541,
+      "debtRatio": 44.4,
+      "population": 18130208,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "PL": {
+      "debtMioEur": 553222.7,
+      "debtRatio": 59.7,
+      "population": 36332765,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "PT": {
+      "debtMioEur": 275062.8,
+      "debtRatio": 89.7,
+      "population": 11424031,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "RO": {
+      "debtMioEur": 223144.7,
+      "debtRatio": 59.3,
+      "population": 19041322,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "e"
+    },
+    "SK": {
+      "debtMioEur": 83956.8,
+      "debtRatio": 61.4,
+      "population": 5409407,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "SI": {
+      "debtMioEur": 46323.6,
+      "debtRatio": 65.7,
+      "population": 2135107,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    },
+    "ES": {
+      "debtMioEur": 1698224.6,
+      "debtRatio": 100.7,
+      "population": 49590099,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": "p"
+    },
+    "SE": {
+      "debtMioEur": 213039,
+      "debtRatio": 35.1,
+      "population": 10605529,
+      "debtStatus": "",
+      "ratioStatus": "",
+      "populationStatus": ""
+    }
+  }
+}

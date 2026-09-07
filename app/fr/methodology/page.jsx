@@ -6,9 +6,9 @@ const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
 
 export async function generateMetadata() {
-  const title = "Méthodologie | Comment EU Debt Map calcule la dette publique en direct";
+  const title = "Méthodologie et sources Eurostat | EU Debt Map";
   const description =
-    "Découvrez comment EU Debt Map utilise les données Eurostat pour calculer des estimations en direct de la dette publique pour les 27 pays de l’UE, avec sources, filtres, calcul, limites et mises à jour.";
+    "Retrouvez chez Eurostat l’origine des dettes publiques, soldes budgétaires, intérêts, dépenses et recettes européens. Observations officielles, calculs d’EU Debt Map et estimations en direct restent distincts.";
 
   return {
     metadataBase: new URL(SITE),

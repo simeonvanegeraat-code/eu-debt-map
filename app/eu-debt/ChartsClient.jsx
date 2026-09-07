@@ -22,7 +22,7 @@ const TEXT = {
     shareOfTotal: "Share of total",
     historyTitle: "EU debt over the last 5 years",
     historyIntro:
-      "The combined EU-27 debt pile has climbed steadily over the past 20 quarters. This chart focuses on the movement itself, so the scale starts near the actual range instead of zero.",
+      "The combined EU-27 debt pile has climbed steadily over the 21 quarterly observations shown. This chart focuses on the movement itself, so the scale starts near the actual range instead of zero.",
     latestPoint: "Latest point",
     total: "Total",
     breakdownTitle: "Where the debt sits by country",
@@ -38,7 +38,7 @@ const TEXT = {
     shareOfTotal: "Aandeel van totaal",
     historyTitle: "EU-schuld in de afgelopen 5 jaar",
     historyIntro:
-      "De gezamenlijke schuld van de EU-27 is in de afgelopen 20 kwartalen geleidelijk gestegen. De schaal begint dicht bij het werkelijke bereik, zodat de verandering goed zichtbaar blijft.",
+      "De gezamenlijke schuld van de EU-27 is in de 21 getoonde kwartaalwaarnemingen geleidelijk gestegen. De schaal begint dicht bij het werkelijke bereik, zodat de verandering goed zichtbaar blijft.",
     latestPoint: "Laatste punt",
     total: "Totaal",
     breakdownTitle: "Verdeling van de schuld per land",
@@ -54,7 +54,7 @@ const TEXT = {
     shareOfTotal: "Anteil an der Gesamtsumme",
     historyTitle: "EU-Schulden in den vergangenen 5 Jahren",
     historyIntro:
-      "Die gemeinsame Schuldsumme der EU-27 ist in den vergangenen 20 Quartalen stetig gestiegen. Die Skala beginnt nahe am tatsächlichen Wertebereich, damit die Veränderung klar erkennbar bleibt.",
+      "Die gemeinsame Schuldsumme der EU-27 ist in den 21 gezeigten Quartalsbeobachtungen stetig gestiegen. Die Skala beginnt nahe am tatsächlichen Wertebereich, damit die Veränderung klar erkennbar bleibt.",
     latestPoint: "Letzter Wert",
     total: "Gesamt",
     breakdownTitle: "Verteilung der Schulden nach Ländern",
@@ -70,7 +70,7 @@ const TEXT = {
     shareOfTotal: "Part du total",
     historyTitle: "Dette de l’UE sur les 5 dernières années",
     historyIntro:
-      "La dette cumulée de l’UE-27 a progressé régulièrement au cours des 20 derniers trimestres. L’échelle commence près de la plage réelle afin de rendre le mouvement plus visible.",
+      "La dette cumulée de l’UE-27 a progressé régulièrement au cours des 21 observations trimestrielles affichées. L’échelle commence près de la plage réelle afin de rendre le mouvement plus visible.",
     latestPoint: "Dernier point",
     total: "Total",
     breakdownTitle: "Répartition de la dette par pays",

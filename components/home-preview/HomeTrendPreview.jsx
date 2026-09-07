@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { EUROSTAT_DEBT_HISTORY } from "@/lib/eurostat.debt.history.gen";
+import { getGrowthCopy } from "@/components/fiscal/growth-copy";
+import { fiscalPath } from "@/lib/fiscal/paths";
 import styles from "./home-preview.module.css";
 
 const CHART_WIDTH = 720;
@@ -34,8 +35,7 @@ function chartGeometry(rows) {
   return { points, line, area };
 }
 
-export default function HomeTrendPreview({ lang, copy }) {
-  const rows = (EUROSTAT_DEBT_HISTORY?.quarters || []).slice(-20);
+export default function HomeTrendPreview({ lang, copy, rows = [], provisional = false }) {
   if (rows.length < 2) return null;
 
   const first = rows[0];
@@ -58,7 +58,7 @@ export default function HomeTrendPreview({ lang, copy }) {
           </div>
           <div>
             <dt>{copy.trendChange}</dt>
-            <dd>+{new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 1 }).format(change)}%</dd>
+            <dd>{new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 1, signDisplay: "exceptZero" }).format(change)}%</dd>
           </div>
         </dl>
 
@@ -108,6 +108,7 @@ export default function HomeTrendPreview({ lang, copy }) {
           />
         </svg>
 
+        {provisional && <p style={{fontSize:12,lineHeight:1.6}}><Link style={{color:"#c1d4ea",textUnderlineOffset:"3px"}} href={fiscalPath("/debt-growth#debt-growth-methodology",lang)}>{getGrowthCopy(lang).overviewFlags} →</Link></p>}
         <div className={styles.trendAxis} aria-hidden="true">
           <span>{first.quarter}</span>
           <span>{latest.quarter}</span>

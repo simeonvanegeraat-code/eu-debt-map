@@ -1,0 +1,53 @@
+.overview, .trends, .comparisons { color: #10233e; min-width: 0; }
+.overview :is(h2, h3), .comparisons :is(h2, h3) { letter-spacing: -.025em; line-height: 1.16; }
+.overview h2, .comparisons h2 { font-size: clamp(28px,3.1vw,40px); margin: 0 0 18px; }
+.overview h3, .comparisons h3 { font-size: clamp(22px,2vw,28px); margin: 34px 0 14px; }
+.eyebrow { margin: 0 0 14px; color: #2868db; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.lede { max-width: 900px; color: #52627a; line-height: 1.7; }
+.overview :is(a,summary), .trends a, .comparisons a { color: #1d5194; text-underline-offset: 4px; }
+.overview :is(a,summary):focus-visible, .trends :is(a,summary):focus-visible, .comparisons :is(a,[tabindex]):focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
+.metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); margin: 28px 0 18px; gap: 0 28px; }
+.metrics > div { min-width: 0; container-type: inline-size; border-top: 1px solid #c8d3e1; padding: 24px 0; }
+.primaryMetric { grid-column: span 2; }
+.metrics dt { font-size: 14px; color: #52627a; min-height: 38px; }
+.metrics dd { margin: 8px 0 0; font-weight: 650; font-size: clamp(28px,3vw,39px); font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
+.primaryMetric dd { font-size: clamp(38px,4vw,52px); }
+.metrics a { font-size: 12px; }
+.period { font-size: 12px; color: #52627a; margin: 12px 0; }
+.secondaryValue { margin: 8px 0 0; font-size: 14px; color: #435873; }
+.note { color: #52627a; font-size: 13px; line-height: 1.7; }
+.overview sup, .comparisons sup { font-size: .5em; }
+.trends section[aria-labelledby="country-balance-title"] svg text { font-size: 18px; }
+.interpretation { padding: 2px 0 18px; border-top: 1px solid #c8d3e1; }
+.interpretation ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 36px; }
+.interpretation li { border-left: 2px solid #b99556; padding-left: 16px; line-height: 1.65; }
+.callout { border-left: 2px solid #b99556; padding-left: 16px; }
+.details { padding: 12px 0; border-block: 1px solid #d8e0eb; margin: 24px 0; }
+.details summary { padding: 12px 0; color: #1d5194; cursor: pointer; font-size: 15px; }
+.details > section { width: 100%; margin: 12px 0; }
+.trends, .comparisons { width: min(1180px,calc(100% - 48px)); margin: 38px auto 0; }
+.trends > section { width: 100%; margin: 0; padding-block: 38px; }
+.trends :is(h2,h3,[id]), .overview [id], .comparisons [id], .trends { scroll-margin-top: 152px; }
+.comparisons { padding: 38px 0; border-top: 1px solid #c8d3e1; }
+.tableScroll { max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; margin: 20px 0; }
+.tableScroll table { width: 100%; min-width: 840px; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.tableScroll table[data-fiscal-comparison="eu"] { min-width: 740px; table-layout: fixed; }
+.tableScroll table[data-fiscal-comparison="eu"] :is(th,td):first-child { width: 200px; }
+.tableScroll caption { text-align: left; padding-bottom: 14px; color: #52627a; }
+.tableScroll :is(td,th) { padding: 18px 12px; text-align: right; border-bottom: 1px solid #d8e0eb; }
+.tableScroll th { font-weight: 600; }
+.tableScroll :is(td,th):first-child { text-align: left; }
+.tableScroll td { white-space: nowrap; }
+.tableScroll small { display: block; font-size: 11px; color: #52627a; margin-top: 6px; font-weight: 400; }
+.currentRow { background: #eaf0f8; }
+.links { display: flex; flex-wrap: wrap; gap: 16px 28px; padding-top: 20px; }
+@media(max-width:700px) {
+  .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 20px; }
+  .metrics dd { font-size: clamp(20px,14cqi,28px); }
+  .primaryMetric dd { font-size: clamp(28px,12cqi,42px); }
+  .metrics dt { font-size: 13px; min-height: 38px; }
+  .interpretation ul { grid-template-columns: minmax(0,1fr); }
+  .trends, .comparisons { width: calc(100% - 32px); }
+  .trends :is(h2,h3,[id]), .overview [id], .comparisons [id], .trends { scroll-margin-top: 92px; }
+  .links { flex-direction: column; }
+}

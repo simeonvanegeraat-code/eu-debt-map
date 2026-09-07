@@ -1,3 +1,4 @@
+import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/fr/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
@@ -80,8 +81,13 @@ export default async function CountryPageFR({ params }) {
 
   const isFrance = country.code === "FR";
 
+  const fiscal = createCountryFiscalSlots(country.code, "fr");
+
   return (
     <CountryClient
+      fiscalOverviewSlot={fiscal.overview}
+      fiscalTrendsSlot={fiscal.trends}
+      fiscalComparisonSlot={fiscal.comparisons}
       country={country}
       lang="fr"
       breadcrumbSlot={isFrance ? <FranceDebtClockBreadcrumbs /> : null}

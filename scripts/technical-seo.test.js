@@ -416,7 +416,10 @@ test("the homepage experience preserves live SEO and isolates preview routes", (
   assert.doesNotMatch(ticker, /<i aria-hidden="true"/);
   assert.match(ticker, /prefers-reduced-motion: reduce/);
   assert.match(ticker, /officialTotal \+ perSecond \* elapsedSeconds/);
-  assert.match(trend, /EUROSTAT_DEBT_HISTORY/);
+  assert.match(wrapper, /fiveYearOverview\(growthSnapshot\)/);
+  assert.match(wrapper, /historyRows=\{overview\.quarters\}/);
+  assert.match(experience, /rows=\{historyRows\}/);
+  assert.doesNotMatch(trend, /eurostat\.debt\.history\.gen/);
   assert.match(trend, /copy\.base\}\/eu-debt/);
   assert.match(trend, /role="img"/);
   assert.match(finish, /copy\.methodologyCta/);

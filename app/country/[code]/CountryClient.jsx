@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CountryPageExperience from "@/components/country/CountryPageExperience";
+import { getCountryFiscalCopy } from "@/components/country/country-fiscal-copy";
 import ShareBar from "@/components/ShareBar";
 import { countryName } from "@/lib/countries";
 
@@ -109,6 +110,14 @@ export default function CountryClient({
   country,
   lang = "en",
   introSlot = null,
+  fiscalBalanceSlot = null,
+  perCapitaSlot = null,
+  growthSlot = null,
+  interestSlot = null,
+  accountsSlot = null,
+  fiscalOverviewSlot = null,
+  fiscalTrendsSlot = null,
+  fiscalComparisonSlot = null,
   relatedArticleSlot = null,
   breadcrumbSlot = null,
   titleOverride = null,
@@ -173,7 +182,8 @@ export default function CountryClient({
 
   const displayName = countryName(safeCountry.code, effLang);
   const title = titleOverride || pageTitleFor(effLang, displayName);
-  const shareTitle = SHARE_TITLES[effLang](displayName);
+  const fiscalCopy = getCountryFiscalCopy(effLang);
+  const shareTitle = fiscalOverviewSlot ? fiscalCopy.title(displayName) : SHARE_TITLES[effLang](displayName);
   const shareBase = effLang === "en" ? "" : `/${effLang}`;
   const shareUrl = `https://www.eudebtmap.com${shareBase}/country/${safeCountry.code.toLowerCase()}`;
 
@@ -181,12 +191,20 @@ export default function CountryClient({
     <CountryPageExperience
       country={safeCountry}
       lang={effLang}
-      title={title}
+      title={fiscalOverviewSlot ? fiscalCopy.title(displayName) : title}
       displayName={displayName}
       gdpAbs={gdpAbs}
       gdpPeriod={gdpPeriod || yearLabel}
       breadcrumbSlot={breadcrumbSlot}
       introSlot={introSlot}
+      fiscalBalanceSlot={fiscalBalanceSlot}
+      perCapitaSlot={perCapitaSlot}
+      growthSlot={growthSlot}
+      interestSlot={interestSlot}
+      accountsSlot={accountsSlot}
+      fiscalOverviewSlot={fiscalOverviewSlot}
+      fiscalTrendsSlot={fiscalTrendsSlot}
+      fiscalComparisonSlot={fiscalComparisonSlot}
       adSlot={<ManualAd lang={effLang} />}
       shareSlot={
         <ShareBar

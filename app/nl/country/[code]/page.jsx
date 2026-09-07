@@ -1,3 +1,4 @@
+import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/nl/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
@@ -58,8 +59,13 @@ export default async function CountryPageNL({ params }) {
   );
   if (!country) return notFound();
 
+  const fiscal = createCountryFiscalSlots(country.code, "nl");
+
   return (
     <CountryClient
+      fiscalOverviewSlot={fiscal.overview}
+      fiscalTrendsSlot={fiscal.trends}
+      fiscalComparisonSlot={fiscal.comparisons}
       country={country}
       lang="nl"
       introSlot={<CountryIntro country={country} lang="nl" />}

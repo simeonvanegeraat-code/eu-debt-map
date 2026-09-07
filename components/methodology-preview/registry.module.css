@@ -1,0 +1,35 @@
+.registry { padding:64px 0; scroll-margin-top:152px; }
+.registry h2 { max-width:850px; font-size:clamp(28px,3vw,42px); line-height:1.15; letter-spacing:-.03em; }
+.registry > p { max-width:950px; line-height:1.75; color:#475569; }
+.registry .review { font-size:13px; }
+.kinds { display:flex; flex-wrap:wrap; list-style:none; gap:10px 24px; padding:20px 0; border-block:1px solid #dbe3ed; }
+.kinds li { font-size:13px; font-weight:700; color:#163b6d; }
+.kinds li[data-kind='calculated'] { color:#475569; }
+.kinds li[data-kind='modelled'] { color:#806328; }
+.metric { border-bottom:1px solid #dbe3ed; scroll-margin-top:152px; }
+.metric summary { cursor:pointer; display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 200px; align-items:center; gap:16px; padding:22px 24px 22px 0; position:relative; list-style:none; }
+.metric summary::-webkit-details-marker { display:none; }
+.metric summary::after { content:'+'; position:absolute; right:0; color:#1d4ed8; }
+.metric[open] summary::after { content:'−'; }
+.metric summary span, .metric summary small { color:#526174; font-size:13px; }
+.metric summary:focus-visible, .registry a:focus-visible { outline:2px solid #2563eb; outline-offset:3px; }
+.detail { padding:0 0 28px; max-width:950px; }
+.detail h3 { margin:24px 0 8px; font-size:15px; }
+.detail p { line-height:1.75; color:#475569; }
+.source { padding:20px; margin:16px 0; background:#f2f5f9; border-left:3px solid #acc5e8; }
+.source a { font-weight:650; overflow-wrap:anywhere; }
+.source > p { margin:6px 0; font-size:13px; }
+.source dl { margin:12px 0 0; }
+.source dl > div { display:grid; grid-template-columns:190px minmax(0,1fr); gap:12px; padding:6px 0; font-size:13px; }
+.source dt { color:#526174; }
+.source dd { margin:0; overflow-wrap:anywhere; }
+.source code { white-space:normal; overflow-wrap:anywhere; font-size:12px; }
+.notes { margin-top:32px; padding-left:20px; border-left:3px solid #9b8351; line-height:1.75; color:#475569; }
+.attribution { font-size:14px; }
+@media(max-width:760px) {
+  .registry,.metric { scroll-margin-top:90px; }
+  .registry { padding:40px 0; }
+  .metric summary { grid-template-columns:1fr; gap:8px; padding-block:20px; }
+  .source { padding:14px; }
+  .source dl > div { grid-template-columns:1fr; gap:3px; padding:7px 0; }
+}

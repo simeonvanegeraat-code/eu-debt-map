@@ -2,6 +2,11 @@
 "use client";
 
 import Link from "next/link";
+import { getAccountsCopy } from "@/components/fiscal/accounts-copy";
+import { getInterestCopy } from "@/components/fiscal/interest-copy";
+import { getGrowthCopy } from "@/components/fiscal/growth-copy";
+import { getPerCapitaCopy } from "@/components/fiscal/per-capita-copy";
+import { getBalanceCopy } from "@/components/fiscal/balance-copy";
 import { usePathname } from "next/navigation";
 import { withLocale, getLocaleFromPathname } from "@/lib/locale";
 import GoogleConsentSettingsLink from "@/components/GoogleConsentSettingsLink";
@@ -105,6 +110,13 @@ export default function Footer() {
             flexWrap: "wrap",
           }}
         >
+          <Link href={withLocale("/deficit", locale)} className="footer-link">
+            {getBalanceCopy(locale).shortTitle}
+          </Link>
+          <Link href={withLocale("/government-spending", locale)} className="footer-link">{getAccountsCopy(locale).shortTitle}</Link>
+          <Link href={withLocale("/interest-cost", locale)} className="footer-link">{getInterestCopy(locale).shortTitle}</Link>
+          <Link href={withLocale("/debt-growth", locale)} className="footer-link">{getGrowthCopy(locale).shortTitle}</Link>
+          <Link href={withLocale("/debt-per-capita", locale)} className="footer-link">{getPerCapitaCopy(locale).shortTitle}</Link>
           <Link href={withLocale("/about", locale)} className="footer-link">
             {copy.about}
           </Link>

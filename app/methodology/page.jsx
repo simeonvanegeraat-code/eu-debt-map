@@ -6,9 +6,9 @@ const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
 
 export async function generateMetadata() {
-  const title = "Methodology | How EU Debt Map Calculates Live Government Debt";
+  const title = "Methodology & Eurostat Sources | EU Debt Map";
   const description =
-    "See how EU Debt Map uses Eurostat data to calculate live government debt estimates for all EU-27 countries, including sources, filters, formulas, limitations, and update logic.";
+    "Trace European government debt, budget balances, interest, spending and revenue back to Eurostat. Official observations, EU Debt Map calculations and live estimates are clearly separated.";
 
   return {
     metadataBase: new URL(SITE),

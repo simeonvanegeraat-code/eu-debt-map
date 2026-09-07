@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getBalanceCopy } from "@/components/fiscal/balance-copy";
 import styles from "./home-preview.module.css";
 
 function formatDate(value, locale) {
@@ -88,6 +89,7 @@ export default function HomePreviewFinish({ articles = [], copy, commonPeriod, c
           <div>
             <p>{copy.whyIntro}</p>
             <Link href={debtHref}>{copy.debtExplainerCta} <span aria-hidden="true">→</span></Link>
+            <p><Link href={`${copy.base}/deficit`}>{getBalanceCopy(copy.base.slice(1) || "en").comparisonLink} <span aria-hidden="true">→</span></Link></p>
           </div>
         </header>
         <div className={styles.whyGrid}>

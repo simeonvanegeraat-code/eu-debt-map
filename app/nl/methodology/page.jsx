@@ -6,9 +6,9 @@ const SITE = "https://www.eudebtmap.com";
 const PATH = "/methodology";
 
 export async function generateMetadata() {
-  const title = "Methodologie | Hoe EU Debt Map live staatsschuld berekent";
+  const title = "Methodologie & Eurostat-bronnen | EU Debt Map";
   const description =
-    "Lees hoe EU Debt Map Eurostat-data gebruikt om live schattingen van overheidsschuld te tonen voor alle EU-27-landen, inclusief bronnen, filters, berekening, beperkingen en updates.";
+    "Herleid Europese overheidsschuld, begrotingssaldi, rente, uitgaven en inkomsten tot Eurostat. Officiële waarnemingen, berekeningen van EU Debt Map en live schattingen worden duidelijk onderscheiden.";
 
   return {
     metadataBase: new URL(SITE),

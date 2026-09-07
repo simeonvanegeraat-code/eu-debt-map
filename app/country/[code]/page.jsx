@@ -1,3 +1,4 @@
+import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import CountryClient from "./CountryClient";
@@ -89,8 +90,13 @@ export default async function CountryPage({ params }) {
   const lang = "en";
   const localizedCountry = { ...country, name: countryName(country.code, lang) };
 
+  const fiscal = createCountryFiscalSlots(country.code, "en");
+
   return (
     <CountryClient
+      fiscalOverviewSlot={fiscal.overview}
+      fiscalTrendsSlot={fiscal.trends}
+      fiscalComparisonSlot={fiscal.comparisons}
       country={localizedCountry}
       lang={lang}
       introSlot={<CountryIntro country={localizedCountry} lang={lang} />}

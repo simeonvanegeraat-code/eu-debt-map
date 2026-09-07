@@ -45,7 +45,7 @@ test("page components cannot override the global site header width", () => {
 });
 
 test("localized home navigation only matches the exact locale root", () => {
-  const header = read("components/Header.jsx");
+  const header = read("lib/navigation.js");
 
   assert.match(
     header,
@@ -121,12 +121,16 @@ test("country chapter navigation lands on headings without overriding manual scr
   const experience = read("components/country/CountryPageExperience.jsx");
   const css = read("components/country/country-page.module.css");
 
-  for (const id of ["snapshot", "compare", "movement", "context", "method"]) {
+  for (const id of ["snapshot", "compare", "context", "method"]) {
     assert.match(
       experience,
       new RegExp(`className=\\{\\\`\\$\\{styles\\.eyebrow\\} \\$\\{styles\\.chapterTarget\\}\\\`\\} id="${id}"`)
     );
   }
+
+  assert.match(experience, /id=\{fiscalTrendsSlot \? "quarter-movement" : "movement"\}/);
+  assert.match(read("components/country/CountryFiscalDashboard.jsx"), /id="movement"/);
+  assert.match(read("components/country/country-fiscal.module.css"), /scroll-margin-top: 152px/);
 
   assert.match(experience, /id="country-hero"/);
   assert.doesNotMatch(experience, /addEventListener\(["']wheel["']/);

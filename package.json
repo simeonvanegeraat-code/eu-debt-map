@@ -7,15 +7,20 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js scripts/article-page-core.test.js scripts/article-quality-core.test.js scripts/article-archive-pagination.test.js scripts/news-sitemap.test.js scripts/raw-style-hydration.test.js scripts/layout-stability.test.js scripts/technical-seo.test.js scripts/consent-config.test.js scripts/related-articles.test.js scripts/government-bond-calculator.test.js scripts/government-bond-guide.test.js",
+    "test": "node --test scripts/eurostat-debt-core.test.js scripts/eurostat-ratio-core.test.js scripts/article-page-core.test.js scripts/article-quality-core.test.js scripts/article-archive-pagination.test.js scripts/news-sitemap.test.js scripts/raw-style-hydration.test.js scripts/layout-stability.test.js scripts/technical-seo.test.js scripts/consent-config.test.js scripts/related-articles.test.js scripts/government-bond-calculator.test.js scripts/government-bond-guide.test.js scripts/eurostat-balance-core.test.js scripts/eurostat-per-capita-core.test.js scripts/eurostat-growth-core.test.js scripts/eurostat-interest-core.test.js scripts/eurostat-accounts-core.test.js scripts/country-dashboard.test.js scripts/navigation.test.js scripts/methodology-registry.test.js",
     "update:debt": "node scripts/update-eurostat-debt.js",
     "update:ratios": "node scripts/update-eurostat-ratios.js",
     "update:data": "npm run update:debt && npm run update:ratios",
     "fetch:data": "npm run update:data",
     "fetch:history": "npm run update:data",
-    "prebuild": "node scripts/validate-eurostat-data.js && node scripts/validate-eurostat-ratios.js && node scripts/validate-article-quality.js",
+    "prebuild": "node scripts/validate-eurostat-data.js && node scripts/validate-eurostat-ratios.js && node scripts/validate-article-quality.js && node scripts/validate-eurostat-balance.js && node scripts/validate-eurostat-per-capita.js && node scripts/validate-eurostat-growth.js && node scripts/validate-eurostat-interest.js && node scripts/validate-eurostat-accounts.js",
     "audit:articles": "node scripts/validate-article-quality.js",
-    "new:article": "node scripts/new-article.js"
+    "new:article": "node scripts/new-article.js",
+    "update:balance": "node scripts/update-eurostat-balance.js",
+    "update:per-capita": "node scripts/update-eurostat-per-capita.js",
+    "update:growth": "node scripts/update-eurostat-growth.js",
+    "update:interest": "node scripts/update-eurostat-interest.js",
+    "update:accounts": "node scripts/update-eurostat-accounts.js"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

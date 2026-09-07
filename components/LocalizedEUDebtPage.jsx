@@ -1,10 +1,12 @@
 import Link from "next/link";
+import growthSnapshot from "@/lib/fiscal/growth.gen.json";
+import { fiveYearOverview } from "@/lib/fiscal/growth";
+import { getGrowthCopy } from "@/components/fiscal/growth-copy";
 import InArticleAd from "@/components/InArticleAd";
 import ChartsClient from "@/app/eu-debt/ChartsClient";
 import { countryName } from "@/lib/countries";
 import { withLocale } from "@/lib/locale";
 import {
-  EUROSTAT_DEBT_HISTORY,
   EUROSTAT_DEBT_HISTORY_UPDATED_AT,
 } from "@/lib/eurostat.debt.history.gen";
 
@@ -236,6 +238,7 @@ const TEXT = {
   },
 };
 
+const EUROSTAT_DEBT_HISTORY = fiveYearOverview(growthSnapshot);
 const latestQuarter = EUROSTAT_DEBT_HISTORY?.latestQuarter || null;
 const latestTotal = Number(EUROSTAT_DEBT_HISTORY?.latestTotalDebtEUR || 0);
 const quarters = Array.isArray(EUROSTAT_DEBT_HISTORY?.quarters)
@@ -407,7 +410,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
     description: t.description,
     inLanguage: safe,
     datePublished: EUROSTAT_DEBT_HISTORY_UPDATED_AT || new Date().toISOString(),
-    dateModified: EUROSTAT_DEBT_HISTORY_UPDATED_AT || new Date().toISOString(),
+    dateModified: growthSnapshot.fetchedAt,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     author: { "@type": "Organization", name: "EU Debt Map" },
     publisher: {
@@ -435,7 +438,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
 
         <div className="meta">
           <span>{t.latestQuarter}: {latestQuarter || "n/a"}</span>
-          <span>{t.updated}: {formatDate(EUROSTAT_DEBT_HISTORY_UPDATED_AT, safe) || "n/a"}</span>
+          <span>{t.updated}: {formatDate(growthSnapshot.fetchedAt, safe) || "n/a"}</span>
           <span>{t.source}</span>
         </div>
 
@@ -499,6 +502,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
           </p>
 
           <p className="note">{t.note}</p>
+          <p className="note"><Link href={routeFor(safe,"/debt-growth#debt-growth-methodology")}>{getGrowthCopy(safe).overviewFlags} →</Link></p>
         </div>
       </article>
     </div>

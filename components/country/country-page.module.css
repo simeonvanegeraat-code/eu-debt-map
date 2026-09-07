@@ -1,4 +1,9 @@
 /* Shared country-page design tokens and responsive layout. */
+.fiscalDisclosure summary, .quarterDisclosure summary { cursor: pointer; padding: 16px 0; color: #1d5194; }
+.fiscalDisclosure summary:focus-visible, .quarterDisclosure summary:focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
+.quarterDisclosure { width: min(1180px,calc(100% - 48px)); margin: 20px auto; border-block: 1px solid #d8e0eb; }
+.quarterDisclosure > section { margin: 0; padding-block: 28px; }
+.quarterDisclosure > section > div { width: 100%; }
 .page {
   --ink: #07182f;
   --ink-soft: #173052;
@@ -151,6 +156,12 @@
 .heroCopy h1.heroTitleLong {
   font-size: clamp(2.7rem, 11.5cqi, 4rem);
   line-height: 0.99;
+}
+
+.heroCopy h1.heroFiscalTitle {
+  font-size: clamp(2rem, 9.3cqi, 3.45rem);
+  line-height: 1.04;
+  overflow-wrap: anywhere;
 }
 
 .lede {

@@ -54,7 +54,7 @@ function formatRatio(value, locale) {
   return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value)}%`;
 }
 
-export default function HomePreviewExperience({ lang = "en", articles = [], preview = false }) {
+export default function HomePreviewExperience({ lang = "en", articles = [], preview = false, historyRows = [], historyProvisional = false }) {
   const copy = getHomePreviewCopy(lang);
   const [mode, setMode] = useState("ratio");
   const [selectedCode, setSelectedCode] = useState(null);
@@ -324,7 +324,7 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
         </section>
       </section>
 
-      <HomeTrendPreview lang={lang} copy={copy} />
+      <HomeTrendPreview lang={lang} copy={copy} rows={historyRows} provisional={historyProvisional} />
       <HomePreviewFinish
         articles={articles}
         copy={copy}
