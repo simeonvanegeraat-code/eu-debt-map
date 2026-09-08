@@ -13,6 +13,7 @@
 .metrics dd { margin: 8px 0 0; font-weight: 650; font-size: clamp(28px,3vw,39px); font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
 .primaryMetric dd { font-size: clamp(38px,4vw,52px); }
 .metrics a { font-size: 12px; }
+.metrics dt a { font-size: inherit; line-height: 1.5; }
 .period { font-size: 12px; color: #52627a; margin: 12px 0; }
 .secondaryValue { margin: 8px 0 0; font-size: 14px; color: #435873; }
 .note { color: #52627a; font-size: 13px; line-height: 1.7; }

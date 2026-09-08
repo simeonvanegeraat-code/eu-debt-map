@@ -1,3 +1,4 @@
+import { countryFiscalDescription, countrySocialMetadata } from "@/lib/fiscal/discovery";
 import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/nl/country/[code]/page.jsx
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }) {
   const code = String(routeCode).toLowerCase();
   const name = countryName(code.toUpperCase(), "nl") || code.toUpperCase();
   const country = countries.find((item) => item.code === code.toUpperCase());
-  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratio = country?.official_debt_to_gdp_pct;
   const ratioPeriod = country?.official_debt_to_gdp_time || "";
   const ratioYear = ratioPeriod.slice(0, 4) || "2026";
   const ratioText = Number.isFinite(ratio)
@@ -30,16 +31,18 @@ export async function generateMetadata({ params }) {
     : null;
   const url = `${SITE}/nl/country/${code}`;
 
-  return {
-    title: ratioText
+  const title = ratioText
       ? `Staatsschuld ${name}: live en ${ratioText} van bbp (${ratioYear}) | EU Debt Map`
-      : `Staatsschuld ${name} (live) | EU Debt Map`,
-    description: ratioText
-      ? `Bekijk de staatsschuld van ${name} live en de officiële Eurostat-schuldquote van ${ratioText} voor ${ratioPeriod}.`
-      : `Bekijk de staatsschuld van ${name} live met een actuele schatting op basis van Eurostat. Inclusief schuldniveau en bbp-verhouding.`,
+      : `Staatsschuld ${name} (live) | EU Debt Map`;
+  const description = countryFiscalDescription({ name, lang: "nl", ratio, period: ratioPeriod });
+
+  return {
+    title, description,
+    ...countrySocialMetadata({ title, description, url, lang: "nl" }),
     alternates: {
       canonical: url,
       languages: {
+        "x-default": `${SITE}/country/${code}`,
         en: `${SITE}/country/${code}`,
         nl: `${SITE}/nl/country/${code}`,
         de: `${SITE}/de/country/${code}`,

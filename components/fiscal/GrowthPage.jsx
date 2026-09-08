@@ -1,3 +1,5 @@
+import FiscalRelatedLinks from "./FiscalRelatedLinks";
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import Link from "next/link";
 import snapshot from "@/lib/fiscal/growth.gen.json";
 import { GROWTH, quarterEnd } from "@/lib/fiscal/growth";
@@ -17,7 +19,7 @@ export default function GrowthPage({ lang = "en" }) {
   const copy = getGrowthCopy(lang), url = `${SITE}${fiscalPath("/debt-growth",lang)}`;
   const modified = new Date(Math.max(Date.parse(snapshot.fetchedAt),Date.parse(GROWTH.reviewedAt))).toISOString();
   const graph = {"@context":"https://schema.org","@graph":[
-    {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:modified,mainEntity:{"@id":`${url}#dataset`}},
+    {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:fiscalPageModified(modified),mainEntity:{"@id":`${url}#dataset`}},
     {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-growth-methodology`,name:`${copy.shortTitle} · EU27`,description:copy.formula,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},isBasedOn:GROWTH.metadata,citation:copy.attribution,dateModified:modified,temporalCoverage:`${quarterEnd(snapshot.periods[0])}/${quarterEnd(snapshot.latestQuarter)}`,spatialCoverage:"EU-27 (2020 composition)",variableMeasured:[{ "@type":"PropertyValue",name:copy.amount,unitText:"EUR"},{"@type":"PropertyValue",name:copy.percent,unitText:"percent"},{"@type":"PropertyValue",name:copy.pp,unitText:"percentage points"}]},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"EU Debt Map",item:`${SITE}${fiscalPath("/",lang)}`},{"@type":"ListItem",position:2,name:copy.shortTitle,item:url}]},
   ]};
@@ -27,5 +29,6 @@ export default function GrowthPage({ lang = "en" }) {
     <GrowthExplorer snapshot={{periods:snapshot.periods,latestQuarter:snapshot.latestQuarter,countries:snapshot.countries}} lang={lang} />
     <section className={`${styles.context} ${styles.shell}`} aria-labelledby="growth-context-title"><h2 id="growth-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.contextDebt}</h3><p>{copy.contextDebtText}</p><Link href={fiscalPath("/deficit",lang)}>{copy.balanceLink} →</Link></div><div><h3>{copy.contextRatio}</h3><p>{copy.contextRatioText}</p><Link href={fiscalPath("/",lang)}>{copy.debtLink} →</Link></div></div><p>{copy.fx}</p></section>
     <div className={styles.shell}><GrowthSource lang={lang} /></div>
+    <FiscalRelatedLinks indicator="debt-growth" lang={lang} />
   </article>;
 }

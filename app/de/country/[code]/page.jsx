@@ -1,3 +1,4 @@
+import { countryFiscalDescription } from "@/lib/fiscal/discovery";
 import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }) {
   const lang = "de";
   const name = countryName(code, lang);
   const country = countries.find((item) => item.code === code);
-  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratio = country?.official_debt_to_gdp_pct;
   const ratioPeriod = country?.official_debt_to_gdp_time || "";
   const ratioYear = ratioPeriod.slice(0, 4) || "2026";
   const ratioText = Number.isFinite(ratio)
@@ -42,13 +43,7 @@ export async function generateMetadata({ params }) {
     : ratioText
     ? `${name} Staatsschulden: live & ${ratioText} des BIP (${ratioYear}) | EU Debt Map`
     : `${name} Schuldenuhr (live) | EU Debt Map`;
-  const desc = isGermany
-    ? ratioText
-      ? `Schuldenuhr Deutschland live: geschätzte Staatsverschuldung pro Sekunde, offizielle Eurostat-Schuldenquote von ${ratioText} für ${ratioPeriod} und transparente Methodik.`
-      : "Schuldenuhr Deutschland live: geschätzte Staatsverschuldung pro Sekunde auf Basis offizieller Eurostat-Daten und transparenter Methodik."
-    : ratioText
-    ? `Verfolgen Sie die Staatsschulden von ${name} live und sehen Sie die offizielle Eurostat-Schuldenquote von ${ratioText} für ${ratioPeriod}.`
-    : `Verfolge die Staatsverschuldung von ${name} live mit einer aktuellen Schätzung auf Basis von Eurostat. Inklusive Schuldenstand und BIP-Verhältnis.`;
+  const desc = countryFiscalDescription({ name, lang: "de", ratio, period: ratioPeriod });
 
   return {
     title,

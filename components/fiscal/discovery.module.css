@@ -1,0 +1,16 @@
+.section, .articleLinks { border-top: 1px solid #c8d3e1; padding-block: 32px; color: #10233e; }
+.section { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+.section h2, .articleLinks h2 { margin: 0 0 24px; font-size: clamp(24px, 2.5vw, 32px); line-height: 1.25; letter-spacing: -.025em; }
+.section h3 { font-size: 18px; margin: 0 0 16px; }
+.links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 40px; list-style: none; padding: 0; margin: 0; }
+.links li { min-width: 0; }
+.section a, .articleLinks a { color: #1d5194; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; line-height: 1.6; overflow-wrap: anywhere; }
+.section a:focus-visible, .articleLinks a:focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
+.section p, .articleLinks p { font-size: 14px; color: #52627a; line-height: 1.7; margin: 8px 0 0; }
+.analysis { margin-top: 26px; max-width: 840px; }
+.articleLinks { margin-top: 36px; }
+.articleLinks > p { margin-bottom: 22px; }
+@media (max-width: 700px) {
+  .section { width: calc(100% - 32px); }
+  .links { grid-template-columns: minmax(0, 1fr); }
+}

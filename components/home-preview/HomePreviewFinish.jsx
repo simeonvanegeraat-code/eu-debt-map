@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBalanceCopy } from "@/components/fiscal/balance-copy";
+import { getDiscoveryCopy } from "@/components/fiscal/discovery-copy";
 import styles from "./home-preview.module.css";
 
 function formatDate(value, locale) {
@@ -23,6 +24,7 @@ export default function HomePreviewFinish({ articles = [], copy, commonPeriod, c
   const aboutHref = `${copy.base}/about` || "/about";
   const debtHref = `${copy.base}/debt` || "/debt";
   const trustItems = copy.trustItems(commonPeriod, countryCount);
+  const discovery = getDiscoveryCopy(copy.base.slice(1) || "en");
 
   return (
     <>
@@ -90,6 +92,7 @@ export default function HomePreviewFinish({ articles = [], copy, commonPeriod, c
             <p>{copy.whyIntro}</p>
             <Link href={debtHref}>{copy.debtExplainerCta} <span aria-hidden="true">→</span></Link>
             <p><Link href={`${copy.base}/deficit`}>{getBalanceCopy(copy.base.slice(1) || "en").comparisonLink} <span aria-hidden="true">→</span></Link></p>
+            {["interest-cost", "government-spending"].map(key => <p key={key}><Link href={`${copy.base}/${key}`} prefetch={false}>{discovery.routes[key][0]} <span aria-hidden="true">→</span></Link></p>)}
           </div>
         </header>
         <div className={styles.whyGrid}>

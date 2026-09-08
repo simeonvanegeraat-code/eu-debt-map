@@ -1,3 +1,4 @@
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import accountsSnapshot from "@/lib/fiscal/accounts.gen.json";
 import { METHODOLOGY_REVIEWED } from "@/lib/fiscal/methodology-registry";
 import { COUNTRY_DASHBOARD_REVIEWED } from "@/lib/fiscal/country-dashboard";
@@ -208,7 +209,7 @@ export default async function sitemap() {
     for (const lang of ALL_LOCALES) {
       pushUrl({
         url: urlFor(item.path, lang),
-        lastModified: item.path === "/methodology" ? new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(METHODOLOGY_REVIEWED))) : ["/", "/eu-debt"].includes(item.path) ? new Date(Math.max(DATA_LASTMOD.getTime(), GROWTH_LASTMOD.getTime())) : DATA_LASTMOD,
+        lastModified: item.path === "/" ? new Date(fiscalPageModified(new Date(Math.max(DATA_LASTMOD.getTime(), GROWTH_LASTMOD.getTime())).toISOString())) : item.path === "/methodology" ? new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(METHODOLOGY_REVIEWED))) : item.path === "/eu-debt" ? new Date(Math.max(DATA_LASTMOD.getTime(), GROWTH_LASTMOD.getTime())) : DATA_LASTMOD,
         changeFrequency: item.changeFrequency,
         priority: item.priority,
         alternates: { languages: alternates },
@@ -218,29 +219,29 @@ export default async function sitemap() {
 
   // Annual fiscal data has its own update date, independent of quarterly debt.
   for (const lang of ALL_LOCALES) {
-    pushUrl({ url: urlFor("/deficit", lang), lastModified: FISCAL_LASTMOD,
+    pushUrl({ url: urlFor("/deficit", lang), lastModified: new Date(fiscalPageModified(FISCAL_LASTMOD.toISOString())),
       changeFrequency: "monthly", priority: 0.9,
       alternates: { languages: { ...languageAlternatesFor("/deficit"), "x-default": urlFor("/deficit") } },
     });
   }
 
   for (const lang of ALL_LOCALES) {
-    pushUrl({ url: urlFor("/debt-per-capita", lang), lastModified: CAPITA_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+    pushUrl({ url: urlFor("/debt-per-capita", lang), lastModified: new Date(fiscalPageModified(CAPITA_LASTMOD.toISOString())), changeFrequency: "monthly", priority: 0.85,
       alternates: { languages: { ...languageAlternatesFor("/debt-per-capita"), "x-default": urlFor("/debt-per-capita") } } });
   }
 
   for (const lang of ALL_LOCALES) {
-    pushUrl({ url: urlFor("/debt-growth", lang), lastModified: GROWTH_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+    pushUrl({ url: urlFor("/debt-growth", lang), lastModified: new Date(fiscalPageModified(GROWTH_LASTMOD.toISOString())), changeFrequency: "monthly", priority: 0.85,
       alternates: { languages: { ...languageAlternatesFor("/debt-growth"), "x-default": urlFor("/debt-growth") } } });
   }
 
   for (const lang of ALL_LOCALES) {
-    pushUrl({ url: urlFor("/interest-cost", lang), lastModified: INTEREST_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+    pushUrl({ url: urlFor("/interest-cost", lang), lastModified: new Date(fiscalPageModified(INTEREST_LASTMOD.toISOString())), changeFrequency: "monthly", priority: 0.85,
       alternates: { languages: { ...languageAlternatesFor("/interest-cost"), "x-default": urlFor("/interest-cost") } } });
   }
 
   for (const lang of ALL_LOCALES) {
-    pushUrl({ url: urlFor("/government-spending", lang), lastModified: ACCOUNTS_LASTMOD, changeFrequency: "monthly", priority: 0.85,
+    pushUrl({ url: urlFor("/government-spending", lang), lastModified: new Date(fiscalPageModified(ACCOUNTS_LASTMOD.toISOString())), changeFrequency: "monthly", priority: 0.85,
       alternates: { languages: { ...languageAlternatesFor("/government-spending"), "x-default": urlFor("/government-spending") } } });
   }
 
@@ -259,12 +260,12 @@ export default async function sitemap() {
       if (!code) continue;
 
       const path = `/country/${code}`;
-      const alternates = languageAlternatesFor(path);
+      const alternates = { ...languageAlternatesFor(path), "x-default": urlFor(path) };
 
       for (const lang of ALL_LOCALES) {
         pushUrl({
           url: urlFor(path, lang),
-          lastModified: new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(COUNTRY_DASHBOARD_REVIEWED))),
+          lastModified: new Date(fiscalPageModified(new Date(Math.max(COUNTRY_LASTMOD.getTime(), Date.parse(COUNTRY_DASHBOARD_REVIEWED))).toISOString())),
           changeFrequency: "daily",
           priority: 0.8,
           alternates: { languages: alternates },

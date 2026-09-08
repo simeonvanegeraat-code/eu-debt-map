@@ -7,6 +7,8 @@ import perCapita from "@/lib/fiscal/per-capita.gen.json";
 import { countryDashboard } from "@/lib/fiscal/country-dashboard";
 import { countryName } from "@/lib/countries";
 import { fiscalPath } from "@/lib/fiscal/paths";
+import { METRIC_ROUTES } from "@/lib/fiscal/discovery";
+import { getDiscoveryCopy } from "@/components/fiscal/discovery-copy";
 import CountryBalance from "@/components/fiscal/CountryBalance";
 import CountryPerCapita from "@/components/fiscal/CountryPerCapita";
 import CountryGrowth from "@/components/fiscal/CountryGrowth";
@@ -31,12 +33,13 @@ function Source({ source, lang, copy, label }) {
 function Overview({ data, lang }) {
   const copy = getCountryFiscalCopy(lang), number = (value, type = "pp", signed = true) => accountNumber(value, lang, type, signed);
   const { ratioChange, debtChange, balanceChange, interestChange, debtRanks } = data;
+  const discovery = getDiscoveryCopy(lang), balance = data.metrics.find(metric => metric.key === "balance");
   return <div className={styles.overview}>
     <p id="snapshot" className={styles.eyebrow}>{copy.overviewLabel}</p>
     <h2 id="country-fiscal-title">{copy.overview}</h2>
     <p className={styles.lede}>{copy.overviewNote}</p>
     <dl className={styles.metrics}>{data.metrics.map(metric => <div key={metric.key} data-fiscal-metric={metric.key} className={metric.key === "debt" ? styles.primaryMetric : undefined}>
-      <dt>{copy.labels[metric.key]}</dt>
+      <dt><Link href={fiscalPath(METRIC_ROUTES[metric.key], lang)} prefetch={false}>{copy.labels[metric.key]}</Link></dt>
       <dd><Value point={metric} lang={lang} type={metric.type} signed={metric.key === "balance"} /></dd>
       {metric.secondary && <p className={styles.secondaryValue}><Value point={metric.secondary} lang={lang} type={metric.key === "interest" ? "percent" : "compact"} />{metric.key === "interest" ? ` · ${{ en: "GDP", nl: "bbp", de: "BIP", fr: "PIB" }[lang]}` : ""}</p>}
       <p className={styles.period}>{metric.calculated ? copy.calculated : copy.official} · <time>{periodLabel(metric.period, lang)}</time></p>
@@ -54,6 +57,10 @@ function Overview({ data, lang }) {
       </ul>
       {debtChange.change > 0 && ratioChange.change < 0 && <p className={styles.callout}>{copy.divergence}<sup>{[...new Set(`${debtChange.status}${ratioChange.status}`)].join("")}</sup></p>}
       <p className={styles.note}>{copy.insightNote}</p>
+      {Number.isFinite(balance?.value) && <p data-country-balance-link>
+        {discovery.countryBalance(countryName(data.code, lang), accountNumber(balance.value, lang, "percent", true), balance.period)}<sup>{balance.status}</sup>{" "}
+        <Link href={fiscalPath("/deficit", lang)} prefetch={false}>{discovery.balanceLink} →</Link>
+      </p>}
     </section>
     <details className={styles.details}><summary>{copy.capitaDetails}</summary><CountryPerCapita code={data.code} lang={lang} /></details>
   </div>;

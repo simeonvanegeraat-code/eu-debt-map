@@ -1,0 +1,68 @@
+const COPY = {
+  en: {
+    title: "Put the figures in context", articles: "Related analysis", compare: "Compare EU countries",
+    articleTitle: "Explore the data behind the topic", homeIntro: "Explore the budget behind the debt:",
+    countryBalance: (name, value, year) => `${name} recorded an EDP budget balance of ${value} of GDP in ${year}.`,
+    balanceLink: "Compare budget balances across the EU",
+    debtArticle: "Analysis of the Q1 2026 debt release. The comparison pages retain their own reporting periods and source versions.",
+    capitaArticle: "This article uses Q1 2026 debt and population on 1 January 2026. The comparison page uses year-end debt and population on the following 1 January; the figures are not interchangeable.",
+    routes: {
+      "deficit": ["Budget deficit and surplus", "Compare annual government balances and the EU reference value."],
+      "debt-to-gdp": ["Debt relative to GDP", "Compare the debt stock with the size of each economy."],
+      "debt-growth": ["Debt growth", "Separate changes in euros from changes in the debt-to-GDP ratio."],
+      "debt-per-capita": ["Debt per resident", "Compare debt amounts using a documented population reference date."],
+      "interest-cost": ["Government interest costs", "See annual interest expenditure and its share of government revenue."],
+      "government-spending": ["Government spending and revenue", "Compare the two sides of the annual government accounts."],
+    },
+  },
+  nl: {
+    title: "Plaats de cijfers in context", articles: "Bijbehorende analyse", compare: "Vergelijk EU-landen",
+    articleTitle: "Verken de cijfers achter dit onderwerp", homeIntro: "Bekijk de begroting achter de schuld:",
+    countryBalance: (name, value, year) => `${name} had in ${year} een EDP-begrotingssaldo van ${value} van het bbp.`,
+    balanceLink: "Vergelijk begrotingssaldi in de EU",
+    debtArticle: "Analyse van de schuldcijfers voor Q1 2026. De vergelijkingspagina’s behouden hun eigen verslagperioden en bronversies.",
+    capitaArticle: "Dit artikel gebruikt de schuld van Q1 2026 en de bevolking op 1 januari 2026. De vergelijkingspagina gebruikt de schuld aan het jaareinde en de bevolking op de daaropvolgende 1 januari; de cijfers zijn niet uitwisselbaar.",
+    routes: {
+      "deficit": ["Begrotingstekort en overschot", "Vergelijk jaarlijkse begrotingssaldi en de EU-referentiewaarde."],
+      "debt-to-gdp": ["Schuld ten opzichte van bbp", "Vergelijk de schuldvoorraad met de omvang van elke economie."],
+      "debt-growth": ["Schuldgroei", "Onderscheid de verandering in euro’s van de verandering in schuldquote."],
+      "debt-per-capita": ["Schuld per inwoner", "Vergelijk schuldbedragen met een vastgelegde peildatum voor de bevolking."],
+      "interest-cost": ["Rentelasten van overheden", "Bekijk de jaarlijkse rentelasten en hun aandeel in de overheidsinkomsten."],
+      "government-spending": ["Overheidsuitgaven en inkomsten", "Vergelijk de twee kanten van de jaarlijkse overheidsrekening."],
+    },
+  },
+  de: {
+    title: "Die Zahlen im Zusammenhang", articles: "Passende Analyse", compare: "EU-Länder vergleichen",
+    articleTitle: "Die Daten zum Thema erkunden", homeIntro: "Der Haushalt hinter den Schulden:",
+    countryBalance: (name, value, year) => `${name} verzeichnete ${year} einen EDP-Haushaltssaldo von ${value} des BIP.`,
+    balanceLink: "Haushaltssalden in der EU vergleichen",
+    debtArticle: "Analyse der Schuldendaten für Q1 2026. Die Vergleichsseiten behalten ihre eigenen Berichtszeiträume und Datenstände bei.",
+    capitaArticle: "Dieser Artikel nutzt Schulden aus Q1 2026 und die Bevölkerung am 1. Januar 2026. Die Vergleichsseite nutzt den Schuldenstand zum Jahresende und die Bevölkerung am folgenden 1. Januar; die Werte sind nicht austauschbar.",
+    routes: {
+      "deficit": ["Haushaltsdefizit und Überschuss", "Jährliche Haushaltssalden und den EU-Referenzwert vergleichen."],
+      "debt-to-gdp": ["Schulden im Verhältnis zum BIP", "Den Schuldenstand mit der Größe der jeweiligen Wirtschaft vergleichen."],
+      "debt-growth": ["Schuldenentwicklung", "Veränderungen in Euro von Veränderungen der Schuldenquote unterscheiden."],
+      "debt-per-capita": ["Schulden je Einwohner", "Schuldenbeträge mit einem dokumentierten Bevölkerungsstichtag vergleichen."],
+      "interest-cost": ["Staatliche Zinsausgaben", "Jährliche Zinsausgaben und ihren Anteil an den Staatseinnahmen betrachten."],
+      "government-spending": ["Staatsausgaben und Einnahmen", "Beide Seiten der jährlichen Staatskonten vergleichen."],
+    },
+  },
+  fr: {
+    title: "Mettre les chiffres en perspective", articles: "Analyse associée", compare: "Comparer les pays de l’UE",
+    articleTitle: "Explorer les données sur ce sujet", homeIntro: "Le budget derrière la dette :",
+    countryBalance: (name, value, year) => `${name} a enregistré un solde budgétaire PDE de ${value} du PIB en ${year}.`,
+    balanceLink: "Comparer les soldes budgétaires dans l’UE",
+    debtArticle: "Analyse des données de dette du T1 2026. Les pages de comparaison conservent leurs propres périodes et versions des sources.",
+    capitaArticle: "Cet article utilise la dette du T1 2026 et la population au 1er janvier 2026. La page de comparaison utilise la dette de fin d’année et la population au 1er janvier suivant ; ces chiffres ne sont pas interchangeables.",
+    routes: {
+      "deficit": ["Déficit et excédent budgétaires", "Comparer les soldes annuels et la valeur de référence de l’UE."],
+      "debt-to-gdp": ["Dette rapportée au PIB", "Comparer le stock de dette à la taille de chaque économie."],
+      "debt-growth": ["Évolution de la dette", "Distinguer les variations en euros de celles du ratio dette/PIB."],
+      "debt-per-capita": ["Dette par habitant", "Comparer les montants avec une date de référence démographique explicite."],
+      "interest-cost": ["Dépenses publiques d’intérêts", "Examiner les intérêts annuels et leur part dans les recettes publiques."],
+      "government-spending": ["Dépenses et recettes publiques", "Comparer les deux côtés des comptes publics annuels."],
+    },
+  },
+};
+
+export function getDiscoveryCopy(lang = "en") { return COPY[lang] || COPY.en; }

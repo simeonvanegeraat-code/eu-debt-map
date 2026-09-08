@@ -1,3 +1,4 @@
+import { countryFiscalDescription, countrySocialMetadata } from "@/lib/fiscal/discovery";
 import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/fr/country/[code]/page.jsx
 import { notFound } from "next/navigation";
@@ -12,11 +13,6 @@ import FranceDebtClockIntro from "@/components/FranceDebtClockIntro";
 const SITE = "https://www.eudebtmap.com";
 const FRANCE_ARTICLE_SLUG = "dette-publique-france-compteur-live-record";
 
-function formatFrenchQuarter(value) {
-  const match = /^(\d{4})-?Q([1-4])$/i.exec(String(value || "").trim());
-  return match ? `T${match[2]} ${match[1]}` : value;
-}
-
 export async function generateStaticParams() {
   const list = Array.isArray(countries) ? countries : [];
   return list.map((c) => ({ code: String(c.code).toLowerCase() }));
@@ -30,7 +26,7 @@ export async function generateMetadata({ params }) {
   );
 
   const name = countryName(code.toUpperCase(), "fr") || c?.name || code.toUpperCase();
-  const ratio = Number(c?.official_debt_to_gdp_pct);
+  const ratio = c?.official_debt_to_gdp_pct;
   const ratioPeriod = c?.official_debt_to_gdp_time || "";
   const ratioYear = ratioPeriod.slice(0, 4) || "2026";
   const ratioText = Number.isFinite(ratio)
@@ -40,25 +36,22 @@ export async function generateMetadata({ params }) {
       })} %`
     : null;
   const isFrance = code === "fr";
-  const ratioPeriodText = formatFrenchQuarter(ratioPeriod);
   const url = `${SITE}/fr/country/${code}`;
 
-  return {
-    title: isFrance
+  const title = isFrance
       ? `Dette publique de la France en direct ${ratioYear} | EU Debt Map`
       : ratioText
       ? `Dette publique ${name} : direct et ${ratioText} du PIB (${ratioYear}) | EU Debt Map`
-      : `Dette publique ${name} (en direct) | EU Debt Map`,
-    description: isFrance
-      ? ratioText
-        ? `Dette publique de la France en direct : estimation par seconde fondée sur Eurostat, ratio officiel de ${ratioText} au ${ratioPeriodText} et méthode transparente.`
-        : "Dette publique de la France en direct : estimation par seconde fondée sur les données officielles d’Eurostat et méthode transparente."
-      : ratioText
-      ? `Suivez la dette publique de ${name} en direct et consultez le ratio officiel d’Eurostat de ${ratioText} pour ${ratioPeriod}.`
-      : `Suivez la dette publique de ${name} en direct avec une estimation actuelle basée sur Eurostat. Inclut le niveau de dette et le ratio dette/PIB.`,
+      : `Dette publique ${name} (en direct) | EU Debt Map`;
+  const description = countryFiscalDescription({ name, lang: "fr", ratio, period: ratioPeriod });
+
+  return {
+    title, description,
+    ...countrySocialMetadata({ title, description, url, lang: "fr" }),
     alternates: {
       canonical: url,
       languages: {
+        "x-default": `${SITE}/country/${code}`,
         en: `${SITE}/country/${code}`,
         nl: `${SITE}/nl/country/${code}`,
         de: `${SITE}/de/country/${code}`,

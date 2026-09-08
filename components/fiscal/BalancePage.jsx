@@ -1,3 +1,5 @@
+import FiscalRelatedLinks from "./FiscalRelatedLinks";
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import Link from "next/link";
 import snapshot from "@/lib/fiscal/balance.gen.json";
 import { BALANCE } from "@/lib/fiscal/indicators";
@@ -31,7 +33,7 @@ export default function BalancePage({ lang = "en" }) {
   const url = `${SITE}${fiscalPath("/deficit", lang)}`;
   const schema = { "@context": "https://schema.org", "@graph": [
     { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang,
-      dateModified: new Date(Math.max(Date.parse(BALANCE.contentReviewedAt), Date.parse(snapshot.fetchedAt))).toISOString(), mainEntity: { "@id": `${url}#dataset` } },
+      dateModified: fiscalPageModified(new Date(Math.max(Date.parse(BALANCE.contentReviewedAt), Date.parse(snapshot.fetchedAt))).toISOString()), mainEntity: { "@id": `${url}#dataset` } },
     { "@type": "Dataset", "@id": `${url}#dataset`, name: `${copy.balance} · EU-27 · ${snapshot.years[0]}–${year}`, description: `${copy.definition} ${copy.calculations}`, url: `${url}#budget-balance-methodology`,
       creator: { "@type": "Organization", name: "Eurostat", url: "https://ec.europa.eu/eurostat" },
       publisher: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: BALANCE.datasetUrl,
@@ -59,5 +61,6 @@ export default function BalancePage({ lang = "en" }) {
       <Link className={styles.textLink} href={fiscalPath("/", lang)}>{copy.debtLink} →</Link>
     </section>
     <div className={styles.shell}><BalanceSource lang={lang} /></div>
+    <FiscalRelatedLinks indicator="deficit" lang={lang} />
   </article>;
 }

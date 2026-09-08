@@ -18,7 +18,7 @@ export default function CountryBalance({ code, lang = "en" }) {
     <dl className={styles.countryMetrics}>
       <div><dt>{copy.balance} · {copy.gdp}</dt><dd>{formatFiscal(row.balance, lang)}<sup>{row.balanceStatus}</sup></dd><small>{copy.status[balanceBand(row.balance)]} · {row.year}</small></div>
       <div><dt>{copy.previous} · {Number(row.year) - 1}</dt><dd>{formatFiscal(row.previous, lang)}<sup>{row.previousStatus}</sup></dd><small>{copy.gdp}</small></div>
-      <div><dt>{copy.change}</dt><dd>{formatFiscal(row.change, lang, { suffix: ` ${copy.pp}` })}</dd><small>{Number(row.year) - 1} → {row.year}</small></div>
+      <div><dt>{copy.change}</dt><dd>{formatFiscal(row.change, lang, { suffix: ` ${copy.pp}` })}<sup>{row.changeStatus}</sup></dd><small>{Number(row.year) - 1} → {row.year}</small></div>
       <div><dt>{copy.rank}</dt><dd>{row.rank ?? "—"} / 27</dd><small>{row.year}</small></div>
     </dl>
     <p className={styles.insight}>{balanceInsight(row.change, lang)}</p>

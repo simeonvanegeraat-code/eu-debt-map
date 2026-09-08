@@ -1,10 +1,10 @@
 # European Public Finance Expansion Plan
 
-Status: Phases 0–8 complete locally. Production publication explicitly authorized through the existing GitHub/Vercel integration. Phases 9–10 have not started. Earlier phase previews remain available.
+Status: Phases 0–8 completed and published as `b91c815`. Phases 9–10 completed locally on 8 September 2026; cumulative preview on port 3019, with Phase 9 retained on port 3018. The owner has now explicitly authorized committing, pushing and publishing the reviewed Phases 9–10 through the existing production integration. See the final audit for verification and remaining model/accessibility/performance limitations.
 
-Audit reviewed: 5 September 2026. Delivery status updated: 7 September 2026. Repository baseline: `d553c79`.
+Audit reviewed: 5 September 2026. Delivery status updated: 8 September 2026. Original repository baseline: `d553c79`; Phase 9 baseline: `b91c815`.
 
-This is the durable project note for expanding EU Debt Map. It records the owner's proposed phases, the repository audit, and recommended adjustments. Phase 0 changed documentation only; the owner subsequently authorized Phases 1–7, followed by Phase 8 and production publication. Completing a phase does not authorize further implementation, data refreshes, commits, pushes, or deployment.
+This is the durable project note for expanding EU Debt Map. It records the owner's proposed phases, the repository audit, and recommended adjustments. Phase 0 changed documentation only; the owner subsequently authorized Phases 1–7, followed by Phase 8 and production publication, then Phases 9 and 10 individually. Completing a phase does not authorize further implementation, data refreshes, commits, pushes, or deployment.
 
 ## 1. Product direction and delivery rules
 
@@ -237,19 +237,21 @@ Delivered on 7 September 2026: seven sourced metrics, visible debt/balance/inter
 
 Add debt, balance, and interest trends with exact period labels and missing-data states. Compare with a clearly identified EU aggregate/median and a justified peer set. Use deterministic insight rules whose result carries its input periods and calculation: ratio change in pp, stable EU rank, balance improvement/deterioration, and interest growth when the base is valid. No AI-generated filler or artificial precision. Revisit country titles/metadata carefully without changing canonical/hreflang contracts. Stop.
 
-### Phase 7 — Navigation and information architecture
+### Phase 7 — Navigation and information architecture — COMPLETED AND PUBLISHED
 
 Review Debt, Fiscal Health, Countries, and Methodology as potential groups. Preserve direct access to the existing map, guides, and articles. Keep mobile controls short and clear; do not simply add all new pages to the current six-item desktop row. Fix the documented mobile-drawer focus issue when touching navigation. Test keyboard, touch, active states, locale switching, and source/indicator cross-links. Stop.
 
-### Phase 8 — Methodology and source transparency
+### Phase 8 — Methodology and source transparency — COMPLETED AND PUBLISHED
 
 Consolidate the definitions already delivered with each indicator into a clear registry-driven source overview. For every metric list dataset ID, filters, frequency, reporting period, units, calculation, update logic, source dates, and official/calculated/modelled status. Explain revisions, flags, partial coverage, aggregate definitions, and period matching. Review code-versus-methodology consistency, including any separately authorized debt-model repair.
 
 Use attribution such as “Source: Eurostat, dataset … . Visualisation and calculations by EU Debt Map.” Do not imply Eurostat endorsement. Preserve a meaningful methodology review history. Stop.
 
-### Phase 9 — SEO and internal linking
+### Phase 9 — SEO and internal linking — COMPLETED LOCALLY
 
 Audit useful links between the map, deficit, interest, countries, and relevant articles. Prefer comparisons derived from validated observations with their periods. Review canonical URLs, locale availability/hreflang, titles, descriptions, schema, sitemap lastmod ownership, crawlability, raw/rendered language, thin/duplicate content, and performance implications. Do not create masses of programmatic country/indicator URLs. Existing country profiles remain the destination for country context. Stop.
+
+Delivered localized contextual links, country metric-to-comparison links, period-aware article navigation and wider country descriptions. Fixed inherited English social metadata on Dutch/French country profiles. Titles, canonicals, data and Dataset schema remain intact. See [the Phase 9 report](fiscal-phase-9.md) for 171 passing tests, 230 working routes, payload comparison and remaining limits.
 
 ### Phase 10 — Final quality audit
 
@@ -292,7 +294,9 @@ The audit covers repository structure, active feature/data paths, shared librari
 
 For Phase 0, only this documentation note was a repository deliverable. Temporary route evidence was kept outside tracked source. No public page, generated fiscal snapshot, dependency, SEO configuration, model calculation, or external service was changed during that audit.
 
-## 10. Next action
+## 10. Delivery log and next action
+
+Earlier entries below describe the delivery state at the end of each phase. Their local-only status was superseded by the cumulative Phase 8 release.
 
 Phase 1 was explicitly authorized and completed locally on 5 September 2026. See [the Phase 1 implementation and verification report](fiscal-phase-1.md) for the annual EDP data pipeline, four deficit routes, country integration and checks. No deployment has been made.
 
@@ -313,4 +317,10 @@ The owner explicitly requested Phase 8 and publication of the expanded website o
 
 Phase 8 was completed on 7 September 2026: [source registry and release report](fiscal-phase-8.md). The methodology page now identifies 14 official, calculated and modelled metrics in all four locales. The suite has 166 passing tests. Source definitions were reviewed without refreshing the saved observations or changing the debt model. The cumulative local preview is `http://127.0.0.1:3017/nl/methodology`.
 
-The authorized next action for this delivery is the verified production release of Phases 1–8 through GitHub `main` and Vercel. Use the Production deployment status and the live website to establish rollout completion. After publication, stop; do not start Phase 9 or 10 automatically.
+Phases 1–8 were published through GitHub `main` and Vercel as `b91c8158f4f0c2cbc61aa099b3382d7a43582423`. GitHub CI and Production deployment `6313373399` succeeded. The live site returned HTTP 200 for all 230 routes and displayed the source registry.
+
+The owner then explicitly requested Phase 9. It is complete locally: [implementation and verification report](fiscal-phase-9.md), preview `http://127.0.0.1:3018/nl/debt-per-capita`. No Phase 9 commit, push or deployment was requested or performed. Previous preview builds are retained in the temporary directory, but their servers may need to be restarted after a new session.
+
+The owner subsequently authorized Phase 10. The [final quality audit](fiscal-phase-10.md) is complete locally: 5,947 source observations and flags matched the Eurostat API, 172 tests passed, the production build passed, and 1,252 internal destinations resolved. Annual balance changes now suppress non-comparable observations and retain their source flags. The cumulative preview is `http://127.0.0.1:3019/nl/deficit`. The live-counter consistency repair and other explicit audit limitations remain recorded separately.
+
+The owner explicitly requested publication on 8 September 2026. The reviewed Phases 9–10 may be committed and pushed as a normal forward update to GitHub `main`, triggering the existing Vercel Production deployment. Confirm the CI result, deployment commit and live routes before reporting success. Do not begin the separately scoped model repair or another feature as part of this release.

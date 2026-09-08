@@ -45,4 +45,6 @@ The final local preview is `http://127.0.0.1:3017/nl/methodology`. Phase 7 was f
 
 The owner authorized publishing the cumulative Phases 1–8. The existing GitHub `main` → Vercel Production integration was verified, with production and remote main still based on `d553c7973a796a0b79237160669f1fdb14c6b298` before this release. Publication uses a normal forward update, not a force push. The GitHub Production deployment status and live site must be checked before reporting the release as live.
 
+Release verification: commit `b91c8158f4f0c2cbc61aa099b3382d7a43582423` was pushed to `main`; GitHub run `34147126293` and Vercel Production deployment `6313373399` both succeeded on 7 September 2026. All 230 live routes returned HTTP 200. The localized source registry was verified at `https://www.eudebtmap.com/nl/methodology#dataset-registry`. This records the completed Phase 8 release; subsequent Phase 9 work is a separate local change.
+
 The separately scoped model-consistency repair remains outstanding: the homepage starts its modelled total at page load, while country counters extrapolate from their reference date. The registry discloses the difference; official fiscal statistics remain unchanged. No unsupported unified real-time total is introduced.

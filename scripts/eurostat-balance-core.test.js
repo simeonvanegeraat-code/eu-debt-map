@@ -111,6 +111,28 @@ test("checked-in snapshot is valid and uses the existing EU27 identity set", () 
   assert.equal(url.searchParams.getAll("geo").length, 28);
 });
 
+test("balance changes retain provisional flags and suppress non-comparable annual observations", () => {
+  const fixture = clone(snapshot);
+  const year = fixture.latestCompleteYear, previous = String(Number(year) - 1);
+  fixture.series.FR[year].balance = -3;
+  fixture.series.FR[previous].balance = -5;
+  fixture.series.FR[year].balanceStatus = "p";
+  fixture.series.FR[previous].balanceStatus = "e";
+  const row = () => balanceRows(fixture).find(item => item.code === "FR");
+  assert.equal(row().change, 2);
+  assert.equal(row().changeStatus, "ep");
+  for (const flag of ["b", "d", "f"]) {
+    for (const period of [previous, year]) {
+      fixture.series.FR[previous].balanceStatus = "";
+      fixture.series.FR[year].balanceStatus = "";
+      fixture.series.FR[period].balanceStatus = flag;
+      assert.equal(row().change, null, `${flag} at ${period}`);
+      assert.equal(row().changeStatus, flag);
+      assert.equal(row().balance, -3);
+    }
+  }
+});
+
 test("fiscal routes preserve root English, four translations and methodology anchors", () => {
   for (const lang of ["en", "nl", "de", "fr"]) {
     const prefix = lang === "en" ? "" : `/${lang}`;

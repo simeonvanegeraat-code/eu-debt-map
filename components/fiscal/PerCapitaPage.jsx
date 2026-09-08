@@ -1,3 +1,5 @@
+import FiscalRelatedLinks from "./FiscalRelatedLinks";
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import Link from "next/link";
 import snapshot from "@/lib/fiscal/per-capita.gen.json";
 import { PER_CAPITA, perCapitaRows, perCapitaAggregate } from "@/lib/fiscal/per-capita";
@@ -30,7 +32,7 @@ export default function PerCapitaPage({ lang = "en" }) {
   const url = `${SITE}${fiscalPath("/debt-per-capita",lang)}`;
   const modified = new Date(Math.max(Date.parse(PER_CAPITA.reviewedAt),Date.parse(snapshot.fetchedAt))).toISOString();
   const graph = {"@context":"https://schema.org","@graph":[
-    {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:modified,mainEntity:{"@id":`${url}#dataset`}},
+    {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:fiscalPageModified(modified),mainEntity:{"@id":`${url}#dataset`}},
     {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-per-capita-methodology`,name:`${copy.value} · EU-27 · ${snapshot.debtYear}`,description:`${copy.formula} ${copy.datesText}`,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},isBasedOn:[PER_CAPITA.debtMetadata,PER_CAPITA.populationMetadata],citation:copy.attribution,temporalCoverage:`${snapshot.debtDate}/${snapshot.populationDate}`,spatialCoverage:"EU-27 (2020 composition)",dateModified:modified,variableMeasured:{"@type":"PropertyValue",name:copy.value,unitText:"EUR per resident"},measurementTechnique:copy.formula},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"EU Debt Map",item:`${SITE}${fiscalPath("/",lang)}`},{"@type":"ListItem",position:2,name:copy.shortTitle,item:url}]},
   ]};
@@ -48,5 +50,6 @@ export default function PerCapitaPage({ lang = "en" }) {
     <IndicatorRanking id="per-capita-ranking" title={copy.rankingTitle} caption={`${copy.value} · ${snapshot.debtYear} / ${snapshot.populationDate}`} columns={columns} rows={rankingRows} copy={{search:copy.search,rankNote:copy.rankNote,shown:copy.shown,noResults:copy.noResults,rank:copy.rank,country:copy.country}} locale={copy.locale} />
     <section className={`${styles.context} ${styles.shell}`} aria-labelledby="per-capita-context-title"><p className={styles.eyebrow}>{copy.calculation}</p><h2 id="per-capita-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.datesTitle}</h3><p>{copy.datesText}</p><p>{copy.formula}</p></div><div><h3>{copy.meaningTitle}</h3><p>{copy.meaningText}</p><Link href={fiscalPath("/deficit",lang)}>{copy.balanceLink} →</Link></div></div><Link className={styles.textLink} href={fiscalPath("/",lang)}>{copy.debtLink} →</Link></section>
     <div className={styles.shell}><PerCapitaSource lang={lang} /></div>
+    <FiscalRelatedLinks indicator="debt-per-capita" lang={lang} />
   </article>;
 }

@@ -16,7 +16,7 @@ const COPY = {
     title: "Public finances: sources and methodology.",
     lede: "Trace European government debt, budget balances, interest, spending and revenue back to Eurostat. Official observations, EU Debt Map calculations and live estimates are clearly separated.",
     heroAction: "Explore the sources",
-    heroNote: "Source registry reviewed 7 September 2026 · debt model unchanged",
+    heroNote: "Source registry reviewed 8 September 2026 · debt model unchanged",
     sourcePanel: "The data lineage",
     sourceSteps: [
       ["01", "Eurostat", "Official quarterly observations"],
@@ -155,6 +155,7 @@ const COPY = {
       ],
       changelogTitle: "Method record",
       changelog: [
+        ["2026-09", "2026-09-08", "Checked saved fiscal observations against the Eurostat API. Annual balance changes now retain source flags and are unavailable across series breaks or differing definitions. Stored observations and the debt model are unchanged."],
         ["2026-09", "2026-09-07", "Added the fiscal source registry, calculation labels, source dates and current live-display limitations."],
         ["Version 2.0", "30 Aug 2026", "Adds live-ratio logic, stale-data freezes, exact guardrails, revisions and foreign-exchange limitations."],
         ["1.2", "Jul 2026", "Documents validated snapshots, official ratios and last-known-good country updates."],
@@ -206,7 +207,7 @@ const COPY = {
     title: "Overheidsfinanciën: bronnen en methodologie.",
     lede: "Herleid Europese overheidsschuld, begrotingssaldi, rente, uitgaven en inkomsten tot Eurostat. Officiële waarnemingen, berekeningen van EU Debt Map en live schattingen worden duidelijk onderscheiden.",
     heroAction: "Bekijk de bronnen",
-    heroNote: "Bronnenregister gecontroleerd op 7 september 2026 · schuldmodel ongewijzigd",
+    heroNote: "Bronnenregister gecontroleerd op 8 september 2026 · schuldmodel ongewijzigd",
     sourcePanel: "De herkomst van de data",
     sourceSteps: [
       ["01", "Eurostat", "Officiële kwartaalwaarnemingen"],
@@ -345,6 +346,7 @@ const COPY = {
       ],
       changelogTitle: "Methoderegister",
       changelog: [
+        ["2026-09", "2026-09-08", "Opgeslagen begrotingscijfers gecontroleerd met de Eurostat-API. Jaarlijkse saldoveranderingen behouden nu broncodes en worden niet berekend bij reeksbreuken of afwijkende definities. De opgeslagen cijfers en het schuldmodel zijn ongewijzigd."],
         ["2026-09", "2026-09-07", "Bronnenregister, berekeningslabels, brondatums en huidige beperkingen van de live weergave toegevoegd."],
         ["Versie 2.0", "30 aug. 2026", "Voegt logica voor de live schuldquote, bevriezing van verouderde data, exacte waarborgen, herzieningen en wisselkoersbeperkingen toe."],
         ["1.2", "jul. 2026", "Documenteert gevalideerde momentopnamen, officiële ratio’s en updates met de laatst bekende geldige landdata."],
@@ -396,7 +398,7 @@ const COPY = {
     title: "Staatsfinanzen: Quellen und Methodik.",
     lede: "Europäische Staatsschulden, Haushaltssalden, Zinsen, Ausgaben und Einnahmen bis zu Eurostat zurückverfolgen. Offizielle Beobachtungen, Berechnungen von EU Debt Map und Live-Schätzungen bleiben klar getrennt.",
     heroAction: "Quellen ansehen",
-    heroNote: "Quellenregister geprüft am 7. September 2026 · Schuldenmodell unverändert",
+    heroNote: "Quellenregister geprüft am 8. September 2026 · Schuldenmodell unverändert",
     sourcePanel: "Der Weg der Daten",
     sourceSteps: [
       ["01", "Eurostat", "Offizielle vierteljährliche Beobachtungen"],
@@ -535,6 +537,7 @@ const COPY = {
       ],
       changelogTitle: "Methodenprotokoll",
       changelog: [
+        ["2026-09", "2026-09-08", "Gespeicherte Finanzdaten mit der Eurostat-API abgeglichen. Jährliche Saldoänderungen behalten nun Quellenkennzeichnungen und werden bei Zeitreihenbrüchen oder abweichenden Definitionen nicht berechnet. Gespeicherte Werte und Schuldenmodell bleiben unverändert."],
         ["2026-09", "2026-09-07", "Quellenregister, Berechnungskennzeichnungen, Quelldaten und aktuelle Grenzen der Live-Anzeige ergänzt."],
         ["Version 2.0", "30. Aug. 2026", "Ergänzt Live-Quotenlogik, Stopps bei veralteten Daten, genaue Schutzregeln, Revisionen und Wechselkursgrenzen."],
         ["1.2", "Juli 2026", "Dokumentiert validierte Datenstände, offizielle Quoten und Aktualisierungen mit zuletzt bekannten gültigen Länderwerten."],
@@ -586,7 +589,7 @@ const COPY = {
     title: "Finances publiques : sources et méthodologie.",
     lede: "Retrouvez chez Eurostat l’origine des dettes publiques, soldes budgétaires, intérêts, dépenses et recettes européens. Observations officielles, calculs d’EU Debt Map et estimations en direct restent distincts.",
     heroAction: "Explorer les sources",
-    heroNote: "Registre vérifié le 7 septembre 2026 · modèle de dette inchangé",
+    heroNote: "Registre vérifié le 8 septembre 2026 · modèle de dette inchangé",
     sourcePanel: "Le parcours des données",
     sourceSteps: [
       ["01", "Eurostat", "Observations trimestrielles officielles"],
@@ -725,6 +728,7 @@ const COPY = {
       ],
       changelogTitle: "Registre de la méthode",
       changelog: [
+        ["2026-09", "2026-09-08", "Données budgétaires enregistrées vérifiées auprès de l’API Eurostat. Les variations annuelles du solde conservent les indicateurs de source et ne sont pas calculées en cas de rupture de série ou de définition différente. Les données enregistrées et le modèle de dette restent inchangés."],
         ["2026-09", "2026-09-07", "Ajout du registre, des calculs, des dates des sources et des limites actuelles de l’affichage en direct."],
         ["Version 2.0", "30 août 2026", "Ajoute la logique du ratio en direct, le gel des données anciennes, les garde-fous exacts, les révisions et les limites liées au change."],
         ["1.2", "juil. 2026", "Documente les instantanés validés, les ratios officiels et les mises à jour fondées sur les dernières données nationales valides."],

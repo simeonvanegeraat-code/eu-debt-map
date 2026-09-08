@@ -1,3 +1,4 @@
+import { countryFiscalDescription } from "@/lib/fiscal/discovery";
 import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }) {
   const lang = "en";
   const name = countryName(code, lang);
   const country = countries.find((item) => item.code === code);
-  const ratio = Number(country?.official_debt_to_gdp_pct);
+  const ratio = country?.official_debt_to_gdp_pct;
   const ratioPeriod = country?.official_debt_to_gdp_time || "";
   const ratioYear = ratioPeriod.slice(0, 4) || "2026";
   const ratioText = Number.isFinite(ratio)
@@ -34,9 +35,7 @@ export async function generateMetadata({ params }) {
   const title = ratioText
     ? `${name} public debt: live & ${ratioText} of GDP (${ratioYear}) | EU Debt Map`
     : `${name} public debt (live) | EU Debt Map`;
-  const description = ratioText
-    ? `Track ${name} public debt live and see the official Eurostat debt-to-GDP ratio of ${ratioText} for ${ratioPeriod}.`
-    : `Track ${name} public debt live with a real-time estimate based on Eurostat data. See debt levels, GDP ratio, and country details.`;
+  const description = countryFiscalDescription({ name, lang: "en", ratio, period: ratioPeriod });
 
   return {
     title,

@@ -1,3 +1,5 @@
+import FiscalRelatedLinks from "./FiscalRelatedLinks";
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import Link from "next/link";
 import snapshot from "@/lib/fiscal/accounts.gen.json";
 import edp from "@/lib/fiscal/balance.gen.json";
@@ -19,7 +21,7 @@ export default function AccountsPage({ lang = "en" }) {
   const copy = getAccountsCopy(lang), eu = accountPoints(snapshot, "EU27_2020").at(-1), url = `${SITE}${fiscalPath("/government-spending", lang)}`;
   const modified = new Date(Math.max(Date.parse(snapshot.fetchedAt), Date.parse(ACCOUNTS.reviewedAt))).toISOString();
   const graph = { "@context": "https://schema.org", "@graph": [
-    { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: modified, mainEntity: { "@id": `${url}#dataset` } },
+    { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: fiscalPageModified(modified), mainEntity: { "@id": `${url}#dataset` } },
     { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#government-accounts-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.identity, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: ACCOUNTS.metadata, citation: copy.attribution, dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: Object.keys(ACCOUNTS.sources).map(key => ({ "@type": "PropertyValue", name: copy[key], unitText: key.endsWith("Ratio") ? "percent of GDP" : "EUR" })) },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
@@ -30,5 +32,6 @@ export default function AccountsPage({ lang = "en" }) {
     <AccountsExplorer snapshot={{ latestYear: snapshot.latestYear, years: snapshot.years, countries: snapshot.countries, eu: snapshot.eu }} comparisons={Object.fromEntries(Object.keys(snapshot.countries).map(code => [code, edpComparison(snapshot, edp, code)]))} lang={lang} />
     <section className={`${styles.context} ${styles.shell}`} aria-labelledby="accounts-context-title"><h2 id="accounts-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.contextSpending}</h3><p>{copy.spendingText}</p><p>{copy.interestNote}</p><Link href={fiscalPath("/interest-cost", lang)}>{copy.interestLink} →</Link></div><div><h3>{copy.contextRevenue}</h3><p>{copy.revenueText}</p><Link href={fiscalPath("/deficit", lang)}>{copy.deficitLink} →</Link></div></div></section>
     <div className={styles.shell}><AccountsSource lang={lang} /></div>
+    <FiscalRelatedLinks indicator="government-spending" lang={lang} />
   </article>;
 }

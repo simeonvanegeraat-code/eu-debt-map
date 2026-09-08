@@ -1,3 +1,5 @@
+import FiscalRelatedLinks from "./FiscalRelatedLinks";
+import { fiscalPageModified } from "@/lib/fiscal/discovery";
 import Link from "next/link";
 import snapshot from "@/lib/fiscal/interest.gen.json";
 import debtSnapshot from "@/lib/fiscal/per-capita.gen.json";
@@ -26,7 +28,7 @@ export default function InterestPage({ lang = "en" }) {
   const modified = new Date(Math.max(Date.parse(snapshot.fetchedAt), Date.parse(INTEREST.reviewedAt))).toISOString();
   const debtContext = debtSnapshot.debtYear === snapshot.latestYear ? { year: debtSnapshot.debtYear, countries: Object.fromEntries(Object.entries(debtSnapshot.countries).map(([code, row]) => [code, { amount: row.debtMioEur * 1e6, ratio: row.debtRatio, amountStatus: row.debtStatus, ratioStatus: row.ratioStatus }])) } : null;
   const graph = { "@context": "https://schema.org", "@graph": [
-    { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: modified, mainEntity: { "@id": `${url}#dataset` } },
+    { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: fiscalPageModified(modified), mainEntity: { "@id": `${url}#dataset` } },
     { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#interest-cost-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.formula, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: [INTEREST.metadata, INTEREST.populationMetadata], citation: copy.attribution, dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: [[copy.amount, "EUR"], [copy.ratio, "percent of GDP"], [copy.perCapita, "EUR per resident"], [copy.revenueShare, "percent of government revenue"]].map(([name, unitText]) => ({ "@type": "PropertyValue", name, unitText })) },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
@@ -39,5 +41,6 @@ export default function InterestPage({ lang = "en" }) {
     <InterestExplorer snapshot={{ years: snapshot.years, latestYear: snapshot.latestYear, countries: snapshot.countries }} debtContext={debtContext} lang={lang} />
     <section className={`${styles.context} ${styles.shell}`} aria-labelledby="interest-context-title"><h2 id="interest-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.contextCost}</h3><p>{copy.contextCostText}</p><Link href={fiscalPath("/", lang)}>{copy.debtLink} →</Link></div><div><h3>{copy.contextRevenue}</h3><p>{copy.contextRevenueText}</p><Link href={fiscalPath("/deficit", lang)}>{copy.balanceLink} →</Link></div></div><p>{copy.accounting}</p><p>{copy.populationNote}</p></section>
     <div className={styles.shell}><InterestSource lang={lang} /></div>
+    <FiscalRelatedLinks indicator="interest-cost" lang={lang} />
   </article>;
 }

@@ -51,7 +51,7 @@ test('registry is compact metadata with valid sources, localized explanations an
       assert(copy.kinds[row.kind] && copy.updates[row.update]);
     }
   }
-  assert.equal(METHODOLOGY_REVIEWED,'2026-09-07T00:00:00Z');
+  assert.equal(METHODOLOGY_REVIEWED,'2026-09-08T00:00:00Z');
 });
 
 test('registry reporting periods follow refreshed snapshots without borrowing another source period', () => {

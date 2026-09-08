@@ -1,3 +1,4 @@
+import ArticleFiscalLinks from "@/components/fiscal/ArticleFiscalLinks";
 export const runtime = "nodejs";
 
 import { getArticle, getTranslations } from "@/lib/articles";
@@ -308,6 +309,8 @@ export default async function ArticleDetailPage({ params }) {
             </div>
           )}
         </div>
+
+        <ArticleFiscalLinks slug={article.slug} lang={article.lang} />
 
         <ArticleRailServer
           lang={article.lang}

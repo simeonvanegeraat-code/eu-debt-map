@@ -48,7 +48,7 @@ export default function BalanceExplorer({ rows, history, year, lang = "en" }) {
             <p>{copy.status[balanceBand(selected.balance)]} · {copy.gdp}</p>
             <dl className={styles.panelFacts}>
               <div><dt>{copy.previous} · {Number(year) - 1}</dt><dd>{formatFiscal(selected.previous, lang)}<sup>{selected.previousStatus}</sup></dd></div>
-              <div><dt>{copy.change}</dt><dd>{formatFiscal(selected.change, lang, { suffix: ` ${copy.pp}` })}</dd></div>
+              <div><dt>{copy.change}</dt><dd>{formatFiscal(selected.change, lang, { suffix: ` ${copy.pp}` })}<sup>{selected.changeStatus}</sup></dd></div>
               <div><dt>{copy.rank}</dt><dd>{selected.rank ?? "—"} / 27</dd></div>
               <div><dt>{copy.debt} · {copy.debtDate} {year}</dt><dd>{formatFiscal(selected.debtRatio, lang, { signed: false })}<sup>{selected.debtStatus}</sup></dd></div>
             </dl>
@@ -71,7 +71,7 @@ export default function BalanceExplorer({ rows, history, year, lang = "en" }) {
           <thead><tr><th scope="col">{copy.rank}</th><th scope="col">{copy.country}</th><th scope="col">{copy.balance}<small>{year}</small></th><th scope="col">{copy.previous}<small>{Number(year) - 1}</small></th><th scope="col">{copy.change}<small>{copy.pp}</small></th><th scope="col">{copy.debt}<small>{copy.debtDate} {year}</small></th></tr></thead>
           <tbody>{filtered.map((row) => <tr key={row.code}><td>{row.rank ?? "—"}</td><th scope="row"><Link href={countryHref(row.code)}>{row.name}</Link><small>{row.code}</small></th>
             <td><span className={styles.balanceCell}><i aria-hidden="true" style={{ background: BALANCE_COLORS[balanceBand(row.balance)] }} />{formatFiscal(row.balance, lang)}<sup>{row.balanceStatus}</sup></span></td>
-            <td>{formatFiscal(row.previous, lang)}<sup>{row.previousStatus}</sup></td><td>{formatFiscal(row.change, lang, { suffix: "" })}</td><td>{formatFiscal(row.debtRatio, lang, { signed: false })}<sup>{row.debtStatus}</sup></td></tr>)}</tbody>
+            <td>{formatFiscal(row.previous, lang)}<sup>{row.previousStatus}</sup></td><td>{formatFiscal(row.change, lang, { suffix: "" })}<sup>{row.changeStatus}</sup></td><td>{formatFiscal(row.debtRatio, lang, { signed: false })}<sup>{row.debtStatus}</sup></td></tr>)}</tbody>
         </table>
         {filtered.length === 0 && <p>{copy.noResults}</p>}
       </div>

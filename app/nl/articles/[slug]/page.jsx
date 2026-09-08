@@ -1,3 +1,4 @@
+import ArticleFiscalLinks from "@/components/fiscal/ArticleFiscalLinks";
 export const runtime = "nodejs";
 
 import { getArticle, getTranslations } from "@/lib/articles";
@@ -294,6 +295,8 @@ export default async function ArticleDetailPage({ params }) {
               "Bron: Eurostat (gov_10q_ggdebt). Educatieve visualisatie, geen officiële statistiek."}
           </div>
         </div>
+
+        <ArticleFiscalLinks slug={article.slug} lang={article.lang} />
 
         <ArticleRailServer
           lang={article.lang}
