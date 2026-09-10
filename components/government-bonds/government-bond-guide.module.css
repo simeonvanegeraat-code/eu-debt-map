@@ -1,5 +1,5 @@
 .page {
-  --bond-navy: #061a33;
+  --bond-navy: var(--surface-dark);
   --bond-navy-soft: #0b2a50;
   --bond-blue: #1d63d8;
   --bond-blue-light: #82b6ff;
@@ -7,10 +7,10 @@
   --bond-ink: #0a1b31;
   --bond-muted: #5c6f88;
   --bond-line: #d7e1ec;
-  --bond-paper: #f4f7fb;
+  --bond-paper: var(--surface-page);
   --bond-warm: #f6f2ea;
   color: var(--bond-ink);
-  background: #fff;
+  background: var(--surface-page);
   font-family: var(--font-editorial-display), var(--font-system), sans-serif;
 }
 
@@ -45,9 +45,7 @@
 
 .hero {
   color: #fff;
-  background:
-    radial-gradient(circle at 88% 8%, rgba(55, 119, 221, 0.42), transparent 32%),
-    linear-gradient(118deg, #05162c 0%, #0a284f 66%, #164888 100%);
+  background: var(--surface-hero);
 }
 
 .previewBar {
@@ -90,7 +88,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(430px, 0.82fr);
   gap: clamp(50px, 7vw, 108px);
   align-items: center;
-  padding: clamp(52px, 6vw, 88px) 0 clamp(64px, 7vw, 104px);
+  padding: clamp(52px, 6vw, 88px) 0 max(clamp(64px, 7vw, 104px), var(--surface-hero-fade-height));
 }
 
 .eyebrow {
@@ -735,9 +733,7 @@
 .mechanics {
   padding-block: clamp(80px, 9vw, 138px);
   color: #fff;
-  background:
-    radial-gradient(circle at 8% 90%, rgba(32, 99, 205, 0.28), transparent 30%),
-    var(--bond-navy);
+  background: var(--surface-dark);
 }
 
 .flow {
@@ -1412,7 +1408,7 @@
 .debtConnection {
   padding-block: clamp(72px, 8vw, 112px);
   color: #fff;
-  background: linear-gradient(120deg, #0c2c56, #174e91);
+  background: var(--surface-feature);
 }
 
 .debtConnectionGrid {

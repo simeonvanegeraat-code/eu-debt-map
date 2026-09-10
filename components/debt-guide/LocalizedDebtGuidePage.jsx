@@ -160,7 +160,6 @@ export default function LocalizedDebtGuidePage({ lang }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       <section className={styles.hero} aria-labelledby="page-title">
-        <div className={styles.heroGlow} aria-hidden="true" />
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <p className={styles.heroEyebrow}>{copy.hero.eyebrow}</p>

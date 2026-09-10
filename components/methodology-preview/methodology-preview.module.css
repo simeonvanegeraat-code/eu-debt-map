@@ -1,5 +1,5 @@
 .page {
-  --navy: #071a34;
+  --navy: var(--surface-dark);
   --navy-soft: #0d2d5d;
   --blue: #2567d9;
   --blue-bright: #72a9ff;
@@ -7,10 +7,10 @@
   --ink: #071a34;
   --muted: #5d718e;
   --line: #d5dfeb;
-  --paper: #f4f7fb;
+  --paper: var(--surface-page);
   --warm: #f5f2ec;
   color: var(--ink);
-  background: #fff;
+  background: var(--surface-page);
   font-family: var(--font-editorial-display), var(--font-system), sans-serif;
 }
 
@@ -52,10 +52,9 @@
 }
 
 .hero {
+  padding-bottom: var(--surface-hero-fade-height);
   color: #fff;
-  background:
-    radial-gradient(circle at 90% 18%, rgba(69, 129, 241, 0.5), transparent 34%),
-    linear-gradient(116deg, #06172e 0%, #0a2852 62%, #2257ad 100%);
+  background: var(--surface-hero);
 }
 
 .previewBar {
@@ -433,7 +432,7 @@
   padding: clamp(28px, 4vw, 50px);
   border-radius: 14px;
   color: #fff;
-  background: linear-gradient(116deg, #0b2345, #174995);
+  background: var(--surface-feature);
 }
 
 .examplePanel header { display: flex; justify-content: space-between; gap: 24px; align-items: center; }
@@ -546,7 +545,7 @@
   border: 1px solid #22344a;
   border-radius: 12px;
   color: #fff;
-  background: #09182c;
+  background: var(--surface-dark);
   overflow: hidden;
 }
 

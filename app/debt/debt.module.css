@@ -2,7 +2,7 @@
   --font-display: var(--font-editorial-display);
   --ink: #071426;
   --ink-soft: #20324a;
-  --paper: #f4f7fb;
+  --paper: var(--surface-page);
   --paper-blue: #edf3ff;
   --line: #d4deeb;
   --blue: #246bfe;
@@ -63,30 +63,8 @@
   isolation: isolate;
   min-height: min(760px, calc(100svh - 74px));
   position: relative;
-  background:
-    radial-gradient(circle at 86% 12%, rgba(65, 124, 236, 0.38), transparent 36%),
-    linear-gradient(
-      180deg,
-      #07182f 0%,
-      #0c2e62 62%,
-      #245ca8 78%,
-      #83a7d8 88%,
-      #dfe9f7 96%,
-      var(--paper) 100%
-    );
+  background: var(--surface-hero);
   color: #fff;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 140px;
-  background: linear-gradient(to bottom, transparent, var(--paper));
-  pointer-events: none;
 }
 
 .hero::before {
@@ -105,19 +83,6 @@
   user-select: none;
 }
 
-.heroGlow {
-  position: absolute;
-  z-index: -1;
-  width: 45rem;
-  height: 45rem;
-  right: -18rem;
-  top: -18rem;
-  border-radius: 50%;
-  background: rgba(36, 107, 254, 0.3);
-  filter: blur(90px);
-  pointer-events: none;
-}
-
 .heroInner {
   position: relative;
   z-index: 1;
@@ -128,7 +93,7 @@
   width: min(1180px, calc(100% - 3rem));
   min-height: inherit;
   margin: 0 auto;
-  padding: clamp(4.75rem, 8vw, 7rem) 0 clamp(7rem, 10vw, 9rem);
+  padding: clamp(4.75rem, 8vw, 7rem) 0 max(clamp(7rem, 10vw, 9rem), var(--surface-hero-fade-height));
 }
 
 .heroCopy {
@@ -1431,7 +1396,7 @@
 
 @media (max-width: 560px) {
   .hero { min-height: auto; }
-  .heroInner { width: calc(100% - 2rem); padding: 4rem 0 6.5rem; }
+  .heroInner { width: calc(100% - 2rem); padding: 4rem 0 max(6.5rem, var(--surface-hero-fade-height)); }
   .heroCopy h1 { font-size: clamp(3rem, 13vw, 3.5rem); line-height: 0.98; }
   .heroThesis { font-size: 1.25rem; line-height: 1.28; }
   .heroMeta { display: grid; }

@@ -9,12 +9,32 @@
    Global tokens & resets
    =========================== */
 :root{
+  /* Shared page surfaces; chart and map palettes remain independent. */
+  --surface-page: #f7f9fc;
+  --surface-panel: #ffffff;
+  --surface-dark: #07182f;
+  --surface-hero-blue: #0c2e62;
+  --surface-hero-fade-height: clamp(104px, 12vw, 160px);
+  --surface-feature: linear-gradient(145deg, var(--surface-dark), var(--surface-hero-blue));
+  /* Keep the light transition in the reserved space below hero content. */
+  --surface-hero:
+    radial-gradient(circle at 82% 14%, rgba(73, 132, 235, 0.38), transparent 30%),
+    linear-gradient(
+      180deg,
+      var(--surface-dark) 0%,
+      var(--surface-hero-blue) calc(100% - var(--surface-hero-fade-height)),
+      #245ca8 calc(100% - var(--surface-hero-fade-height) * 0.72),
+      #83a7d8 calc(100% - var(--surface-hero-fade-height) * 0.38),
+      #dfe9f7 calc(100% - var(--surface-hero-fade-height) * 0.12),
+      var(--surface-page) 100%
+    );
+
   /* Light theme */
-  --bg:#f7fafc;
+  --bg:var(--surface-page);
   --fg:#0b1220;
   --muted:#4a617b;
 
-  --card:#ffffff;
+  --card:var(--surface-panel);
   --card-elev:#ffffff;
   --border:#e5e7eb;
 

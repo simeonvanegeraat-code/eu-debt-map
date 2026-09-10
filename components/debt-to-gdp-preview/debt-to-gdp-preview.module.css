@@ -1,7 +1,7 @@
 .page {
   --ink: #07182f;
   --ink-soft: #173052;
-  --paper: #f7f9fc;
+  --paper: var(--surface-page);
   --line: #d8e0eb;
   --blue: #2868f0;
   --blue-soft: #79a9f5;
@@ -18,9 +18,7 @@
 
 .hero {
   color: #fff;
-  background:
-    radial-gradient(circle at 82% 15%, rgba(67, 126, 230, 0.48), transparent 32%),
-    linear-gradient(180deg, #06162d 0%, #0c2f63 70%, #4778bd 88%, var(--paper) 100%);
+  background: var(--surface-hero);
 }
 
 .heroInner,
@@ -53,7 +51,7 @@
   grid-template-columns: minmax(0, 1.05fr) minmax(390px, 0.72fr);
   gap: clamp(56px, 8vw, 120px);
   align-items: center;
-  padding: clamp(72px, 9vw, 126px) 0 clamp(124px, 14vw, 180px);
+  padding: clamp(72px, 9vw, 126px) 0 max(clamp(124px, 14vw, 180px), var(--surface-hero-fade-height));
 }
 
 .eyebrow {
@@ -239,7 +237,7 @@
   align-items: end;
   padding: 24px;
   border-bottom: 1px solid var(--line);
-  background: #f4f7fb;
+  background: var(--surface-page);
 }
 
 .modeSwitch { display: flex; padding: 3px; border: 1px solid #ced8e6; border-radius: 8px; background: #e8eef6; }
@@ -388,7 +386,7 @@
   padding: clamp(58px, 8vw, 96px);
   border-radius: 18px;
   color: #fff;
-  background: radial-gradient(circle at 100% 0%, rgba(50, 111, 216, 0.48), transparent 42%), var(--ink);
+  background: var(--surface-feature);
   box-shadow: 0 30px 80px rgba(7, 27, 57, 0.16);
   scroll-margin-top: 148px;
 }

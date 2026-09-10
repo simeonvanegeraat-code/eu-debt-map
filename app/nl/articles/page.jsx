@@ -162,9 +162,7 @@ export default function ArticlesPage() {
     <div className="insights-page">
       <style dangerouslySetInnerHTML={{ __html: `
         .insights-page {
-          background:
-            radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 34rem),
-            linear-gradient(180deg, #f8fafc 0%, #ffffff 36rem);
+          background: var(--surface-page);
           color: #0f172a;
         }
 

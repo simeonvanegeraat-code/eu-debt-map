@@ -1,10 +1,10 @@
 .page {
   --ink: #071a35;
-  --navy: #071d3b;
+  --navy: var(--surface-dark);
   --blue: #2b6ff2;
   --sky: #76aaff;
   --mint: #58e5c1;
-  --paper: #f4f7fb;
+  --paper: var(--surface-page);
   --line: #d2dcea;
   --muted: #60728c;
   color: var(--ink);
@@ -32,9 +32,7 @@
 
 .hero {
   color: white;
-  background:
-    radial-gradient(circle at 88% 20%, rgba(77, 132, 255, 0.34), transparent 31rem),
-    linear-gradient(112deg, #061a34 0%, #0a2c61 67%, #2756ae 100%);
+  background: var(--surface-hero);
 }
 
 .heroInner,
@@ -48,7 +46,7 @@
 
 .heroInner {
   min-height: min(600px, calc(100vh - 76px));
-  padding-bottom: clamp(38px, 4vw, 54px);
+  padding-bottom: max(clamp(38px, 4vw, 54px), var(--surface-hero-fade-height));
 }
 
 .previewBar {

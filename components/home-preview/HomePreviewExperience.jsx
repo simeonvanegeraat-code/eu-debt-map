@@ -105,7 +105,6 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
   return (
     <div className={styles.page}>
       <section className={styles.hero} aria-labelledby="home-title">
-        <div className={styles.heroOrb} aria-hidden="true" />
         <div className={`${styles.heroInner} ${preview ? "" : styles.heroInnerLive}`}>
           {preview && (
             <div className={styles.previewBar}>

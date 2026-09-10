@@ -4,7 +4,7 @@
   --ink-soft: #18395f;
   --blue: #2868f0;
   --mint: #5ce5bf;
-  --paper: #f4f7fb;
+  --paper: var(--surface-page);
   --line: #d9e1ec;
   min-height: 100vh;
   overflow: clip;
@@ -21,33 +21,7 @@
   min-height: 520px;
   overflow: hidden;
   color: #fff;
-  background:
-    radial-gradient(circle at 82% 20%, rgba(54, 113, 241, 0.72), transparent 34%),
-    linear-gradient(118deg, #061a36 0%, #0c2b59 48%, #2459ad 100%);
-}
-
-.hero::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 150px;
-  content: "";
-  background: linear-gradient(180deg, transparent, var(--paper));
-  pointer-events: none;
-}
-
-.heroOrb {
-  position: absolute;
-  top: -280px;
-  right: -180px;
-  width: 720px;
-  height: 720px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 90px rgba(255, 255, 255, 0.025),
-    0 0 0 180px rgba(255, 255, 255, 0.018);
+  background: var(--surface-hero);
 }
 
 .heroInner,
@@ -104,7 +78,7 @@
   position: relative;
   z-index: 1;
   display: block;
-  padding: clamp(48px, 5vw, 72px) 0 112px;
+  padding: clamp(48px, 5vw, 72px) 0 max(112px, var(--surface-hero-fade-height));
 }
 
 .heroInnerLive .heroGrid {
@@ -188,7 +162,7 @@
   padding: clamp(24px, 3vw, 42px);
   border: 1px solid rgba(195, 207, 222, 0.9);
   border-radius: 18px;
-  background: rgba(251, 253, 255, 0.97);
+  background: var(--surface-panel);
   box-shadow: 0 30px 80px rgba(7, 27, 57, 0.15);
 }
 
@@ -437,9 +411,7 @@
   overflow: hidden;
   border-radius: 12px;
   color: #fff;
-  background:
-    radial-gradient(circle at 110% -10%, rgba(40, 104, 240, 0.42), transparent 42%),
-    linear-gradient(145deg, #071b39, #0b284f);
+  background: var(--surface-dark);
 }
 
 .inspector::after {
@@ -758,9 +730,7 @@
   overflow: hidden;
   border-radius: 18px;
   color: #fff;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(40, 104, 240, 0.48), transparent 43%),
-    linear-gradient(135deg, #061a36, #0d315f);
+  background: var(--surface-feature);
   box-shadow: 0 30px 80px rgba(7, 27, 57, 0.16);
 }
 
@@ -1069,9 +1039,7 @@
   padding: clamp(42px, 5vw, 72px);
   border-radius: 18px;
   color: #fff;
-  background:
-    radial-gradient(circle at 88% 12%, rgba(40, 104, 240, 0.45), transparent 34%),
-    var(--ink);
+  background: var(--surface-feature);
 }
 
 .whyHeader {
