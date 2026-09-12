@@ -5,7 +5,7 @@ import snapshot from "@/lib/fiscal/balance.gen.json";
 import { BALANCE } from "@/lib/fiscal/indicators";
 import { balanceRows } from "@/lib/fiscal/balance-core";
 import { fiscalPath } from "@/lib/fiscal/paths";
-import { editorialDisplay } from "@/lib/editorial-font";
+import typography from "@/components/typography/typography.module.css";
 import BalanceExplorer from "./BalanceExplorer";
 import BalanceSource from "./BalanceSource";
 import { getBalanceCopy, formatFiscal } from "./balance-copy";
@@ -42,7 +42,7 @@ export default function BalancePage({ lang = "en" }) {
       measurementTechnique: "ESA 2010; S13; annual; PC_GDP", dateModified: new Date(snapshot.sourceUpdated).toISOString(), citation: copy.attribution },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
-  return <article className={`${styles.page} ${editorialDisplay.variable}`} lang={lang}>
+  return <article className={`${styles.page} ${typography.page}`} lang={lang}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <header className={styles.hero}><div className={styles.shell}>
       <p className={styles.eyebrow}>{copy.eyebrow}</p><h1>{copy.title}</h1><p className={styles.intro}>{copy.intro}</p>

@@ -189,7 +189,7 @@ export default function ChartsClient({ historyRows = [], breakdownRows = [], lan
   const latestHistoryPoint = historyRows.length ? historyRows[historyRows.length - 1] : null;
   const breakdownData = buildBreakdownData(breakdownRows, safe);
 
-  const sectionTitle = { fontSize: "1.15rem", fontWeight: 800, color: "#111827", margin: "0 0 10px", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "-0.01em" };
+  const sectionTitle = { fontSize: "var(--type-h2, 1.778rem)", lineHeight: "var(--type-heading-leading, 1.18)", fontWeight: 800, color: "#111827", margin: "0 0 10px", fontFamily: "var(--type-font, sans-serif)", letterSpacing: "var(--type-heading-tracking, -0.025em)" };
   const sectionIntro = { fontSize: "0.98rem", lineHeight: 1.65, color: "#6b7280", margin: "0 0 16px" };
   const chartCard = { width: "100%", background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 18, padding: 18, boxShadow: "0 8px 24px rgba(0,0,0,0.04)" };
 

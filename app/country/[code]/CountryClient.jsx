@@ -191,7 +191,7 @@ export default function CountryClient({
     <CountryPageExperience
       country={safeCountry}
       lang={effLang}
-      title={fiscalOverviewSlot ? fiscalCopy.title(displayName) : title}
+      title={title}
       displayName={displayName}
       gdpAbs={gdpAbs}
       gdpPeriod={gdpPeriod || yearLabel}

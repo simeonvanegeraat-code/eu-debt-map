@@ -5,7 +5,7 @@ import snapshot from "@/lib/fiscal/per-capita.gen.json";
 import { PER_CAPITA, perCapitaRows, perCapitaAggregate } from "@/lib/fiscal/per-capita";
 import { fiscalPath } from "@/lib/fiscal/paths";
 import { countryName } from "@/lib/countries";
-import { editorialDisplay } from "@/lib/editorial-font";
+import typography from "@/components/typography/typography.module.css";
 import { getPerCapitaCopy, capitaNumber } from "./per-capita-copy";
 import PerCapitaExplorer from "./PerCapitaExplorer";
 import PerCapitaSource from "./PerCapitaSource";
@@ -40,7 +40,7 @@ export default function PerCapitaPage({ lang = "en" }) {
   const rankingRows = rows.map(row=>({code:row.code,name:countryName(row.code,lang),rank:row.rank,href:fiscalPath(`/country/${row.code.toLowerCase()}`,lang),cells:{
     perCapita:{text:capitaNumber(row.displayValue,lang),status:row.status},debt:{text:capitaNumber(row.debtEur,lang),status:row.debtStatus},ratio:{text:capitaNumber(row.debtRatio,lang,"percent"),status:row.ratioStatus},population:{text:capitaNumber(row.population,lang,"number"),status:row.populationStatus},
   }}));
-  return <article className={`${styles.page} ${editorialDisplay.variable}`} lang={lang}>
+  return <article className={`${styles.page} ${typography.page}`} lang={lang}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(graph).replace(/</g,"\\u003c")}} />
     <header className={styles.hero}><div className={styles.shell}><p className={styles.eyebrow}>{copy.eyebrow}</p><h1>{copy.title}</h1><p className={styles.intro}>{copy.intro}</p><p className={styles.period}>{copy.calculated}</p>
       <dl className={styles.heroStats}><div><dt>{copy.eu}</dt><dd>{capitaNumber(eu?.value,lang)}</dd><small>{copy.perResident}</small></div><div><dt>{copy.debtDate}</dt><dd>{snapshot.debtYear}</dd><small>{snapshot.debtDate}</small></div><div><dt>{copy.populationDate}</dt><dd>{snapshot.populationYear}</dd><small>{snapshot.populationDate}</small></div></dl><p className={styles.heroNote}>{copy.euNote}</p>{eu?.status && <p className={styles.heroNote}>{copy.estimate}</p>}

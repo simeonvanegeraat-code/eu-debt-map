@@ -1,6 +1,6 @@
 # European Public Finance Expansion Plan
 
-Status: Phases 0–8 completed and published as `b91c815`. Phases 9–10 completed locally on 8 September 2026; cumulative preview on port 3019, with Phase 9 retained on port 3018. The owner has now explicitly authorized committing, pushing and publishing the reviewed Phases 9–10 through the existing production integration. See the final audit for verification and remaining model/accessibility/performance limitations.
+Status: Phases 0–10 are complete. Phases 9–10 were published on 8 September 2026 as `fd9f6fa`, after the earlier Phases 0–8 release `b91c815`. GitHub CI, Vercel Production and all 230 live routes were verified. The cumulative local preview is retained on port 3019, with Phase 9 on port 3018. See the final audit for verification and remaining model/accessibility/performance limitations.
 
 Audit reviewed: 5 September 2026. Delivery status updated: 8 September 2026. Original repository baseline: `d553c79`; Phase 9 baseline: `b91c815`.
 
@@ -324,3 +324,5 @@ The owner then explicitly requested Phase 9. It is complete locally: [implementa
 The owner subsequently authorized Phase 10. The [final quality audit](fiscal-phase-10.md) is complete locally: 5,947 source observations and flags matched the Eurostat API, 172 tests passed, the production build passed, and 1,252 internal destinations resolved. Annual balance changes now suppress non-comparable observations and retain their source flags. The cumulative preview is `http://127.0.0.1:3019/nl/deficit`. The live-counter consistency repair and other explicit audit limitations remain recorded separately.
 
 The owner explicitly requested publication on 8 September 2026. The reviewed Phases 9–10 may be committed and pushed as a normal forward update to GitHub `main`, triggering the existing Vercel Production deployment. Confirm the CI result, deployment commit and live routes before reporting success. Do not begin the separately scoped model repair or another feature as part of this release.
+
+Publication completed: commit `fd9f6fa3bcb4e83f9636188f82e10b0d476c9e62`, successful GitHub run `34269591922` and successful Vercel Production deployment `6335529017`. All 230 live routes returned HTTP 200; the 227 sitemap pages matched the reviewed metadata, fiscal schemas and internal links. This post-release verification entry was recorded locally after publication. No further feature or model repair was started.

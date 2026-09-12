@@ -9,6 +9,7 @@ import { withLocale } from "@/lib/locale";
 import {
   EUROSTAT_DEBT_HISTORY_UPDATED_AT,
 } from "@/lib/eurostat.debt.history.gen";
+import typography from "@/components/typography/typography.module.css";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -384,17 +385,17 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
   const css = `
     .page { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
     .article { max-width: 760px; margin: 0 auto; }
-    .eyebrow { margin-top: 20px; color: #2563eb; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-display, sans-serif); }
-    .title { margin: 10px 0 14px; line-height: 1.05; font-weight: 800; font-size: clamp(2.2rem, 1.7rem + 2.8vw, 4rem); letter-spacing: -0.03em; color: #111827; font-family: var(--font-display, sans-serif); }
-    .standfirst { font-size: 1.2rem; line-height: 1.65; color: #4b5563; margin: 0 0 24px; max-width: 760px; font-family: Georgia, Cambria, "Times New Roman", Times, serif; }
+    .eyebrow { margin-top: 20px; color: #2563eb; font-size: var(--type-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--type-font); }
+    .title { margin: 10px 0 14px; line-height: var(--type-heading-leading); font-weight: 800; font-size: var(--type-h1); letter-spacing: var(--type-heading-tracking); color: #111827; font-family: var(--type-font); }
+    .standfirst { font-size: var(--type-lede); line-height: var(--type-body-leading); color: #4b5563; margin: 0 0 24px; max-width: 760px; font-family: var(--type-font); }
     .meta { display: flex; flex-wrap: wrap; gap: 14px; color: #6b7280; font-size: 0.9rem; margin-bottom: 28px; }
     .highlightGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 0 0 34px; }
     .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; background: #ffffff; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
     .cardLabel { color: #6b7280; font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; font-family: var(--font-display, sans-serif); }
     .cardValue { color: #111827; font-size: clamp(1.3rem, 1.1rem + 1vw, 2rem); font-weight: 800; letter-spacing: -0.02em; font-family: var(--font-display, sans-serif); }
-    .prose { font-family: Georgia, Cambria, "Times New Roman", Times, serif; font-size: 1.125rem; line-height: 1.85; color: #1f2937; }
+    .prose { font-family: var(--type-font); font-size: var(--type-body); line-height: var(--type-body-leading); color: #1f2937; }
     .prose p { margin-bottom: 1.45rem; }
-    .prose h2 { font-family: var(--font-display, sans-serif); font-size: 1.8rem; line-height: 1.25; margin: 2.6rem 0 1rem; color: #111827; letter-spacing: -0.02em; }
+    .prose h2 { font-family: var(--type-font); font-size: var(--type-h2); line-height: var(--type-heading-leading); margin: 2.6rem 0 1rem; color: #111827; letter-spacing: var(--type-heading-tracking); }
     .prose a { color: #2563eb; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
     .prose a:hover { color: #1d4ed8; }
     .countryList { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 18px 0 10px; padding: 0; list-style: none; }
@@ -421,7 +422,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
   };
 
   return (
-    <div className="page">
+    <div className={`page ${typography.page}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -210,7 +210,7 @@ test("the government debt guide keeps its SEO contract and progressive content",
   const page = read("app/debt/page.jsx");
   const experience = read("app/debt/DebtExperience.jsx");
   const styles = read("app/debt/debt.module.css");
-  const editorialFont = read("lib/editorial-font.js");
+  const typography = read("components/typography/typography.module.css");
 
   assert.match(page, /const PATH = "\/debt"/);
   assert.match(page, /canonical: `\$\{SITE\}\$\{PATH\}`/);
@@ -224,8 +224,8 @@ test("the government debt guide keeps its SEO contract and progressive content",
   assert.match(page, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
   assert.match(page, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
   assert.match(page, /This is EU Debt Map’s sum of national Eurostat observations for scale/);
-  assert.match(page, /editorialDisplay\.variable/);
-  assert.match(editorialFont, /IBM_Plex_Sans/);
+  assert.match(page, /typography\.page/);
+  assert.match(typography, /--type-h1:/);
 
   assert.match(experience, /"IntersectionObserver" in window/);
   assert.match(experience, /Illustrative calculation, not a forecast/);
@@ -427,7 +427,7 @@ test("the homepage experience preserves live SEO and isolates preview routes", (
   assert.match(finish, /preview && \(/);
   assert.match(finish, /copy\.whyTitle/);
   assert.match(finish, /copy\.faqTitle/);
-  assert.match(wrapper, /editorialDisplay\.variable/);
+  assert.match(wrapper, /typography\.page/);
   assert.match(wrapper, /getHomeArticles\(lang\)/);
   assert.match(previewData, /import "server-only"/);
   assert.match(previewData, /listArticles\(\{ lang \}\)\.slice\(0, 3\)/);

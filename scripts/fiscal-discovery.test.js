@@ -50,6 +50,12 @@ test("curated analyses have reciprocal links, actual translations and explicit p
 });
 
 test("country descriptions preserve real periods, distinguish estimates and never turn null into zero", () => {
+  const debtLead = {
+    en: "Example public debt live",
+    nl: "staatsschuld van Example live",
+    de: "Staatsschulden von Example live",
+    fr: "dette publique de Example en direct",
+  };
   for (const lang of ["en", "nl", "de", "fr"]) {
     const descriptions = new Set();
     for (const code of EU27) {
@@ -58,6 +64,7 @@ test("country descriptions preserve real periods, distinguish estimates and neve
       descriptions.add(description);
     }
     assert.equal(descriptions.size, 27);
+    assert.ok(countryFiscalDescription({ name: "Example", lang, ratio: 117.6, period: "2026-Q1" }).includes(debtLead[lang]));
     for (const ratio of [null, undefined, NaN, "", "117.6"]) assert.ok(!countryFiscalDescription({ name: "Example", lang, ratio, period: "2026-Q1" }).includes("%"));
     assert.ok(countryFiscalDescription({ name: "Example", lang, ratio: 0, period: "2026-Q1" }).includes("%"));
     assert.ok(!countryFiscalDescription({ name: "Example", lang, ratio: 10, period: "unknown" }).includes("%"));

@@ -1,6 +1,6 @@
 .notice { margin-block: 28px 0; padding: 18px 22px; border-left: 3px solid #b29154; background: #f1ede4; color: #263d59; font-size: 15px; line-height: 1.7; }
 .country { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 36px; margin-block: 38px; padding-block: 28px; border-top: 1px solid #c8d3e1; color: #10233e; }
-.country h2 { font-size: clamp(24px, 2.6vw, 32px); line-height: 1.25; margin: 0; }
+.country h2 { font-size: var(--type-h2, clamp(24px, 2.6vw, 32px)); line-height: var(--type-heading-leading, 1.25); margin: 0; }
 .country p { color: #435873; font-size: 14px; line-height: 1.7; }
 .country .eyebrow { color: #315a8c; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
 .country .value { color: #10233e; font-size: clamp(34px, 4vw, 48px); font-weight: 600; line-height: 1.2; margin: 18px 0 0; font-variant-numeric: tabular-nums; }

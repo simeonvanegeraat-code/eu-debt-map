@@ -120,3 +120,12 @@ test("localized routes compose the dashboard on the server and retain previous i
   assert.match(dashboard, /<CountryInterest[^>]+showHistory/);
   assert.match(read("app/sitemap.js"), /COUNTRY_DASHBOARD_REVIEWED/);
 });
+
+test("country profiles retain their localized debt-first SEO framing", () => {
+  const client = read("app/country/[code]/CountryClient.jsx");
+  const experience = read("components/country/CountryPageExperience.jsx");
+  assert.match(client, /title=\{title\}/);
+  assert.doesNotMatch(client, /title=\{fiscalOverviewSlot \? fiscalCopy\.title/);
+  assert.doesNotMatch(experience, /lede: fiscalCopy\.lede/);
+  assert.match(experience, /<div className=\{styles\.introSlot\}>\{introSlot\}<\/div>/);
+});

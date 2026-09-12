@@ -1,3 +1,4 @@
+import typography from "@/components/typography/typography.module.css";
 import ArticleFiscalLinks from "@/components/fiscal/ArticleFiscalLinks";
 export const runtime = "nodejs";
 
@@ -74,41 +75,42 @@ export default async function ArticleDetailPage({ params }) {
     /* Typography Hierarchy */
     .pageTitle {
       margin: 1rem 0 0.5rem;
-      line-height: 1.1;
-      font-weight: 800;
-      font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
-      letter-spacing: -0.02em;
+      line-height: var(--type-heading-leading);
+      font-weight: 700;
+      font-size: var(--type-article-title);
+      letter-spacing: var(--type-heading-tracking);
       color: #111827;
-      font-family: var(--font-sans, sans-serif);
+      font-family: var(--type-font);
+      overflow-wrap: anywhere;
     }
 
-    .metaRow { 
-      display: flex; 
-      gap: 12px; 
-      flex-wrap: wrap; 
-      font-size: 0.85rem;
+    .metaRow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       color: #6b7280;
       margin-bottom: 24px;
       font-weight: 500;
       align-items: center;
+      font-size: var(--type-label);
     }
     .metaRow .tag {
       color: #2563eb;
       font-weight: 600;
       text-transform: uppercase;
-      font-size: 0.75rem;
       letter-spacing: 0.05em;
+      font-size: var(--type-label);
     }
 
     .summary-lead {
-      font-size: 1.25rem;
-      line-height: 1.5;
       color: #4b5563;
       margin-bottom: 24px;
       font-weight: 400;
-      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-family: var(--type-font);
       border-bottom: 1px solid #e5e7eb;
       padding-bottom: 24px;
+      font-size: var(--type-lede);
+      line-height: var(--type-body-leading);
     }
 
     .heroWrap {
@@ -128,11 +130,12 @@ export default async function ArticleDetailPage({ params }) {
       display: block;
     }
 
-    /* THE ARTICLE BODY - "The Economist" style */
+    /* Shared reading typography */
     .articleProse {
-      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-      font-size: 1.125rem; /* 18px */
-      line-height: 1.8;
+      font-family: var(--type-font);
+      font-size: var(--type-body);
+      /* 18px */
+      line-height: var(--type-body-leading);
       color: #1f2937;
     }
 
@@ -142,20 +145,22 @@ export default async function ArticleDetailPage({ params }) {
 
     /* Headings in article body */
     .articleProse h2 {
-      font-family: var(--font-sans, sans-serif);
-      font-size: 1.75rem;
+      font-family: var(--type-font);
+      font-size: var(--type-h2);
       font-weight: 700;
       color: #111827;
       margin: 2.5rem 0 1rem;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
+      line-height: var(--type-heading-leading);
+      letter-spacing: var(--type-heading-tracking);
     }
     .articleProse h3 {
-      font-family: var(--font-sans, sans-serif);
-      font-size: 1.35rem;
-      font-weight: 600;
+      font-family: var(--type-font);
       color: #111827;
       margin: 2rem 0 0.75rem;
+      font-size: var(--type-h3);
+      font-weight: 700;
+      line-height: var(--type-heading-leading);
+      letter-spacing: var(--type-heading-tracking);
     }
 
     /* Links */
@@ -209,11 +214,11 @@ export default async function ArticleDetailPage({ params }) {
       display: block;
     }
     .articleProse figcaption {
-      font-family: var(--font-sans, sans-serif);
+      font-family: var(--type-font);
       color: #6b7280;
-      font-size: 0.9rem;
       margin-top: 0.75rem;
       text-align: center;
+      font-size: var(--type-label);
     }
     
     /* Footer source styling */
@@ -234,7 +239,7 @@ export default async function ArticleDetailPage({ params }) {
   });
 
   return (
-    <div style={{ paddingBottom: 60 }}>
+    <div className={typography.page} style={{ paddingBottom: 60 }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <style dangerouslySetInnerHTML={{ __html: css }} />
 

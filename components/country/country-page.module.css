@@ -99,10 +99,10 @@
   margin: 0 0 18px;
   color: var(--blue);
   font-family: var(--font-system), sans-serif;
-  font-size: 0.76rem;
   font-weight: 750;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  font-size: var(--type-label);
 }
 
 .hero .eyebrow {
@@ -118,12 +118,13 @@
   max-width: 570px;
   margin: 0;
   font-family: var(--font-system), sans-serif;
-  font-size: clamp(3.2rem, 5vw, 4.75rem);
-  font-size: clamp(3.2rem, 14.5cqi, 4.75rem);
-  font-weight: 760;
-  letter-spacing: -0.052em;
-  line-height: 0.96;
   text-wrap: balance;
+  font-size: var(--type-h1);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+  overflow-wrap: anywhere;
+  hyphens: manual;
 }
 
 .heroCopy h1 span {
@@ -131,22 +132,29 @@
 }
 
 .heroCopy h1.heroTitleLong {
-  font-size: clamp(2.7rem, 11.5cqi, 4rem);
-  line-height: 0.99;
+  font-size: var(--type-h1);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+  overflow-wrap: anywhere;
+  hyphens: manual;
 }
 
 .heroCopy h1.heroFiscalTitle {
-  font-size: clamp(2rem, 9.3cqi, 3.45rem);
-  line-height: 1.04;
+  font-size: min(var(--type-h1), clamp(2.25rem, 8.9cqi, 2.667rem));
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
   overflow-wrap: anywhere;
+  hyphens: manual;
 }
 
 .lede {
   max-width: 590px;
   margin: 28px 0 0;
   color: #c8d5e8;
-  font-size: clamp(1.06rem, 1.45vw, 1.28rem);
-  line-height: 1.6;
+  font-size: var(--type-lede);
+  line-height: var(--type-body-leading);
 }
 
 .dataStatus {
@@ -155,8 +163,8 @@
   gap: 10px;
   margin-top: 27px;
   color: #aebfd7;
-  font-size: 0.8rem;
   font-weight: 620;
+  font-size: var(--type-label);
 }
 
 .statusDot {
@@ -189,14 +197,15 @@
 .heroFacts dt,
 .heroFacts dd {
   margin: 0;
+  font-size: var(--type-label);
 }
 
 .heroFacts dt {
   color: #91a8c8;
-  font-size: 0.62rem;
   font-weight: 760;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-size: var(--type-label);
 }
 
 .heroFacts dd {
@@ -274,7 +283,7 @@
   position: relative;
   display: block;
   margin: clamp(30px, 4vw, 46px) 0 10px;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: clamp(1.7rem, 3.4vw, 3.45rem);
   font-size: clamp(1.7rem, 7.4cqi, 3.45rem);
   font-variant-numeric: tabular-nums;
@@ -289,7 +298,7 @@
   align-items: baseline;
   gap: 12px;
   color: #91bdff;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: 1.05rem;
   font-weight: 650;
 }
@@ -377,7 +386,7 @@
 .routeLabels strong {
   margin-top: 4px;
   color: #d8e1ed;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: clamp(0.69rem, 2.6cqi, 0.87rem);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -531,17 +540,18 @@
 .nextCard h2 {
   margin: 0;
   font-family: var(--font-system), sans-serif;
-  font-size: clamp(2.3rem, 4.5vw, 4.5rem);
-  letter-spacing: -0.045em;
-  line-height: 0.98;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
 }
 
 .sectionIntro > p:last-child {
   max-width: 530px;
   margin: 0;
   color: #52647d;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
 }
 
 .metricsGrid {
@@ -573,17 +583,18 @@
   max-width: 650px;
   margin: 0;
   font-family: var(--font-system), sans-serif;
-  font-size: clamp(2rem, 3.8vw, 3.7rem);
-  letter-spacing: -0.045em;
-  line-height: 1;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
 }
 
 .exploreHeader > div > p:last-child {
   max-width: 580px;
   margin: 22px 0 0;
   color: #62748b;
-  font-size: 0.9rem;
-  line-height: 1.65;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
 }
 
 .overviewLink {
@@ -695,7 +706,7 @@
 .choiceRatio {
   display: block;
   color: var(--blue);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: clamp(1.45rem, 2.2vw, 2.05rem);
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -870,7 +881,7 @@
 .metric strong {
   display: block;
   margin: 16px 0 10px;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: clamp(1.7rem, 3vw, 2.8rem);
   letter-spacing: -0.045em;
   line-height: 1;
@@ -959,7 +970,7 @@
 
 .barRow strong {
   color: #c5d2e5;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
 }
@@ -979,7 +990,7 @@
 
 .deltaBadge strong {
   color: #fff;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: clamp(1.45rem, 3vw, 2.5rem);
   letter-spacing: -0.04em;
 }
@@ -996,7 +1007,13 @@
   margin-bottom: 75px;
 }
 
-.contextHeader h2 { max-width: 760px; }
+.contextHeader h2 {
+  max-width: 760px;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
 
 .contextStatement {
   display: grid;
@@ -1007,7 +1024,7 @@
 }
 
 .contextStatement strong {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   font-size: 1.35rem;
 }
 
@@ -1121,7 +1138,7 @@
 
 .compareRow b {
   color: var(--ink);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--type-font);
   text-align: right;
 }
 
@@ -1161,7 +1178,13 @@
   background: #fff;
 }
 
-.methodCard h2 { max-width: 760px; }
+.methodCard h2 {
+  max-width: 760px;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
 
 .methodSteps {
   display: grid;
@@ -1190,14 +1213,17 @@
 .methodSteps h3 {
   margin: 18px 0 8px;
   font-family: var(--font-system), sans-serif;
-  font-size: 1.05rem;
+  font-size: var(--type-h3);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
 }
 
 .methodSteps p {
   margin: 0;
   color: #65768d;
-  font-size: 0.8rem;
-  line-height: 1.6;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
 }
 
 .methodWarning {
@@ -1206,8 +1232,9 @@
   border-left: 3px solid var(--mint);
   color: #43566f;
   background: #f2f7f7;
-  font-size: 0.84rem;
   font-weight: 650;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
 }
 
 .sourceFacts {
@@ -1226,21 +1253,22 @@
 .sourceFacts dt,
 .sourceFacts dd {
   margin: 0;
+  font-size: var(--type-label);
 }
 
 .sourceFacts dt {
   color: #718198;
-  font-size: 0.68rem;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-size: var(--type-label);
 }
 
 .sourceFacts dd {
   margin-top: 7px;
   color: #43566f;
-  font-size: 0.78rem;
   line-height: 1.55;
+  font-size: var(--type-label);
 }
 
 .actions {
@@ -1276,14 +1304,17 @@
 
 .nextCard h2 {
   margin-top: 28px;
-  font-size: clamp(2rem, 3vw, 3rem);
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
 }
 
 .nextCard p {
   margin: 24px 0 40px;
   color: #aebed4;
-  font-size: 0.9rem;
-  line-height: 1.65;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
 }
 
 .nextCard a {
@@ -1306,10 +1337,22 @@
 @media (min-width: 1061px) and (max-height: 800px) {
   .heroGrid { padding: 32px 0 max(118px, var(--surface-hero-fade-height)); }
   .heroCopy h1 {
-    font-size: clamp(3.1rem, 13.5cqi, 4.45rem);
+    font-size: var(--type-h1);
+    font-weight: 700;
+    line-height: var(--type-heading-leading);
+    letter-spacing: var(--type-heading-tracking);
+    overflow-wrap: anywhere;
+    hyphens: manual;
   }
-  .lede { margin-top: 20px; font-size: 1.02rem; line-height: 1.5; }
-  .dataStatus { margin-top: 20px; }
+  .lede {
+    margin-top: 20px;
+    font-size: var(--type-lede);
+    line-height: var(--type-body-leading);
+  }
+  .dataStatus {
+    margin-top: 20px;
+    font-size: var(--type-label);
+  }
   .heroFacts { margin-top: 22px; padding-top: 16px; }
   .livePanel { padding: 30px 36px; }
   .debtNumber { margin-top: 34px; }
@@ -1369,17 +1412,31 @@
   .hero { min-height: auto; }
   .heroGrid { gap: 48px; padding: 56px 0 max(70px, var(--surface-hero-fade-height)); }
   .heroCopy h1 {
-    font-size: clamp(3rem, 14.5vw, 4.35rem);
-    line-height: 0.95;
+    font-size: var(--type-h1);
+    font-weight: 700;
+    line-height: var(--type-heading-leading);
+    letter-spacing: var(--type-heading-tracking);
+    overflow-wrap: anywhere;
+    hyphens: manual;
   }
   .heroCopy h1.heroTitleLong {
-    font-size: clamp(2.45rem, 11vw, 3.2rem);
-    line-height: 0.99;
+    font-size: var(--type-h1);
+    font-weight: 700;
+    line-height: var(--type-heading-leading);
+    letter-spacing: var(--type-heading-tracking);
+    overflow-wrap: anywhere;
+    hyphens: manual;
   }
-  .lede { margin-top: 24px; font-size: 1.02rem; }
+  .lede {
+    margin-top: 24px;
+    font-size: var(--type-lede);
+    line-height: var(--type-body-leading);
+  }
   .heroFacts > div { padding-right: 9px; }
   .heroFacts > div + div { padding-left: 9px; }
-  .heroFacts dt { font-size: 0.55rem; }
+  .heroFacts dt {
+    font-size: var(--type-label);
+  }
   .heroFacts dd { font-size: 0.95rem; }
   .previewBar span { max-width: 200px; }
   .livePanel { padding: 24px 20px; }
@@ -1441,4 +1498,8 @@
   .countryChoice,
   .compareRowLink { transition: none; }
   .scrollCue svg { animation: none; }
+}
+
+@media (max-width: 360px) {
+  .heroCopy h1, .heroCopy h1.heroTitleLong, .heroCopy h1.heroFiscalTitle { hyphens: auto; }
 }

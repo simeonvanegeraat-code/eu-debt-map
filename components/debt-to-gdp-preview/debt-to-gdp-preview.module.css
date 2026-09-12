@@ -54,6 +54,8 @@
   padding: clamp(72px, 9vw, 126px) 0 max(clamp(124px, 14vw, 180px), var(--surface-hero-fade-height));
 }
 
+.heroGrid > * { min-width: 0; }
+
 .eyebrow {
   margin: 0 0 18px;
   color: var(--blue);
@@ -424,7 +426,7 @@
 .methodLinks strong { font-size: 0.82rem; line-height: 1.45; }
 
 @media (max-width: 1040px) {
-  .heroGrid { grid-template-columns: 1fr; }
+  .heroGrid { grid-template-columns: minmax(0, 1fr); }
   .heroPanel { max-width: 720px; }
   .rankingToolbar { grid-template-columns: 1fr auto; }
   .modeSwitch { grid-column: 1 / -1; justify-self: start; }
@@ -435,10 +437,11 @@
   .scale span:last-child { grid-column: 4; }
   .rankingRow { grid-template-columns: 38px 175px minmax(140px, 1fr) 70px; }
   .rowLink { display: none; }
-  .referenceSection { grid-template-columns: 1fr; }
+  .referenceSection { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 760px) {
+  .page h2, .page h3 { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
   .heroInner,
   .chapterNav > div,
   .rankingSection,
@@ -447,7 +450,14 @@
   .previewBar { min-height: 62px; font-size: 0.59rem; }
   .previewBar span { max-width: 190px; }
   .heroGrid { gap: 42px; padding: 58px 0 120px; }
-  .heroCopy h1 { font-size: clamp(3rem, 14.5vw, 4.7rem); line-height: 0.95; }
+  .heroCopy h1 {
+    max-width: 100%;
+    font-size: clamp(2.125rem, 9vw, 2.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
   .lede { margin-top: 24px; }
   .heroActions { align-items: flex-start; flex-direction: column; }
   .heroPanel { padding: 26px 20px; }
@@ -499,4 +509,33 @@
 @media (prefers-reduced-motion: reduce) {
   :global(html):has(.page) { scroll-behavior: auto; }
   .rankingRow { transition: none; }
+}
+
+/* Shared site typography: preserve the data visual hierarchy below the headings. */
+.page .heroCopy h1 {
+  font-family: var(--type-font);
+  font-size: var(--type-h1);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page :is(.sectionHeader h2, .meaningIntro h2, .referenceCopy h2, .methodSection h2) {
+  font-family: var(--type-font);
+  font-size: var(--type-h2);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page .meaningGrid h3 {
+  font-family: var(--type-font);
+  font-size: var(--type-h3);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: 1.25;
+}
+
+.page .lede {
+  font-size: var(--type-lede);
+  line-height: var(--type-body-leading);
 }

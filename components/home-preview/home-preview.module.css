@@ -155,6 +155,7 @@
 }
 
 .mapStage {
+  scroll-margin-top: 100px;
   position: relative;
   z-index: 3;
   margin-top: -80px;
@@ -1404,4 +1405,42 @@
   .countryCta,
   .articleCard,
   .articleImage img { transition: none; }
+}
+
+/* Shared site typography: keep data values expressive, align editorial headings. */
+.page .heroCopy h1 {
+  font-family: var(--type-font);
+  font-size: var(--type-h1);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page :is(
+  .stageHeader h2,
+  .inspector h2,
+  .countryDirectory header h2,
+  .trendCopy h2,
+  .articlesHeader h2,
+  .whyHeader h2,
+  .homeFaqSection h2,
+  .trustIntro h2
+) {
+  font-family: var(--type-font);
+  font-size: var(--type-h2);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page :is(.articleContent h3, .whyGrid h3, .trustList h3) {
+  font-family: var(--type-font);
+  font-size: var(--type-h3);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: 1.25;
+}
+
+.page .heroIntro {
+  font-size: var(--type-lede);
+  line-height: var(--type-body-leading);
 }

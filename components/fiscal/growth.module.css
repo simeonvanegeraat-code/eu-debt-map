@@ -21,7 +21,7 @@
 .values :is(td,th) { text-align: right; border-bottom: 1px solid #c8d3e1; padding: 12px; }
 .values :is(td,th):first-child { text-align: left; }
 .country { width: min(1180px, calc(100% - 48px)); margin-inline: auto; color: #10233e; padding-top: 32px; margin-top: 34px; border-top: 1px solid #c8d3e1; }
-.country h2 { margin-top: 0; font-size: clamp(25px,3vw,36px); }
+.country h2 { margin-top: 0; font-size: var(--type-h2, clamp(25px,3vw,36px)); }
 .country a { color: #1d5194; text-underline-offset: 4px; }
 .country :is(a,summary,[tabindex]):focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
 .country .values { max-width: 100%; }

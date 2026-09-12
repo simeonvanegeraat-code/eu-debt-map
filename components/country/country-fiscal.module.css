@@ -1,9 +1,26 @@
 .overview, .trends, .comparisons { color: #10233e; min-width: 0; }
 .overview :is(h2, h3), .comparisons :is(h2, h3) { letter-spacing: -.025em; line-height: 1.16; }
-.overview h2, .comparisons h2 { font-size: clamp(28px,3.1vw,40px); margin: 0 0 18px; }
-.overview h3, .comparisons h3 { font-size: clamp(22px,2vw,28px); margin: 34px 0 14px; }
+.overview h2, .comparisons h2 {
+  margin: 0 0 18px;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
+.overview h3, .comparisons h3 {
+  margin: 34px 0 14px;
+  font-size: var(--type-h3);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
 .eyebrow { margin: 0 0 14px; color: #2868db; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-.lede { max-width: 900px; color: #52627a; line-height: 1.7; }
+.lede {
+  max-width: 900px;
+  color: #52627a;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
 .overview :is(a,summary), .trends a, .comparisons a { color: #1d5194; text-underline-offset: 4px; }
 .overview :is(a,summary):focus-visible, .trends :is(a,summary):focus-visible, .comparisons :is(a,[tabindex]):focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
 .metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); margin: 28px 0 18px; gap: 0 28px; }
@@ -21,7 +38,12 @@
 .trends section[aria-labelledby="country-balance-title"] svg text { font-size: 18px; }
 .interpretation { padding: 2px 0 18px; border-top: 1px solid #c8d3e1; }
 .interpretation ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 36px; }
-.interpretation li { border-left: 2px solid #b99556; padding-left: 16px; line-height: 1.65; }
+.interpretation li {
+  border-left: 2px solid #b99556;
+  padding-left: 16px;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
 .callout { border-left: 2px solid #b99556; padding-left: 16px; }
 .details { padding: 12px 0; border-block: 1px solid #d8e0eb; margin: 24px 0; }
 .details summary { padding: 12px 0; color: #1d5194; cursor: pointer; font-size: 15px; }

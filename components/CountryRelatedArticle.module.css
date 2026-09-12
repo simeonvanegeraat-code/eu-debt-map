@@ -27,9 +27,9 @@
 .heading h2 {
   margin: 0;
   color: #071a35;
-  font-size: clamp(2rem, 3.4vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
+  font-size: var(--type-h2, clamp(2rem, 3.4vw, 3.4rem));
+  line-height: var(--type-heading-leading, 1);
+  letter-spacing: var(--type-heading-tracking, -0.05em);
 }
 
 .heading > p:last-child {
@@ -164,7 +164,7 @@
 @media (max-width: 620px) {
   .section { gap: 18px; padding: 22px 14px; border-radius: 13px; }
   .heading { gap: 16px; }
-  .heading h2 { font-size: clamp(2.15rem, 11vw, 3rem); }
+  .heading h2 { font-size: var(--type-h2, clamp(2.15rem, 11vw, 3rem)); }
   .primary { grid-template-columns: 1fr; }
   .image { min-height: 190px; aspect-ratio: 16 / 9; }
   .content { padding: 22px 16px 24px; }

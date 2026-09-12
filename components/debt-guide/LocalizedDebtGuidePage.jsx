@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { countries, debtDataSummary } from "@/lib/data";
 import { countryName } from "@/lib/countries";
-import { editorialDisplay } from "@/lib/editorial-font";
+import typography from "@/components/typography/typography.module.css";
 import { DebtBuilder, DebtMechanismStory } from "@/app/debt/DebtExperience";
 import styles from "@/app/debt/debt.module.css";
 import { getDebtGuideCopy } from "./debt-guide-copy";
@@ -153,7 +153,7 @@ export default function LocalizedDebtGuidePage({ lang }) {
   ];
 
   return (
-    <div className={`${styles.page} ${editorialDisplay.variable}`}>
+    <div className={`${styles.page} ${typography.page}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} />

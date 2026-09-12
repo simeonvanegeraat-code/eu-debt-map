@@ -7,6 +7,7 @@ import { countryName } from "@/lib/countries";
 import { getCountryCopy, localeBase, localeFor } from "./country-copy";
 import { getCountryFiscalCopy } from "./country-fiscal-copy";
 import styles from "./country-page.module.css";
+import typography from "@/components/typography/typography.module.css";
 
 const COMPARISON_CODES = ["GR", "IT", "FR", "NL", "EE"];
 const MAJOR_CODES = ["DE", "FR", "IT", "ES", "NL", "PL", "BE", "SE"];
@@ -111,7 +112,7 @@ export default function CountryPageExperience({
 }) {
   const effLang = ["en", "nl", "de", "fr"].includes(lang) ? lang : "en";
   const fiscalCopy = getCountryFiscalCopy(effLang);
-  const copy = fiscalOverviewSlot ? { ...getCountryCopy(effLang), lede: fiscalCopy.lede, exploreSignals: fiscalCopy.overview, nav: fiscalCopy.nav } : getCountryCopy(effLang);
+  const copy = fiscalOverviewSlot ? { ...getCountryCopy(effLang), exploreSignals: fiscalCopy.overview, nav: fiscalCopy.nav } : getCountryCopy(effLang);
   const locale = localeFor(effLang);
   const base = localeBase(effLang);
   const name = displayName || countryName(country.code, effLang);
@@ -266,7 +267,7 @@ export default function CountryPageExperience({
   );
 
   return (
-    <article className={styles.page}>
+    <article className={`${styles.page} ${typography.page}`}>
       <section className={styles.hero} id="country-hero" aria-labelledby="country-page-title">
         <div className={styles.heroInner}>
           {isPreview ? (
@@ -518,7 +519,7 @@ export default function CountryPageExperience({
           <aside className={styles.adSlot} aria-label={copy.advertisement}>{adSlot}</aside>
         ) : null}
 
-        {introSlot ? <div className={styles.introSlot}>{fiscalOverviewSlot ? <details className={styles.fiscalDisclosure}><summary>{fiscalCopy.legacyDetails}</summary>{introSlot}</details> : introSlot}</div> : null}
+        {introSlot ? <div className={styles.introSlot}>{introSlot}</div> : null}
 
         {effLang === "nl" && country.code === "NL" && !isPreview ? (
           <Link className={styles.bondGuideLink} href="/nl/staatsobligaties-nederland">

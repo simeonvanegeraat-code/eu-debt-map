@@ -10,7 +10,7 @@ import BalanceSource from "@/components/fiscal/BalanceSource";
 import { countries, debtDataSummary, livePerSecondFor, officialDebtToGDPRatio } from "@/lib/data";
 import { EUROSTAT_UPDATED_AT } from "@/lib/eurostat.debt.gen";
 import { EUROSTAT_RATIO_UPDATED_AT } from "@/lib/eurostat.ratio.gen";
-import { editorialDisplay } from "@/lib/editorial-font";
+import typography from "@/components/typography/typography.module.css";
 import { getMethodologyCopy } from "./methodology-copy";
 import styles from "./methodology-preview.module.css";
 
@@ -111,7 +111,7 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
   };
 
   return (
-    <article className={`${styles.page} ${editorialDisplay.variable} google-anno-skip`}>
+    <article className={`${styles.page} ${typography.page} google-anno-skip`}>
       {!preview ? (
         <>
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />

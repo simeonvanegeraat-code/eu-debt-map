@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { countries, estimatedLiveDebtToGDPRatio, interpolateDebt, officialDebtToGDPRatio } from "@/lib/data";
 import { countryName } from "@/lib/countries";
-import { editorialDisplay } from "@/lib/editorial-font";
+import typography from "@/components/typography/typography.module.css";
 import { getDebtToGDPCopy, SITE } from "./debt-to-gdp-copy";
 import styles from "./debt-to-gdp-preview.module.css";
 
@@ -70,7 +70,7 @@ export default function DebtToGDPPreviewPage({ lang = "en", preview = false }) {
   const navHrefs = ["#ranking", "#meaning", "#reference", "#method"];
 
   return (
-    <div className={`${styles.page} ${editorialDisplay.variable}`}>
+    <div className={`${styles.page} ${typography.page}`}>
       {!preview ? <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }} /></> : null}
       <section className={styles.hero} aria-labelledby="debt-ratio-title">
         <div className={styles.heroInner}>

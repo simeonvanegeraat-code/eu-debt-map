@@ -97,6 +97,7 @@
 }
 
 .heroCopy {
+  min-width: 0;
   max-width: 760px;
 }
 
@@ -1316,6 +1317,7 @@
   }
 
   .heroInner {
+    grid-template-columns: minmax(0, 1fr);
     gap: 4rem;
     padding-top: 6rem;
   }
@@ -1339,6 +1341,9 @@
 }
 
 @media (max-width: 820px) {
+  .page h2, .page h3 { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+  .sectionIntro h2, .holdersCopy h2, .euSection h2, .nextSection h2 { max-width: 100%; }
+  .nextSection > div:first-child { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .heroInner,
   .definitionSection,
   .storySection,
@@ -1360,7 +1365,7 @@
   .euHeader,
   .faqSection,
   .sourcesSection {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .definitionLead .eyebrow,
@@ -1397,7 +1402,14 @@
 @media (max-width: 560px) {
   .hero { min-height: auto; }
   .heroInner { width: calc(100% - 2rem); padding: 4rem 0 max(6.5rem, var(--surface-hero-fade-height)); }
-  .heroCopy h1 { font-size: clamp(3rem, 13vw, 3.5rem); line-height: 0.98; }
+  .heroCopy h1 {
+    max-width: 100%;
+    font-size: clamp(2.125rem, 9vw, 2.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
   .heroThesis { font-size: 1.25rem; line-height: 1.28; }
   .heroMeta { display: grid; }
   .heroMeta span::after { display: none !important; }
@@ -1461,4 +1473,34 @@
   }
 
   .flowPulse { display: none; }
+}
+
+/* Shared site typography: keep diagrams unchanged and align the editorial roles. */
+.page .heroCopy h1 {
+  font-family: var(--type-font);
+  font-size: var(--type-h1);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page h2 {
+  font-family: var(--type-font);
+  font-size: var(--type-h2);
+  font-weight: 700;
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.page h3 {
+  font-family: var(--type-font);
+  font-size: var(--type-h3);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: 1.25;
+}
+
+.page .heroThesis {
+  font-family: var(--type-font);
+  font-size: var(--type-lede);
+  line-height: var(--type-heading-leading);
 }

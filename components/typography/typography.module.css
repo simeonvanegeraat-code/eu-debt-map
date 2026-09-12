@@ -1,0 +1,26 @@
+/* Opt-in type roles. Reuse the Inter font already loaded by the root layout. */
+.page {
+  --type-font: var(--font-system), sans-serif;
+  --font-display: var(--font-system);
+  --font-editorial-display: var(--font-system);
+  --font-sans: var(--font-system);
+  --type-h1: clamp(2.25rem, 1.5rem + 1.75vw, 2.667rem);
+  --type-article-title: clamp(2.125rem, 1.3rem + 1.7vw, 2.444rem);
+  --type-h2: clamp(1.7rem, 1.5rem + 0.4vw, 1.778rem);
+  --type-h3: 1.333rem;
+  --type-lede: clamp(1.17rem, 1.1rem + 0.15vw, 1.25rem);
+  --type-body: clamp(1rem, 1.2rem - 0.25vw, 1.125rem);
+  --type-label: clamp(0.8125rem, 1rem - 0.2vw, 0.9375rem);
+  --type-heading-leading: 1.18;
+  --type-body-leading: 1.65;
+  --type-heading-tracking: -0.025em;
+  font-family: var(--type-font);
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
+
+.page :where(h1, h2, h3, h4) {
+  font-family: var(--type-font);
+  overflow-wrap: anywhere;
+  hyphens: manual;
+}

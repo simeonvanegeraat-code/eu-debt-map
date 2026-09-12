@@ -1,6 +1,17 @@
 .registry { padding:64px 0; scroll-margin-top:152px; }
-.registry h2 { max-width:850px; font-size:clamp(28px,3vw,42px); line-height:1.15; letter-spacing:-.03em; }
-.registry > p { max-width:950px; line-height:1.75; color:#475569; }
+.registry h2 {
+  max-width:850px;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
+.registry > p {
+  max-width:950px;
+  color:#475569;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
 .registry .review { font-size:13px; }
 .kinds { display:flex; flex-wrap:wrap; list-style:none; gap:10px 24px; padding:20px 0; border-block:1px solid #dbe3ed; }
 .kinds li { font-size:13px; font-weight:700; color:#163b6d; }
@@ -14,8 +25,18 @@
 .metric summary span, .metric summary small { color:#526174; font-size:13px; }
 .metric summary:focus-visible, .registry a:focus-visible { outline:2px solid #2563eb; outline-offset:3px; }
 .detail { padding:0 0 28px; max-width:950px; }
-.detail h3 { margin:24px 0 8px; font-size:15px; }
-.detail p { line-height:1.75; color:#475569; }
+.detail h3 {
+  margin:24px 0 8px;
+  font-size: var(--type-h3);
+  font-weight: 700;
+  line-height: var(--type-heading-leading);
+  letter-spacing: var(--type-heading-tracking);
+}
+.detail p {
+  color:#475569;
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
 .source { padding:20px; margin:16px 0; background:#f2f5f9; border-left:3px solid #acc5e8; }
 .source a { font-weight:650; overflow-wrap:anywhere; }
 .source > p { margin:6px 0; font-size:13px; }
