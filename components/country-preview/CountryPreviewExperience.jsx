@@ -6,7 +6,7 @@ import accounts from "@/lib/fiscal/accounts.gen.json";
 import perCapita from "@/lib/fiscal/per-capita.gen.json";
 import { countries } from "@/lib/data";
 import { countryName } from "@/lib/countries";
-import { countryGrowthPoints, endpointChange, growthRows } from "@/lib/fiscal/growth";
+import { countryGrowthPoints, growthRows } from "@/lib/fiscal/growth";
 import { balanceRows } from "@/lib/fiscal/balance-core";
 import { interestRows } from "@/lib/fiscal/interest";
 import { accountPoints, accountRows } from "@/lib/fiscal/accounts";
@@ -14,21 +14,24 @@ import { perCapitaRows } from "@/lib/fiscal/per-capita";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import ShareBar from "@/components/ShareBar";
-import { getCountryCopy } from "@/components/country/country-copy";
+import { getCountryCopy, localeBase, localeFor } from "@/components/country/country-copy";
+import { fiscalPath } from "@/lib/fiscal/paths";
 import CountryPreviewHero from "./CountryPreviewHero";
 import CountryDebtTrend from "./CountryDebtTrend";
+import { getCountryRedesignCopy } from "./country-redesign-copy";
 import typography from "@/components/typography/typography.module.css";
 import countryStyles from "@/components/country/country-page.module.css";
 import styles from "./country-preview.module.css";
 
-function quarter(value) {
+function quarter(value, lang) {
   const match = /^(\d{4})-?Q([1-4])$/i.exec(String(value || ""));
-  return match ? `${match[1]} Q${match[2]}` : value || "—";
+  if (!match) return value || "—";
+  return lang === "fr" ? `T${match[2]} ${match[1]}` : `${match[1]} Q${match[2]}`;
 }
 
-function money(value, compact = true) {
+function money(value, locale, compact = true) {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat("en-GB", {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "EUR",
     notation: compact ? "compact" : "standard",
@@ -36,15 +39,10 @@ function money(value, compact = true) {
   }).format(value);
 }
 
-function percent(value, signed = false) {
+function percent(value, locale, signed = false) {
   if (!Number.isFinite(value)) return "—";
   const sign = signed && value > 0 ? "+" : "";
-  return `${sign}${new Intl.NumberFormat("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value)}%`;
-}
-
-function points(value, signed = true) {
-  if (!Number.isFinite(value)) return "—";
-  return `${signed && value > 0 ? "+" : ""}${new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 }).format(value)} pp`;
+  return `${sign}${new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value)}%`;
 }
 
 function MetricCard({ title, value, period, signal, text, href, cta, values = null }) {
@@ -62,9 +60,23 @@ function MetricCard({ title, value, period, signal, text, href, cta, values = nu
   );
 }
 
-export default function CountryPreviewExperience({ country, lang = "en", title, isPreview = false }) {
-  const name = countryName(country.code, lang);
+export default function CountryPreviewExperience({
+  country,
+  lang = "en",
+  title,
+  displayName = null,
+  breadcrumbSlot = null,
+  introSlot = null,
+  relatedArticleSlot = null,
+  shareSlot = null,
+  adSlot = null,
+  isPreview = false,
+}) {
+  const name = displayName || countryName(country.code, lang);
+  const locale = localeFor(lang);
+  const base = localeBase(lang);
   const copy = getCountryCopy(lang);
+  const redesign = getCountryRedesignCopy(lang);
   const rankedDebt = [...countries]
     .filter((item) => Number.isFinite(Number(item.official_debt_to_gdp_pct)))
     .sort((a, b) => Number(b.official_debt_to_gdp_pct) - Number(a.official_debt_to_gdp_pct));
@@ -72,11 +84,7 @@ export default function CountryPreviewExperience({ country, lang = "en", title, 
   const ratios = rankedDebt.map((item) => Number(item.official_debt_to_gdp_pct)).sort((a, b) => a - b);
   const middle = Math.floor(ratios.length / 2);
   const median = ratios.length % 2 ? ratios[middle] : (ratios[middle - 1] + ratios[middle]) / 2;
-  const scaleMax = 160;
-
   const debtPoints = countryGrowthPoints(growth, country.code);
-  const fiveYearGrowth = endpointChange(debtPoints, growth.latestQuarter, 5, "debt");
-  const fiveYearRatio = endpointChange(debtPoints, growth.latestQuarter, 5, "ratio");
   const growthRank = growthRows(growth, 5, "percent").find((row) => row.code === country.code);
   const capita = perCapitaRows(perCapita).find((row) => row.code === country.code);
   const balanceRow = balanceRows(balance).find((row) => row.code === country.code);
@@ -87,62 +95,76 @@ export default function CountryPreviewExperience({ country, lang = "en", title, 
   const previousDebt = Number(country.prev_value_eur);
   const quarterChange = officialDebt - previousDebt;
   const pace = Number(country._perSecond);
-  const publicUrl = `https://www.eudebtmap.com/country/${country.code.toLowerCase()}`;
+  const publicUrl = `https://www.eudebtmap.com${base}/country/${country.code.toLowerCase()}`;
+  const latestQuarter = quarter(country.official_latest_time, lang);
+  const previousQuarter = quarter(country.official_previous_time, lang);
 
   return (
     <article className={`${styles.page} ${typography.page}`} lang={lang}>
-      <CountryPreviewHero country={country} name={name} title={title} rank={rank} count={rankedDebt.length} isPreview={isPreview} />
+      <CountryPreviewHero country={country} name={name} title={title} rank={rank} count={rankedDebt.length} lang={lang} breadcrumbSlot={breadcrumbSlot} isPreview={isPreview} />
 
-      <nav className={styles.chapterNav} aria-label="On this page">
+      <nav className={styles.chapterNav} aria-label={copy.pageNav}>
         <div className={styles.shell}>
-          <a href="#debt-now">Debt now</a>
-          <a href="#recent-change">Latest quarter</a>
-          <a href="#debt-trend">Debt trend</a>
-          <a href="#snapshot">At a glance</a>
-          <a href="#eu-context">EU context</a>
-          <a href="#sources">Sources</a>
+          <a href="#debt-picture">{redesign.nav.debt}</a>
+          <a href="#snapshot">{redesign.nav.finances}</a>
+          <a href="#sources">{redesign.nav.sources}</a>
+          <a href="#country-context">{redesign.nav.about} {name}</a>
         </div>
       </nav>
 
       <div>
-        <section className={`${styles.updateStrip} ${styles.shell}`} id="recent-change" aria-labelledby="recent-change-title">
-          <div className={styles.updateHeading}>
-            <p className={styles.eyebrow}>Latest official update</p>
-            <h2 id="recent-change-title">The newest quarter, without repeating the story</h2>
-          </div>
-          <dl>
-            <div><dt>Official debt</dt><dd>{money(officialDebt)}</dd><small>{quarter(country.official_latest_time)}</small></div>
-            <div><dt>Quarterly change</dt><dd>{quarterChange > 0 ? "+" : ""}{money(quarterChange)}</dd><small>{quarter(country.official_previous_time)} → {quarter(country.official_latest_time)}</small></div>
-            <div><dt>Modelled pace</dt><dd>{pace > 0 ? "+" : pace < 0 ? "−" : ""}{money(Math.abs(pace), false)}/s</dd><small>Derived from the latest two official quarters</small></div>
-          </dl>
-          <p>The live value extends this measured pace beyond the official quarter end. Annual fiscal figures below do not move with the counter.</p>
-        </section>
+        <section className={`${styles.debtWorkspace} ${styles.shell}`} id="debt-picture" aria-labelledby="debt-picture-title">
+          <header className={styles.debtWorkspaceHeading}>
+            <p className={styles.eyebrow}>{redesign.debtEyebrow}</p>
+            <h2 id="debt-picture-title">{redesign.debtTitle(name)}</h2>
+            <p>{redesign.debtIntro}</p>
+          </header>
 
-        <div className={styles.shell}>
-          <CountryDebtTrend points={debtPoints} name={name} latestQuarter={growth.latestQuarter} />
-        </div>
+          <div className={styles.officialUpdate}>
+            <p>{redesign.latestQuarter}</p>
+            <dl>
+              <div><dt>{redesign.officialDebt}</dt><dd>{money(officialDebt, locale)}</dd><small>{latestQuarter}</small></div>
+              <div><dt>{redesign.quarterlyChange}</dt><dd>{quarterChange > 0 ? "+" : ""}{money(quarterChange, locale)}</dd><small>{previousQuarter} → {latestQuarter}</small></div>
+              <div><dt>{redesign.modelledPace}</dt><dd>{pace > 0 ? "+" : pace < 0 ? "−" : ""}{money(Math.abs(pace), locale, false)}/s</dd><small>{redesign.paceBasis}</small></div>
+            </dl>
+            <span>{redesign.paceNote}</span>
+          </div>
+
+          <CountryDebtTrend
+            points={debtPoints}
+            name={name}
+            latestQuarter={growth.latestQuarter}
+            ratio={Number(country.official_debt_to_gdp_pct)}
+            rank={rank}
+            count={rankedDebt.length}
+            median={median}
+            growthRank={growthRank.rank}
+            lang={lang}
+            growthLink={<Link href={fiscalPath("/debt-growth", lang)}>{redesign.growthCta(name)} <span aria-hidden="true">→</span></Link>}
+            ratioLink={<Link href={fiscalPath("/debt-to-gdp", lang)}>{redesign.rankingCta} <span aria-hidden="true">→</span></Link>}
+          />
+        </section>
 
         <section className={`${styles.section} ${styles.snapshot} ${styles.shell}`} id="snapshot" aria-labelledby="snapshot-title">
           <div className={styles.sectionHeading}>
             <div>
-              <p className={styles.eyebrow}>Government finances in brief</p>
-              <h2 id="snapshot-title">{name} at a glance</h2>
-              <p>Five useful signals, each with its own period and a direct route to the full European comparison.</p>
+              <p className={styles.eyebrow}>{redesign.snapshotEyebrow}</p>
+              <h2 id="snapshot-title">{redesign.snapshotTitle}</h2>
+              <p>{redesign.snapshotIntro}</p>
             </div>
           </div>
           <div className={styles.cardGrid}>
-            <MetricCard title="Debt per resident" value={money(capita.displayValue, false)} period={`Calculated · ${perCapita.debtDate}`} signal={`EU rank: ${capita.rank} of 27, highest first`} text="A statistical comparison, not a personal amount owed by each resident." href="/debt-per-capita" cta="Compare debt per resident across Europe" />
-            <MetricCard title="Debt growth" value={percent(fiveYearGrowth.percent, true)} period={`${quarter(fiveYearGrowth.start)} → ${quarter(fiveYearGrowth.end)}`} signal={`EU rank: ${growthRank.rank} of 27 by five-year growth`} text={`Debt / GDP changed by ${points(fiveYearRatio.change)} over the same period.`} href="/debt-growth" cta={`Compare ${name}’s debt growth across Europe`} />
-            <MetricCard title="Budget balance" value={percent(balanceRow.balance, true)} period={`Official · ${balance.latestCompleteYear}`} signal={`EU rank: ${balanceRow.rank} of 27 by budget balance`} text={balanceRow.balance >= 0 ? "A surplus for the stated calendar year." : "A deficit for the stated calendar year."} href="/deficit" cta="Compare budget balances across Europe" />
-            <MetricCard title="Annual interest expenditure" value={money(interestRow.amount)} period={`Official · ${interest.latestYear}`} signal={`EU rank: ${interestRow.rank} of 27 by interest / GDP`} text={`${percent(interestRow.ratio)} of GDP; an annual expense, not an observed bond yield.`} href="/interest-cost" cta="Compare interest costs across Europe" />
+            <MetricCard title={redesign.perCapita} value={money(capita.displayValue, locale, false)} period={`${redesign.calculated} · ${perCapita.debtDate}`} signal={redesign.perCapitaSignal(capita.rank)} text={redesign.perCapitaText} href={fiscalPath("/debt-per-capita", lang)} cta={redesign.perCapitaCta} />
+            <MetricCard title={redesign.balance} value={percent(balanceRow.balance, locale, true)} period={`${redesign.official} · ${balance.latestCompleteYear}`} signal={redesign.balanceSignal(balanceRow.rank)} text={redesign.balanceText(balanceRow.balance)} href={fiscalPath("/deficit", lang)} cta={redesign.balanceCta} />
+            <MetricCard title={redesign.interest} value={money(interestRow.amount, locale)} period={`${redesign.official} · ${interest.latestYear}`} signal={redesign.interestSignal(interestRow.rank)} text={redesign.interestText(percent(interestRow.ratio, locale))} href={fiscalPath("/interest-cost", lang)} cta={redesign.interestCta} />
             <MetricCard
-              title="Spending and revenue"
-              period={`Official · ${accounts.latestYear}`}
-              signal={`Spending rank: ${spendingRank.rank} of 27, highest first`}
-              text="Both figures cover the same calendar year and are shown as a share of GDP."
-              href="/government-spending"
-              cta="Compare spending and revenue across Europe"
-              values={<dl className={styles.accountValues}><div><dt>Spending</dt><dd>{percent(account.expenditureRatio)}</dd></div><div><dt>Revenue</dt><dd>{percent(account.revenueRatio)}</dd></div></dl>}
+              title={redesign.accounts}
+              period={`${redesign.official} · ${accounts.latestYear}`}
+              signal={redesign.accountsSignal(spendingRank.rank)}
+              text={redesign.accountsText}
+              href={fiscalPath("/government-spending", lang)}
+              cta={redesign.accountsCta}
+              values={<dl className={styles.accountValues}><div><dt>{redesign.spending}</dt><dd>{percent(account.expenditureRatio, locale)}</dd></div><div><dt>{redesign.revenue}</dt><dd>{percent(account.revenueRatio, locale)}</dd></div></dl>}
             />
           </div>
         </section>
@@ -158,53 +180,51 @@ export default function CountryPreviewExperience({ country, lang = "en", title, 
               <small>{copy.adDetail}</small>
             </div>
           </aside>
-        ) : null}
-
-        <section className={`${styles.section} ${styles.euContext} ${styles.shell}`} id="eu-context" aria-labelledby="eu-context-title">
-          <div className={styles.sectionHeading}>
-            <div><p className={styles.eyebrow}>European debt context</p><h2 id="eu-context-title">Put {name}’s debt ratio in context</h2><p>One debt comparison only. Broader fiscal comparisons stay on their dedicated topic pages.</p></div>
-            <div className={styles.rankBadge}><span>EU position</span><strong>#{rank} / 27</strong><small>{quarter(country.official_debt_to_gdp_time)}</small></div>
-          </div>
-          <div className={styles.ratioChart}>
-            <div className={styles.referenceLabel}>60% reference</div>
-            <div className={styles.ratioRow}><span>{name}</span><div><i style={{ width: `${country.official_debt_to_gdp_pct / scaleMax * 100}%` }} /></div><strong>{percent(country.official_debt_to_gdp_pct)}</strong></div>
-            <div className={styles.ratioRow}><span>EU-country median</span><div><i style={{ width: `${median / scaleMax * 100}%` }} /></div><strong>{percent(median)}</strong></div>
-          </div>
-          <p className={styles.contextNote}>The median describes the middle EU country. The 60% line is a treaty reference, not a pass-or-fail test for debt sustainability.</p>
-          <Link className={styles.primaryLink} href="/debt-to-gdp">View the complete EU ranking <span aria-hidden="true">→</span></Link>
-        </section>
+        ) : adSlot ? <aside className={`${styles.publicAd} ${styles.shell}`} aria-label={copy.advertisement}>{adSlot}</aside> : null}
 
         <section className={`${styles.section} ${styles.sources} ${styles.shell}`} id="sources" aria-labelledby="sources-title">
           <div className={styles.sourceIntro}>
-            <p className={styles.eyebrow}>About this debt monitor</p>
-            <h2 id="sources-title">Official debt first. The live number clearly labelled.</h2>
-            <p>Eurostat provides the official quarterly government-debt observations. EU Debt Map extends the latest measured change into a live display so the official and modelled figures remain visibly distinct.</p>
-            <strong>The live debt is an estimate, not a new official observation and not a forecast.</strong>
+            <p className={styles.eyebrow}>{redesign.sourcesEyebrow}</p>
+            <h2 id="sources-title">{redesign.sourcesTitle}</h2>
+            <p>{redesign.sourcesIntro}</p>
+            <strong>{redesign.liveWarning}</strong>
           </div>
           <dl className={styles.sourceFacts}>
-            <div><dt>Official source</dt><dd>Eurostat · gov_10q_ggdebt</dd></div>
-            <div><dt>Latest period</dt><dd>{quarter(country.official_latest_time)}</dd></div>
-            <div><dt>Quarter end</dt><dd>{country.official_last_date}</dd></div>
+            <div><dt>{redesign.source}</dt><dd>Eurostat · gov_10q_ggdebt</dd></div>
+            <div><dt>{redesign.latestPeriod}</dt><dd>{latestQuarter}</dd></div>
+            <div><dt>{redesign.quarterEnd}</dt><dd>{country.official_last_date}</dd></div>
           </dl>
           <div className={styles.sourceLinks}>
-            <Link href="/methodology">Read the full methodology →</Link>
-            <a href="https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm" target="_blank" rel="noreferrer">Open Eurostat metadata ↗</a>
+            <Link href={`${base}/methodology`}>{redesign.methodology} →</Link>
+            <a href="https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm" target="_blank" rel="noreferrer">{redesign.eurostat} ↗</a>
           </div>
           <details className={styles.methodDetails}>
-            <summary>How the live estimate is calculated</summary>
+            <summary>{redesign.details}</summary>
             <ol>
-              <li><strong>Anchor</strong><span>Start with the official debt stock for {quarter(country.official_latest_time)}.</span></li>
-              <li><strong>Measure</strong><span>Measure the change from {quarter(country.official_previous_time)} to {quarter(country.official_latest_time)} and convert it to a constant pace per second.</span></li>
-              <li><strong>Extend</strong><span>Apply that pace after {country.official_last_date}. The source code is Eurostat gov_10q_ggdebt, frequency Q, sector S13, item GD, unit MIO_EUR.</span></li>
+              {redesign.steps.map(([label, text], index) => (
+                <li key={label}>
+                  <strong>{label}</strong>
+                  <span>{index === 0 ? text(latestQuarter) : text(previousQuarter, latestQuarter, country.official_last_date)}</span>
+                </li>
+              ))}
             </ol>
-            <p>This deliberately simple model does not react to events after the official anchor and must never be read as an official real-time observation.</p>
+            <p>{redesign.detailsNote}</p>
           </details>
         </section>
 
-        <section className={`${styles.countryContext} ${styles.shell}`} aria-label={`About ${name}'s public debt`}><CountryIntro country={country} lang={lang} /></section>
+        <section className={`${styles.countryContext} ${styles.shell}`} id="country-context">
+          <div className={styles.introSlot}>{introSlot || <CountryIntro country={country} lang={lang} />}</div>
+          {lang === "nl" && country.code === "NL" && !isPreview ? (
+            <Link className={styles.bondGuideLink} href="/nl/staatsobligaties-nederland">
+              <span><small>Praktische gids</small><strong>Nederlandse staatsobligaties kopen: hoe werkt dat?</strong></span>
+              <p>Kooproute, ISIN, marktprijs, kosten en risico’s uitgelegd.</p>
+              <b aria-hidden="true">→</b>
+            </Link>
+          ) : null}
+        </section>
         <section className={`${styles.related} ${styles.shell}`}>
-          <CountryRelatedArticleServer code={country.code} lang={lang} />
-          <div className={styles.shareWrap}><ShareBar url={publicUrl} title={`${name} public debt`} summary={title} lang={lang} variant="country" /></div>
+          {relatedArticleSlot || <CountryRelatedArticleServer code={country.code} lang={lang} />}
+          <div className={styles.shareWrap}>{shareSlot || <ShareBar url={publicUrl} title={title} summary={title} lang={lang} variant="country" />}</div>
         </section>
       </div>
     </article>

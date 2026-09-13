@@ -117,13 +117,12 @@ test("failed and incomplete updates preserve the previous snapshot; successful u
   } finally {for(const file of fs.readdirSync(directory))fs.unlinkSync(path.join(directory,file));fs.rmdirSync(directory);}
 });
 
-test("all four routes are localized and existing country pages receive a separate per-capita slot", () => {
+test("all four routes are localized and country pages link to the per-capita topic", () => {
   for(const lang of ["en","nl","de","fr"]){const prefix=lang==="en"?"":`/${lang}`;
     assert.match(read(`app${prefix}/debt-per-capita/page.jsx`),new RegExp(`perCapitaMetadata\\("${lang}"\\)`));
-    assert.match(read(`app${prefix}/country/[code]/page.jsx`),/createCountryFiscalSlots/);
+    assert.match(read(`app${prefix}/country/[code]/page.jsx`),/CountryPublicPage/);
   }
-  assert.match(read("app/country/[code]/CountryClient.jsx"),/perCapitaSlot=\{perCapitaSlot\}/);
-  assert.match(read("components/country/CountryPageExperience.jsx"),/\{perCapitaSlot\}/);
+  assert.match(read("components/country-preview/CountryPreviewExperience.jsx"),/fiscalPath\("\/debt-per-capita", lang\)/);
   assert.match(read("app/sitemap.js"),/urlFor\("\/debt-per-capita", lang\)/);
   assert.match(read("components/fiscal/PerCapitaPage.jsx"),/"x-default"/);
 });

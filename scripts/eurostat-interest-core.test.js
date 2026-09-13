@@ -140,8 +140,9 @@ test("interest routes preserve locale metadata and integrate server country/meth
   for (const lang of ["en", "nl", "de", "fr"]) {
     const root = lang === "en" ? "app" : `app/${lang}`;
     assert.match(await fs.readFile(path.join(__dirname, "..", root, "interest-cost/page.jsx"), "utf8"), new RegExp(`interestMetadata\\("${lang}"\\)`));
-    assert.match(await fs.readFile(path.join(__dirname, "..", root, "country/[code]/page.jsx"), "utf8"), /createCountryFiscalSlots/);
+    assert.match(await fs.readFile(path.join(__dirname, "..", root, "country/[code]/page.jsx"), "utf8"), /CountryPublicPage/);
   }
+  assert.match(await fs.readFile(path.join(__dirname, "../components/country-preview/CountryPreviewExperience.jsx"), "utf8"), /fiscalPath\("\/interest-cost", lang\)/);
   const page = await fs.readFile(path.join(__dirname, "../components/fiscal/InterestPage.jsx"), "utf8");
   assert.match(page, /canonical: url/); assert.match(page, /"x-default"/); assert.match(page, /debtSnapshot.debtYear === snapshot.latestYear/);
   assert.match(await fs.readFile(path.join(__dirname, "../components/methodology-preview/MethodologyPreviewPage.jsx"), "utf8"), /<InterestSource lang={lang} methodology/);

@@ -326,8 +326,8 @@ test("all localized country routes share one experience without changing their S
     "app/de/country/[code]/page.jsx",
     "app/fr/country/[code]/page.jsx",
   ];
-  const client = read("app/country/[code]/CountryClient.jsx");
-  const experience = read("components/country/CountryPageExperience.jsx");
+  const publicPage = read("components/country/CountryPublicPage.jsx");
+  const ad = read("components/country/CountryAd.jsx");
   const copy = read("components/country/country-copy.js");
   const preview = read("app/preview/country-de/page.jsx");
   const previewExperience = read("components/country-preview/CountryPreviewExperience.jsx");
@@ -338,23 +338,26 @@ test("all localized country routes share one experience without changing their S
     const source = read(route);
     assert.match(source, /generateStaticParams/);
     assert.match(source, /generateMetadata/);
-    assert.match(source, /<CountryClient/);
+    assert.match(source, /<CountryPublicPage/);
+    assert.doesNotMatch(source, /createCountryFiscalSlots/);
   }
 
-  assert.match(client, /CountryPageExperience/);
-  assert.match(client, /data-ad-client="ca-pub-9252617114074571"/);
-  assert.match(client, /data-ad-slot="8705915822"/);
-  assert.match(client, /gdpAbs=\{gdpAbs\}/);
-  assert.match(client, /relatedArticleSlot=\{relatedArticleSlot\}/);
+  assert.doesNotMatch(publicPage, /^"use client"/);
+  assert.match(publicPage, /CountryPreviewExperience/);
+  assert.match(publicPage, /relatedArticleSlot=\{relatedArticleSlot\}/);
+  assert.match(publicPage, /titleOverride \|\| pageTitleFor/);
+  assert.match(ad, /data-ad-client="ca-pub-9252617114074571"/);
+  assert.match(ad, /data-ad-slot="8705915822"/);
 
-  assert.match(experience, /getCountryCopy/);
-  assert.match(experience, /localeBase/);
-  assert.match(experience, /id="country-page-title"/);
-  assert.match(experience, /isPreview \? \(/);
-  assert.match(experience, /\(60 \/ maxComparison\) \* 100/);
-  assert.match(experience, /styles\.compareRowLink/);
-  assert.match(experience, /href=\{`\$\{base\}\/country\/\$\{item\.code\.toLowerCase\(\)\}`\}/);
-  assert.match(experience, /aria-current="true"/);
+  assert.match(previewExperience, /getCountryCopy/);
+  assert.match(previewExperience, /localeBase/);
+  assert.match(previewExperience, /isPreview \? \(/);
+  assert.match(previewExperience, /fiscalPath\("\/debt-per-capita", lang\)/);
+  assert.match(previewExperience, /fiscalPath\("\/debt-growth", lang\)/);
+  assert.match(previewExperience, /fiscalPath\("\/deficit", lang\)/);
+  assert.match(previewExperience, /fiscalPath\("\/interest-cost", lang\)/);
+  assert.match(previewExperience, /fiscalPath\("\/government-spending", lang\)/);
+  assert.match(previewHero, /id="country-page-title"/);
 
   for (const lang of ["en", "nl", "de", "fr"]) {
     assert.match(copy, new RegExp(`\\n  ${lang}: \\{`));
@@ -365,12 +368,8 @@ test("all localized country routes share one experience without changing their S
   assert.match(preview, /isPreview/);
   assert.match(preview, /CountryPreviewExperience/);
   assert.doesNotMatch(previewExperience, /^"use client"/);
-  assert.match(previewExperience, /href="\/debt-per-capita"/);
-  assert.match(previewExperience, /href="\/debt-growth"/);
-  assert.match(previewExperience, /href="\/deficit"/);
-  assert.match(previewExperience, /href="\/interest-cost"/);
-  assert.match(previewExperience, /href="\/government-spending"/);
-  assert.match(previewExperience, /href="\/debt-to-gdp"/);
+  assert.match(previewExperience, /CountryDebtTrend/);
+  assert.match(previewExperience, /fiscalPath\("\/debt-to-gdp", lang\)/);
   assert.match(previewExperience, /<details className=\{styles\.methodDetails\}>/);
   assert.match(previewHero, /^"use client"/);
   assert.match(previewTrend, /^"use client"/);
@@ -473,7 +472,7 @@ test("the homepage experience preserves live SEO and isolates preview routes", (
 test("Germany debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
   const germanCountryPage = read("app/de/country/[code]/page.jsx");
   const dutchCountryPage = read("app/nl/country/[code]/page.jsx");
-  const countryClient = read("app/country/[code]/CountryClient.jsx");
+  const countryClient = read("components/country/CountryPublicPage.jsx");
   const breadcrumbs = read("components/GermanyDebtClockBreadcrumbs.jsx");
 
   assert.match(germanCountryPage, /const isGermany = code === "DE"/);
@@ -499,7 +498,7 @@ test("Germany debt-clock SEO is route-scoped and preserves the Dutch country pag
   assert.match(countryClient, /titleOverride = null/);
   assert.match(
     countryClient,
-    /titleOverride \|\| pageTitleFor\(effLang, displayName\)/
+    /titleOverride \|\| pageTitleFor\(safeLang, displayName\)/
   );
   assert.match(breadcrumbs, /"@type": "BreadcrumbList"/);
   assert.match(breadcrumbs, /item: `\$\{SITE\}\/de\/country\/de`/);
@@ -508,7 +507,7 @@ test("Germany debt-clock SEO is route-scoped and preserves the Dutch country pag
 test("France debt-clock SEO is route-scoped and preserves the Dutch country page", () => {
   const frenchCountryPage = read("app/fr/country/[code]/page.jsx");
   const dutchCountryPage = read("app/nl/country/[code]/page.jsx");
-  const countryClient = read("app/country/[code]/CountryClient.jsx");
+  const countryClient = read("components/country/CountryPublicPage.jsx");
   const breadcrumbs = read("components/FranceDebtClockBreadcrumbs.jsx");
   const intro = read("components/FranceDebtClockIntro.jsx");
 
@@ -539,7 +538,7 @@ test("France debt-clock SEO is route-scoped and preserves the Dutch country page
   assert.match(countryClient, /titleOverride = null/);
   assert.match(
     countryClient,
-    /titleOverride \|\| pageTitleFor\(effLang, displayName\)/
+    /titleOverride \|\| pageTitleFor\(safeLang, displayName\)/
   );
   assert.match(breadcrumbs, /"@type": "BreadcrumbList"/);
   assert.match(breadcrumbs, /item: `\$\{SITE\}\/fr\/country\/fr`/);

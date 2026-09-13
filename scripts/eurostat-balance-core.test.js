@@ -140,11 +140,10 @@ test("fiscal routes preserve root English, four translations and methodology anc
     assert.equal(fiscalPath("/methodology#budget-balance-methodology", lang), `${prefix}/methodology#budget-balance-methodology`);
     const route = read(`app${prefix}/deficit/page.jsx`);
     assert.match(route, new RegExp(`balanceMetadata\\("${lang}"\\)`));
-    assert.match(read(`app${prefix}/country/[code]/page.jsx`), /createCountryFiscalSlots/);
+    assert.match(read(`app${prefix}/country/[code]/page.jsx`), /CountryPublicPage/);
   }
   assert.match(read("app/sitemap.js"), /urlFor\("\/deficit", lang\)/);
-  assert.match(read("app/country/[code]/CountryClient.jsx"), /fiscalBalanceSlot=\{fiscalBalanceSlot\}/);
-  assert.match(read("components/country/CountryPageExperience.jsx"), /\{fiscalBalanceSlot\}/);
+  assert.match(read("components/country-preview/CountryPreviewExperience.jsx"), /fiscalPath\("\/deficit", lang\)/);
   assert.match(read("components/fiscal/BalancePage.jsx"), /"x-default"/);
   assert.match(read("components/fiscal/BalancePage.jsx"), /"@type": "Dataset"/);
 });

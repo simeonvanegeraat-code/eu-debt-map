@@ -131,8 +131,9 @@ test("government accounts integrate four locale routes, country slots and source
   for (const lang of ["en", "nl", "de", "fr"]) {
     const root = lang === "en" ? "app" : `app/${lang}`;
     assert.match(await read(`${root}/government-spending/page.jsx`), new RegExp(`accountsMetadata\\("${lang}"\\)`));
-    assert.match(await read(`${root}/country/[code]/page.jsx`), /createCountryFiscalSlots/);
+    assert.match(await read(`${root}/country/[code]/page.jsx`), /CountryPublicPage/);
   }
+  assert.match(await read("components/country-preview/CountryPreviewExperience.jsx"), /fiscalPath\("\/government-spending", lang\)/);
   const page = await read("components/fiscal/AccountsPage.jsx"); assert.match(page, /canonical: url/); assert.match(page, /"x-default"/); assert.match(page, /edpComparison/);
   assert.match(await read("components/methodology-preview/MethodologyPreviewPage.jsx"), /<AccountsSource lang={lang} methodology/);
   assert.match(await read("app/sitemap.js"), /urlFor\("\/government-spending", lang\)/);

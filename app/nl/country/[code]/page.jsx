@@ -1,9 +1,8 @@
 import { countryFiscalDescription, countrySocialMetadata } from "@/lib/fiscal/discovery";
-import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/nl/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
-import CountryClient from "@/app/country/[code]/CountryClient";
+import CountryPublicPage from "@/components/country/CountryPublicPage";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import { countryName } from "@/lib/countries";
@@ -62,13 +61,8 @@ export default async function CountryPageNL({ params }) {
   );
   if (!country) return notFound();
 
-  const fiscal = createCountryFiscalSlots(country.code, "nl");
-
   return (
-    <CountryClient
-      fiscalOverviewSlot={fiscal.overview}
-      fiscalTrendsSlot={fiscal.trends}
-      fiscalComparisonSlot={fiscal.comparisons}
+    <CountryPublicPage
       country={country}
       lang="nl"
       introSlot={<CountryIntro country={country} lang="nl" />}

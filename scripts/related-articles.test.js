@@ -200,24 +200,24 @@ test("all 27 country pages receive a valid article in their own language", () =>
 });
 
 test("country routes render related reading before calm sharing controls", () => {
-  const client = read("app/country/[code]/CountryClient.jsx");
-  const experience = read("components/country/CountryPageExperience.jsx");
+  const publicPage = read("components/country/CountryPublicPage.jsx");
+  const experience = read("components/country-preview/CountryPreviewExperience.jsx");
   const server = read("components/CountryRelatedArticleServer.jsx");
   const related = read("components/CountryRelatedArticle.jsx");
   const share = read("components/ShareBar.jsx");
-  const adIndex = experience.indexOf(": adSlot ? (");
-  const introIndex = experience.indexOf("{introSlot ?");
-  const relatedIndex = experience.indexOf("{relatedArticleSlot}");
-  const shareIndex = experience.indexOf("{shareSlot ?");
+  const adIndex = experience.indexOf(": adSlot ?");
+  const introIndex = experience.indexOf("introSlot || <CountryIntro");
+  const relatedIndex = experience.indexOf("relatedArticleSlot || <CountryRelatedArticleServer");
+  const shareIndex = experience.indexOf("shareSlot || <ShareBar");
 
-  assert.equal(client.includes("LatestArticles"), false);
-  assert.equal(client.includes("MapCTA"), false);
+  assert.equal(publicPage.includes("LatestArticles"), false);
+  assert.equal(publicPage.includes("MapCTA"), false);
   assert.equal(experience.includes("mapSlot"), false);
-  assert.match(client, /adSlot=\{<ManualAd/);
-  assert.match(client, /introSlot=\{introSlot\}/);
-  assert.match(client, /https:\/\/www\.eudebtmap\.com/);
-  assert.match(client, /variant="country"/);
-  assert.match(client, /relatedArticleSlot=\{relatedArticleSlot\}/);
+  assert.match(publicPage, /adSlot=\{<CountryAd/);
+  assert.match(publicPage, /introSlot=\{introSlot\}/);
+  assert.match(publicPage, /https:\/\/www\.eudebtmap\.com/);
+  assert.match(publicPage, /variant="country"/);
+  assert.match(publicPage, /relatedArticleSlot=\{relatedArticleSlot\}/);
   assert.ok(adIndex >= 0);
   assert.ok(adIndex < introIndex);
   assert.ok(introIndex < relatedIndex);

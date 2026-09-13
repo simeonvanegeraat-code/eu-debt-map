@@ -1,10 +1,9 @@
 import { countryFiscalDescription, countrySocialMetadata } from "@/lib/fiscal/discovery";
-import { createCountryFiscalSlots } from "@/components/country/CountryFiscalDashboard";
 // app/fr/country/[code]/page.jsx
 import { notFound } from "next/navigation";
 import { countries } from "@/lib/data";
 import { countryName } from "@/lib/countries";
-import CountryClient from "@/app/country/[code]/CountryClient";
+import CountryPublicPage from "@/components/country/CountryPublicPage";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import FranceDebtClockBreadcrumbs from "@/components/FranceDebtClockBreadcrumbs";
@@ -74,13 +73,8 @@ export default async function CountryPageFR({ params }) {
 
   const isFrance = country.code === "FR";
 
-  const fiscal = createCountryFiscalSlots(country.code, "fr");
-
   return (
-    <CountryClient
-      fiscalOverviewSlot={fiscal.overview}
-      fiscalTrendsSlot={fiscal.trends}
-      fiscalComparisonSlot={fiscal.comparisons}
+    <CountryPublicPage
       country={country}
       lang="fr"
       breadcrumbSlot={isFrance ? <FranceDebtClockBreadcrumbs /> : null}

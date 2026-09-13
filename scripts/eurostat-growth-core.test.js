@@ -104,7 +104,8 @@ test("growth updater preserves previous bytes on failure and replaces only a ful
   }finally{await fs.unlink(target);await fs.rmdir(dir);}
 });
 test("all growth locales share one page and integrate with country, source and historical chart paths",async()=>{
-  for(const lang of ["en","nl","de","fr"]){const root=lang==="en"?"app":`app/${lang}`;assert.match(await fs.readFile(path.join(__dirname,"..",root,"debt-growth/page.jsx"),"utf8"),new RegExp(`growthMetadata\\("${lang}"\\)`));assert.match(await fs.readFile(path.join(__dirname,"..",root,"country/[code]/page.jsx"),"utf8"),/createCountryFiscalSlots/);}
+  for(const lang of ["en","nl","de","fr"]){const root=lang==="en"?"app":`app/${lang}`;assert.match(await fs.readFile(path.join(__dirname,"..",root,"debt-growth/page.jsx"),"utf8"),new RegExp(`growthMetadata\\("${lang}"\\)`));assert.match(await fs.readFile(path.join(__dirname,"..",root,"country/[code]/page.jsx"),"utf8"),/CountryPublicPage/);}
+  assert.match(await fs.readFile(path.join(__dirname,"../components/country-preview/CountryPreviewExperience.jsx"),"utf8"),/fiscalPath\("\/debt-growth", lang\)/);
   const page=await fs.readFile(path.join(__dirname,"../components/fiscal/GrowthPage.jsx"),"utf8");assert.match(page,/canonical:url/);assert.match(page,/"x-default"/);assert.match(page,/"percentage points"/);
   assert.match(await fs.readFile(path.join(__dirname,"../app/sitemap.js"),"utf8"),/urlFor\("\/debt-growth", lang\)/);
   assert.match(await fs.readFile(path.join(__dirname,"../components/HomePageExperience.jsx"),"utf8"),/historyRows={overview.quarters}/);

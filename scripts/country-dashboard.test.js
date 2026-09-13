@@ -105,27 +105,31 @@ test("all EU profiles have a stable peer group without duplicate current countri
   }
 });
 
-test("localized routes compose the dashboard on the server and retain previous indicator functionality", () => {
+test("localized country routes use the compact server-rendered dashboard and retain topic functionality", () => {
   for (const lang of ["en", "nl", "de", "fr"]) {
     const root = lang === "en" ? "app" : `app/${lang}`;
     const route = read(`${root}/country/[code]/page.jsx`);
-    assert.match(route, new RegExp(`createCountryFiscalSlots\\(country.code, "${lang}"\\)`));
-    for (const prop of ["fiscalOverviewSlot", "fiscalTrendsSlot", "fiscalComparisonSlot"]) assert(route.includes(`${prop}={fiscal.`));
+    assert.match(route, /<CountryPublicPage/);
+    assert.doesNotMatch(route, /createCountryFiscalSlots/);
     assert(route.includes("generateMetadata") && route.includes("generateStaticParams") && route.includes("notFound()"));
   }
-  const dashboard = read("components/country/CountryFiscalDashboard.jsx");
-  assert(!dashboard.includes('"use client"'));
-  for (const feature of ["CountryGrowth", "CountryBalance", "CountryInterest", "CountryAccounts", "CountryPerCapita", "AccountSourceDifference"]) assert(dashboard.includes(`<${feature}`));
-  assert.match(dashboard, /<CountryGrowth[^>]+showHistory/);
-  assert.match(dashboard, /<CountryInterest[^>]+showHistory/);
+  const publicPage = read("components/country/CountryPublicPage.jsx");
+  const experience = read("components/country-preview/CountryPreviewExperience.jsx");
+  assert.doesNotMatch(publicPage, /^"use client"/);
+  assert.match(publicPage, /CountryPreviewExperience/);
+  for (const route of ["debt-per-capita", "debt-growth", "deficit", "interest-cost", "government-spending", "debt-to-gdp"]) {
+    assert.match(experience, new RegExp(route));
+  }
   assert.match(read("app/sitemap.js"), /COUNTRY_DASHBOARD_REVIEWED/);
 });
 
 test("country profiles retain their localized debt-first SEO framing", () => {
-  const client = read("app/country/[code]/CountryClient.jsx");
-  const experience = read("components/country/CountryPageExperience.jsx");
-  assert.match(client, /title=\{title\}/);
-  assert.doesNotMatch(client, /title=\{fiscalOverviewSlot \? fiscalCopy\.title/);
-  assert.doesNotMatch(experience, /lede: fiscalCopy\.lede/);
-  assert.match(experience, /<div className=\{styles\.introSlot\}>\{introSlot\}<\/div>/);
+  const publicPage = read("components/country/CountryPublicPage.jsx");
+  const experience = read("components/country-preview/CountryPreviewExperience.jsx");
+  const hero = read("components/country-preview/CountryPreviewHero.jsx");
+  assert.match(publicPage, /titleOverride \|\| pageTitleFor/);
+  assert.match(publicPage, /title=\{title\}/);
+  assert.match(hero, /<h1 id="country-page-title">\{title\}<\/h1>/);
+  assert.match(hero, /<p className=\{styles\.heroIntro\}>\{copy\.lede\}<\/p>/);
+  assert.match(experience, /introSlot \|\| <CountryIntro/);
 });
