@@ -330,6 +330,9 @@ test("all localized country routes share one experience without changing their S
   const experience = read("components/country/CountryPageExperience.jsx");
   const copy = read("components/country/country-copy.js");
   const preview = read("app/preview/country-de/page.jsx");
+  const previewExperience = read("components/country-preview/CountryPreviewExperience.jsx");
+  const previewHero = read("components/country-preview/CountryPreviewHero.jsx");
+  const previewTrend = read("components/country-preview/CountryDebtTrend.jsx");
 
   for (const route of routes) {
     const source = read(route);
@@ -360,6 +363,17 @@ test("all localized country routes share one experience without changing their S
   assert.match(preview, /index: false/);
   assert.match(preview, /follow: false/);
   assert.match(preview, /isPreview/);
+  assert.match(preview, /CountryPreviewExperience/);
+  assert.doesNotMatch(previewExperience, /^"use client"/);
+  assert.match(previewExperience, /href="\/debt-per-capita"/);
+  assert.match(previewExperience, /href="\/debt-growth"/);
+  assert.match(previewExperience, /href="\/deficit"/);
+  assert.match(previewExperience, /href="\/interest-cost"/);
+  assert.match(previewExperience, /href="\/government-spending"/);
+  assert.match(previewExperience, /href="\/debt-to-gdp"/);
+  assert.match(previewExperience, /<details className=\{styles\.methodDetails\}>/);
+  assert.match(previewHero, /^"use client"/);
+  assert.match(previewTrend, /^"use client"/);
 });
 
 test("the homepage experience preserves live SEO and isolates preview routes", () => {
