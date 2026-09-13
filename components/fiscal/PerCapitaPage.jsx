@@ -12,6 +12,7 @@ import PerCapitaSource from "./PerCapitaSource";
 import IndicatorRanking from "./IndicatorRanking";
 import styles from "./fiscal.module.css";
 import capitaStyles from "./per-capita.module.css";
+import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
 export function perCapitaMetadata(lang = "en") {
@@ -33,7 +34,7 @@ export default function PerCapitaPage({ lang = "en" }) {
   const modified = new Date(Math.max(Date.parse(PER_CAPITA.reviewedAt),Date.parse(snapshot.fetchedAt))).toISOString();
   const graph = {"@context":"https://schema.org","@graph":[
     {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:fiscalPageModified(modified),mainEntity:{"@id":`${url}#dataset`}},
-    {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-per-capita-methodology`,name:`${copy.value} · EU-27 · ${snapshot.debtYear}`,description:`${copy.formula} ${copy.datesText}`,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},isBasedOn:[PER_CAPITA.debtMetadata,PER_CAPITA.populationMetadata],citation:copy.attribution,temporalCoverage:`${snapshot.debtDate}/${snapshot.populationDate}`,spatialCoverage:"EU-27 (2020 composition)",dateModified:modified,variableMeasured:{"@type":"PropertyValue",name:copy.value,unitText:"EUR per resident"},measurementTechnique:copy.formula},
+    {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-per-capita-methodology`,name:`${copy.value} · EU-27 · ${snapshot.debtYear}`,description:`${copy.formula} ${copy.datesText}`,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},publisher:{"@type":"Organization",name:"EU Debt Map",url:SITE},license:DERIVED_DATASET_LICENSE_URL,isBasedOn:[PER_CAPITA.debtMetadata,PER_CAPITA.populationMetadata],temporalCoverage:`${snapshot.debtDate}/${snapshot.populationDate}`,spatialCoverage:"EU-27 (2020 composition)",dateModified:modified,variableMeasured:{"@type":"PropertyValue",name:copy.value,unitText:"EUR per resident"},measurementTechnique:copy.formula},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"EU Debt Map",item:`${SITE}${fiscalPath("/",lang)}`},{"@type":"ListItem",position:2,name:copy.shortTitle,item:url}]},
   ]};
   const columns = [{key:"perCapita",label:copy.value,period:snapshot.debtYear},{key:"debt",label:copy.debt,period:snapshot.debtYear},{key:"ratio",label:copy.ratio,period:snapshot.debtYear},{key:"population",label:copy.population,period:snapshot.populationDate}];

@@ -13,12 +13,23 @@ import { EUROSTAT_RATIO_UPDATED_AT } from "@/lib/eurostat.ratio.gen";
 import typography from "@/components/typography/typography.module.css";
 import { getMethodologyCopy } from "./methodology-copy";
 import styles from "./methodology-preview.module.css";
+import { DERIVED_DATASET_LICENSE_URL, EUROSTAT_DATASET_LICENSE, EUROSTAT_REUSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
 const EUROSTAT_METADATA = "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm";
 const EUROSTAT_DATASET = "https://ec.europa.eu/eurostat/en/web/products-datasets/-/GOV_10Q_GGDEBT";
 const EUROSTAT_API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10q_ggdebt?lang=EN&format=JSON&freq=Q&sector=S13&na_item=GD&unit=MIO_EUR&lastTimePeriod=20";
 const NAV_HREFS = ["#overview", "#definition", "#pipeline", "#calculation", "#safeguards", "#limitations", "#sources"];
+
+function quarterCoverage(value) {
+  const match = /^(\d{4})-Q([1-4])$/.exec(value || "");
+  if (!match) return value;
+  const year = Number(match[1]);
+  const quarter = Number(match[2]);
+  const startMonth = String((quarter - 1) * 3 + 1).padStart(2, "0");
+  const endDate = new Date(Date.UTC(year, quarter * 3, 0)).toISOString().slice(0, 10);
+  return `${year}-${startMonth}-01/${endDate}`;
+}
 
 function ArrowIcon() {
   return <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" /></svg>;
@@ -91,14 +102,22 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
   const datasetLd = {
     "@context": "https://schema.org",
     "@type": "Dataset",
+    "@id": `${SITE}${path}#eurostat-quarterly-debt-dataset`,
+    url: `${SITE}${path}#dataset-registry`,
     name: copy.schema.datasetName,
     description: copy.schema.datasetDescription,
     creator: { "@type": "Organization", name: "Eurostat" },
+    publisher: { "@type": "Organization", name: "Eurostat", url: "https://ec.europa.eu/eurostat" },
     isBasedOn: EUROSTAT_METADATA,
+    sameAs: EUROSTAT_DATASET,
     spatialCoverage: copy.schema.spatialCoverage,
-    temporalCoverage: period,
+    temporalCoverage: quarterCoverage(period),
     measurementTechnique: "Eurostat gov_10q_ggdebt; Q, S13, GD, MIO_EUR and PC_GDP",
-    license: "https://ec.europa.eu/eurostat/about/policies/copyright",
+    license: EUROSTAT_DATASET_LICENSE,
+    variableMeasured: [
+      { "@type": "PropertyValue", name: "General government consolidated gross debt", propertyID: "GD", unitText: "EUR" },
+      { "@type": "PropertyValue", name: "General government consolidated gross debt", propertyID: "GD", unitText: "percent of GDP" },
+    ],
     distribution: [{ "@type": "DataDownload", encodingFormat: "application/json", contentUrl: EUROSTAT_API }],
   };
   const breadcrumbsLd = {
@@ -281,7 +300,7 @@ export default function MethodologyPreviewPage({ lang = "en", preview = false })
           <div className={styles.updateGrid}>{copy.updates.cards.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}</div>
           <div className={styles.changelog}>
             <p>{copy.updates.changelogTitle}</p>
-            {copy.updates.changelog.map(([version, date, text]) => <div key={version}><strong>{version}</strong><time>{date}</time><span>{text}</span></div>)}
+            {copy.updates.changelog.map(([version, date, text]) => <div key={`${version}-${date}`}><strong>{version}</strong><time>{date}</time><span>{text}</span></div>)}
           </div>
         </div>
       </section>
@@ -316,6 +335,14 @@ estimate_now = latest_debt + rate_per_second * seconds_since_latest`}</code></pr
             <a href={EUROSTAT_DATASET} target="_blank" rel="noreferrer"><span>{copy.sources.linkLabels[1]}</span><strong>{copy.sources.dataset}</strong><ArrowIcon /></a>
             <a href={EUROSTAT_API} target="_blank" rel="noreferrer"><span>{copy.sources.linkLabels[2]}</span><strong>{copy.sources.api}</strong><ArrowIcon /></a>
           </div>
+        </div>
+        <div className={styles.licensePanel} id="dataset-reuse-v1">
+          <h3>{copy.sources.licenseTitle}</h3>
+          <p>{copy.sources.licenseText}</p>
+          <p className={styles.licenseLinks}>
+            <a href={DERIVED_DATASET_LICENSE_URL} target="_blank" rel="license noreferrer">{copy.sources.derivedLicense}</a>
+            <a href={EUROSTAT_REUSE_URL} target="_blank" rel="noreferrer">{copy.sources.eurostatReuse}</a>
+          </p>
         </div>
         <div className={styles.nextPanel}>
           <p>{copy.sources.nextTitle}</p>

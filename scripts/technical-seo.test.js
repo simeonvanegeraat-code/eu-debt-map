@@ -746,12 +746,21 @@ test("the methodology redesign is published with preserved SEO contracts and mod
   assert.match(preview, /gov_10q_ggdebt/);
   assert.match(preview, /"@type": "TechArticle"/);
   assert.match(preview, /"@type": "Dataset"/);
+  assert.match(preview, /license: EUROSTAT_DATASET_LICENSE/);
+  assert.match(preview, /sameAs: EUROSTAT_DATASET/);
+  assert.match(preview, /temporalCoverage: quarterCoverage\(period\)/);
+  assert.match(preview, /id="dataset-reuse-v1"/);
+  assert.match(preview, /key=\{`\$\{version\}-\$\{date\}`\}/);
   assert.match(preview, /"@type": "BreadcrumbList"/);
   assert.match(preview, /inLanguage: lang/);
   assert.match(preview, /const path = `\$\{copy\.base\}\/methodology`/);
   assert.match(copy, /base: "\/nl"/);
   assert.match(copy, /base: "\/de"/);
   assert.match(copy, /base: "\/fr"/);
+  assert.match(copy, /EU Debt Map’s calculated datasets are licensed under CC BY 4\.0/);
+  assert.match(copy, /De berekende datasets van EU Debt Map worden aangeboden onder CC BY 4\.0/);
+  assert.match(copy, /Die berechneten Datensätze von EU Debt Map stehen unter CC BY 4\.0/);
+  assert.match(copy, /Les jeux de données calculés par EU Debt Map sont placés sous licence CC BY 4\.0/);
   assert.match(copy, /€50,000\/s hard cap/);
   assert.match(copy, /Stale-country freeze/);
   assert.match(copy, /official ratio × \(modelled debt now ÷ official debt at the reference date\)/);
@@ -762,6 +771,25 @@ test("the methodology redesign is published with preserved SEO contracts and mod
   assert.match(styles, /top:\s*72px/);
   assert.match(styles, /overflow-x:\s*clip/);
   assert.match(styles, /@media \(max-width: 760px\)/);
+});
+
+test("all public fiscal Dataset schemas declare the scoped derived-data license", () => {
+  const license = read("lib/dataset-license.js");
+  assert.match(license, /https:\/\/creativecommons\.org\/licenses\/by\/4\.0\//);
+  assert.match(license, /https:\/\/ec\.europa\.eu\/eurostat\/help\/copyright-notice/);
+  assert.doesNotMatch(license, /about\/policies\/copyright/);
+
+  for (const file of [
+    "components/fiscal/PerCapitaPage.jsx",
+    "components/fiscal/GrowthPage.jsx",
+    "components/fiscal/BalancePage.jsx",
+    "components/fiscal/InterestPage.jsx",
+    "components/fiscal/AccountsPage.jsx",
+  ]) {
+    const source = read(file);
+    assert.match(source, /license:\s*DERIVED_DATASET_LICENSE_URL/);
+    assert.doesNotMatch(source, /citation:\s*copy\.attribution/);
+  }
 });
 
 test("phase 3A preserves production AdSense identifiers", () => {

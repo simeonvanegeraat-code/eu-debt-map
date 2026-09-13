@@ -9,6 +9,7 @@ import { getGrowthCopy, growthQuarter } from "./growth-copy";
 import GrowthExplorer from "./GrowthExplorer";
 import GrowthSource from "./GrowthSource";
 import styles from "./fiscal.module.css";
+import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 const SITE = "https://www.eudebtmap.com";
 export function growthMetadata(lang = "en") {
   const copy = getGrowthCopy(lang), url = `${SITE}${fiscalPath("/debt-growth",lang)}`;
@@ -20,7 +21,7 @@ export default function GrowthPage({ lang = "en" }) {
   const modified = new Date(Math.max(Date.parse(snapshot.fetchedAt),Date.parse(GROWTH.reviewedAt))).toISOString();
   const graph = {"@context":"https://schema.org","@graph":[
     {"@type":"WebPage","@id":url,url,name:copy.title,description:copy.description,inLanguage:lang,dateModified:fiscalPageModified(modified),mainEntity:{"@id":`${url}#dataset`}},
-    {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-growth-methodology`,name:`${copy.shortTitle} · EU27`,description:copy.formula,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},isBasedOn:GROWTH.metadata,citation:copy.attribution,dateModified:modified,temporalCoverage:`${quarterEnd(snapshot.periods[0])}/${quarterEnd(snapshot.latestQuarter)}`,spatialCoverage:"EU-27 (2020 composition)",variableMeasured:[{ "@type":"PropertyValue",name:copy.amount,unitText:"EUR"},{"@type":"PropertyValue",name:copy.percent,unitText:"percent"},{"@type":"PropertyValue",name:copy.pp,unitText:"percentage points"}]},
+    {"@type":"Dataset","@id":`${url}#dataset`,url:`${url}#debt-growth-methodology`,name:`${copy.shortTitle} · EU27`,description:copy.formula,creator:{"@type":"Organization",name:"EU Debt Map",url:SITE},publisher:{"@type":"Organization",name:"EU Debt Map",url:SITE},license:DERIVED_DATASET_LICENSE_URL,isBasedOn:GROWTH.metadata,dateModified:modified,temporalCoverage:`${quarterEnd(snapshot.periods[0])}/${quarterEnd(snapshot.latestQuarter)}`,spatialCoverage:"EU-27 (2020 composition)",variableMeasured:[{ "@type":"PropertyValue",name:copy.amount,unitText:"EUR"},{"@type":"PropertyValue",name:copy.percent,unitText:"percent"},{"@type":"PropertyValue",name:copy.pp,unitText:"percentage points"}]},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"EU Debt Map",item:`${SITE}${fiscalPath("/",lang)}`},{"@type":"ListItem",position:2,name:copy.shortTitle,item:url}]},
   ]};
   return <article className={`${styles.page} ${typography.page}`} lang={lang}>

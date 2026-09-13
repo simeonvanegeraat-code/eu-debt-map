@@ -658,6 +658,11 @@
 .citationGrid article > p { color: var(--blue); }
 .citationGrid blockquote { margin: 30px 0 0; font-size: clamp(1.15rem, 1.8vw, 1.55rem); font-weight: 550; line-height: 1.5; }
 .citationGrid article small { display: block; margin-top: 26px; color: var(--muted); line-height: 1.5; }
+.licensePanel { margin-top: 18px; padding: clamp(24px, 3vw, 34px); border: 1px solid #bdcce0; border-radius: 12px; background: #eef4fc; scroll-margin-top: 110px; }
+.licensePanel h3 { margin: 0; color: var(--blue); font-size: var(--type-h3); line-height: var(--type-heading-leading); }
+.licensePanel > p { max-width: 1000px; margin: 16px 0 0; color: var(--muted); line-height: 1.65; }
+.licenseLinks { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+.licenseLinks a { color: var(--blue); font-weight: 700; }
 .auditLinks { display: grid; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .auditLinks a { display: grid; grid-template-columns: 1fr auto; gap: 7px 24px; align-items: center; padding: 23px 26px; color: var(--ink); text-decoration: none; }
 .auditLinks a + a { border-top: 1px solid var(--line); }

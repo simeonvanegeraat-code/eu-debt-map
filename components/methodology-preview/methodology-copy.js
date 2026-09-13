@@ -177,6 +177,10 @@ const COPY = {
       citation:
         "EU Debt Map (2026), ‘Methodology: Eurostat data and live government debt estimates’, based on Eurostat gov_10q_ggdebt. Accessed 30 August 2026.",
       copyHint: "Use the original Eurostat source alongside EU Debt Map when reusing the figures.",
+      licenseTitle: "Dataset reuse licence",
+      licenseText: "EU Debt Map’s calculated datasets are licensed under CC BY 4.0. This applies only to the published datasets and derived values, not to website code, articles, images, logos or design. The underlying Eurostat data remain subject to Eurostat’s reuse conditions. Credit Eurostat and EU Debt Map, identify changes and calculations, and note that Eurostat is not responsible for the derived results.",
+      derivedLicense: "CC BY 4.0 licence",
+      eurostatReuse: "Eurostat reuse conditions",
       linkLabels: ["Official metadata", "Dataset", "JSON API"],
       primary: "Eurostat reference metadata",
       dataset: "Open the Eurostat dataset",
@@ -368,6 +372,10 @@ const COPY = {
       citation:
         "EU Debt Map (2026), ‘Methodologie: Eurostat-data en live schattingen van de overheidsschuld’, gebaseerd op Eurostat gov_10q_ggdebt. Geraadpleegd op 30 augustus 2026.",
       copyHint: "Vermeld bij hergebruik van de cijfers naast EU Debt Map ook de oorspronkelijke Eurostat-bron.",
+      licenseTitle: "Licentie voor hergebruik van datasets",
+      licenseText: "De berekende datasets van EU Debt Map worden aangeboden onder CC BY 4.0. Dit geldt uitsluitend voor de gepubliceerde datasets en afgeleide waarden, niet voor websitecode, artikelen, afbeeldingen, logo’s of vormgeving. Op de onderliggende Eurostat-data blijven Eurostats hergebruikvoorwaarden van toepassing. Vermeld Eurostat en EU Debt Map als bron, geef wijzigingen en berekeningen aan en vermeld dat Eurostat niet verantwoordelijk is voor de afgeleide resultaten.",
+      derivedLicense: "CC BY 4.0-licentie",
+      eurostatReuse: "Hergebruikvoorwaarden van Eurostat",
       linkLabels: ["Officiële metadata", "Dataset", "JSON-API"],
       primary: "Referentiemetadata van Eurostat",
       dataset: "Open de Eurostat-dataset",
@@ -559,6 +567,10 @@ const COPY = {
       citation:
         "EU Debt Map (2026), ‚Methodik: Eurostat-Daten und Live-Schätzungen der Staatsverschuldung‘, basierend auf Eurostat gov_10q_ggdebt. Abgerufen am 30. August 2026.",
       copyHint: "Bei einer Weiterverwendung der Zahlen sollte neben EU Debt Map auch die ursprüngliche Eurostat-Quelle angegeben werden.",
+      licenseTitle: "Lizenz zur Weiterverwendung von Datensätzen",
+      licenseText: "Die berechneten Datensätze von EU Debt Map stehen unter CC BY 4.0. Dies gilt nur für die veröffentlichten Datensätze und abgeleiteten Werte, nicht für Website-Code, Artikel, Bilder, Logos oder Gestaltung. Für die zugrunde liegenden Eurostat-Daten gelten weiterhin die Wiederverwendungsbedingungen von Eurostat. Nennen Sie Eurostat und EU Debt Map als Quellen, kennzeichnen Sie Änderungen und Berechnungen und weisen Sie darauf hin, dass Eurostat für die abgeleiteten Ergebnisse nicht verantwortlich ist.",
+      derivedLicense: "CC BY 4.0-Lizenz",
+      eurostatReuse: "Wiederverwendungsbedingungen von Eurostat",
       linkLabels: ["Offizielle Metadaten", "Datensatz", "JSON-API"],
       primary: "Eurostat-Referenzmetadaten",
       dataset: "Eurostat-Datensatz öffnen",
@@ -750,6 +762,10 @@ const COPY = {
       citation:
         "EU Debt Map (2026), « Méthodologie : données Eurostat et estimations en direct de la dette publique », d’après Eurostat gov_10q_ggdebt. Consulté le 30 août 2026.",
       copyHint: "Lors de la réutilisation des chiffres, citez la source Eurostat d’origine en plus d’EU Debt Map.",
+      licenseTitle: "Licence de réutilisation des jeux de données",
+      licenseText: "Les jeux de données calculés par EU Debt Map sont placés sous licence CC BY 4.0. Cette licence s’applique uniquement aux jeux de données publiés et aux valeurs dérivées, et non au code du site, aux articles, aux images, aux logos ou à la conception. Les données Eurostat sous-jacentes restent soumises aux conditions de réutilisation d’Eurostat. Citez Eurostat et EU Debt Map, signalez les modifications et les calculs, et précisez qu’Eurostat n’est pas responsable des résultats dérivés.",
+      derivedLicense: "Licence CC BY 4.0",
+      eurostatReuse: "Conditions de réutilisation d’Eurostat",
       linkLabels: ["Métadonnées officielles", "Jeu de données", "API JSON"],
       primary: "Métadonnées de référence d’Eurostat",
       dataset: "Ouvrir le jeu de données Eurostat",

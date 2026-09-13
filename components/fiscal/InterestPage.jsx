@@ -10,6 +10,7 @@ import { getInterestCopy, interestNumber } from "./interest-copy";
 import InterestExplorer from "./InterestExplorer";
 import InterestSource from "./InterestSource";
 import styles from "./fiscal.module.css";
+import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
 export function interestMetadata(lang = "en") {
@@ -29,7 +30,7 @@ export default function InterestPage({ lang = "en" }) {
   const debtContext = debtSnapshot.debtYear === snapshot.latestYear ? { year: debtSnapshot.debtYear, countries: Object.fromEntries(Object.entries(debtSnapshot.countries).map(([code, row]) => [code, { amount: row.debtMioEur * 1e6, ratio: row.debtRatio, amountStatus: row.debtStatus, ratioStatus: row.ratioStatus }])) } : null;
   const graph = { "@context": "https://schema.org", "@graph": [
     { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: fiscalPageModified(modified), mainEntity: { "@id": `${url}#dataset` } },
-    { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#interest-cost-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.formula, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: [INTEREST.metadata, INTEREST.populationMetadata], citation: copy.attribution, dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: [[copy.amount, "EUR"], [copy.ratio, "percent of GDP"], [copy.perCapita, "EUR per resident"], [copy.revenueShare, "percent of government revenue"]].map(([name, unitText]) => ({ "@type": "PropertyValue", name, unitText })) },
+    { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#interest-cost-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.formula, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, publisher: { "@type": "Organization", name: "EU Debt Map", url: SITE }, license: DERIVED_DATASET_LICENSE_URL, isBasedOn: [INTEREST.metadata, INTEREST.populationMetadata], dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: [[copy.amount, "EUR"], [copy.ratio, "percent of GDP"], [copy.perCapita, "EUR per resident"], [copy.revenueShare, "percent of government revenue"]].map(([name, unitText]) => ({ "@type": "PropertyValue", name, unitText })) },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
   return <article className={`${styles.page} ${editorialDisplay.variable}`} lang={lang}>

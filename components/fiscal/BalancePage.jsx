@@ -10,6 +10,7 @@ import BalanceExplorer from "./BalanceExplorer";
 import BalanceSource from "./BalanceSource";
 import { getBalanceCopy, formatFiscal } from "./balance-copy";
 import styles from "./fiscal.module.css";
+import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
 
@@ -36,10 +37,10 @@ export default function BalancePage({ lang = "en" }) {
       dateModified: fiscalPageModified(new Date(Math.max(Date.parse(BALANCE.contentReviewedAt), Date.parse(snapshot.fetchedAt))).toISOString()), mainEntity: { "@id": `${url}#dataset` } },
     { "@type": "Dataset", "@id": `${url}#dataset`, name: `${copy.balance} · EU-27 · ${snapshot.years[0]}–${year}`, description: `${copy.definition} ${copy.calculations}`, url: `${url}#budget-balance-methodology`,
       creator: { "@type": "Organization", name: "Eurostat", url: "https://ec.europa.eu/eurostat" },
-      publisher: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: BALANCE.datasetUrl,
+      publisher: { "@type": "Organization", name: "EU Debt Map", url: SITE }, license: DERIVED_DATASET_LICENSE_URL, isBasedOn: BALANCE.datasetUrl,
       temporalCoverage: `${snapshot.years[0]}/${year}`, spatialCoverage: "EU-27 (2020 composition)",
       variableMeasured: [{ "@type": "PropertyValue", name: "General government net lending (+) / net borrowing (−)", propertyID: "B9", unitText: "% of GDP" }, { "@type": "PropertyValue", name: "Year-end general government consolidated gross debt", propertyID: "GD", unitText: "% of GDP" }],
-      measurementTechnique: "ESA 2010; S13; annual; PC_GDP", dateModified: new Date(snapshot.sourceUpdated).toISOString(), citation: copy.attribution },
+      measurementTechnique: "ESA 2010; S13; annual; PC_GDP", dateModified: new Date(snapshot.sourceUpdated).toISOString() },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
   return <article className={`${styles.page} ${typography.page}`} lang={lang}>

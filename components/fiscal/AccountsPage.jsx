@@ -10,6 +10,7 @@ import { getAccountsCopy, accountNumber } from "./accounts-copy";
 import AccountsExplorer from "./AccountsExplorer";
 import AccountsSource from "./AccountsSource";
 import styles from "./fiscal.module.css";
+import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
 export function accountsMetadata(lang = "en") {
@@ -22,7 +23,7 @@ export default function AccountsPage({ lang = "en" }) {
   const modified = new Date(Math.max(Date.parse(snapshot.fetchedAt), Date.parse(ACCOUNTS.reviewedAt))).toISOString();
   const graph = { "@context": "https://schema.org", "@graph": [
     { "@type": "WebPage", "@id": url, url, name: copy.title, description: copy.description, inLanguage: lang, dateModified: fiscalPageModified(modified), mainEntity: { "@id": `${url}#dataset` } },
-    { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#government-accounts-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.identity, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, isBasedOn: ACCOUNTS.metadata, citation: copy.attribution, dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: Object.keys(ACCOUNTS.sources).map(key => ({ "@type": "PropertyValue", name: copy[key], unitText: key.endsWith("Ratio") ? "percent of GDP" : "EUR" })) },
+    { "@type": "Dataset", "@id": `${url}#dataset`, url: `${url}#government-accounts-methodology`, name: `${copy.shortTitle} · EU27`, description: copy.identity, creator: { "@type": "Organization", name: "EU Debt Map", url: SITE }, publisher: { "@type": "Organization", name: "EU Debt Map", url: SITE }, license: DERIVED_DATASET_LICENSE_URL, isBasedOn: ACCOUNTS.metadata, dateModified: modified, temporalCoverage: `${snapshot.years[0]}-01-01/${snapshot.latestYear}-12-31`, spatialCoverage: "EU-27 (2020 composition)", variableMeasured: Object.keys(ACCOUNTS.sources).map(key => ({ "@type": "PropertyValue", name: copy[key], unitText: key.endsWith("Ratio") ? "percent of GDP" : "EUR" })) },
     { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "EU Debt Map", item: `${SITE}${fiscalPath("/", lang)}` }, { "@type": "ListItem", position: 2, name: copy.shortTitle, item: url }] },
   ] };
   return <article className={`${styles.page} ${editorialDisplay.variable}`} lang={lang}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph).replace(/</g, "\\u003c") }} />
