@@ -15,11 +15,32 @@
 }
 
 .hero {
-  padding: 18px 0 42px;
+  position: relative;
+  padding: 18px 0 54px;
+  overflow: hidden;
+  color: #f8fbff;
   background:
-    radial-gradient(circle at 92% 4%, rgba(64, 139, 238, 0.2), transparent 34%),
-    linear-gradient(145deg, #f6faff 0%, #fff 58%, #f1f6fc 100%);
-  border-bottom: 1px solid var(--line);
+    radial-gradient(circle at 84% 12%, rgba(42, 131, 255, 0.35), transparent 28%),
+    radial-gradient(circle at 12% 100%, rgba(30, 105, 210, 0.22), transparent 36%),
+    linear-gradient(135deg, #061a35 0%, #082b59 52%, #0a4284 100%);
+  border-bottom: 1px solid #123f78;
+}
+
+.hero::after {
+  position: absolute;
+  right: -12%;
+  bottom: -180px;
+  width: 68%;
+  height: 260px;
+  content: "";
+  background: rgba(47, 139, 255, 0.18);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.hero .shell {
+  position: relative;
+  z-index: 1;
 }
 
 .previewBar {
@@ -29,12 +50,14 @@
   gap: 16px;
   margin-bottom: 34px;
   padding: 10px 14px;
-  color: #47566a;
+  color: #c8d8ec;
   font-size: 0.82rem;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(155, 176, 202, 0.55);
-  border-radius: 12px;
+  background: rgba(2, 18, 39, 0.24);
+  border: 1px solid rgba(191, 218, 251, 0.22);
+  border-radius: 8px;
 }
+
+.previewBar a { color: #fff; }
 
 .previewBar strong {
   color: var(--blue-dark);
@@ -42,8 +65,8 @@
 
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(390px, 0.72fr);
-  gap: clamp(34px, 6vw, 78px);
+  grid-template-columns: minmax(0, 0.94fr) minmax(430px, 1.06fr);
+  gap: clamp(42px, 7vw, 92px);
   align-items: center;
 }
 
@@ -56,6 +79,8 @@
   text-transform: uppercase;
 }
 
+.hero .eyebrow { color: #8fc2ff; }
+
 .heroCopy h1 {
   max-width: 760px;
   margin: 0;
@@ -67,7 +92,7 @@
 .heroIntro {
   max-width: 680px;
   margin: 20px 0 12px;
-  color: #42536a;
+  color: #ccdaec;
   font-size: clamp(1.02rem, 1.6vw, 1.2rem);
   line-height: 1.55;
 }
@@ -77,7 +102,7 @@
   align-items: center;
   gap: 7px;
   margin: 0;
-  color: #39704f;
+  color: #9cdeb9;
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -94,16 +119,21 @@
 .heroFacts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0;
   margin: 25px 0 0;
+  border-top: 1px solid rgba(205, 224, 247, 0.2);
+  border-bottom: 1px solid rgba(205, 224, 247, 0.2);
 }
 
 .heroFacts div {
   min-width: 0;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--line);
-  border-radius: 13px;
+  padding: 14px 18px;
+  border-left: 1px solid rgba(205, 224, 247, 0.2);
+}
+
+.heroFacts div:first-child {
+  padding-left: 0;
+  border-left: 0;
 }
 
 .heroFacts dt,
@@ -116,6 +146,8 @@
   text-transform: uppercase;
 }
 
+.heroFacts dt { color: #9fb6d1; }
+
 .heroFacts dd,
 .sourceFacts dd {
   margin: 0;
@@ -124,13 +156,13 @@
   line-height: 1.25;
 }
 
+.heroFacts dd { color: #fff; }
+
 .livePanel {
-  padding: clamp(22px, 3.3vw, 34px);
+  padding: 8px 0 8px clamp(30px, 4vw, 54px);
   color: #fff;
-  background: linear-gradient(145deg, #102f5d 0%, #0b438f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.17);
-  border-radius: 22px;
-  box-shadow: 0 25px 60px rgba(16, 54, 101, 0.2);
+  background: transparent;
+  border-left: 1px solid rgba(205, 224, 247, 0.22);
 }
 
 .liveHeader {
@@ -174,7 +206,7 @@
 
 .debtNumber {
   margin: 25px 0 7px;
-  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-size: clamp(2.25rem, 3.5vw, 3.35rem);
   font-variant-numeric: tabular-nums;
   font-weight: 830;
   line-height: 1;
@@ -247,6 +279,7 @@
 
 .chapterNav > div {
   display: flex;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -268,30 +301,32 @@
 .updateStrip {
   display: grid;
   grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2fr);
-  gap: 12px;
-  align-items: stretch;
-  margin-top: 34px;
+  gap: 24px 44px;
+  align-items: start;
+  margin-top: 42px;
+  padding: 0 0 32px;
+  border-bottom: 1px solid var(--line);
 }
 
 .updateHeading,
 .updateStrip dl,
 .updateStrip > p {
-  padding: 18px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .updateStrip dl {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0;
   margin: 0;
 }
 
 .updateStrip dl div {
   min-width: 0;
-  padding-left: 16px;
+  padding: 4px 20px;
   border-left: 1px solid var(--line);
 }
 
@@ -304,10 +339,12 @@
 .updateStrip dd { margin: 0; }
 
 .updateStrip > p {
-  grid-column: 1 / -1;
+  grid-column: 2;
   margin: 0;
+  padding-top: 14px;
   color: var(--muted);
   line-height: 1.5;
+  border-top: 1px solid var(--line);
 }
 
 .updateHeading h2,
@@ -344,10 +381,9 @@
 }
 
 .section {
-  padding: 62px 0;
+  padding: 54px 0;
 }
 
-.trendSection,
 .snapshot,
 .sources {
   border-top: 1px solid var(--line);
@@ -358,7 +394,7 @@
   align-items: end;
   justify-content: space-between;
   gap: 28px;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
 
 .sectionHeading > div:first-child {
@@ -391,28 +427,25 @@
 .trendLayout {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.65fr);
-  gap: 18px;
-}
-
-.chartCard,
-.metricCard,
-.euContext,
-.sources {
-  border: 1px solid var(--line);
-  border-radius: 18px;
+  gap: 0;
+  padding-bottom: 34px;
+  border-bottom: 1px solid var(--line);
 }
 
 .chartCard {
   min-width: 0;
-  padding: 20px;
-  background: #fff;
+  margin: 0;
+  padding: 0 34px 0 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .chartCard svg {
   display: block;
   width: 100%;
   height: auto;
-  min-height: 260px;
+  min-height: 250px;
 }
 
 .chartCard figcaption {
@@ -429,11 +462,12 @@
 .trendSummary {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 25px;
-  color: #fff;
-  background: linear-gradient(155deg, #112d52, #0c4f9f);
-  border-radius: 18px;
+  justify-content: flex-start;
+  padding: 8px 0 8px 34px;
+  color: var(--ink);
+  background: transparent;
+  border-left: 3px solid var(--blue);
+  border-radius: 0;
 }
 
 .trendSummary h3 {
@@ -443,20 +477,21 @@
 
 .trendSummary > p:first-child {
   margin: 0 0 8px;
-  color: #c5d9f0;
+  color: #52667f;
   font-size: 0.76rem;
   font-weight: 750;
   text-transform: uppercase;
 }
 
 .trendSummary > strong {
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  color: var(--blue-dark);
+  font-size: clamp(2.15rem, 4vw, 3.35rem);
   line-height: 1;
 }
 
 .trendSummary > span {
   margin-top: 8px;
-  color: #c5d9f0;
+  color: var(--muted);
 }
 
 .trendSummary > div {
@@ -469,10 +504,11 @@
 .trendSummary > div b { font-size: 1.35rem; }
 
 .trendSummary .contextNote { color: #c5d9f0; }
+.trendSummary .contextNote { color: var(--muted); }
 
 .trendSummary > a {
   margin-top: 20px;
-  color: #fff;
+  color: var(--blue);
   font-weight: 750;
 }
 
@@ -517,20 +553,38 @@
 .cardGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .metricCard {
   display: flex;
   flex-direction: column;
-  min-height: 225px;
-  padding: 24px;
-  background: #fff;
+  min-height: 0;
+  padding: 24px 30px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .metricCard:last-child {
   grid-column: 1 / -1;
-  min-height: 205px;
+  min-height: 0;
+  border-top: 1px solid var(--line);
+}
+
+.metricCard:nth-child(odd):not(:last-child) {
+  padding-left: 0;
+  border-right: 1px solid var(--line);
+}
+
+.metricCard:nth-child(even) {
+  padding-right: 0;
+}
+
+.metricCard:nth-child(n + 3):not(:last-child) {
+  border-top: 1px solid var(--line);
 }
 
 .metricCard > div:first-child > p {
@@ -560,15 +614,15 @@
 }
 
 .metricText {
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.42;
 }
 
 .metricCard > a {
-  margin-top: auto;
-  padding-top: 20px;
+  margin-top: 14px;
+  padding-top: 0;
   color: var(--blue);
   font-weight: 760;
   font-size: 0.92rem;
@@ -578,13 +632,20 @@
 .accountValues {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0;
+  max-width: 520px;
 }
 
 .accountValues div {
-  padding: 13px;
-  background: var(--surface);
-  border-radius: 12px;
+  padding: 0 22px;
+  background: transparent;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.accountValues div:first-child {
+  padding-left: 0;
+  border-left: 0;
 }
 
 .accountValues span {
@@ -609,21 +670,25 @@
 
 .euContext {
   display: block;
-  padding: clamp(24px, 4vw, 44px);
-  background: var(--surface);
+  padding: clamp(38px, 5vw, 58px) clamp(24px, 5vw, 58px);
+  background: linear-gradient(110deg, #f2f7fd 0%, #f8fbff 100%);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
 }
 
 .rankBadge {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin-top: 18px;
-  padding: 8px 11px;
+  margin: 0;
+  padding: 0 0 0 28px;
   color: var(--blue-dark);
   font-size: 0.8rem;
   font-weight: 780;
-  background: #e3efff;
-  border-radius: 999px;
+  background: transparent;
+  border-left: 1px solid #bfd1e5;
+  border-radius: 0;
 }
 
 .rankBadge span,
@@ -631,7 +696,7 @@
 
 .rankBadge strong {
   margin: 2px 0;
-  font-size: 1.2rem;
+  font-size: 1.55rem;
 }
 
 .ratioChart {
@@ -692,23 +757,34 @@
 .sources {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
-  gap: 26px;
-  margin-bottom: 72px;
-  padding: clamp(24px, 4vw, 42px);
-  background: #fff;
+  gap: 28px 54px;
+  margin-bottom: 0;
+  padding: 58px 0;
+  background: transparent;
+  border-right: 0;
+  border-bottom: 1px solid var(--line);
+  border-left: 0;
+  border-radius: 0;
 }
 
 .sourceFacts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 0;
   margin: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .sourceFacts div {
-  padding: 13px;
-  background: var(--surface);
-  border-radius: 12px;
+  padding: 13px 0;
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.sourceFacts div:last-child {
+  border-bottom: 0;
 }
 
 .sourceLinks {
@@ -752,6 +828,28 @@
   margin-top: 54px;
 }
 
+.countryContext :global(.card) {
+  margin: 0 !important;
+  padding: 32px 0 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.countryContext :global(.card h3) {
+  margin: 0 0 14px;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+}
+
+.countryContext :global(.card p) {
+  max-width: 780px;
+  color: var(--muted) !important;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
 .shareWrap {
   padding-bottom: 72px;
 }
@@ -771,13 +869,12 @@
 
   .heroGrid,
   .trendLayout,
-  .euContext,
   .sources {
     grid-template-columns: 1fr;
   }
 
   .heroGrid {
-    gap: 24px;
+    gap: 34px;
   }
 
   .heroCopy h1 {
@@ -792,19 +889,38 @@
     grid-column: 1 / -1;
   }
 
+  .heroFacts div:nth-child(3) {
+    padding-left: 0;
+    border-top: 1px solid rgba(205, 224, 247, 0.2);
+    border-left: 0;
+  }
+
+  .livePanel {
+    padding: 30px 0 0;
+    border-top: 1px solid rgba(205, 224, 247, 0.22);
+    border-left: 0;
+  }
+
   .chapterNav {
     position: static;
   }
 
-  .chapterNav > div { overflow-x: auto; scrollbar-width: none; }
+  .chapterNav > div {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow: visible;
+  }
 
   .chapterNav a {
-    flex: 0 0 auto;
+    flex: 1 0 calc(33.333% - 8px);
+    text-align: center;
   }
 
   .updateStrip {
     grid-template-columns: 1fr;
   }
+
+  .updateStrip > p { grid-column: 1; }
 
   .section {
     padding: 48px 0;
@@ -812,6 +928,12 @@
 
   .cardGrid {
     grid-template-columns: 1fr;
+  }
+
+  .trendSummary {
+    padding: 26px 0 0;
+    border-top: 3px solid var(--blue);
+    border-left: 0;
   }
 
   .metricCard:last-child {
@@ -840,7 +962,7 @@
   }
 
   .hero {
-    padding-bottom: 30px;
+    padding-bottom: 34px;
   }
 
   .heroIntro {
@@ -854,7 +976,7 @@
   }
 
   .heroFacts div {
-    padding: 11px;
+    padding: 11px 13px;
   }
 
   .heroFacts dd {
@@ -862,8 +984,8 @@
   }
 
   .livePanel {
-    padding: 20px 17px;
-    border-radius: 17px;
+    padding: 24px 0 0;
+    border-radius: 0;
   }
 
   .liveHeader {
@@ -876,20 +998,30 @@
   }
 
   .chapterNav {
-    margin-inline: -12px;
-    padding-inline: 12px;
+    margin-inline: 0;
+    padding: 9px 0;
+  }
+
+  .chapterNav > div {
+    gap: 4px;
+  }
+
+  .chapterNav a {
+    padding: 7px 4px;
+    font-size: 0.7rem;
   }
 
   .updateStrip {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 20px;
     margin-top: 24px;
+    padding-bottom: 30px;
   }
 
   .updateHeading,
   .updateStrip dl,
   .updateStrip > p {
-    padding: 14px;
+    padding: 0;
   }
 
   .updateStrip dl {
@@ -904,7 +1036,7 @@
     grid-template-columns: 1fr auto;
     gap: 10px;
     align-items: baseline;
-    padding: 0 0 10px;
+    padding: 10px 0;
     border: 0;
     border-bottom: 1px solid var(--line);
   }
@@ -919,7 +1051,7 @@
   }
 
   .section {
-    padding: 40px 0;
+    padding: 36px 0;
   }
 
   .sectionHeading {
@@ -930,35 +1062,108 @@
   }
 
   .chartCard {
-    padding: 12px 8px;
+    padding: 0;
   }
 
   .chartCard svg {
-    min-height: 210px;
+    width: calc(100% + 16px);
+    min-height: 190px;
+    margin-left: -8px;
   }
 
-  .trendSummary,
-  .metricCard {
-    padding: 18px;
+  .chartCard svg text { font-size: 16px; }
+
+  .trendLayout {
+    padding-bottom: 30px;
+  }
+
+  .trendSummary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: 4px 20px;
+    padding: 22px 0 0;
+  }
+
+  .trendSummary > p:first-child { grid-column: 1; grid-row: 1; }
+  .trendSummary > strong { grid-column: 1; grid-row: 2; }
+  .trendSummary > span { grid-column: 1; grid-row: 3; }
+
+  .trendSummary > div {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: end;
+    margin-top: 0;
+  }
+
+  .trendSummary .contextNote,
+  .trendSummary > a {
+    grid-column: 1 / -1;
+  }
+
+  .trendSummary > a {
+    margin-top: 14px;
   }
 
   .metricCard,
   .metricCard:last-child {
     min-height: 0;
+    padding: 24px 0;
+    border-right: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .metricCard > div:first-child {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: end;
+  }
+
+  .metricCard > div:first-child > p,
+  .metricCard > div:first-child > .accountValues {
+    grid-column: 1 / -1;
+  }
+
+  .metricCard > div:first-child > p {
+    margin-bottom: 8px;
+  }
+
+  .metricCard > div:first-child > span {
+    margin: 0 0 2px;
+    text-align: right;
+  }
+
+  .metricCard:first-child {
+    border-top: 0;
   }
 
   .metricCard > a {
-    padding-top: 16px;
+    margin-top: 12px;
+    padding-top: 0;
   }
 
   .accountValues,
+  .sourceFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .sourceFacts {
     grid-template-columns: 1fr;
   }
 
   .euContext {
-    gap: 24px;
-    padding: 22px 18px;
+    padding: 32px 18px;
+  }
+
+  .euContext .sectionHeading {
+    gap: 12px;
+  }
+
+  .rankBadge {
+    align-items: flex-start;
+    padding: 12px 0 0;
+    border-top: 1px solid #bfd1e5;
+    border-left: 0;
   }
 
   .ratioRow {
@@ -974,8 +1179,8 @@
 
   .sources {
     gap: 20px;
-    margin-bottom: 52px;
-    padding: 22px 18px;
+    margin-bottom: 0;
+    padding: 40px 0;
   }
 
   .countryContext,
