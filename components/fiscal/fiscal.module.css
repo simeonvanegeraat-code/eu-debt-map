@@ -49,11 +49,11 @@
   line-height: var(--type-heading-leading, 1.2);
 }
 .mapLayout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .48fr); gap: 36px; align-items: start; }
-.mapFrame { position: relative; aspect-ratio: 800 / 520; background: #edf2f7; isolation: isolate; }
+.mapFrame { position: relative; aspect-ratio: 800 / 520; background: transparent; isolation: isolate; }
 .mapFallback { position: absolute; inset: 38% 12% auto; font-size: 14px; text-align: center; color: #52627a; z-index: -1; }
 .mapFrame:has(.mapSvg) .mapFallback { display: none; }
 .page h2[id] { scroll-margin-top: 100px; }
-.mapSvg { position: relative; width: 100%; height: auto; display: block; background: #edf2f7; }
+.mapSvg { position: relative; width: 100%; height: auto; display: block; background: transparent; }
 .mapCountry { cursor: pointer; }
 .mapCountry:hover, .mapCountry:focus-visible { stroke: #07182f; stroke-width: 3px; outline: none; filter: brightness(.87); }
 .smallCountries { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
