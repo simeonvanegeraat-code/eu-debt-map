@@ -135,7 +135,7 @@
 .countryMetrics dd { font-size: 30px; font-weight: 600; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
 .countryMetrics small { color: #52627a; font-size: 12px; }
 .page sup, .countryBalance sup { font-size: .6em; margin-left: 2px; }
-.page :is(a, button, input, select, summary, [tabindex]):focus-visible, .source :is(a, summary):focus-visible, .countryBalance :is(a, summary):focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
+.page :is(a, button, input, select, summary, [tabindex]:not(.mapCountry)):focus-visible, .source :is(a, summary):focus-visible, .countryBalance :is(a, summary):focus-visible { outline: 3px solid #2868db; outline-offset: 4px; }
 @media (max-width: 850px) {
   .mapLayout { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .countryPanel { padding: 24px; }

@@ -1,10 +1,9 @@
 import { balanceBand } from "@/lib/fiscal/balance-core";
+import { MAP_BALANCE_COLORS } from "@/lib/map-colors";
 import { getBalanceCopy, formatFiscal } from "./balance-copy";
 import styles from "./fiscal.module.css";
 
-export const BALANCE_COLORS = {
-  surplus: "#287c68", balanced: "#8296ad", smallDeficit: "#bd934c", largeDeficit: "#b95059", missing: "#d8dee8",
-};
+export const BALANCE_COLORS = MAP_BALANCE_COLORS;
 
 export default function BalanceTrend({ points, lang = "en", name }) {
   const copy = getBalanceCopy(lang);

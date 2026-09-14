@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ACCOUNTS, accountRows, accountPoints, accountBand, accountChange } from "@/lib/fiscal/accounts";
 import { countryName } from "@/lib/countries";
 import { fiscalPath } from "@/lib/fiscal/paths";
+import { MAP_ACCOUNT_BALANCE_COLORS, MAP_SCALE_COLORS } from "@/lib/map-colors";
 import { getAccountsCopy, accountNumber } from "./accounts-copy";
 import IndicatorRanking from "./IndicatorRanking";
 import AccountsHistory from "./AccountsHistory";
@@ -13,8 +14,8 @@ import styles from "./accounts.module.css";
 import fiscal from "./fiscal.module.css";
 
 const IndicatorMap = dynamic(() => import("./IndicatorMap"), { ssr: false });
-const SIZE = { low: "#c7daf8", medium: "#85b1f3", high: "#3478dc", highest: "#123b80", missing: "#d8dee8" };
-const BALANCE = { surplus: "#24746d", deficit: "#88ace0", largeDeficit: "#b76946", missing: "#d8dee8" };
+const SIZE = MAP_SCALE_COLORS;
+const BALANCE = MAP_ACCOUNT_BALANCE_COLORS;
 
 export default function AccountsExplorer({ snapshot, comparisons, lang = "en" }) {
   const [code, setCode] = useState("NL"), [mode, setMode] = useState("expenditureRatio");

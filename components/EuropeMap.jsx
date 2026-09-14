@@ -6,19 +6,20 @@ import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import geographyData from "@/public/maps/countries-110m.json";
 import { countries as DATA, livePerSecondFor } from "@/lib/data";
 import { getLocaleFromPathname, withLocale } from "@/lib/locale";
+import { MAP_DEBT_TREND_COLORS } from "@/lib/map-colors";
 
 
 const STYLE = {
   stroke: "#ffffff",
   strokeWidth: 0.7,
 
-  colorRising: "#ef4444",
-  colorRisingSoft: "#f87171",
+  colorRising: MAP_DEBT_TREND_COLORS.rising,
+  colorRisingSoft: MAP_DEBT_TREND_COLORS.risingSoft,
 
-  colorFalling: "#22c55e",
-  colorFallingSoft: "#34d399",
+  colorFalling: MAP_DEBT_TREND_COLORS.falling,
+  colorFallingSoft: MAP_DEBT_TREND_COLORS.fallingSoft,
 
-  colorNoData: "#cbd5e1",
+  colorNoData: MAP_DEBT_TREND_COLORS.flat,
   hoverColor: "#2563eb",
 };
 
@@ -465,11 +466,11 @@ export default function EuropeMap() {
         }
 
         .eu-map-tooltip-row strong.is-rising {
-          color: #dc2626;
+          color: ${MAP_DEBT_TREND_COLORS.rising};
         }
 
         .eu-map-tooltip-row strong.is-falling {
-          color: #16a34a;
+          color: ${MAP_DEBT_TREND_COLORS.falling};
         }
 
         @media (max-width: 820px) {

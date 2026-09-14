@@ -5,11 +5,12 @@ import Link from "next/link";
 import { countryName } from "@/lib/countries";
 import { fiscalPath } from "@/lib/fiscal/paths";
 import { perCapitaBand } from "@/lib/fiscal/per-capita";
+import { MAP_SCALE_COLORS } from "@/lib/map-colors";
 import { capitaNumber, getPerCapitaCopy } from "./per-capita-copy";
 import styles from "./fiscal.module.css";
 
 const IndicatorMap = dynamic(() => import("./IndicatorMap"), { ssr: false });
-const COLORS = { low: "#c7daf8", medium: "#85b1f3", high: "#3478dc", highest: "#123b80", missing: "#d8dee8" };
+const COLORS = MAP_SCALE_COLORS;
 
 export default function PerCapitaExplorer({ rows, debtYear, populationYear, lang = "en" }) {
   const copy = getPerCapitaCopy(lang);

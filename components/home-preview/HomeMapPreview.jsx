@@ -6,33 +6,34 @@ import { nameToIso2 } from "@/lib/eu-map-geography";
 import geographyData from "@/public/maps/countries-110m.json";
 import { countries, trendFor } from "@/lib/data";
 import { countryName } from "@/lib/countries";
+import { MAP_DEBT_TREND_COLORS, MAP_SCALE_COLORS } from "@/lib/map-colors";
 import { getHomePreviewCopy } from "./home-preview-copy";
 import styles from "./home-preview.module.css";
 
 function ratioFill(value) {
-  if (!Number.isFinite(value)) return "#d8dee8";
-  if (value < 60) return "#c7daf8";
-  if (value < 90) return "#85b1f3";
-  if (value < 120) return "#3478dc";
-  return "#123b80";
+  if (!Number.isFinite(value)) return MAP_SCALE_COLORS.missing;
+  if (value < 60) return MAP_SCALE_COLORS.low;
+  if (value < 90) return MAP_SCALE_COLORS.medium;
+  if (value < 120) return MAP_SCALE_COLORS.high;
+  return MAP_SCALE_COLORS.highest;
 }
 
 function trendFill(value) {
-  if (!Number.isFinite(value)) return "#d8dee8";
-  if (value < -5_000_000_000) return "#27b88a";
-  if (value < 0) return "#8adfc4";
-  if (value < 5_000_000_000) return "#d7dee9";
-  if (value < 30_000_000_000) return "#f3a3a7";
-  return "#d9545c";
+  if (!Number.isFinite(value)) return MAP_DEBT_TREND_COLORS.flat;
+  if (value < -5_000_000_000) return MAP_DEBT_TREND_COLORS.falling;
+  if (value < 0) return MAP_DEBT_TREND_COLORS.fallingSoft;
+  if (value < 5_000_000_000) return MAP_SCALE_COLORS.low;
+  if (value < 30_000_000_000) return MAP_DEBT_TREND_COLORS.risingSoft;
+  return MAP_DEBT_TREND_COLORS.rising;
 }
 
 function totalFill(value, maxValue) {
-  if (!Number.isFinite(value) || value <= 0 || maxValue <= 0) return "#d8dee8";
+  if (!Number.isFinite(value) || value <= 0 || maxValue <= 0) return MAP_SCALE_COLORS.missing;
   const normalized = Math.log10(value) / Math.log10(maxValue);
-  if (normalized < 0.78) return "#d7e4f8";
-  if (normalized < 0.9) return "#90b7ee";
-  if (normalized < 0.97) return "#4b83d6";
-  return "#173f7f";
+  if (normalized < 0.78) return MAP_SCALE_COLORS.low;
+  if (normalized < 0.9) return MAP_SCALE_COLORS.medium;
+  if (normalized < 0.97) return MAP_SCALE_COLORS.high;
+  return MAP_SCALE_COLORS.highest;
 }
 
 function metricText(country, mode, locale) {
