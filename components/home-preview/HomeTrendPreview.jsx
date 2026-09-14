@@ -84,8 +84,8 @@ export default function HomeTrendPreview({ lang, copy, rows = [], provisional = 
         >
           <defs>
             <linearGradient id="home-trend-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#5ce5bf" stopOpacity="0.34" />
-              <stop offset="1" stopColor="#5ce5bf" stopOpacity="0" />
+              <stop offset="0" stopColor="#ffffff" stopOpacity="0.24" />
+              <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
           </defs>
           {[0.2, 0.5, 0.8].map((fraction) => (

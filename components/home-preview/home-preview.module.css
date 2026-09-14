@@ -3,7 +3,7 @@
   --ink: #071b39;
   --ink-soft: #18395f;
   --blue: #2868f0;
-  --mint: #5ce5bf;
+  --mint: #fff;
   --paper: var(--surface-page);
   --line: #d9e1ec;
   min-height: 100vh;
@@ -801,7 +801,7 @@
 }
 
 .trendCta b { font-size: 1.35rem; font-weight: 400; }
-.trendCta:hover { background: #8df0d4; }
+.trendCta:hover { background: #edf3fa; }
 
 .trendChart {
   min-width: 0;

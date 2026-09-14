@@ -145,7 +145,7 @@ export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
                       data-country={iso2}
                       onMouseEnter={() => previewCountry(iso2)}
                       onMouseLeave={() => onPreview(null)}
-                      stroke={isActive ? "#5ce5bf" : "#ffffff"}
+                      stroke="#ffffff"
                       strokeWidth={isActive ? 2.2 : 0.8}
                       style={{
                         default: {
@@ -166,7 +166,7 @@ export default function HomeMapPreview({ lang, mode, activeCode, onPreview }) {
                           filter: "drop-shadow(0 7px 12px rgba(8, 31, 65, 0.22))",
                         },
                         pressed: {
-                          fill: "#5ce5bf",
+                          fill: "#ffffff",
                           outline: "none",
                           stroke: "#071b39",
                           strokeWidth: 1.8,
