@@ -1137,10 +1137,11 @@
   }
 
   .countryQuickNav {
-    grid-template-columns: repeat(3, minmax(150px, 1fr));
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .countryQuickNav a:nth-child(n + 3) {
+    display: none;
   }
 
   .liveHeader {
