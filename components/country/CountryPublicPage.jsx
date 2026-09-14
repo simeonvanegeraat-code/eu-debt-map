@@ -37,6 +37,7 @@ export default function CountryPublicPage({
       lang={safeLang}
       title={title}
       displayName={displayName}
+      countryNavigationBase={`${localeBase(safeLang)}/country`}
       breadcrumbSlot={breadcrumbSlot}
       introSlot={introSlot}
       relatedArticleSlot={relatedArticleSlot}

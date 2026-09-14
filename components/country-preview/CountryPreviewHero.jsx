@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { interpolateDebt } from "@/lib/data";
+import { countries, interpolateDebt } from "@/lib/data";
+import { countryName } from "@/lib/countries";
 import { getCountryCopy, localeBase, localeFor } from "@/components/country/country-copy";
 import styles from "./country-preview.module.css";
 
@@ -12,11 +13,35 @@ function formatQuarter(value, lang) {
   return lang === "fr" ? `T${match[2]} ${match[1]}` : `${match[1]} Q${match[2]}`;
 }
 
-export default function CountryPreviewHero({ country, name, title, rank, count, lang = "en", breadcrumbSlot = null, isPreview }) {
+const NAV_COPY = {
+  en: { label: "Explore another country", compare: "Compare" },
+  nl: { label: "Bekijk een ander land", compare: "Vergelijk" },
+  de: { label: "Anderes Land ansehen", compare: "Vergleichen" },
+  fr: { label: "Voir un autre pays", compare: "Comparer" },
+};
+
+function navigationCountries(currentCode, lang) {
+  const sorted = [...countries].sort((a, b) =>
+    countryName(a.code, lang).localeCompare(countryName(b.code, lang), localeFor(lang))
+  );
+  const currentIndex = sorted.findIndex((item) => item.code === currentCode);
+  const next = currentIndex >= 0 ? sorted[(currentIndex + 1) % sorted.length] : null;
+  const featured = ["DE", "FR", "IT", "ES", "NL"]
+    .map((code) => countries.find((item) => item.code === code))
+    .filter((item) => item && item.code !== currentCode && item.code !== next?.code)
+    .slice(0, 2);
+
+  return [...featured, ...(next ? [next] : [])];
+}
+
+export default function CountryPreviewHero({ country, name, title, rank, count, lang = "en", breadcrumbSlot = null, isPreview, countryNavigationBase = null }) {
   const locale = localeFor(lang);
   const copy = getCountryCopy(lang);
   const number = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }), [locale]);
   const compact = useMemo(() => new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 2 }), [locale]);
+  const navigationMoney = useMemo(() => new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 0,
+  }), [locale]);
   const ratio = useMemo(() => new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [locale]);
   const [now, setNow] = useState(() => Date.now());
   const [showOfficial, setShowOfficial] = useState(false);
@@ -33,6 +58,8 @@ export default function CountryPreviewHero({ country, name, title, rank, count, 
   const shownDebt = showOfficial ? officialDebt : liveDebt;
   const period = formatQuarter(country.official_latest_time, lang);
   const base = localeBase(lang);
+  const navCopy = NAV_COPY[lang] || NAV_COPY.en;
+  const navigation = countryNavigationBase ? navigationCountries(country.code, lang) : [];
 
   return (
     <header className={styles.hero} id="debt-now">
@@ -76,6 +103,19 @@ export default function CountryPreviewHero({ country, name, title, rank, count, 
                 ? copy.officialObservation
                 : copy.methodWarning}
             </p>
+            {navigation.length ? (
+              <nav className={styles.countryQuickNav} aria-label={navCopy.label}>
+                {navigation.map((item) => (
+                  <Link href={`${countryNavigationBase}/${item.code.toLowerCase()}`} key={item.code}>
+                    <span>
+                      <small>{navCopy.compare}</small>
+                      <strong>{countryName(item.code, lang)}</strong>
+                    </span>
+                    <b>€{navigationMoney.format(Number(item.last_value_eur) / 1_000_000_000)}bn</b>
+                  </Link>
+                ))}
+              </nav>
+            ) : null}
           </section>
 
           <div className={styles.heroMeta}>

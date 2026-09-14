@@ -71,6 +71,7 @@ export default function CountryPreviewExperience({
   shareSlot = null,
   adSlot = null,
   isPreview = false,
+  countryNavigationBase = null,
 }) {
   const name = displayName || countryName(country.code, lang);
   const locale = localeFor(lang);
@@ -101,7 +102,17 @@ export default function CountryPreviewExperience({
 
   return (
     <article className={`${styles.page} ${typography.page}`} lang={lang}>
-      <CountryPreviewHero country={country} name={name} title={title} rank={rank} count={rankedDebt.length} lang={lang} breadcrumbSlot={breadcrumbSlot} isPreview={isPreview} />
+      <CountryPreviewHero
+        country={country}
+        name={name}
+        title={title}
+        rank={rank}
+        count={rankedDebt.length}
+        lang={lang}
+        breadcrumbSlot={breadcrumbSlot}
+        isPreview={isPreview}
+        countryNavigationBase={countryNavigationBase}
+      />
 
       <nav className={styles.chapterNav} aria-label={copy.pageNav}>
         <div className={styles.shell}>

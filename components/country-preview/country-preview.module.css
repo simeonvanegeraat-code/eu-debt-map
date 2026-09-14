@@ -275,6 +275,63 @@
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.countryQuickNav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.countryQuickNav a {
+  display: flex;
+  min-width: 0;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(191, 218, 251, 0.24);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.countryQuickNav a:hover,
+.countryQuickNav a:focus-visible {
+  border-color: rgba(191, 218, 251, 0.58);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.countryQuickNav span {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.countryQuickNav small {
+  color: #9fb8d8;
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.countryQuickNav strong {
+  overflow: hidden;
+  font-size: 0.79rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.countryQuickNav b {
+  flex: 0 0 auto;
+  color: #8fc2ff;
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .chapterNav {
   position: sticky;
   z-index: 120;
@@ -971,6 +1028,11 @@
     border-left: 0;
   }
 
+  .countryQuickNav a {
+    min-height: 58px;
+    padding-inline: 10px;
+  }
+
   .chapterNav > div {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -1072,6 +1134,13 @@
   .livePanel {
     padding: 24px 0 0;
     border-radius: 0;
+  }
+
+  .countryQuickNav {
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
   }
 
   .liveHeader {
