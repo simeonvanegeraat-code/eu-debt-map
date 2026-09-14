@@ -96,6 +96,7 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
   const activeCountry = activeCode ? data.byCode.get(activeCode) : null;
   const activeName = activeCountry?.localizedName;
   const currentHomeHref = copy.base || "/";
+  const countryDirectoryHref = `${preview ? previewHref(lang) : currentHomeHref}#country-directory`;
 
   function selectCountry(code) {
     setSelectedCode(code || null);
@@ -265,7 +266,7 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
                   </div>
                 </dl>
 
-                <Link className={styles.countryCta} href={currentHomeHref}>
+                <Link className={styles.countryCta} href={countryDirectoryHref}>
                   <span>{copy.exploreCountries}</span>
                   <b aria-hidden="true">→</b>
                 </Link>
@@ -303,7 +304,7 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
         <p className={styles.officialNote}>{copy.officialNote}</p>
 
         <section className={styles.countryDirectory} aria-labelledby="country-directory-title">
-          <header>
+          <header id="country-directory">
             <p className={styles.eyebrow}>{copy.countryDirectoryEyebrow}</p>
             <h2 id="country-directory-title">{copy.countryDirectoryTitle}</h2>
             <p>{copy.countryDirectoryIntro}</p>

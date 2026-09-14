@@ -675,6 +675,16 @@
   border-top: 1px solid #d4deea;
 }
 
+.countryDirectory header {
+  scroll-margin-top: calc(79px + 0.5cm);
+}
+
+@media (max-width: 1179px) {
+  .countryDirectory header {
+    scroll-margin-top: calc(73px + 0.5cm);
+  }
+}
+
 .countryDirectory header h2 {
   max-width: 12ch;
   margin: 14px 0 16px;
