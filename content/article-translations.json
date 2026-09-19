@@ -60,5 +60,11 @@
   "france-debt-live-counter": {
     "nl": "franse-staatsschuld-live-teller-record",
     "fr": "dette-publique-france-compteur-live-record"
+  },
+  "france-record-debt-2027": {
+    "en": "france-record-debt-121-7-percent-2027",
+    "nl": "frankrijk-recordschuld-121-7-procent-2027",
+    "de": "frankreich-rekordschulden-121-7-prozent-2027",
+    "fr": "dette-france-record-121-7-pour-cent-2027"
   }
 }
