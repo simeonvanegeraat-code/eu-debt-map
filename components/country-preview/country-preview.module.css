@@ -327,7 +327,7 @@
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: country-card-glow 8.3s linear infinite both;
+  animation: country-card-glow 6.8s linear infinite both;
 }
 
 .countryQuickNavGlow a:nth-child(1)::after { animation-delay: 0.45s; }
@@ -339,9 +339,9 @@
     --country-glow-angle: 0deg;
     opacity: 0;
   }
-  1.2% { opacity: 1; }
-  11.7% { opacity: 1; }
-  13.25% {
+  1.5% { opacity: 1; }
+  14.3% { opacity: 1; }
+  16.2% {
     --country-glow-angle: 360deg;
     opacity: 0;
   }
