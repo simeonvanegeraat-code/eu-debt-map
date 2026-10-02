@@ -9,12 +9,15 @@ function formatValue(value, locale, format, compact, signed) {
   if (!Number.isFinite(value)) return "—";
 
   if (format === "currency") {
-    return new Intl.NumberFormat(locale, {
+    const formatted = new Intl.NumberFormat(locale, {
       style: "currency",
       currency: "EUR",
       notation: compact ? "compact" : "standard",
       maximumFractionDigits: compact ? 2 : 0,
-    }).format(value);
+    }).format(signed ? Math.abs(value) : value);
+    if (signed && value > 0) return `+${formatted}`;
+    if (signed && value < 0) return `−${formatted}`;
+    return formatted;
   }
 
   const normalizedValue = Math.abs(value) < 0.05 ? 0 : value;
@@ -32,13 +35,14 @@ export default function AnimatedMetricValue({
   format = "percent",
   compact = false,
   signed = false,
+  suffix = "",
 }) {
   const target = Number(value);
   const fallbackText = useMemo(
     () => formatValue(target, locale, format, compact, signed),
     [compact, format, locale, signed, target]
   );
-  const finalText = formattedValue || fallbackText;
+  const finalText = `${formattedValue || fallbackText}${suffix}`;
   const [displayValue, setDisplayValue] = useState(target);
   const elementRef = useRef(null);
   const hasAnimatedRef = useRef(false);
@@ -87,7 +91,7 @@ export default function AnimatedMetricValue({
       <span aria-hidden="true">
         {displayValue === target
           ? finalText
-          : formatValue(displayValue, locale, format, compact, signed)}
+          : `${formatValue(displayValue, locale, format, compact, signed)}${suffix}`}
       </span>
     </span>
   );

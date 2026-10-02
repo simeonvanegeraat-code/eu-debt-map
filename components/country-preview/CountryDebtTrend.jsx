@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { endpointChange, shiftQuarter, trendSegments } from "@/lib/fiscal/growth";
 import { localeFor } from "@/components/country/country-copy";
 import { getCountryRedesignCopy } from "./country-redesign-copy";
+import AnimatedMetricValue from "./AnimatedMetricValue";
 import styles from "./country-preview.module.css";
 
 const HORIZONS = [1, 5, 10];
@@ -41,7 +42,7 @@ function signed(value, locale, suffix = "") {
   return `${value > 0 ? "+" : ""}${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value)}${suffix}`;
 }
 
-export default function CountryDebtTrend({ points, name, latestQuarter, ratio, rank, count, median, growthRank, growthLink, ratioLink, lang = "en" }) {
+export default function CountryDebtTrend({ points, name, latestQuarter, ratio, rank, count, median, growthRank, growthLink, ratioLink, lang = "en", animateMetrics = false }) {
   const locale = localeFor(lang);
   const copy = getCountryRedesignCopy(lang);
   const [years, setYears] = useState(5);
@@ -105,8 +106,8 @@ export default function CountryDebtTrend({ points, name, latestQuarter, ratio, r
         <aside className={styles.debtReading} aria-live="polite">
           <div className={styles.movementSummary}>
             <p>{copy.yearChange(years)}</p>
-            <strong>{signed(debtChange.percent, locale, "%")}</strong>
-            <span>{formatDebt(debtChange.change, locale)} {copy.debtChange}</span>
+            <strong>{animateMetrics ? <AnimatedMetricValue key={`growth-percent-${years}`} value={debtChange.percent} locale={locale} formattedValue={signed(debtChange.percent, locale)} signed suffix="%" /> : signed(debtChange.percent, locale, "%")}</strong>
+            <span>{animateMetrics ? <AnimatedMetricValue key={`growth-debt-${years}`} value={debtChange.change} locale={locale} formattedValue={formatDebt(debtChange.change, locale)} format="currency" compact /> : formatDebt(debtChange.change, locale)} {copy.debtChange}</span>
             <dl>
               <div><dt>{copy.ratioChange}</dt><dd>{signed(ratioChange.change, locale, " pp")}</dd></div>
               <div><dt>{copy.growthRank}</dt><dd>#{growthRank} / {count}</dd></div>

@@ -106,12 +106,13 @@ export default function CountryPreviewExperience({
     <AnimatedMetricValue
       value={value}
       locale={locale}
-      formattedValue={format === "currency"
+      formattedValue={options.formattedValue || (format === "currency"
         ? money(value, locale, options.compact)
-        : percent(value, locale, options.signed)}
+        : percent(value, locale, options.signed))}
       format={format}
       compact={options.compact}
       signed={options.signed}
+      suffix={options.suffix}
     />
   ) : format === "currency"
     ? money(value, locale, options.compact)
@@ -152,9 +153,9 @@ export default function CountryPreviewExperience({
           <div className={styles.officialUpdate}>
             <p>{redesign.latestQuarter}</p>
             <dl>
-              <div><dt>{redesign.officialDebt}</dt><dd>{money(officialDebt, locale)}</dd><small>{latestQuarter}</small></div>
-              <div><dt>{redesign.quarterlyChange}</dt><dd>{quarterChange > 0 ? "+" : ""}{money(quarterChange, locale)}</dd><small>{previousQuarter} → {latestQuarter}</small></div>
-              <div><dt>{redesign.modelledPace}</dt><dd>{pace > 0 ? "+" : pace < 0 ? "−" : ""}{money(Math.abs(pace), locale, false)}/s</dd><small>{redesign.paceBasis}</small></div>
+              <div><dt>{redesign.officialDebt}</dt><dd>{metricValue(officialDebt, "currency", { compact: true })}</dd><small>{latestQuarter}</small></div>
+              <div><dt>{redesign.quarterlyChange}</dt><dd>{metricValue(quarterChange, "currency", { compact: true, signed: true, formattedValue: `${quarterChange > 0 ? "+" : ""}${money(quarterChange, locale)}` })}</dd><small>{previousQuarter} → {latestQuarter}</small></div>
+              <div><dt>{redesign.modelledPace}</dt><dd>{metricValue(pace, "currency", { compact: false, signed: true, formattedValue: `${pace > 0 ? "+" : pace < 0 ? "−" : ""}${money(Math.abs(pace), locale, false)}`, suffix: "/s" })}</dd><small>{redesign.paceBasis}</small></div>
             </dl>
             <span>{redesign.paceNote}</span>
           </div>
@@ -169,6 +170,7 @@ export default function CountryPreviewExperience({
             median={median}
             growthRank={growthRank.rank}
             lang={lang}
+            animateMetrics={animateSnapshotMetrics}
             growthLink={<Link href={fiscalPath("/debt-growth", lang)}>{redesign.growthCta(name)} <span aria-hidden="true">→</span></Link>}
             ratioLink={<Link href={fiscalPath("/debt-to-gdp", lang)}>{redesign.rankingCta} <span aria-hidden="true">→</span></Link>}
           />
