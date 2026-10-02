@@ -35,7 +35,7 @@ export default function InterestPage({ lang = "en" }) {
   ] };
   return <article className={`${styles.page} ${editorialDisplay.variable}`} lang={lang}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph).replace(/</g, "\\u003c") }} />
-    <header className={styles.hero}><div className={styles.shell}><p className={styles.eyebrow}>{copy.eyebrow}</p><h1>{copy.title}</h1><p className={styles.intro}>{copy.intro}</p><p className={styles.period}>{copy.official}</p>
+    <header className={styles.hero}><div className={styles.shell}><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 className={styles.compactHeroTitle}>{copy.title}</h1><p className={styles.intro}>{copy.intro}</p><p className={styles.period}>{copy.official}</p>
       <dl className={styles.heroStats}><div><dt>{copy.year}</dt><dd>{snapshot.latestYear}</dd></div><div><dt>{copy.total}</dt><dd style={{ fontSize: "clamp(28px,3.3vw,46px)" }}>{interestNumber(aggregate?.amount, lang, "compact")}<sup>{aggregate?.amountStatus}</sup></dd></div><div><dt>{copy.countries}</dt><dd>27 <span>EU</span></dd></div></dl>
     </div></header>
     <div className={styles.shell}><p className={styles.note}>{copy.weighted}</p></div>
