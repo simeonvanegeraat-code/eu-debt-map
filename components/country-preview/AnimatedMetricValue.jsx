@@ -28,15 +28,17 @@ function formatValue(value, locale, format, compact, signed) {
 export default function AnimatedMetricValue({
   value,
   locale,
+  formattedValue,
   format = "percent",
   compact = false,
   signed = false,
 }) {
   const target = Number(value);
-  const finalText = useMemo(
+  const fallbackText = useMemo(
     () => formatValue(target, locale, format, compact, signed),
     [compact, format, locale, signed, target]
   );
+  const finalText = formattedValue || fallbackText;
   const [displayValue, setDisplayValue] = useState(target);
   const elementRef = useRef(null);
   const hasAnimatedRef = useRef(false);
@@ -83,7 +85,9 @@ export default function AnimatedMetricValue({
     <span className={styles.metricAnimationValue} ref={elementRef}>
       <span className={styles.metricAnimationSr}>{finalText}</span>
       <span aria-hidden="true">
-        {formatValue(displayValue, locale, format, compact, signed)}
+        {displayValue === target
+          ? finalText
+          : formatValue(displayValue, locale, format, compact, signed)}
       </span>
     </span>
   );

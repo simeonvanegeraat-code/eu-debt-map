@@ -106,6 +106,9 @@ export default function CountryPreviewExperience({
     <AnimatedMetricValue
       value={value}
       locale={locale}
+      formattedValue={format === "currency"
+        ? money(value, locale, options.compact)
+        : percent(value, locale, options.signed)}
       format={format}
       compact={options.compact}
       signed={options.signed}

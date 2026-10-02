@@ -119,6 +119,7 @@ test("localized country routes use the compact server-rendered dashboard and ret
   assert.match(publicPage, /CountryPreviewExperience/);
   assert.match(publicPage, /animateSnapshotMetrics/);
   assert.match(publicPage, /animateCountryNavigation/);
+  assert.match(experience, /formattedValue=/);
   for (const route of ["debt-per-capita", "debt-growth", "deficit", "interest-cost", "government-spending", "debt-to-gdp"]) {
     assert.match(experience, new RegExp(route));
   }
