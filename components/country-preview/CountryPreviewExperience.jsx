@@ -18,6 +18,7 @@ import { getCountryCopy, localeBase, localeFor } from "@/components/country/coun
 import { fiscalPath } from "@/lib/fiscal/paths";
 import CountryPreviewHero from "./CountryPreviewHero";
 import CountryDebtTrend from "./CountryDebtTrend";
+import AnimatedMetricValue from "./AnimatedMetricValue";
 import { getCountryRedesignCopy } from "./country-redesign-copy";
 import typography from "@/components/typography/typography.module.css";
 import countryStyles from "@/components/country/country-page.module.css";
@@ -71,6 +72,7 @@ export default function CountryPreviewExperience({
   shareSlot = null,
   adSlot = null,
   isPreview = false,
+  animateSnapshotMetrics = false,
   countryNavigationBase = null,
 }) {
   const name = displayName || countryName(country.code, lang);
@@ -99,6 +101,17 @@ export default function CountryPreviewExperience({
   const publicUrl = `https://www.eudebtmap.com${base}/country/${country.code.toLowerCase()}`;
   const latestQuarter = quarter(country.official_latest_time, lang);
   const previousQuarter = quarter(country.official_previous_time, lang);
+  const metricValue = (value, format, options = {}) => animateSnapshotMetrics ? (
+    <AnimatedMetricValue
+      value={value}
+      locale={locale}
+      format={format}
+      compact={options.compact}
+      signed={options.signed}
+    />
+  ) : format === "currency"
+    ? money(value, locale, options.compact)
+    : percent(value, locale, options.signed);
 
   return (
     <article className={`${styles.page} ${typography.page}`} lang={lang}>
@@ -165,9 +178,9 @@ export default function CountryPreviewExperience({
             </div>
           </div>
           <div className={styles.cardGrid}>
-            <MetricCard title={redesign.perCapita} value={money(capita.displayValue, locale, false)} period={`${redesign.calculated} · ${perCapita.debtDate}`} signal={redesign.perCapitaSignal(capita.rank)} text={redesign.perCapitaText} href={fiscalPath("/debt-per-capita", lang)} cta={redesign.perCapitaCta} />
-            <MetricCard title={redesign.balance} value={percent(balanceRow.balance, locale, true)} period={`${redesign.official} · ${balance.latestCompleteYear}`} signal={redesign.balanceSignal(balanceRow.rank)} text={redesign.balanceText(balanceRow.balance)} href={fiscalPath("/deficit", lang)} cta={redesign.balanceCta} />
-            <MetricCard title={redesign.interest} value={money(interestRow.amount, locale)} period={`${redesign.official} · ${interest.latestYear}`} signal={redesign.interestSignal(interestRow.rank)} text={redesign.interestText(percent(interestRow.ratio, locale))} href={fiscalPath("/interest-cost", lang)} cta={redesign.interestCta} />
+            <MetricCard title={redesign.perCapita} value={metricValue(capita.displayValue, "currency", { compact: false })} period={`${redesign.calculated} · ${perCapita.debtDate}`} signal={redesign.perCapitaSignal(capita.rank)} text={redesign.perCapitaText} href={fiscalPath("/debt-per-capita", lang)} cta={redesign.perCapitaCta} />
+            <MetricCard title={redesign.balance} value={metricValue(balanceRow.balance, "percent", { signed: true })} period={`${redesign.official} · ${balance.latestCompleteYear}`} signal={redesign.balanceSignal(balanceRow.rank)} text={redesign.balanceText(balanceRow.balance)} href={fiscalPath("/deficit", lang)} cta={redesign.balanceCta} />
+            <MetricCard title={redesign.interest} value={metricValue(interestRow.amount, "currency", { compact: true })} period={`${redesign.official} · ${interest.latestYear}`} signal={redesign.interestSignal(interestRow.rank)} text={redesign.interestText(percent(interestRow.ratio, locale))} href={fiscalPath("/interest-cost", lang)} cta={redesign.interestCta} />
             <MetricCard
               title={redesign.accounts}
               period={`${redesign.official} · ${accounts.latestYear}`}
@@ -175,7 +188,7 @@ export default function CountryPreviewExperience({
               text={redesign.accountsText}
               href={fiscalPath("/government-spending", lang)}
               cta={redesign.accountsCta}
-              values={<dl className={styles.accountValues}><div><dt>{redesign.spending}</dt><dd>{percent(account.expenditureRatio, locale)}</dd></div><div><dt>{redesign.revenue}</dt><dd>{percent(account.revenueRatio, locale)}</dd></div></dl>}
+              values={<dl className={styles.accountValues}><div><dt>{redesign.spending}</dt><dd>{metricValue(account.expenditureRatio, "percent")}</dd></div><div><dt>{redesign.revenue}</dt><dd>{metricValue(account.revenueRatio, "percent")}</dd></div></dl>}
             />
           </div>
         </section>
