@@ -48,6 +48,7 @@ export default async function CountryMetricAnimationPreview({ params }) {
       displayName={name}
       isPreview
       animateSnapshotMetrics
+      animateCountryNavigation
       countryNavigationBase={`/preview/country-metrics/${lang}`}
     />
   );

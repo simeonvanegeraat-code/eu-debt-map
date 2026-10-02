@@ -73,6 +73,7 @@ export default function CountryPreviewExperience({
   adSlot = null,
   isPreview = false,
   animateSnapshotMetrics = false,
+  animateCountryNavigation = false,
   countryNavigationBase = null,
 }) {
   const name = displayName || countryName(country.code, lang);
@@ -124,6 +125,7 @@ export default function CountryPreviewExperience({
         lang={lang}
         breadcrumbSlot={breadcrumbSlot}
         isPreview={isPreview}
+        animateCountryNavigation={animateCountryNavigation}
         countryNavigationBase={countryNavigationBase}
       />
 

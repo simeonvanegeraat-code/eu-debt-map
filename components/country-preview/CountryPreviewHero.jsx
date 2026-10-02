@@ -34,7 +34,7 @@ function navigationCountries(currentCode, lang) {
   return [...featured, ...(next ? [next] : [])];
 }
 
-export default function CountryPreviewHero({ country, name, title, rank, count, lang = "en", breadcrumbSlot = null, isPreview, countryNavigationBase = null }) {
+export default function CountryPreviewHero({ country, name, title, rank, count, lang = "en", breadcrumbSlot = null, isPreview, animateCountryNavigation = false, countryNavigationBase = null }) {
   const locale = localeFor(lang);
   const copy = getCountryCopy(lang);
   const number = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }), [locale]);
@@ -104,7 +104,7 @@ export default function CountryPreviewHero({ country, name, title, rank, count, 
                 : copy.methodWarning}
             </p>
             {navigation.length ? (
-              <nav className={styles.countryQuickNav} aria-label={navCopy.label}>
+              <nav className={`${styles.countryQuickNav} ${animateCountryNavigation ? styles.countryQuickNavGlow : ""}`} aria-label={navCopy.label}>
                 {navigation.map((item) => (
                   <Link href={`${countryNavigationBase}/${item.code.toLowerCase()}`} key={item.code}>
                     <span>
