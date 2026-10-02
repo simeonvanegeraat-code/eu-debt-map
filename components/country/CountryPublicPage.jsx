@@ -38,6 +38,8 @@ export default function CountryPublicPage({
       title={title}
       displayName={displayName}
       countryNavigationBase={`${localeBase(safeLang)}/country`}
+      animateSnapshotMetrics
+      animateCountryNavigation
       breadcrumbSlot={breadcrumbSlot}
       introSlot={introSlot}
       relatedArticleSlot={relatedArticleSlot}

@@ -117,6 +117,8 @@ test("localized country routes use the compact server-rendered dashboard and ret
   const experience = read("components/country-preview/CountryPreviewExperience.jsx");
   assert.doesNotMatch(publicPage, /^"use client"/);
   assert.match(publicPage, /CountryPreviewExperience/);
+  assert.match(publicPage, /animateSnapshotMetrics/);
+  assert.match(publicPage, /animateCountryNavigation/);
   for (const route of ["debt-per-capita", "debt-growth", "deficit", "interest-cost", "government-spending", "debt-to-gdp"]) {
     assert.match(experience, new RegExp(route));
   }
