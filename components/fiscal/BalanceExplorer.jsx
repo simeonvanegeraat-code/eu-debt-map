@@ -65,7 +65,7 @@ export default function BalanceExplorer({ rows, history, year, lang = "en" }) {
         <div className={styles.search}><label htmlFor="balance-search">{copy.search}</label><input id="balance-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} /></div></div>
       <p className={styles.note} id="balance-rank-note">{copy.rankNote}</p>
       <p className={styles.resultCount} role="status">{copy.shown}: {filtered.length} / 27</p>
-      <div className={styles.tableScroll} tabIndex={0} role="region" aria-labelledby="balance-ranking-title">
+      <div className={`${styles.tableScroll} ${styles.desktopRanking}`} tabIndex={0} role="region" aria-labelledby="balance-ranking-title">
         <table className={styles.ranking} aria-describedby="balance-rank-note">
           <caption>{copy.balance} · {copy.gdp} · {year}</caption>
           <thead><tr><th scope="col">{copy.rank}</th><th scope="col">{copy.country}</th><th scope="col">{copy.balance}<small>{year}</small></th><th scope="col">{copy.previous}<small>{Number(year) - 1}</small></th><th scope="col">{copy.change}<small>{copy.pp}</small></th><th scope="col">{copy.debt}<small>{copy.debtDate} {year}</small></th></tr></thead>
@@ -73,6 +73,29 @@ export default function BalanceExplorer({ rows, history, year, lang = "en" }) {
             <td><span className={styles.balanceCell}><i aria-hidden="true" style={{ background: BALANCE_COLORS[balanceBand(row.balance)] }} />{formatFiscal(row.balance, lang)}<sup>{row.balanceStatus}</sup></span></td>
             <td>{formatFiscal(row.previous, lang)}<sup>{row.previousStatus}</sup></td><td>{formatFiscal(row.change, lang, { suffix: "" })}<sup>{row.changeStatus}</sup></td><td>{formatFiscal(row.debtRatio, lang, { signed: false })}<sup>{row.debtStatus}</sup></td></tr>)}</tbody>
         </table>
+        {filtered.length === 0 && <p>{copy.noResults}</p>}
+      </div>
+      <div className={styles.mobileRanking} aria-labelledby="balance-ranking-title">
+        <ol className={styles.mobileRankList}>
+          {filtered.map((row) => <li className={styles.mobileRankItem} key={row.code}>
+            <details>
+              <summary>
+                <span className={styles.mobileRankPosition}>{row.rank ?? "—"}</span>
+                <span className={styles.mobileRankCountry}><strong>{row.name}</strong><small>{row.code}</small></span>
+                <span className={styles.mobileRankBalance}><i aria-hidden="true" style={{ background: BALANCE_COLORS[balanceBand(row.balance)] }} />{formatFiscal(row.balance, lang)}<sup>{row.balanceStatus}</sup></span>
+                <span className={styles.mobileRankChevron} aria-hidden="true" />
+              </summary>
+              <div className={styles.mobileRankDetails}>
+                <dl>
+                  <div><dt>{copy.previous} · {Number(year) - 1}</dt><dd>{formatFiscal(row.previous, lang)}<sup>{row.previousStatus}</sup></dd></div>
+                  <div><dt>{copy.change}</dt><dd>{formatFiscal(row.change, lang, { suffix: ` ${copy.pp}` })}<sup>{row.changeStatus}</sup></dd></div>
+                  <div><dt>{copy.debt} · {copy.debtDate} {year}</dt><dd>{formatFiscal(row.debtRatio, lang, { signed: false })}<sup>{row.debtStatus}</sup></dd></div>
+                </dl>
+                <Link className={styles.mobileRankLink} href={countryHref(row.code)}>{copy.countryLink} →</Link>
+              </div>
+            </details>
+          </li>)}
+        </ol>
         {filtered.length === 0 && <p>{copy.noResults}</p>}
       </div>
     </section>
