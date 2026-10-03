@@ -38,6 +38,14 @@ test('country menus contain every EU27 profile once and sort by the displayed la
   }
 });
 
+test('mobile navigation controls are translated in every locale', () => {
+  const keys = ['back', 'currentPage', 'searchCountries', 'noCountries', 'language'];
+  for (const lang of ['en', 'nl', 'de', 'fr']) {
+    const { t } = navigationFor(lang, COUNTRY_NAMES);
+    for (const key of keys) assert.equal(typeof t[key], 'string', `${lang}.${key}`);
+  }
+});
+
 test('active routes respect locale boundaries, exact home roots and nested article pages', () => {
   for (const locale of ['', 'en', 'nl', 'de', 'fr']) {
     const home = localeAwareHref('/', locale);

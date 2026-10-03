@@ -107,7 +107,7 @@ function useDisclosureDismiss(open, onClose, rootRef, triggerRef) {
 }
 
 /* ---------------- LANGUAGE DROPDOWN ---------------- */
-function LanguageDropdown({ t, inline = false, onNavigate }) {
+function LanguageDropdown({ t, inline = false, compact = false, onNavigate }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
   const current = getLocaleFromPathname(pathname);
@@ -179,27 +179,51 @@ function LanguageDropdown({ t, inline = false, onNavigate }) {
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
-      {!inline && <button
-        ref={triggerRef}
-        type="button"
-        aria-controls="desktop-languages"
-        aria-expanded={open}
-        aria-label={t.changeLanguage}
-        onClick={() => setOpen((v) => !v)}
-        className="lang-trigger"
-        title={t.changeLanguage}
-      >
-        <span className="lang-trigger-icon">
-          <GlobeIcon size={16} />
-        </span>
-        <span className="lang-trigger-code">{currentLocale.short}</span>
-        <ChevronIcon open={open} />
-      </button>}
+      {!inline && (compact ? (
+        <button
+          ref={triggerRef}
+          type="button"
+          aria-controls="mobile-languages"
+          aria-expanded={open}
+          aria-label={t.changeLanguage}
+          onClick={() => setOpen((value) => !value)}
+          className="lang-compact-trigger"
+        >
+          <span className="lang-compact-main">
+            <GlobeIcon size={18} />
+            <span>
+              <small>{t.language}</small>
+              <strong>{currentLocale.label}</strong>
+            </span>
+          </span>
+          <span className="lang-compact-side">
+            <span>{currentLocale.short}</span>
+            <ChevronIcon open={open} />
+          </span>
+        </button>
+      ) : (
+        <button
+          ref={triggerRef}
+          type="button"
+          aria-controls="desktop-languages"
+          aria-expanded={open}
+          aria-label={t.changeLanguage}
+          onClick={() => setOpen((v) => !v)}
+          className="lang-trigger"
+          title={t.changeLanguage}
+        >
+          <span className="lang-trigger-icon">
+            <GlobeIcon size={16} />
+          </span>
+          <span className="lang-trigger-code">{currentLocale.short}</span>
+          <ChevronIcon open={open} />
+        </button>
+      ))}
 
         <ul
-          id={inline ? "mobile-languages" : "desktop-languages"}
+          id={inline || compact ? "mobile-languages" : "desktop-languages"}
           hidden={!open && !inline}
-          className={`lang-menu${inline ? " lang-menu--inline" : ""}`}
+          className={`lang-menu${inline ? " lang-menu--inline" : ""}${compact ? " lang-menu--compact" : ""}`}
           aria-label={t.changeLanguage}
           style={inline ? undefined : {
             position: "absolute",
@@ -251,10 +275,16 @@ function LanguageDropdown({ t, inline = false, onNavigate }) {
       <style jsx>{`
         .lang-menu { list-style: none; margin: 0; }
         .lang-menu--inline { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 0; }
+        .lang-menu--compact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 8px 0 0; }
+        .lang-menu--compact[hidden] { display: none; }
         .lang-menu--inline .lang-item { padding: 12px 8px; gap: 4px; }
+        .lang-menu--compact .lang-item { padding: 11px 8px; gap: 4px; }
         .lang-menu--inline .lang-item-main { gap: 7px; }
+        .lang-menu--compact .lang-item-main { gap: 7px; }
         .lang-menu--inline .lang-item-label { font-size: 13px; }
+        .lang-menu--compact .lang-item-label { font-size: 13px; }
         .lang-menu--inline .lang-item-side { display: none; }
+        .lang-menu--compact .lang-item-side { display: none; }
         .lang-item:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
         .lang-trigger {
           display: inline-flex;
@@ -301,6 +331,49 @@ function LanguageDropdown({ t, inline = false, onNavigate }) {
           font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.04em;
+        }
+
+        .lang-compact-trigger {
+          width: 100%;
+          min-height: 58px;
+          padding: 8px 10px;
+          border: 0;
+          border-radius: 12px;
+          background: #f8fafc;
+          color: var(--header-fg);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          cursor: pointer;
+          text-align: left;
+        }
+        .lang-compact-trigger:focus-visible {
+          outline: 2px solid #2563eb;
+          outline-offset: 2px;
+        }
+        .lang-compact-main,
+        .lang-compact-side {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .lang-compact-main > span {
+          display: grid;
+          gap: 1px;
+        }
+        .lang-compact-main small {
+          color: #64748b;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: .06em;
+          text-transform: uppercase;
+        }
+        .lang-compact-main strong { font-size: 14px; }
+        .lang-compact-side > span {
+          color: #1d4ed8;
+          font-size: 12px;
+          font-weight: 800;
         }
 
         .lang-item {
@@ -486,12 +559,96 @@ function MobileDrawer({ open, onClose, label, closeLabel, children }) {
   );
 }
 
+function MobileNavigationGroup({ group, locale, pathname, open, onToggle, onNavigate, currentPageLabel }) {
+  const activeItem = group.items.find(item => isActivePath(pathname, item.href, locale));
+  const panelId = `mobile-navigation-${group.key}`;
+
+  return (
+    <div className={`drawer-group${activeItem ? ' drawer-group--active' : ''}`}>
+      <button
+        type="button"
+        className="drawer-group-trigger"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={onToggle}
+      >
+        <span className="drawer-group-heading">
+          <strong>{group.label}</strong>
+          {activeItem ? <small>{activeItem.label} · {currentPageLabel}</small> : null}
+        </span>
+        <ChevronIcon open={open} />
+      </button>
+      <div id={panelId} className="drawer-group-panel" hidden={!open}>
+        <NavigationLinks
+          items={group.items}
+          locale={locale}
+          pathname={pathname}
+          onNavigate={onNavigate}
+          className="drawer-link"
+        />
+      </div>
+    </div>
+  );
+}
+
+function MobileCountries({ group, locale, pathname, query, onQueryChange, onBack, onNavigate, t }) {
+  const normalizedQuery = query.trim().toLocaleLowerCase(locale);
+  const items = normalizedQuery
+    ? group.items.filter(item => item.label.toLocaleLowerCase(locale).includes(normalizedQuery))
+    : group.items;
+
+  return (
+    <div className="drawer-country-view">
+      <div className="drawer-subview-header">
+        <button type="button" className="drawer-back" onClick={onBack}>
+          <span aria-hidden="true">←</span> {t.back}
+        </button>
+        <strong>{group.label}</strong>
+      </div>
+      <label className="drawer-country-search">
+        <input
+          type="search"
+          aria-label={t.searchCountries}
+          value={query}
+          onChange={event => onQueryChange(event.target.value)}
+          placeholder={t.searchCountries}
+          autoComplete="off"
+        />
+      </label>
+      <div className="drawer-country-results" aria-live="polite">
+        {items.length ? (
+          <NavigationLinks
+            items={items}
+            locale={locale}
+            pathname={pathname}
+            onNavigate={onNavigate}
+            className="drawer-link"
+          />
+        ) : (
+          <p className="drawer-country-empty">{t.noCountries}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function HeaderNavigation({ pathname }) {
   const [open, setOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState(null);
+  const [drawerView, setDrawerView] = useState('main');
+  const [countryQuery, setCountryQuery] = useState('');
   const locale = getLocaleFromPathname(pathname);
   const { t, groups, links } = useMemo(() => navigationFor(locale || 'en', COUNTRY_NAMES), [locale]);
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => {
+    setOpen(false);
+    setOpenGroup(null);
+    setDrawerView('main');
+    setCountryQuery('');
+  }, []);
   const brandRef = useRef(null);
+  const countriesGroup = groups.find(group => group.key === 'countries');
+  const primaryGroups = groups.filter(group => group.key !== 'countries');
+  const activeCountry = countriesGroup?.items.find(item => isActivePath(pathname, item.href, locale));
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1180px)');
@@ -532,23 +689,54 @@ function HeaderNavigation({ pathname }) {
         </div>
       </header>
       <MobileDrawer open={open} onClose={close} label={t.navigation} closeLabel={t.closeMenu}>
-        <nav className="drawer-nav" aria-label={t.navigation}>
-          {groups.map(group => (
-            <details className="drawer-group" key={`${pathname}-${group.key}`} open={group.items.some(item => isActivePath(pathname, item.href, locale))}>
-              <summary>{group.label}<ChevronIcon /></summary>
-              <div className={group.key === 'countries' ? 'drawer-countries' : undefined}>
-                <NavigationLinks items={group.items} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
+        {drawerView === 'countries' && countriesGroup ? (
+          <MobileCountries
+            group={countriesGroup}
+            locale={locale}
+            pathname={pathname}
+            query={countryQuery}
+            onQueryChange={setCountryQuery}
+            onBack={() => { setDrawerView('main'); setCountryQuery(''); }}
+            onNavigate={close}
+            t={t}
+          />
+        ) : (
+          <>
+            <nav className="drawer-nav" aria-label={t.navigation}>
+              {primaryGroups.map(group => (
+                <MobileNavigationGroup
+                  key={group.key}
+                  group={group}
+                  locale={locale}
+                  pathname={pathname}
+                  open={openGroup === group.key}
+                  onToggle={() => setOpenGroup(current => current === group.key ? null : group.key)}
+                  onNavigate={close}
+                  currentPageLabel={t.currentPage}
+                />
+              ))}
+              {countriesGroup ? (
+                <button
+                  type="button"
+                  className={`drawer-country-trigger${activeCountry ? ' drawer-country-trigger--active' : ''}`}
+                  onClick={() => setDrawerView('countries')}
+                >
+                  <span className="drawer-group-heading">
+                    <strong>{countriesGroup.label}</strong>
+                    {activeCountry ? <small>{activeCountry.label} · {t.currentPage}</small> : null}
+                  </span>
+                  <span className="drawer-forward" aria-hidden="true">→</span>
+                </button>
+              ) : null}
+              <div className="drawer-direct">
+                <NavigationLinks items={links} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
               </div>
-            </details>
-          ))}
-          <div className="drawer-direct">
-            <NavigationLinks items={links} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
-          </div>
-        </nav>
-        <div className="drawer-languages">
-          <p>{t.language}</p>
-          <LanguageDropdown t={t} inline onNavigate={close} />
-        </div>
+            </nav>
+            <div className="drawer-languages">
+              <LanguageDropdown t={t} compact onNavigate={close} />
+            </div>
+          </>
+        )}
       </MobileDrawer>
     </>
   );
