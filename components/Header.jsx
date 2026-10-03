@@ -6,7 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale";
 import { getArticleTranslationHref } from "@/lib/articleTranslations";
 import { COUNTRY_NAMES } from "@/lib/countries";
-import { navigationFor, localeAwareHref, isActivePath } from "@/lib/navigation";
+import {
+  navigationFor,
+  localeAwareHref,
+  isActivePath,
+  normalizeNavigationSearch,
+} from "@/lib/navigation";
 
 /* ---------------- CONSTANTEN ---------------- */
 const NO_LOCALE = new Set([]);
@@ -591,9 +596,9 @@ function MobileSectionView({ group, locale, pathname, onBack, onNavigate, t }) {
 }
 
 function MobileCountries({ group, locale, pathname, query, onQueryChange, onBack, onNavigate, t }) {
-  const normalizedQuery = query.trim().toLocaleLowerCase(locale);
+  const normalizedQuery = normalizeNavigationSearch(query, locale);
   const items = normalizedQuery
-    ? group.items.filter(item => item.label.toLocaleLowerCase(locale).includes(normalizedQuery))
+    ? group.items.filter(item => normalizeNavigationSearch(item.label, locale).includes(normalizedQuery))
     : group.items;
 
   return (

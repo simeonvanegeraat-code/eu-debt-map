@@ -4,7 +4,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { COUNTRY_NAMES } = require('../lib/countries.js');
 const { EU27 } = require('../lib/fiscal/indicators');
-const { navigationFor, localeAwareHref, isActivePath } = require('../lib/navigation');
+const {
+  navigationFor,
+  localeAwareHref,
+  isActivePath,
+  normalizeNavigationSearch,
+} = require('../lib/navigation');
 
 const SECTIONS = ['/', '/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/debt', '/deficit', '/interest-cost', '/government-spending', '/articles', '/methodology', '/about'];
 
@@ -44,6 +49,11 @@ test('mobile navigation controls are translated in every locale', () => {
     const { t } = navigationFor(lang, COUNTRY_NAMES);
     for (const key of keys) assert.equal(typeof t[key], 'string', `${lang}.${key}`);
   }
+});
+
+test('country search normalizes the root English locale without throwing', () => {
+  assert.equal(normalizeNavigationSearch('  Countries  ', ''), 'countries');
+  assert.equal(normalizeNavigationSearch('  PAYS  ', 'fr'), 'pays');
 });
 
 test('active routes respect locale boundaries, exact home roots and nested article pages', () => {
