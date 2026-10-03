@@ -274,16 +274,16 @@ function LanguageDropdown({ t, inline = false, compact = false, onNavigate }) {
 
       <style jsx>{`
         .lang-menu { list-style: none; margin: 0; }
-        .lang-menu--inline { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 0; }
+        .lang-menu--inline { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 0; }
         .lang-menu--compact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 8px 0 0; }
         .lang-menu--compact[hidden] { display: none; }
-        .lang-menu--inline .lang-item { padding: 12px 8px; gap: 4px; }
+        .lang-menu--inline .lang-item { min-height: 56px; padding: 12px; gap: 8px; }
         .lang-menu--compact .lang-item { padding: 11px 8px; gap: 4px; }
         .lang-menu--inline .lang-item-main { gap: 7px; }
         .lang-menu--compact .lang-item-main { gap: 7px; }
         .lang-menu--inline .lang-item-label { font-size: 13px; }
         .lang-menu--compact .lang-item-label { font-size: 13px; }
-        .lang-menu--inline .lang-item-side { display: none; }
+        .lang-menu--inline .lang-item-side { display: inline-flex; }
         .lang-menu--compact .lang-item-side { display: none; }
         .lang-item:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
         .lang-trigger {
@@ -456,7 +456,14 @@ function LanguageDropdown({ t, inline = false, compact = false, onNavigate }) {
   );
 }
 
-function NavigationLinks({ items, locale, pathname, onNavigate, className = 'nav-panel-link' }) {
+function NavigationLinks({
+  items,
+  locale,
+  pathname,
+  onNavigate,
+  className = 'nav-panel-link',
+  suppressVignette = false,
+}) {
   return items.map(item => {
     const active = isActivePath(pathname, item.href, locale);
     return (
@@ -466,6 +473,7 @@ function NavigationLinks({ items, locale, pathname, onNavigate, className = 'nav
         prefetch={false}
         className={`${className}${active ? ` ${className}--active` : ''}`}
         aria-current={active ? 'page' : undefined}
+        data-google-vignette={suppressVignette ? 'false' : undefined}
         onClick={onNavigate}
       >
         {item.label}
@@ -559,34 +567,25 @@ function MobileDrawer({ open, onClose, label, closeLabel, children }) {
   );
 }
 
-function MobileNavigationGroup({ group, locale, pathname, open, onToggle, onNavigate, currentPageLabel }) {
-  const activeItem = group.items.find(item => isActivePath(pathname, item.href, locale));
-  const panelId = `mobile-navigation-${group.key}`;
-
+function MobileSectionView({ group, locale, pathname, onBack, onNavigate, t }) {
   return (
-    <div className={`drawer-group${activeItem ? ' drawer-group--active' : ''}`}>
-      <button
-        type="button"
-        className="drawer-group-trigger"
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={onToggle}
-      >
-        <span className="drawer-group-heading">
-          <strong>{group.label}</strong>
-          {activeItem ? <small>{activeItem.label} · {currentPageLabel}</small> : null}
-        </span>
-        <ChevronIcon open={open} />
-      </button>
-      <div id={panelId} className="drawer-group-panel" hidden={!open}>
+    <div className="drawer-section-view">
+      <div className="drawer-subview-header">
+        <button type="button" className="drawer-back" onClick={onBack}>
+          <span aria-hidden="true">←</span> {t.back}
+        </button>
+        <strong>{group.label}</strong>
+      </div>
+      <nav className="drawer-section-links" aria-label={group.label}>
         <NavigationLinks
           items={group.items}
           locale={locale}
           pathname={pathname}
           onNavigate={onNavigate}
           className="drawer-link"
+          suppressVignette
         />
-      </div>
+      </nav>
     </div>
   );
 }
@@ -623,6 +622,7 @@ function MobileCountries({ group, locale, pathname, query, onQueryChange, onBack
             pathname={pathname}
             onNavigate={onNavigate}
             className="drawer-link"
+            suppressVignette
           />
         ) : (
           <p className="drawer-country-empty">{t.noCountries}</p>
@@ -632,23 +632,37 @@ function MobileCountries({ group, locale, pathname, query, onQueryChange, onBack
   );
 }
 
+function MobileLanguages({ t, onBack, onNavigate }) {
+  return (
+    <div className="drawer-language-view">
+      <div className="drawer-subview-header">
+        <button type="button" className="drawer-back" onClick={onBack}>
+          <span aria-hidden="true">←</span> {t.back}
+        </button>
+        <strong>{t.language}</strong>
+      </div>
+      <div className="drawer-language-options">
+        <LanguageDropdown t={t} inline onNavigate={onNavigate} />
+      </div>
+    </div>
+  );
+}
+
 function HeaderNavigation({ pathname }) {
   const [open, setOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState(null);
   const [drawerView, setDrawerView] = useState('main');
   const [countryQuery, setCountryQuery] = useState('');
   const locale = getLocaleFromPathname(pathname);
   const { t, groups, links } = useMemo(() => navigationFor(locale || 'en', COUNTRY_NAMES), [locale]);
   const close = useCallback(() => {
     setOpen(false);
-    setOpenGroup(null);
     setDrawerView('main');
     setCountryQuery('');
   }, []);
   const brandRef = useRef(null);
   const countriesGroup = groups.find(group => group.key === 'countries');
-  const primaryGroups = groups.filter(group => group.key !== 'countries');
-  const activeCountry = countriesGroup?.items.find(item => isActivePath(pathname, item.href, locale));
+  const currentDrawerGroup = groups.find(group => group.key === drawerView);
+  const currentLocale = LOCALES.find(option => option.code === locale) || LOCALES[0];
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1180px)');
@@ -700,40 +714,70 @@ function HeaderNavigation({ pathname }) {
             onNavigate={close}
             t={t}
           />
+        ) : drawerView === 'language' ? (
+          <MobileLanguages
+            t={t}
+            onBack={() => setDrawerView('main')}
+            onNavigate={close}
+          />
+        ) : currentDrawerGroup ? (
+          <MobileSectionView
+            group={currentDrawerGroup}
+            locale={locale}
+            pathname={pathname}
+            onBack={() => setDrawerView('main')}
+            onNavigate={close}
+            t={t}
+          />
         ) : (
           <>
             <nav className="drawer-nav" aria-label={t.navigation}>
-              {primaryGroups.map(group => (
-                <MobileNavigationGroup
-                  key={group.key}
-                  group={group}
-                  locale={locale}
-                  pathname={pathname}
-                  open={openGroup === group.key}
-                  onToggle={() => setOpenGroup(current => current === group.key ? null : group.key)}
-                  onNavigate={close}
-                  currentPageLabel={t.currentPage}
-                />
-              ))}
-              {countriesGroup ? (
+              {groups.map(group => {
+                const activeItem = group.items.find(item => isActivePath(pathname, item.href, locale));
+                return (
                 <button
+                  key={group.key}
                   type="button"
-                  className={`drawer-country-trigger${activeCountry ? ' drawer-country-trigger--active' : ''}`}
-                  onClick={() => setDrawerView('countries')}
+                  className={`drawer-section-trigger${activeItem ? ' drawer-section-trigger--active' : ''}`}
+                  onClick={() => setDrawerView(group.key)}
                 >
                   <span className="drawer-group-heading">
-                    <strong>{countriesGroup.label}</strong>
-                    {activeCountry ? <small>{activeCountry.label} · {t.currentPage}</small> : null}
+                    <strong>{group.label}</strong>
+                    {activeItem ? <small>{activeItem.label} · {t.currentPage}</small> : null}
                   </span>
                   <span className="drawer-forward" aria-hidden="true">→</span>
                 </button>
-              ) : null}
+                );
+              })}
               <div className="drawer-direct">
-                <NavigationLinks items={links} locale={locale} pathname={pathname} onNavigate={close} className="drawer-link" />
+                <NavigationLinks
+                  items={links}
+                  locale={locale}
+                  pathname={pathname}
+                  onNavigate={close}
+                  className="drawer-link"
+                  suppressVignette
+                />
               </div>
             </nav>
             <div className="drawer-languages">
-              <LanguageDropdown t={t} compact onNavigate={close} />
+              <button
+                type="button"
+                className="drawer-language-trigger"
+                onClick={() => setDrawerView('language')}
+              >
+                <span className="drawer-language-main">
+                  <GlobeIcon size={18} />
+                  <span>
+                    <small>{t.language}</small>
+                    <strong>{currentLocale.label}</strong>
+                  </span>
+                </span>
+                <span className="drawer-language-side">
+                  <span>{currentLocale.short}</span>
+                  <span className="drawer-forward" aria-hidden="true">→</span>
+                </span>
+              </button>
             </div>
           </>
         )}
