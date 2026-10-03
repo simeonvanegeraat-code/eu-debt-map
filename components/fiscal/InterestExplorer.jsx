@@ -54,6 +54,6 @@ export default function InterestExplorer({ snapshot, debtContext, lang = "en" })
       <InterestHistory points={interestPoints(snapshot, code)} name={countryName(code, lang)} lang={lang} />
     </section>
     <div className={styles.order}><label htmlFor="interest-order">{copy.order}</label><select id="interest-order" value={mode} onChange={event => setMode(event.target.value)}>{INTEREST.modes.map(key => <option key={key} value={key}>{copy.modes[key]}</option>)}</select></div>
-    <p className={fiscal.note}>{copy.scrollHint}</p><div className={styles.ranking}><IndicatorRanking id="interest-ranking" title={copy.rankingTitle} caption={`${copy.modes[mode]} · ${snapshot.latestYear}`} columns={columns} rows={ranking} copy={copy} locale={copy.locale} /></div><p className={fiscal.note}>{copy.missing}</p><p className={fiscal.note}>{copy.flags}</p>
+    <p className={`${fiscal.note} ${fiscal.desktopOnly}`}>{copy.scrollHint}</p><p className={`${fiscal.note} ${fiscal.mobileOnly}`}>{copy.mobileRankHint}</p><div className={styles.ranking}><IndicatorRanking id="interest-ranking" title={copy.rankingTitle} caption={`${copy.modes[mode]} · ${snapshot.latestYear}`} columns={columns} rows={ranking} copy={copy} locale={copy.locale} mobilePrimaryKey={mode} /></div><p className={fiscal.note}>{copy.missing}</p><p className={fiscal.note}>{copy.flags}</p>
   </div>;
 }

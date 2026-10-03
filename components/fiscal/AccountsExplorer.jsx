@@ -50,6 +50,6 @@ export default function AccountsExplorer({ snapshot, comparisons, lang = "en" })
       {expenditureChange.change !== null && revenueChange.change !== null && <p className={fiscal.insight}>{copy.insight(countryName(code, lang), accountNumber(expenditureChange.change, lang, "pp", true), accountNumber(revenueChange.change, lang, "pp", true), expenditureChange.startYear, snapshot.latestYear)}</p>}
       <AccountsHistory points={points} name={countryName(code, lang)} lang={lang} />
     </section><div className={styles.control}><div><label htmlFor="accounts-order">{copy.order}</label><select id="accounts-order" value={mode} onChange={e => setMode(e.target.value)}>{ACCOUNTS.modes.map(key => <option key={key} value={key}>{copy.modes[key]}</option>)}</select></div></div>
-    <p className={fiscal.note}>{copy.scrollHint}</p><div className={styles.ranking}><IndicatorRanking id="accounts-ranking" title={copy.rankingTitle} caption={`${copy.modes[mode]} · ${snapshot.latestYear}`} rows={ranking} columns={columns} copy={copy} locale={copy.locale} /></div><p className={fiscal.note}>{copy.flags}</p>
+    <p className={`${fiscal.note} ${fiscal.desktopOnly}`}>{copy.scrollHint}</p><p className={`${fiscal.note} ${fiscal.mobileOnly}`}>{copy.mobileRankHint}</p><div className={styles.ranking}><IndicatorRanking id="accounts-ranking" title={copy.rankingTitle} caption={`${copy.modes[mode]} · ${snapshot.latestYear}`} rows={ranking} columns={columns} copy={copy} locale={copy.locale} mobilePrimaryKey={mode} /></div><p className={fiscal.note}>{copy.flags}</p>
   </div>;
 }
