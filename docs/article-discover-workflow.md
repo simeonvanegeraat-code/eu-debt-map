@@ -34,6 +34,11 @@ the draft is being written.
    editorial review. Do not change dates merely to make an article look recent.
 7. Keep at most one `<!-- MID_ARTICLE_AD -->` marker. Consent and AdSense scripts
    stay in the shared site configuration, never inside article HTML.
+8. Treat tables as dense-data tools, not as default article layout. For four or
+   fewer comparisons, prefer the responsive key-number or balance-card grids.
+   When a real table is necessary, keep the first column concise, make the
+   wrapper keyboard-focusable, mention horizontal scrolling in its accessible
+   label, and verify the result at a narrow mobile viewport.
 
 Run the checks before creating a pull request:
 

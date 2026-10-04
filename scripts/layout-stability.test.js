@@ -76,6 +76,24 @@ test("cookie pages preserve responsive horizontal container padding", () => {
   }
 });
 
+test("article tables keep readable mobile columns and expose localized swipe guidance", () => {
+  const articleBody = read("components/ArticleBody.jsx");
+  const css = read("app/globals.css");
+
+  for (const label of [
+    "Swipe to view all columns",
+    "Veeg om alle kolommen te bekijken",
+    "Wischen, um alle Spalten zu sehen",
+    "Balayez pour voir toutes les colonnes",
+  ]) {
+    assert.match(articleBody, new RegExp(label));
+  }
+
+  assert.match(articleBody, /addTableScrollHints\(body, lang\)/);
+  assert.match(css, /\.articleProse \.articleDataTable\s*\{\s*width:max\(100%, 680px\);/s);
+  assert.match(css, /\.articleTableScrollHint\s*\{[\s\S]*display:flex;/);
+});
+
 test("the shared footer and skip link stay localized in every supported language", () => {
   const footer = read("components/Footer.jsx");
   const skipLink = read("components/LocalizedSkipLink.jsx");

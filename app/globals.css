@@ -735,6 +735,7 @@ p{ margin: var(--sp-3) 0; }
   outline:3px solid rgba(37,99,235,.35);
   outline-offset:3px;
 }
+.articleTableScrollHint{ display:none; }
 .articleProse .articleDataTable{
   width:100%;
   border-collapse:collapse;
@@ -828,6 +829,37 @@ p{ margin: var(--sp-3) 0; }
   .articleDonutChart{ max-width:230px; margin:0 auto; }
   .articleKeyNumbers,
   .articleBalanceGrid{ grid-template-columns:1fr; }
+  .articleDataTableWrap{
+    overscroll-behavior-inline:contain;
+    scrollbar-gutter:stable;
+    scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
+  }
+  .articleTableScrollHint{
+    position:sticky;
+    left:0;
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    width:max-content;
+    margin:.55rem .7rem .1rem;
+    color:#64748b;
+    font-family:var(--font-sans, sans-serif);
+    font-size:.72rem;
+    font-weight:600;
+    line-height:1.3;
+  }
+  .articleTableScrollHint span{
+    color:#2563eb;
+    font-size:.9rem;
+  }
+  .articleProse .articleDataTable{
+    width:max(100%, 680px);
+  }
+  .articleDataTable th:first-child,
+  .articleDataTable td:first-child{
+    min-width:11rem;
+  }
   .articleDataTable th,
   .articleDataTable td{ padding:.65rem .7rem; }
   .articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] .articleDataTable{

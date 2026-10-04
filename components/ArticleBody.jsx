@@ -4,6 +4,20 @@ import articlePageCore from "@/lib/articlePageCore.cjs";
 
 const { splitArticleBody } = articlePageCore;
 const ARTICLE_VISUAL_MARKER = /<!--\s*ARTICLE_VISUAL:([a-z0-9-]+)\s*-->/gi;
+const TABLE_SCROLL_LABELS = {
+  en: "Swipe to view all columns",
+  nl: "Veeg om alle kolommen te bekijken",
+  de: "Wischen, um alle Spalten zu sehen",
+  fr: "Balayez pour voir toutes les colonnes",
+};
+
+function addTableScrollHints(html, lang) {
+  const label = TABLE_SCROLL_LABELS[lang] || TABLE_SCROLL_LABELS.en;
+  return html.replace(
+    /(<div class=['"]articleDataTableWrap['"][^>]*>)/g,
+    `$1<div class='articleTableScrollHint'><span aria-hidden='true'>↔</span>${label}</div>`
+  );
+}
 
 function renderArticleSegment(html, visualizations, lang, keyPrefix) {
   if (!html) return null;
@@ -51,7 +65,8 @@ function renderArticleSegment(html, visualizations, lang, keyPrefix) {
 }
 
 export default function ArticleBody({ body = "", visualizations = {}, lang = "en" }) {
-  const { bodyBeforeAd, bodyAfterAd, hasMidArticleAd } = splitArticleBody(body);
+  const preparedBody = addTableScrollHints(body, lang);
+  const { bodyBeforeAd, bodyAfterAd, hasMidArticleAd } = splitArticleBody(preparedBody);
 
   return (
     <div className="articleProse">
