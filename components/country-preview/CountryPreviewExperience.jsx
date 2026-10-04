@@ -14,6 +14,7 @@ import { perCapitaRows } from "@/lib/fiscal/per-capita";
 import CountryIntro from "@/components/CountryIntro";
 import CountryRelatedArticleServer from "@/components/CountryRelatedArticleServer";
 import ShareBar from "@/components/ShareBar";
+import CountryInflationLink from "@/components/inflation/CountryInflationLink";
 import { getCountryCopy, localeBase, localeFor } from "@/components/country/country-copy";
 import { fiscalPath } from "@/lib/fiscal/paths";
 import CountryPreviewHero from "./CountryPreviewHero";
@@ -245,6 +246,7 @@ export default function CountryPreviewExperience({
 
         <section className={`${styles.countryContext} ${styles.shell}`} id="country-context">
           <div className={styles.introSlot}>{introSlot || <CountryIntro country={country} lang={lang} />}</div>
+          {!isPreview && <CountryInflationLink code={country.code} lang={lang} />}
           {lang === "nl" && country.code === "NL" && !isPreview ? (
             <Link className={styles.bondGuideLink} href="/nl/staatsobligaties-nederland">
               <span><small>Praktische gids</small><strong>Nederlandse staatsobligaties kopen: hoe werkt dat?</strong></span>

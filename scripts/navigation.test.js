@@ -11,7 +11,7 @@ const {
   normalizeNavigationSearch,
 } = require('../lib/navigation');
 
-const SECTIONS = ['/', '/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/debt', '/deficit', '/interest-cost', '/government-spending', '/articles', '/methodology', '/about'];
+const SECTIONS = ['/', '/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/debt', '/deficit', '/interest-cost', '/government-spending', '/inflation', '/articles', '/methodology', '/about'];
 
 test('every navigation destination exists in all four locales without new duplicate routes', () => {
   for (const lang of ['en', 'nl', 'de', 'fr']) {

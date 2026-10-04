@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { TEXT } from "@/lib/navigation";
 import { getAccountsCopy } from "@/components/fiscal/accounts-copy";
 import { getInterestCopy } from "@/components/fiscal/interest-copy";
 import { getGrowthCopy } from "@/components/fiscal/growth-copy";
@@ -113,6 +114,7 @@ export default function Footer() {
           <Link href={withLocale("/deficit", locale)} className="footer-link">
             {getBalanceCopy(locale).shortTitle}
           </Link>
+          <Link href={withLocale("/inflation", locale)} className="footer-link">{(TEXT[locale] || TEXT.en).nav.inflation}</Link>
           <Link href={withLocale("/government-spending", locale)} className="footer-link">{getAccountsCopy(locale).shortTitle}</Link>
           <Link href={withLocale("/interest-cost", locale)} className="footer-link">{getInterestCopy(locale).shortTitle}</Link>
           <Link href={withLocale("/debt-growth", locale)} className="footer-link">{getGrowthCopy(locale).shortTitle}</Link>

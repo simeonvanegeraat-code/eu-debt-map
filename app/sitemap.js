@@ -1,4 +1,5 @@
 import { fiscalPageModified } from "@/lib/fiscal/discovery";
+import { inflationModified } from "@/lib/inflation/metadata";
 import accountsSnapshot from "@/lib/fiscal/accounts.gen.json";
 import { METHODOLOGY_REVIEWED } from "@/lib/fiscal/methodology-registry";
 import { COUNTRY_DASHBOARD_REVIEWED } from "@/lib/fiscal/country-dashboard";
@@ -218,6 +219,13 @@ export default async function sitemap() {
   }
 
   // Annual fiscal data has its own update date, independent of quarterly debt.
+  for (const lang of ALL_LOCALES) {
+    pushUrl({ url: urlFor("/inflation", lang), lastModified: new Date(inflationModified()),
+      changeFrequency: "monthly", priority: 0.85,
+      alternates: { languages: { ...languageAlternatesFor("/inflation"), "x-default": urlFor("/inflation") } },
+    });
+  }
+
   for (const lang of ALL_LOCALES) {
     pushUrl({ url: urlFor("/deficit", lang), lastModified: new Date(fiscalPageModified(FISCAL_LASTMOD.toISOString())),
       changeFrequency: "monthly", priority: 0.9,
