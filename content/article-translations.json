@@ -74,9 +74,14 @@
     "fr": "france-emprunt-record-340-milliards-charge-dette-2027"
   },
   "inflation-feeling-after-shock": {
-    "en": "euro-area-inflation-38-energy-warning-2026",
     "nl": "inflatie-nederland-10-jaar-prijzen-sinds-corona",
     "de": "inflation-deutschland-fast-normal-angst-bleibt",
     "fr": "inflation-france-prix-peur-apres-crise"
+  },
+  "energy-inflation-warning-2026": {
+    "en": "euro-area-inflation-38-energy-warning-2026",
+    "nl": "nederlandse-inflatie-energie-waarschuwing-september-2026",
+    "de": "inflation-deutschland-33-prozent-energie-warnsignal-2026",
+    "fr": "inflation-france-energie-34-pour-cent-septembre-2026"
   }
 }
