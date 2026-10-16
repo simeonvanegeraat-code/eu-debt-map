@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { articlePath, checkPublication, checkRenderedMetadata } = require('../lib/articlePublicationCore.cjs');
+const { articlePath, checkPublication, checkRenderedMetadata, verificationTarget } = require('../lib/articlePublicationCore.cjs');
 const { validateArticlePublication } = require('./validate-article-publication');
 
 test('published articles cannot disappear when translations also disappear', () => {
@@ -50,4 +50,19 @@ test('rendered publication checks reject foreign canonicals, duplicate canonical
   assert.equal(checkRenderedMetadata(canonical + canonical, url).length, 1);
   assert.equal(checkRenderedMetadata(canonical + '<meta name="robots" content="noindex, follow"/>', url).length, 1);
   assert.equal(checkRenderedMetadata('', url).length, 1);
+});
+
+test('production and localhost verification enforce indexable response headers by default', () => {
+  for (const origin of ['https://www.eudebtmap.com', 'http://localhost:3022']) {
+    assert.equal(verificationTarget(['--base-url', origin]).protectedPreview, false);
+    assert.throws(() => verificationTarget(['--base-url', origin, '--protected-preview']), /restricted/);
+  }
+});
+
+test('only an explicit Vercel preview check can allow platform noindex headers', () => {
+  const origin = 'https://release-example.vercel.app';
+  assert.equal(verificationTarget(['--base-url', origin]).protectedPreview, false);
+  assert.equal(verificationTarget(['--base-url', origin, '--protected-preview']).protectedPreview, true);
+  assert.throws(() => verificationTarget([]), /base-url/);
+  assert.throws(() => verificationTarget(['--base-url', 'https://user:secret@example.com']), /credentials/);
 });

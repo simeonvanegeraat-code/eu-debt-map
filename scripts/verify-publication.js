@@ -1,14 +1,11 @@
 const { validateArticlePublication } = require('./validate-article-publication');
-const { checkRenderedMetadata } = require('../lib/articlePublicationCore.cjs');
+const { checkRenderedMetadata, verificationTarget } = require('../lib/articlePublicationCore.cjs');
 
 const SITE = 'https://www.eudebtmap.com';
 const CANONICAL_RECHECKS = ['/fr/articles', '/nl/articles', '/de/country/lt'];
 
 async function verifyPublication() {
-  const index = process.argv.indexOf('--base-url');
-  if (index < 0 || !process.argv[index + 1]) throw new Error('Usage: npm run verify:publication -- --base-url http://localhost:3022');
-  const base = new URL(process.argv[index + 1]);
-  if (base.username || base.password || !['http:', 'https:'].includes(base.protocol)) throw new Error('Expected an HTTP(S) base URL without credentials');
+  const { base, protectedPreview } = verificationTarget(process.argv.slice(2));
   const { inventory, translations, redirects } = await validateArticlePublication();
   const paths = [...inventory.keys(), ...CANONICAL_RECHECKS];
   const errors = [];
@@ -19,7 +16,7 @@ async function verifyPublication() {
       try {
         const response = await fetch(new URL(pagePath, base), { redirect: 'manual', signal: AbortSignal.timeout(30000) });
         if (response.status !== 200) throw new Error(`HTTP ${response.status}`);
-        if (/\b(noindex|none)\b/i.test(response.headers.get('x-robots-tag') || '')) throw new Error('X-Robots-Tag prevents indexing');
+        if (!protectedPreview && /\b(noindex|none)\b/i.test(response.headers.get('x-robots-tag') || '')) throw new Error('X-Robots-Tag prevents indexing');
         const html = await response.text();
         errors.push(...checkRenderedMetadata(html, SITE + pagePath));
         const entry = inventory.get(pagePath);
@@ -79,6 +76,7 @@ async function verifyPublication() {
     await response.body?.cancel();
   }
   if (errors.length) throw new Error(errors.join('\n'));
+  if (protectedPreview) console.log('[publication-verify] Protected preview only: Vercel response-header noindex is allowed; production must pass the default strict check separately');
   console.log(`[publication-verify] ${inventory.size} article pages, ${images.length} images and 3 canonical checks passed; sitemap, translations, schema, redirects and 404 behavior verified`);
 }
 

@@ -68,6 +68,9 @@ Before an authorized release, run `npm run preflight:publication` from the clean
 release checkout. Verify the production build and the exact deployment using
 `npm run verify:publication -- --base-url <origin>`. See
 [the publication recovery and release procedure](article-publication-recovery-2026-10-15.md).
+For a protected `*.vercel.app` deployment only, add `--protected-preview` to allow
+Vercel's expected response-header `noindex`. HTML metadata must still be correct.
+Never use this flag for production; the verifier rejects it on the public domain.
 
 ## Updating and consolidating old articles
 

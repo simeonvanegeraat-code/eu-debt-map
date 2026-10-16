@@ -69,6 +69,12 @@ an old report, and do not open the unrelated external URL during investigation.
   URLs when deployment is authorized. It checks all article responses,
   canonicals, indexability, Article schema, translation alternates, sitemap
   membership, permanent redirects and genuine 404 behavior.
+- A protected Vercel deployment normally has a platform `X-Robots-Tag: noindex`.
+  Use `--protected-preview` only on its `*.vercel.app` URL; correct HTML metadata
+  is still required. This exception is rejected on the production domain, which
+  must pass the default strict response-header check after promotion. Existing
+  project authorization can be used for preview testing; do not disable
+  protection or create new credentials merely to run a check.
 - Prefer an authorized GitHub main release. If CLI deployment is explicitly
   required, deploy the same clean, checked commit. Never deploy from an older
   dirty checkout or reuse a preview without verifying its contents.
@@ -90,7 +96,8 @@ No indexing requests or issue validations were submitted during diagnosis.
 
 ## Local verification, 16 October 2026
 
-- Full Node test suite: 209 passed, zero failures.
+- Full Node test suite: 211 passed, including two tests that prevent applying
+  the protected-preview exception to the public production domain.
 - ESLint: zero errors; 15 existing warnings remain outside this recovery.
 - Production build: succeeded, 333 static pages generated; article audit passed
   for all 87 articles. Official data snapshots were validated, not refreshed.
@@ -100,6 +107,13 @@ No indexing requests or issue validations were submitted during diagnosis.
   redirects and unknown-article HTTP 404 behavior passed.
 - The restored French energy article renders with its original hero image.
   Browser console inspection reported no warnings or errors before release.
+- Desktop (1440px) and mobile (390px) browser checks passed with no horizontal
+  overflow. The mobile country selector opens its 27-country list without
+  navigating away or throwing a browser error.
+- The first staged Vercel production build also passed all 87 article, 51 image
+  and three canonical checks using existing project authorization. Its expected
+  platform noindex header was allowed only in protected-preview verification;
+  this does not replace strict verification on the public domain after release.
 - Project-wide publication instructions in `AGENTS.md` apply to all article
   chats, explicitly including `telegraaf.`. The old ignored publishing scripts
   are not an approved release path. The primary project checkout must be brought
