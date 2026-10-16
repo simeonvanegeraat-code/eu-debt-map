@@ -11,7 +11,6 @@ import PerCapitaExplorer from "./PerCapitaExplorer";
 import PerCapitaSource from "./PerCapitaSource";
 import IndicatorRanking from "./IndicatorRanking";
 import styles from "./fiscal.module.css";
-import capitaStyles from "./per-capita.module.css";
 import { DERIVED_DATASET_LICENSE_URL } from "@/lib/dataset-license";
 
 const SITE = "https://www.eudebtmap.com";
@@ -46,10 +45,9 @@ export default function PerCapitaPage({ lang = "en" }) {
     <header className={styles.hero}><div className={styles.shell}><p className={styles.eyebrow}>{copy.eyebrow}</p><h1>{copy.title}</h1><p className={styles.intro}>{copy.intro}</p><p className={styles.period}>{copy.calculated}</p>
       <dl className={styles.heroStats}><div><dt>{copy.eu}</dt><dd>{capitaNumber(eu?.value,lang)}</dd><small>{copy.perResident}</small></div><div><dt>{copy.debtDate}</dt><dd>{snapshot.debtYear}</dd><small>{snapshot.debtDate}</small></div><div><dt>{copy.populationDate}</dt><dd>{snapshot.populationYear}</dd><small>{snapshot.populationDate}</small></div></dl><p className={styles.heroNote}>{copy.euNote}</p>{eu?.status && <p className={styles.heroNote}>{copy.estimate}</p>}
     </div></header>
-    <div className={styles.shell}><p className={capitaStyles.notice}>{copy.warning}</p></div>
     <PerCapitaExplorer rows={rows} debtYear={snapshot.debtYear} populationYear={snapshot.populationYear} lang={lang} />
     <IndicatorRanking id="per-capita-ranking" title={copy.rankingTitle} caption={`${copy.value} · ${snapshot.debtYear} / ${snapshot.populationDate}`} columns={columns} rows={rankingRows} copy={{search:copy.search,rankNote:copy.rankNote,shown:copy.shown,noResults:copy.noResults,rank:copy.rank,country:copy.country}} locale={copy.locale} />
-    <section className={`${styles.context} ${styles.shell}`} aria-labelledby="per-capita-context-title"><p className={styles.eyebrow}>{copy.calculation}</p><h2 id="per-capita-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.datesTitle}</h3><p>{copy.datesText}</p><p>{copy.formula}</p></div><div><h3>{copy.meaningTitle}</h3><p>{copy.meaningText}</p><Link href={fiscalPath("/deficit",lang)}>{copy.balanceLink} →</Link></div></div><Link className={styles.textLink} href={fiscalPath("/",lang)}>{copy.debtLink} →</Link></section>
+    <section className={`${styles.context} ${styles.shell}`} aria-labelledby="per-capita-context-title"><p className={styles.eyebrow}>{copy.calculation}</p><h2 id="per-capita-context-title">{copy.contextTitle}</h2><div className={styles.contextGrid}><div><h3>{copy.datesTitle}</h3><p>{copy.datesText}</p><p>{copy.formula}</p></div><div><h3>{copy.meaningTitle}</h3><p>{copy.meaningText}</p><p>{copy.warning}</p><Link href={fiscalPath("/deficit",lang)}>{copy.balanceLink} →</Link></div></div><Link className={styles.textLink} href={fiscalPath("/",lang)}>{copy.debtLink} →</Link></section>
     <div className={styles.shell}><PerCapitaSource lang={lang} /></div>
     <FiscalRelatedLinks indicator="debt-per-capita" lang={lang} />
   </article>;

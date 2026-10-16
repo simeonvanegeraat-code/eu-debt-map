@@ -4,6 +4,12 @@ This workflow improves eligibility and presentation quality; it cannot guarantee
 Google Discover traffic. Discover does not require a special tag or schema type.
 The `contentStandard` field is an internal EU Debt Map quality gate only.
 
+Before drafting or substantially rewriting an article, follow
+[the editorial and writing standard](article-editorial-standard.md). Complete its
+editorial brief, choose the genre and distinct reader question, and verify the
+claim ledger before polishing the prose. Do not silently substitute an update to
+an existing article when a new article was requested.
+
 ## Create a draft
 
 ```bash
@@ -29,12 +35,17 @@ the draft is being written.
    must not be presented as photographs of real events.
 4. Write meaningful alternative text and keep the large-image preview enabled.
 5. Add descriptive internal links to the relevant country page, debt-to-GDP page
-   and methodology.
+   and methodology. Keep external source links in a visible sources section at
+   the end, preserving attribution in the prose. Inline external links are an
+   exception requiring a specific reader benefit; follow the editorial standard.
 6. Set `dateModified` and `dateReviewed` only after a substantive update or a real
    editorial review. Do not change dates merely to make an article look recent.
 7. Keep at most one `<!-- MID_ARTICLE_AD -->` marker. Consent and AdSense scripts
    stay in the shared site configuration, never inside article HTML.
-8. Treat tables as dense-data tools, not as default article layout. For four or
+8. Complete the editorial standard's section 5a prose edit: check concrete detail,
+   argument progression, rhythm, reader comprehension, and the ending. Record
+   actual revisions and distinguish real reader feedback from simulated review.
+9. Treat tables as dense-data tools, not as default article layout. For four or
    fewer comparisons, prefer the responsive key-number or balance-card grids.
    When a real table is necessary, keep the first column concise, make the
    wrapper keyboard-focusable, mention horizontal scrolling in its accessible
@@ -47,6 +58,16 @@ npm run audit:articles
 npm test
 npm run build
 ```
+
+Record each public article URL in `content/article-publication-manifest.json`.
+Keep its entry when retiring an article and configure a direct permanent
+redirect to the replacement. The offline prebuild check blocks missing
+publications and broken translation links.
+
+Before an authorized release, run `npm run preflight:publication` from the clean
+release checkout. Verify the production build and the exact deployment using
+`npm run verify:publication -- --base-url <origin>`. See
+[the publication recovery and release procedure](article-publication-recovery-2026-10-15.md).
 
 ## Updating and consolidating old articles
 

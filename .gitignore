@@ -28,3 +28,4 @@ Thumbs.db
 
 # Generated local design and browser audit artifacts
 reports/
+.vercel

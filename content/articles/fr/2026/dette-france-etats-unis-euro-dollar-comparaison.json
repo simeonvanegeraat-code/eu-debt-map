@@ -1,0 +1,109 @@
+{
+  "contentStandard": "discover-2026-v1",
+  "slug": "dette-france-etats-unis-euro-dollar-comparaison",
+  "title": "Les États-Unis sont plus endettés : pourquoi cela ne rassure pas la France",
+  "seoTitle": "Dette française et américaine : ce que change l’euro",
+  "summary": "Les États-Unis portent une dette plus élevée que la France. Mais le rôle du dollar et les protections de l’euro changent la comparaison. Voici pourquoi.",
+  "excerpt": "L’exemple américain ne constitue pas une marge d’emprunt pour Paris. L’euro protège la France, sans garantir automatiquement le financement de ses déficits.",
+  "primaryTopic": "dette publique France États-Unis euro dollar",
+  "countryPageFallback": false,
+  "relatedCountries": [
+    "FR"
+  ],
+  "articleType": "analysis",
+  "tags": [
+    "dette publique",
+    "France",
+    "États-Unis",
+    "euro",
+    "dollar"
+  ],
+  "lang": "fr",
+  "datePublished": "2026-10-11T14:21:00+02:00",
+  "dateModified": "2026-10-11T14:21:00+02:00",
+  "dateReviewed": "2026-10-11T14:21:00+02:00",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/methodology"
+  },
+  "readingMinutes": 7,
+  "image": "/images/articles/dette-france-etats-unis-euro-dollar-comparaison.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "Une femme vue de dos, un dossier à la main, sur l’esplanade de La Défense, face aux tours et à la Grande Arche",
+  "imageCredit": "Illustration éditoriale originale créée pour EU Debt Map",
+  "sourceNote": "Sources officielles consultées le 11 octobre 2026. Comparaison annuelle 2025 : dette française révisable au sens de Maastricht et estimation américaine du FMI publiée en avril 2026, avec des conventions comptables différentes. Le chiffre français du deuxième trimestre 2026 est distinct. Les projections fédérales du CBO sont conditionnelles.",
+  "relatedLinks": [
+    {
+      "label": "Suivre la dette publique française et ses mesures officielles",
+      "url": "https://www.eudebtmap.com/fr/country/fr"
+    },
+    {
+      "label": "Comparer les dettes publiques européennes au PIB",
+      "url": "https://www.eudebtmap.com/fr/debt-to-gdp"
+    },
+    {
+      "label": "Comprendre les sources et les compteurs du site",
+      "url": "https://www.eudebtmap.com/fr/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Insee : dette publique, deuxième trimestre 2026 et historique 2025",
+      "url": "https://www.insee.fr/fr/statistiques/9053525",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "FMI : consultation de 2026 avec les États-Unis, estimation de la dette en 2025",
+      "url": "https://www.imf.org/en/news/articles/2026/04/01/pr-26102-usa-imf-executive-board-concludes-2026-article-iv-consult",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "Réserve fédérale : le rôle international du dollar, édition 2025",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/the-international-role-of-the-u-s-dollar-2025-edition-20250718.html",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "Banque de France : le rôle international de l’euro en 2025",
+      "url": "https://www.banque-france.fr/fr/communiques-de-presse/le-role-international-de-leuro-sest-moderement-accru-en-2025",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "BCE : les avantages de la monnaie commune",
+      "url": "https://www.ecb.europa.eu/ecb-and-you/explainers/tell-me/html/benefits-euro-euroat20.en.html",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "BCE : mandat monétaire et interdiction du financement monétaire",
+      "url": "https://www.ecb.europa.eu/press/key/date/2016/html/sp160623.et.html",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "BCE : instrument de protection de la transmission et critères d’éligibilité",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2022/html/ecb.pr220721~973e6e7273.en.html",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "Réserve fédérale : achats de titres et décisions d’emprunt du gouvernement",
+      "url": "https://www.federalreserve.gov/faqs/how-does-the-federal-reserve-buying-and-selling-of-securities-relate-to-the-borrowing-decisions-of-the-federal-government.htm",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "Congressional Budget Office : projections budgétaires 2026–2036",
+      "url": "https://www.cbo.gov/publication/62105",
+      "accessed": "2026-10-11"
+    },
+    {
+      "name": "FMI : conclusions des services sur la France, mai 2026",
+      "url": "https://www.imf.org/fr/news/articles/2026/05/21/mcs-052126-france-staff-concluding-statement-of-the-2026-article-iv-mission",
+      "accessed": "2026-10-11"
+    }
+  ],
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste raw AdSense scripts into the body.",
+  "contentNotes": "Nouvelle analyse française, distincte du guide général Europe–États-Unis ; ne pas l’associer comme traduction de l’article néerlandais sur les répercussions d’une crise française. Recherche, rédaction complète et contrôles éditoriaux assistés par IA ; aucune lecture ni approbation éditoriale humaine n’est attestée. Illustration générée par IA, sans personne identifiable ni événement réel. Les futures publications du FMI prévues les 13 et 14 octobre 2026 nécessitent un contrôle du millésime avant toute republication à partir de ces dates. Mise en ligne autorisée par le propriétaire le 11 octobre 2026 ; cette autorisation ne constitue pas une lecture éditoriale indépendante.",
+  "body": "<p class='article-intro'>Les États-Unis sont plus endettés que la France. Faut-il en conclure que Paris s’inquiète pour rien ? Le rapprochement est tentant : pourquoi demander des efforts aux Français quand Washington continue d’emprunter ? Mais une dette ne se juge pas seulement à sa taille. Elle dépend aussi de ceux qui acceptent de la financer, de la monnaie utilisée et de la confiance dans les décisions à venir.</p>\n<p><strong>La comparaison américaine ne dispense donc pas la France de faire ses choix budgétaires.</strong> Elle oblige, en revanche, à regarder ce que l’euro lui apporte réellement. Notre analyse : la monnaie commune offre une protection précieuse, sans donner à Paris les mêmes atouts que Washington.</p>\n<h2>Deux dettes élevées, à comparer correctement</h2>\n<p>Pour 2025, l’Insee situe la dette publique française à <strong>115,7 % du produit intérieur brut (PIB)</strong>, la richesse produite en un an. Le FMI estime la dette publique brute américaine à <strong>123,9 % du PIB</strong> dans sa publication d’avril 2026. On compare ici l’ensemble des administrations publiques, et non la seule dette fédérale américaine avec toute la dette française. Les conventions comptables restent différentes : ces chiffres donnent un ordre de grandeur, pas un classement précis des risques.</p>\n<p>La France dispose depuis d’un chiffre plus récent : <strong>119,0 % du PIB à la fin du deuxième trimestre 2026</strong>, selon l’Insee. Il décrit une autre période que la comparaison annuelle ci-dessus. Pour suivre la série européenne et ses dates de référence, notre <a href='/fr/country/fr'>page consacrée à la dette publique française</a> permet de replacer les mesures officielles dans leur évolution. Les publications nationales peuvent être plus récentes que les données Eurostat qui y figurent.</p>\n<p>Un ratio de 115,7 % ne signifie pas que la France doit rembourser cette somme l’an prochain. Il rapporte un stock de dette à une année d’activité. Ce qui compte pour le budget, c’est notamment le coût des intérêts, les emprunts arrivant à échéance et le déficit qu’il faut encore financer.</p>\n<h2>Le dollar attire des acheteurs que Paris ne commande pas</h2>\n<p>Les titres du Trésor américain servent bien au-delà du financement du gouvernement. Banques centrales et investisseurs les utilisent pour placer leurs réserves ou disposer d’actifs faciles à acheter et à revendre. La profondeur de ce marché et le rôle international du dollar se renforcent mutuellement, comme l’explique la Réserve fédérale.</p>\n<p>C’est un avantage concret : Washington bénéficie d’une demande qui ne repose pas uniquement sur le jugement porté sur son prochain budget. Cela ne veut dire ni que cette demande est acquise pour toujours, ni que les États-Unis empruntent systématiquement moins cher que la France. Les taux dépendent aussi de l’inflation, des décisions monétaires et de la durée des titres.</p>\n<p>La France peut améliorer ses finances, mais elle ne peut pas décider que ses obligations joueront demain le même rôle mondial que les titres américains. C’est la limite du raisonnement qui consiste à prendre le niveau de dette des États-Unis comme autorisation d’emprunter davantage.</p>\n<!-- MID_ARTICLE_AD -->\n<h2>L’euro protège la France, sans mutualiser toute sa dette</h2>\n<p>Il serait pourtant faux de présenter la France comme un pays privé des avantages d’une grande monnaie. L’euro est la deuxième monnaie internationale, rappelle la Banque de France. Une entreprise française qui vend et se fait payer en euros en Allemagne ne subit pas de variation de change entre ces deux monnaies nationales : elles n’existent plus.</p>\n<p>La même monnaie facilite les placements entre pays membres. Mais acheter une obligation française ou allemande reste une décision différente. <strong>Partager l’euro ne signifie pas partager automatiquement toutes les dettes.</strong> Les recettes fiscales qui servent à payer les intérêts français relèvent du budget français. Un investisseur peut donc demander une rémunération différente selon l’État auquel il prête.</p>\n<p>Pour situer la France parmi ses voisins, la <a href='/fr/debt-to-gdp'>comparaison des dettes publiques rapportées au PIB</a> donne un repère utile. Elle ne suffit pas, à elle seule, à déterminer quel pays résisterait le mieux à une crise.</p>\n<h2>Une banque centrale commune n’est pas un chèque en blanc</h2>\n<p>Voici l’objection la plus sérieuse : dans l’euro, Paris ne choisit ni un taux d’intérêt adapté à la seule économie française, ni une dévaluation nationale. La BCE conduit sa politique pour la zone euro. Le gouvernement ne peut pas non plus lui ordonner de financer directement ses déficits. Cette contrainte est réelle.</p>\n<p>La BCE dispose cependant d’instruments contre des tensions de marché injustifiées qui empêcheraient sa politique monétaire de se transmettre correctement. Son instrument de protection de la transmission, appelé TPI, permet des achats de titres sous conditions, avec notamment une évaluation de la soutenabilité de la dette et des politiques économiques. Une procédure européenne pour déficit excessif n’exclut pas à elle seule un pays ; la réponse aux recommandations compte aussi.</p>\n<p>Ce dispositif ne garantit donc pas le financement de n’importe quel budget français. Mais il serait tout aussi trompeur de décrire la France comme entièrement dépourvue de protection face à une panique financière.</p>\n<p>En sortirait-elle gagnante avec sa propre monnaie ? Cette comparaison ne permet pas de l’affirmer. Retrouver un taux de change national ne donnerait pas à cette monnaie le statut du dollar. Présenter la sortie de l’euro comme un raccourci vers les capacités d’emprunt américaines confond deux sujets.</p>\n<h2>Même Washington paie ses intérêts</h2>\n<p>L’autre raccourci consiste à croire que les États-Unis peuvent simplement créer les dollars nécessaires. Leur banque centrale, la Réserve fédérale, ne reçoit pas ses instructions du Trésor pour financer le déficit. Elle précise qu’elle n’achète pas directement les nouveaux titres lors des adjudications. Ses achats sur le marché servent sa politique monétaire.</p>\n<p>Le privilège du dollar ne supprime d’ailleurs pas la facture. Le Congressional Budget Office, organisme d’analyse budgétaire du Congrès, projette des intérêts nets fédéraux représentant <strong>3,3 % du PIB en 2026 et 4,6 % en 2036</strong>, si les lois en vigueur restent globalement inchangées. Il s’agit de projections américaines, pas d’une charge observée ni d’une comparaison directe avec les intérêts français.</p>\n<p>Ces intérêts mobilisent des ressources qui ne sont plus disponibles pour d’autres dépenses, sauf à augmenter les recettes ou à emprunter davantage. Une monnaie recherchée peut donner du temps. Elle ne rend pas cet arbitrage gratuit.</p>\n<h2>Le vrai débat français commence après la comparaison</h2>\n<p>Les services du FMI demandaient en mai 2026 à la France une trajectoire budgétaire crédible, tout en soutenant la croissance. Ce dernier point importe : réduire le déficit en affaiblissant durablement l’activité peut rendre le désendettement plus difficile. L’enjeu dépasse le choix entre couper partout et laisser filer tous les déficits.</p>\n<p>Pour les Français, le risque peut se matérialiser bien avant un défaut de paiement : une charge d’intérêts plus lourde peut réduire les moyens disponibles pour les services publics ou conduire à de nouveaux prélèvements. Ce sont des conséquences possibles des choix de financement, pas une prévision de faillite.</p>\n<p>La comparaison avec Washington devrait donc rendre le débat plus exigeant. Un budget français doit expliquer ce qu’il finance, comment il soutient l’activité et pourquoi sa trajectoire reste tenable si la croissance déçoit. <strong>Une dette américaine plus élevée ne répond à aucune de ces trois questions.</strong></p>\n<details id='article-sources'><summary>Sources et méthode</summary><p>Analyse préparée avec l’aide de l’IA et vérification des sources officielles le 11 octobre 2026. La comparaison annuelle porte sur 2025 : dette française au sens de Maastricht, révisable, et estimation du FMI publiée en avril 2026 pour la dette publique brute américaine. Les périmètres généraux sont proches, mais les conventions ne sont pas identiques. Le chiffre français du deuxième trimestre 2026 est présenté séparément. Les projections du CBO sont conditionnelles et concernent le budget fédéral. Aucun calcul de probabilité de défaut ni comparaison des taux du jour n’est proposé.</p><p>Les méthodes du site et la distinction entre observations et compteurs modélisés sont expliquées dans notre <a href='/fr/methodology'>méthodologie</a>. L’image est une illustration éditoriale originale générée pour EU Debt Map, et non la photographie d’un événement.</p><ul><li><a href='https://www.insee.fr/fr/statistiques/9053525'>Insee : dette publique, deuxième trimestre 2026 et historique 2025</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.imf.org/en/news/articles/2026/04/01/pr-26102-usa-imf-executive-board-concludes-2026-article-iv-consult'>FMI : consultation de 2026 avec les États-Unis, estimation de la dette en 2025</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.federalreserve.gov/econres/notes/feds-notes/the-international-role-of-the-u-s-dollar-2025-edition-20250718.html'>Réserve fédérale : le rôle international du dollar, édition 2025</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.banque-france.fr/fr/communiques-de-presse/le-role-international-de-leuro-sest-moderement-accru-en-2025'>Banque de France : le rôle international de l’euro en 2025</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.ecb.europa.eu/ecb-and-you/explainers/tell-me/html/benefits-euro-euroat20.en.html'>BCE : les avantages de la monnaie commune</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.ecb.europa.eu/press/key/date/2016/html/sp160623.et.html'>BCE : mandat monétaire et interdiction du financement monétaire</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.ecb.europa.eu/press/pr/date/2022/html/ecb.pr220721~973e6e7273.en.html'>BCE : instrument de protection de la transmission et critères d’éligibilité</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.federalreserve.gov/faqs/how-does-the-federal-reserve-buying-and-selling-of-securities-relate-to-the-borrowing-decisions-of-the-federal-government.htm'>Réserve fédérale : achats de titres et décisions d’emprunt du gouvernement</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.cbo.gov/publication/62105'>Congressional Budget Office : projections budgétaires 2026–2036</a> — consulté le 11 octobre 2026.</li><li><a href='https://www.imf.org/fr/news/articles/2026/05/21/mcs-052126-france-staff-concluding-statement-of-the-2026-article-iv-mission'>FMI : conclusions des services sur la France, mai 2026</a> — consulté le 11 octobre 2026.</li></ul></details>"
+}

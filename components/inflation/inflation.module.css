@@ -107,9 +107,10 @@
 .sharePanel input { flex: 1; min-width: 0; padding: 12px; border: 1px solid #bac8d9; border-radius: 5px; font: inherit; font-size: 13px; }
 .sharePanel p { font-size: 13px; color: #52627a; }
 .page input:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
-.chart svg { cursor: crosshair; }
+.chart svg { cursor: crosshair; touch-action: manipulation; }
 .chartSelection { padding: 14px 12px 0; }
 .chartReadout { padding: 16px; margin-bottom: 16px; background: #eaf0f7; border-radius: 5px; }
+.chartReadoutPreview { box-shadow: inset 3px 0 0 #52627a; }
 .chartReadout > strong { font-size: 13px; }
 .chartReadout dl { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 12px 0 0; }
 .chartReadout dl > div { display: flex; align-items: baseline; gap: 12px; }

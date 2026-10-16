@@ -10,6 +10,33 @@ const {
   isActivePath,
   normalizeNavigationSearch,
 } = require('../lib/navigation');
+const { COUNTRY_DISCOVERY_ORDER, nextDiscoveryCountries } = require('../lib/country-discovery');
+
+test('country discovery reaches every EU country before repeating and offers two forward steps', () => {
+  assert.equal(COUNTRY_DISCOVERY_ORDER.length, 27);
+  assert.deepEqual([...COUNTRY_DISCOVERY_ORDER].sort(), [...EU27].sort());
+  for (const start of EU27) {
+    let current = start;
+    const visited = [];
+    for (let step = 0; step < 27; step++) {
+      assert(!visited.includes(current), `Early repeat from ${start}: ${current}`);
+      visited.push(current);
+      const next = nextDiscoveryCountries(current);
+      assert.equal(next.length, 2);
+      assert(!next.includes(current));
+      assert.equal(new Set(next).size, 2);
+      assert.equal(next[1], nextDiscoveryCountries(next[0])[0]);
+      current = next[0];
+    }
+    assert.equal(current, start);
+    assert.deepEqual(visited.sort(), [...EU27].sort());
+  }
+  assert.deepEqual(nextDiscoveryCountries('nl'), ['DE', 'FR']);
+  assert.deepEqual(nextDiscoveryCountries('DE'), ['FR', 'IT']);
+  assert.deepEqual(nextDiscoveryCountries('FR'), ['IT', 'ES']);
+  assert.deepEqual(nextDiscoveryCountries('unknown'), []);
+  assert.deepEqual(nextDiscoveryCountries(null), []);
+});
 
 const SECTIONS = ['/', '/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/debt', '/deficit', '/interest-cost', '/government-spending', '/inflation', '/articles', '/methodology', '/about'];
 

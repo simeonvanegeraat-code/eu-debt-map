@@ -66,10 +66,15 @@ test("all article hubs expose crawlable server pagination", () => {
     "app/fr/articles/page.jsx",
   ]) {
     const source = read(page);
-    assert.match(source, /ArticleArchivePagination/);
+    assert.match(source, /ArticleArchiveHome/);
     assert.match(source, /articles=\{firstArchivePage\.items\}/);
     assert.match(source, /itemListElement: firstPageArticles\.map/);
   }
+  const home = read("components/ArticleArchiveHome.jsx");
+  assert.match(home, /<ArticleArchivePagination/);
+  assert.match(home, /currentPage=\{pagination\.currentPage\}/);
+  assert.match(home, /totalPages=\{pagination\.totalPages\}/);
+  assert.doesNotMatch(home, /["']use client["']/);
 });
 
 test("the language switcher cannot send archive visitors to a missing page", () => {

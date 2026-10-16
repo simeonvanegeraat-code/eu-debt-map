@@ -83,7 +83,7 @@ const COPY = {
 export function getGrowthCopy(lang = "en") { return COPY[lang] || COPY.en; }
 export function growthNumber(value, lang = "en", type = "eur", signed = false) {
   if (!Number.isFinite(value)) return "—";
-  const options = type === "eur" || type === "compact" ? { style: "currency", currency: "EUR", maximumFractionDigits: type === "compact" ? 2 : 0, ...(type === "compact" ? {notation:"compact"} : {}) }
+  const options = type === "eur" || type === "compact" ? { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: type === "compact" ? 2 : 0, ...(type === "compact" ? {notation:"compact"} : {}) }
     : {minimumFractionDigits:1,maximumFractionDigits:1};
   const normalized = Math.abs(value) < 0.00001 ? 0 : value;
   return new Intl.NumberFormat(getGrowthCopy(lang).locale, {...options, ...(signed ? {signDisplay:"exceptZero"} : {})}).format(normalized) + (type === "percent" ? "%" : type === "pp" ? (lang === "de" ? " Pp." : " pp") : "");

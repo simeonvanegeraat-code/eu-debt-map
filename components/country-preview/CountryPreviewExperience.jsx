@@ -37,6 +37,7 @@ function money(value, locale, compact = true) {
     style: "currency",
     currency: "EUR",
     notation: compact ? "compact" : "standard",
+    minimumFractionDigits: 0,
     maximumFractionDigits: compact ? 2 : 0,
   }).format(value);
 }

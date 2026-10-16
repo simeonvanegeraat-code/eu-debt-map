@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ArticleCard from "@/components/ArticleCard";
+import ArticleArchiveStory from "@/components/ArticleArchiveStory";
+import archiveStyles from "./ArticleArchiveHome.module.css";
 import ArticleArchivePagination from "@/components/ArticleArchivePagination";
 import { listArticles } from "@/lib/articles";
 import paginationCore from "@/lib/articleArchivePagination.cjs";
@@ -162,12 +163,11 @@ export default function PaginatedArticleArchivePage({ lang = "en", page }) {
           <p className={styles.description}>{t.description}</p>
         </header>
 
-        <ul className={styles.list}>
+        <ul className={archiveStyles.list}>
           {archive.data.items.map((article) => (
-            <ArticleCard
-              key={`${article.lang}-${article.slug}`}
-              article={article}
-            />
+            <li key={`${article.lang}-${article.slug}`}>
+              <ArticleArchiveStory article={article} />
+            </li>
           ))}
         </ul>
 

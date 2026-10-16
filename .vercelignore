@@ -1,0 +1,8 @@
+.codex-vercel-cache/
+.codex-remote-attachments/
+.codex/
+.agents/
+reports/
+.env
+.env.*
+*.log

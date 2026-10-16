@@ -270,7 +270,7 @@ test("localized route layouts set the document language during initial load and 
   }
 });
 
-test("the euro area debt analysis is complete and aligned in all four languages", () => {
+test("the euro area debt analysis preserves comparable quarterly figures in all four languages", () => {
   const files = {
     en: "content/articles/en/2025/eurozone-hidden-debt-timebomb-extended.json",
     nl: "content/articles/nl/2025/eurozone-hidden-debt-timebomb-extended.json",
@@ -279,7 +279,7 @@ test("the euro area debt analysis is complete and aligned in all four languages"
   };
   const expectedNumbers = [
     "88.9", "87.7", "82.9", "143.5", "138.9", "117.6", "109.1",
-    "101.6", "43.8", "64.4", "85.3",
+    "101.6", "43.8", "64.4",
   ];
 
   for (const [lang, file] of Object.entries(files)) {
@@ -291,16 +291,66 @@ test("the euro area debt analysis is complete and aligned in all four languages"
     assert.equal(article.image, "/images/articles/eurozone-debt-risks-2026-editorial-v2.jpg");
     assert.equal(article.imageWidth, 1672);
     assert.equal(article.imageHeight, 941);
-    assert.equal(article.sources.length, 5);
+    assert.equal(article.sources.length, lang === "nl" ? 3 : 5);
     assert.deepEqual(article.relatedCountries, ["GR", "IT", "FR", "BE", "ES", "DE", "NL"]);
     assert.doesNotMatch(article.body, /contentReference|oaicite/);
-    assert.match(article.body, /<caption>/);
-    assert.match(article.body, /scope='col'/);
+    if (lang === "nl") {
+      assert.doesNotMatch(article.body, /<table/);
+      assert.match(article.body, /september 2026/);
+      assert.match(normalizedBody, /1\.4% in 2027/);
+      assert.match(article.body, /21 oktober 2026/);
+      assert.ok(article.sources.some((source) => source.url === "https://www.ecb.europa.eu/mopo/devel/ecana/html/table.sr.html"));
+    } else {
+      assert.match(article.body, /<caption>/);
+      assert.match(article.body, /scope='col'/);
+      assert.match(normalizedBody, /85\.3/);
+    }
 
     for (const value of expectedNumbers) {
       assert.match(normalizedBody, new RegExp(value.replace(".", "\\.")), `${lang}: ${value}`);
     }
   }
+});
+
+test("the Dutch budget analysis distinguishes the latest CBS observation from budget forecasts", () => {
+  const article = JSON.parse(fs.readFileSync(
+    path.join(ROOT, "content/articles/nl/2025/hollandse-paradox-bezuinigen-bij-lage-staatsschuld.json"),
+    "utf8"
+  ));
+
+  assert.equal(article.slug, "hollandse-paradox-bezuinigen-bij-lage-staatsschuld");
+  assert.equal(article.datePublished, "2026-08-19T01:25:30+02:00");
+  assert.match(article.body, /juni 2026/);
+  assert.match(article.body, /43,7%/);
+  for (const forecast of ["45,6%", "46,9%", "49,6%", "2,9%"]) {
+    assert.ok(article.body.includes(forecast), `Missing budget forecast: ${forecast}`);
+  }
+  assert.match(article.body, /Miljoenennota 2027/);
+  assert.match(article.sourceNote, /voorlopige/);
+  assert.match(article.sourceNote, /ramingen/);
+  assert.doesNotMatch(article.body, /<table|nog niet afgeronde begroting|€17,453/);
+  assert.ok(article.sources.some((source) => source.url === "https://www.rijksfinancien.nl/miljoenennota/2027"));
+  assert.ok(article.sources.some((source) => new URL(source.url).hostname === "www.cbs.nl"));
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+});
+
+test("the Dutch investment explainer dates the historical estimate and labels its illustrative example", () => {
+  const article = JSON.parse(fs.readFileSync(
+    path.join(ROOT, "content/articles/nl/2025/europa-schuldendilemma-investeren-voor-de-toekomst.json"),
+    "utf8"
+  ));
+
+  assert.equal(article.slug, "europa-schuldendilemma-investeren-voor-de-toekomst");
+  assert.equal(article.datePublished, "2025-11-07T09:00:00+01:00");
+  assert.doesNotMatch(article.title, /triljoen/i);
+  assert.match(article.body, /€750–800 miljard/);
+  assert.match(article.body, /september 2024/);
+  assert.match(article.body, /publieke én private/);
+  assert.match(article.body, /geen verslag van een specifiek project/);
+  assert.match(article.body, /3 maart 2026/);
+  assert.match(article.body, /href='\/nl\/debt-to-gdp'/);
+  assert.doesNotMatch(article.body, /<table/);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
 });
 
 test("the US 40 trillion debt article keeps its definitions and figures aligned in all four languages", () => {
@@ -480,6 +530,36 @@ test("localized 2026 debt-per-capita articles use identical country data and exp
   }
 });
 
+test("Dutch debt-per-capita update preserves search intent and explains the annual comparison link", () => {
+  const article = JSON.parse(fs.readFileSync(path.join(ROOT,
+    "content/articles/nl/2026/eu-staatsschuld-per-inwoner-2026-analyse.json"), "utf8"));
+  const baseline = JSON.parse(fs.readFileSync(path.join(ROOT,
+    "content/articles/en/2026/eu-debt-per-capita-2026-inequality-report.json"), "utf8"));
+  const amounts = (body) => [...body.matchAll(/<tr><td>\d+<\/td><td>[\s\S]*?<\/td><td>([\s\S]*?)<\/td><\/tr>/g)]
+    .map((match) => Number(match[1].replace(/[^0-9]/g, "")));
+  assert.equal(article.slug, "eu-staatsschuld-per-inwoner-2026-analyse");
+  assert.equal(article.title, "EU-staatsschuld per inwoner in 2026: België, Italië en Frankrijk bovenaan");
+  assert.equal(article.seoTitle, "EU-staatsschuld per inwoner 2026: alle 27 landen");
+  assert.equal(article.datePublished, "2026-01-21T09:00:00+00:00");
+  assert.equal(amounts(article.body).length, 27);
+  assert.deepEqual(amounts(article.body), amounts(baseline.body));
+  assert.match(article.body.slice(0, 1600), /href='\/nl\/debt-per-capita'/);
+  assert.match(article.body, /href='\/nl\/debt-per-capita#per-capita-ranking-title'/);
+  assert.match(article.body, /href='\/nl\/debt-per-capita#debt-per-capita-methodology'/);
+  assert.match(article.body, /schuld van eind 2025/);
+  assert.match(article.body, /schuld van eind maart 2026/);
+  assert.match(article.body, /De bedragen kunnen dus verschillen/);
+  assert.match(article.body, /451,99 miljoen/);
+  assert.match(article.body, /€15,70 biljoen/);
+  assert.match(article.body, /€209,25 miljard/);
+  assert.match(article.sourceNote, /Eigen berekening/);
+  assert.match(article.body, /geen rekening voor iedere inwoner/);
+  assert.doesNotMatch(article.summary, /Eurostat zet/);
+  assert.equal(article.relatedLinks[0].url, "https://www.eudebtmap.com/nl/debt-per-capita");
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.equal(article.sources.some((source) => source.url.includes("gov_10q_ggdebt?")), true);
+});
+
 test("article donut visualizations are internally consistent", () => {
   const contentRoot = path.join(ROOT, "content", "articles");
   const stack = [contentRoot];
@@ -551,6 +631,124 @@ test("homepage article cards use isolated responsive styles and descriptive link
 
   assert.match(homepage, /<ul className="eu-home-articles-list">/);
   assert.match(homepage, /<ArticleCard key=\{article\.slug\} article=\{article\} \/>/);
+});
+
+test("French crisis analysis separates Dutch spillovers from automatic default", () => {
+  const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content", "articles", "nl", "2026", "frankrijk-schuldencrisis-gevolgen-nederland.json"), "utf8"));
+
+  assert.equal(article.articleType, "analysis");
+  assert.deepEqual(article.relatedCountries, ["FR", "NL"]);
+  assert.match(article.body, /geen voorspelling dat Frankrijk failliet gaat/);
+  assert.match(article.body, /4,4%/);
+  assert.match(article.body, /daalde het tekort van 5,8% in 2024 naar voorlopig 5,1% in 2025/);
+  assert.match(article.body, /2020 tot en met 2023/);
+  assert.match(article.body, /tot 2029/);
+  assert.match(article.body, /3 juni 2026/);
+  assert.match(article.body, /procedure werd evenmin gesloten/);
+  assert.match(article.body, /geen verklaring dat alle latere begrotingsplannen voldoen/);
+  assert.match(article.body, /wederuitvoer/);
+  assert.match(article.body, /geen bedrag dat bij een crisis volledig verdwijnt/);
+  assert.match(article.body, /sluit inzet niet automatisch uit/);
+  assert.match(article.body, /href='\/nl\/country\/fr'/);
+  assert.match(article.body, /href='\/nl\/debt-to-gdp'/);
+  assert.doesNotMatch(article.body, /<table\b|Veelgestelde vragen/);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.match(article.contentNotes, /menselijke lezing en goedkeuring zijn nog niet uitgevoerd/);
+  const [prose, sourcesFooter] = article.body.split("<details id='article-sources'>");
+  assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+  assert.match(sourcesFooter, /<summary>Bronnen en verantwoording<\/summary>/);
+  assert.equal((sourcesFooter.match(/<li><a /g) || []).length, article.sources.length);
+  for (const source of article.sources) assert.ok(sourcesFooter.includes(source.url));
+  assert.match(prose, /Volgens CBS/);
+  assert.match(prose, /De ECB waarschuwt/);
+  assert.ok(fs.existsSync(path.join(ROOT, "public", article.image)));
+});
+
+test("France-US debt analysis keeps periods, monetary constraints and sources distinct", () => {
+  const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content", "articles", "fr", "2026", "dette-france-etats-unis-euro-dollar-comparaison.json"), "utf8"));
+  const route = fs.readFileSync(path.join(ROOT, "app", "fr", "articles", "[slug]", "page.jsx"), "utf8");
+
+  assert.equal(article.lang, "fr");
+  assert.equal(article.articleType, "analysis");
+  assert.deepEqual(article.relatedCountries, ["FR"]);
+  assert.match(article.body, /Pour 2025/);
+  assert.match(article.body, /115,7 %/);
+  assert.match(article.body, /123,9 %/);
+  assert.match(article.body, /publication d’avril 2026/);
+  assert.match(article.body, /119,0 % du PIB à la fin du deuxième trimestre 2026/);
+  assert.match(article.body, /conventions comptables restent différentes/);
+  assert.match(article.body, /ne signifie pas partager automatiquement toutes les dettes/);
+  assert.match(article.body, /n’exclut pas à elle seule/);
+  assert.match(article.body, /n’achète pas directement les nouveaux titres/);
+  assert.match(article.body, /3,3 % du PIB en 2026 et 4,6 % en 2036/);
+  assert.match(article.body, /projections américaines/);
+  assert.match(article.body, /href='\/fr\/country\/fr'/);
+  assert.match(article.body, /href='\/fr\/debt-to-gdp'/);
+  assert.doesNotMatch(article.body, /<table\b|Questions fréquentes/);
+  assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  assert.match(article.contentNotes, /aucune lecture ni approbation (?:éditoriale )?humaine/);
+  const [prose, footer] = article.body.split("<details id='article-sources'>");
+  assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+  assert.match(footer, /<summary>Sources et méthode<\/summary>/);
+  assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+  for (const source of article.sources) assert.ok(footer.includes(source.url));
+  assert.match(route, /article\.sourceNote\s*\|\|/);
+  assert.match(route, /<figcaption>\{article\.imageCredit\}<\/figcaption>/);
+  assert.ok(fs.existsSync(path.join(ROOT, "public", article.image)));
+});
+
+test("inflation-debt editions preserve fictional arithmetic, localized links and source footers", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "content", "article-translations.json"), "utf8"));
+  const translations = registry["inflation-government-debt"];
+  assert.deepEqual(Object.keys(translations).sort(), ["de", "en", "fr", "nl"]);
+  assert.equal((100 / 110 * 100).toFixed(1), "90.9");
+  assert.equal((1000 / 1.1).toFixed(0), "909");
+
+  for (const [lang, slug] of Object.entries(translations)) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content", "articles", lang, "2026", `${slug}.json`), "utf8"));
+    const prefix = lang === "en" ? "" : `/${lang}`;
+    const [prose, footer] = article.body.split("<details id='article-sources'>");
+    assert.equal(article.lang, lang);
+    assert.equal(article.articleType, "analysis");
+    assert.match(prose, lang === "en" ? /90\.9%/ : /90,9\s*%/);
+    assert.match(prose, /909/);
+    assert.match(prose, /110/);
+    assert.ok(prose.includes(`href='${prefix}/inflation'`));
+    assert.ok(prose.includes(`href='${prefix}/debt-to-gdp'`));
+    assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+    assert.doesNotMatch(prose, /<table\b/);
+    assert.equal(article.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+    assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+    for (const source of article.sources) {
+      assert.equal(source.accessed, "2026-10-11");
+      assert.ok(footer.includes(source.url));
+    }
+    assert.match(article.contentNotes, /no independent human or native-language review claimed/);
+    assert.ok(fs.existsSync(path.join(ROOT, "public", article.image)));
+    const metadata = buildArticleMetadata({article,translations:Object.entries(translations).map(([lang,slug])=>({lang,slug})),slug,lang,ogImage:`https://www.eudebtmap.com${article.image}`});
+    assert.equal(metadata.alternates.canonical, `https://www.eudebtmap.com${prefix}/articles/${slug}`);
+    for (const [targetLang,targetSlug] of Object.entries(translations)) {
+      const targetPrefix = targetLang === "en" ? "" : `/${targetLang}`;
+      assert.equal(metadata.alternates.languages[targetLang], `https://www.eudebtmap.com${targetPrefix}/articles/${targetSlug}`);
+    }
+  }
+});
+
+test("inflation-debt country adaptations distinguish observed examples and indexed liabilities", () => {
+  const slugs = JSON.parse(fs.readFileSync(path.join(ROOT, "content", "article-translations.json"), "utf8"))["inflation-government-debt"];
+  const articles = Object.fromEntries(Object.entries(slugs).map(([lang,slug])=>[lang,JSON.parse(fs.readFileSync(path.join(ROOT, "content", "articles", lang, "2026", `${slug}.json`), "utf8"))]));
+  assert.match(articles.nl.body, /CBS-publicatie van 26 maart 2026/);
+  assert.match(articles.nl.body, /eerste, voorlopige cijfers/);
+  assert.match(articles.nl.body, /niet de nieuwste kwartaalstand/);
+  assert.match(articles.fr.body, /OATi et OAT€i/);
+  assert.match(articles.fr.body, /ne concerne pas toute la dette française/);
+  assert.match(articles.de.body, /seit 2024 keine neuen/);
+  assert.match(articles.de.body, /bleiben aber im Umlauf/);
+  assert.match(articles.en.body, /not a model of the European economy/);
+  assert.deepEqual(articles.nl.relatedCountries, ["NL"]);
+  assert.deepEqual(articles.fr.relatedCountries, ["FR"]);
+  assert.deepEqual(articles.de.relatedCountries, ["DE"]);
+  assert.deepEqual(articles.en.relatedCountries, []);
 });
 
 test("article recommendations localize their supporting text", () => {

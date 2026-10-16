@@ -24,7 +24,7 @@ function formatRatio(value, locale) {
 
 function formatDebt(value, locale, compact = true) {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", notation: compact ? "compact" : "standard", maximumFractionDigits: compact ? 2 : 0 }).format(value);
+  return new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", notation: compact ? "compact" : "standard", minimumFractionDigits: 0, maximumFractionDigits: compact ? 2 : 0 }).format(value);
 }
 
 function bandFor(ratio) {

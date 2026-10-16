@@ -103,6 +103,17 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
     setPreviewCode(null);
   }
 
+  function scrollToCountryDirectory(event) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const directory = document.getElementById("country-directory");
+    if (!directory) return;
+
+    event.preventDefault();
+    directory.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(window.history.state, "", countryDirectoryHref);
+  }
+
   return (
     <div className={styles.page}>
       <section className={styles.hero} aria-labelledby="home-title">
@@ -266,7 +277,11 @@ export default function HomePreviewExperience({ lang = "en", articles = [], prev
                   </div>
                 </dl>
 
-                <Link className={styles.countryCta} href={countryDirectoryHref}>
+                <Link
+                  className={styles.countryCta}
+                  href={countryDirectoryHref}
+                  onClick={scrollToCountryDirectory}
+                >
                   <span>{copy.exploreCountries}</span>
                   <b aria-hidden="true">→</b>
                 </Link>

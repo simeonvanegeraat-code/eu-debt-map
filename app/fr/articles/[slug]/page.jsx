@@ -267,6 +267,7 @@ export default async function ArticleDetailPage({ params }) {
               width={article.imageWidth || 1200}
               height={article.imageHeight || 675}
             />
+            {article.imageCredit && <figcaption>{article.imageCredit}</figcaption>}
           </figure>
         )}
 
@@ -281,7 +282,7 @@ export default async function ArticleDetailPage({ params }) {
         <div style={{ marginBottom: 40 }}>
             <ShareBar url={url} title={article.title} summary={article.summary} lang={LANG} />
             <div className="source-note">
-              Source : Eurostat (gov_10q_ggdebt). Visualisation éducative, statistique non officielle.
+              {article.sourceNote || "Source : Eurostat (gov_10q_ggdebt). Visualisation éducative, statistique non officielle."}
             </div>
         </div>
 

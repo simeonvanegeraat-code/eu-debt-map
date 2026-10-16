@@ -54,21 +54,8 @@
   line-height: 1.65;
 }
 
-.list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 @media (max-width: 760px) {
   .page {
     padding: 36px 0 54px;
-  }
-
-  .list {
-    grid-template-columns: minmax(0, 1fr);
   }
 }

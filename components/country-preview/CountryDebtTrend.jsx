@@ -20,6 +20,8 @@ function formatDebt(value, locale) {
     style: "currency",
     currency: "EUR",
     notation: "compact",
+    // Pin both bounds: compact currency defaults differ across JS runtimes.
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(value);
 }

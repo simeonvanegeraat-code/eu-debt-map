@@ -1,4 +1,10 @@
 {
+  "inflation-government-debt": {
+    "en": "can-inflation-reduce-government-debt",
+    "nl": "kan-inflatie-staatsschuld-laten-verdwijnen",
+    "fr": "inflation-peut-elle-effacer-dette-publique",
+    "de": "kann-inflation-staatsschulden-abbauen"
+  },
   "eu-debt-burden-2026": {
     "en": "eu-debt-burden-2026",
     "nl": "eu-debt-burden-2026",

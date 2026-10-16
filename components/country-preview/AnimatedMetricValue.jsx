@@ -13,6 +13,7 @@ function formatValue(value, locale, format, compact, signed) {
       style: "currency",
       currency: "EUR",
       notation: compact ? "compact" : "standard",
+      minimumFractionDigits: 0,
       maximumFractionDigits: compact ? 2 : 0,
     }).format(signed ? Math.abs(value) : value);
     if (signed && value > 0) return `+${formatted}`;

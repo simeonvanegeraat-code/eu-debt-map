@@ -35,6 +35,17 @@ Factual accuracy, trustworthy sourcing, and data integrity are non-negotiable. O
 - Create commits, push branches, open pull requests, or deploy only when the user explicitly asks.
 - Never change remote services, production configuration, or public state merely because it would be a convenient next step.
 
+## Mandatory article publication safety
+
+- These rules apply to every chat in this project, including `telegraaf.`. Read `docs/article-publication-recovery-2026-10-15.md` and `docs/article-discover-workflow.md` before creating or publishing articles.
+- Never publish from an old or dirty checkout, an ignored deployment cache, a copied production snapshot, or a previous deployment used as a source. Such a release previously removed six already-published articles. Start with current remote `main` and deliberately integrate existing local work without discarding it.
+- At the start of every article task, compare this checkout with current remote `main`; a previous chat's local state or remembered deployment is not a release baseline. Do not use cached publishing scripts. If the recovery documentation or publication commands are absent, stop publication and locate the current release branch rather than bypassing the safeguards.
+- Keep `content/article-publication-manifest.json` append-only: add each new article URL, and never regenerate it from a partial checkout. Removing a published article requires an explicitly approved direct permanent redirect to an existing relevant replacement, while keeping the old manifest entry.
+- Before release, run the article audit, tests and production build. From the exact clean, user-authorized release commit, run `npm run preflight:publication` immediately before deploying. It must include current remote `main` and preserve both remote and live article inventories. Any failure blocks publication; do not bypass it with a raw CLI upload or cached/prebuilt release.
+- Run `npm run verify:publication -- --base-url <origin>` against the local production build and the exact preview; after an authorized release, run it again against `https://www.eudebtmap.com`. This checks all articles, localized canonicals, translation targets, Article schema, sitemap, redirects and real 404 behavior. Check the new article image and desktop/mobile rendering too.
+- Do not claim a release is complete after checking only the new articles. Verify existing article preservation as well. Do not change URLs, dates, canonicals or prose merely to clear a historical Search Console exclusion; distinguish current technical failures from Google's indexing choices.
+- These checks do not authorize commits, pushes, deployments or Search Console submissions. Obtain the user's explicit authorization for those external actions.
+
 ## Project structure and conventions
 
 - This is a JavaScript-only Next.js App Router project. Do not introduce TypeScript unless the user explicitly requests a migration.
@@ -66,6 +77,7 @@ When a protected area must change, explain the risk and add or update regression
 - Change `dateModified` and `dateReviewed` only after a substantive update or genuine review.
 - Follow `docs/article-discover-workflow.md` for article work and `docs/article-image-style.md` for editorial images.
 - Preserve source attribution, meaningful alt text, localized internal links, and the large-image requirements enforced by the article audit.
+- In article prose, prefer useful internal links. Put external source links in a clearly labeled sources section at the end, keeping source names and necessary attribution in the prose. Use an inline external link only when direct access is essential to the reader's understanding or action, and record the reason. Apply this preference to new articles and substantive revisions in every locale; do not mass-edit older articles without a separate request.
 
 ## Dependencies
 

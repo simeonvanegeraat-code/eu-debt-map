@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { countries, interpolateDebt } from "@/lib/data";
 import { countryName } from "@/lib/countries";
+import { nextDiscoveryCountries } from "@/lib/country-discovery";
 import { getCountryCopy, localeBase, localeFor } from "@/components/country/country-copy";
 import styles from "./country-preview.module.css";
 
@@ -14,25 +15,11 @@ function formatQuarter(value, lang) {
 }
 
 const NAV_COPY = {
-  en: { label: "Explore another country", compare: "Compare" },
-  nl: { label: "Bekijk een ander land", compare: "Vergelijk" },
-  de: { label: "Anderes Land ansehen", compare: "Vergleichen" },
-  fr: { label: "Voir un autre pays", compare: "Comparer" },
+  en: { label: "Explore another country", view: "View", choose: "Choose another country" },
+  nl: { label: "Bekijk een ander land", view: "Bekijk", choose: "Kies een ander land" },
+  de: { label: "Anderes Land ansehen", view: "Ansehen", choose: "Anderes Land auswählen" },
+  fr: { label: "Voir un autre pays", view: "Voir", choose: "Choisir un autre pays" },
 };
-
-function navigationCountries(currentCode, lang) {
-  const sorted = [...countries].sort((a, b) =>
-    countryName(a.code, lang).localeCompare(countryName(b.code, lang), localeFor(lang))
-  );
-  const currentIndex = sorted.findIndex((item) => item.code === currentCode);
-  const next = currentIndex >= 0 ? sorted[(currentIndex + 1) % sorted.length] : null;
-  const featured = ["DE", "FR", "IT", "ES", "NL"]
-    .map((code) => countries.find((item) => item.code === code))
-    .filter((item) => item && item.code !== currentCode && item.code !== next?.code)
-    .slice(0, 2);
-
-  return [...featured, ...(next ? [next] : [])];
-}
 
 export default function CountryPreviewHero({ country, name, title, rank, count, lang = "en", breadcrumbSlot = null, isPreview, animateCountryNavigation = false, countryNavigationBase = null }) {
   const locale = localeFor(lang);
@@ -59,7 +46,11 @@ export default function CountryPreviewHero({ country, name, title, rank, count, 
   const period = formatQuarter(country.official_latest_time, lang);
   const base = localeBase(lang);
   const navCopy = NAV_COPY[lang] || NAV_COPY.en;
-  const navigation = countryNavigationBase ? navigationCountries(country.code, lang) : [];
+  const navigation = countryNavigationBase ? nextDiscoveryCountries(country.code)
+    .map(code => countries.find(item => item.code === code)).filter(Boolean) : [];
+  const countryOptions = useMemo(() => [...countries].sort((a, b) =>
+    countryName(a.code, lang).localeCompare(countryName(b.code, lang), locale)
+  ), [lang, locale]);
 
   return (
     <header className={styles.hero} id="debt-now">
@@ -104,16 +95,34 @@ export default function CountryPreviewHero({ country, name, title, rank, count, 
                 : copy.methodWarning}
             </p>
             {navigation.length ? (
-              <nav className={`${styles.countryQuickNav} ${animateCountryNavigation ? styles.countryQuickNavGlow : ""}`} aria-label={navCopy.label}>
-                {navigation.map((item) => (
-                  <Link href={`${countryNavigationBase}/${item.code.toLowerCase()}`} key={item.code}>
-                    <span>
-                      <small>{navCopy.compare}</small>
-                      <strong>{countryName(item.code, lang)}</strong>
-                    </span>
-                    <b>€{navigationMoney.format(Number(item.last_value_eur) / 1_000_000_000)}bn</b>
-                  </Link>
-                ))}
+              <nav aria-label={navCopy.label}>
+                <div className={`${styles.countryQuickNav} ${animateCountryNavigation ? styles.countryQuickNavGlow : ""}`}>
+                  {navigation.map((item) => (
+                    <Link href={`${countryNavigationBase}/${item.code.toLowerCase()}`} key={item.code}>
+                      <span>
+                        <small>{navCopy.view}</small>
+                        <strong>{countryName(item.code, lang)}</strong>
+                      </span>
+                      <b>€{navigationMoney.format(Number(item.last_value_eur) / 1_000_000_000)}bn</b>
+                    </Link>
+                  ))}
+                </div>
+                <details key={country.code} className={styles.countryChooser}>
+                  <summary>{navCopy.choose}</summary>
+                  <ul>
+                    {countryOptions.map(item => (
+                      <li key={item.code}>
+                        {item.code === country.code ? (
+                          <span aria-current="page">{countryName(item.code, lang)}</span>
+                        ) : (
+                          <Link href={`${countryNavigationBase}/${item.code.toLowerCase()}`} prefetch={false}>
+                            {countryName(item.code, lang)}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               </nav>
             ) : null}
           </section>
