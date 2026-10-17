@@ -30,6 +30,32 @@ Monthly maintenance checklist:
 3. Run the validation, tests and production build listed above. Inspect the latest month in the browser in all four locales.
 4. Publish only when deployment has been explicitly requested. A failed fetch or validation leaves the previous snapshot available; investigate the source response before retrying.
 
+## Snapshot refresh: 17 October 2026
+
+- Imported the complete September 2026 release with the existing
+  `npm run update:inflation` command. The saved history now spans 2015-01 through
+  2026-09 (141 months), covering all 27 countries plus the official `EA` and
+  `EU27_2020` aggregates. Both annual and monthly rates are present for every
+  latest-month geography without estimated, provisional or forecast flags.
+- Added 58 observations. The only revision to an existing numeric observation
+  is Austria's August 2026 monthly rate, from 0.5% to 0.6%. No historical
+  observations or status flags were lost.
+- Eurostat source update: `2026-10-16T23:00:00+0200`; retrieved on
+  `2026-10-17T08:31:54.685Z`. The request filters, units, classifications,
+  aggregate definitions and importer validation rules remain unchanged.
+- Release reference, checked 17 October 2026:
+  https://ec.europa.eu/eurostat/en/web/products-euro-indicators/w/2-16102026-ap
+- The shared snapshot supplies all four localized inflation routes. Existing
+  period-dependent titles, Dataset coverage and sitemap modification dates
+  follow the snapshot automatically; no SEO configuration, URLs, layout,
+  advertising or other fiscal snapshots were edited.
+- Verification: the snapshot validator, the full Node test suite and the production
+  build passed. Rendered HTTP checks confirmed September coverage, the retained
+  license and correct canonicals in all four locales. Desktop (1440px) and mobile
+  (390px) browser checks passed without overflow or console errors, including
+  selecting Austria/August to confirm the revised 0.6% monthly rate. Publication
+  is a separate step requiring explicit authorization.
+
 ## Display and discovery
 
 The hero always identifies the latest complete comparison month. The map, country panel and ranking share the selected month. The historical chart ends at that selected month and offers 1, 5 and 10 years (bounded by available history). Rate differences are percentage points, not percentages. Annual and monthly rates are displayed as published, not calculated from rounded indices.
