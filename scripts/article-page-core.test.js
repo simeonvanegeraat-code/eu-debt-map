@@ -751,6 +751,113 @@ test("inflation-debt country adaptations distinguish observed examples and index
   assert.deepEqual(articles.en.relatedCountries, []);
 });
 
+test("priority article revisions preserve published identities and expose their reviewed sources", () => {
+  const fixtures = [
+    ["nl/2026/prinsjesdag-2026-begroting-2027-gevolgen.json", "prinsjesdag-2026-begroting-2027-gevolgen", "2026-08-18T09:17:21+02:00", "prinsjesdag-2026-begroting-nederland-editorial-v2.jpg"],
+    ["nl/2026/prinsjesdagstukken-2026-gelekt-begroting-2027.json", "prinsjesdagstukken-2026-gelekt-begroting-2027", "2026-09-02T15:06:59+02:00", "prinsjesdagstukken-2026-gelekt-begroting-2027-editorial-v2.jpg"],
+    ["fr/prix-carburant.json", "prix-carburant-france-plus-les-moyens-de-tout-compenser", "2026-04-07T18:00:00+00:00", "france-fuel-support-2026-editorial-v2.jpg"],
+    ["en/2026/Eu-debt-april.json", "eu-debt-update-ratio-fell-but-total-still-rose", "2026-04-22T19:30:00+00:00", "eu-debt-update-ratio-total-2026-editorial-v2.jpg"],
+  ];
+  for (const [file, slug, published, image] of fixtures) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", file), "utf8"));
+    assert.equal(article.slug, slug);
+    assert.equal(article.datePublished, published);
+    assert.equal(article.image, `/images/articles/${image}`);
+    assert.equal(article.dateReviewed, "2026-10-16");
+    assert.equal(article.dateModified, "2026-10-16");
+    const [prose, footer] = article.body.split("<details id='article-sources'>");
+    assert.ok(footer, `${slug} must render sources, not only store metadata`);
+    assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+    for (const source of article.sources) {
+      assert.equal(source.accessed, "2026-10-16");
+      assert.ok(footer.includes(source.url));
+    }
+    const inlineExternal = [...prose.matchAll(/href='(https?:[^']+)'/g)].map(match => match[1]);
+    assert.deepEqual(inlineExternal, article.lang === "fr"
+      ? ["https://www.impots.gouv.fr/simulateur-aide-carburant-grands-rouleurs"] : []);
+    assert.equal((prose.match(/<!-- MID_ARTICLE_AD -->/g) || []).length, 1);
+    assert.doesNotMatch(article.body, /<table\b|<script\b/i);
+    assert.match(article.contentNotes, /no independent human or native-language review claimed/);
+  }
+});
+
+test("budget follow-up, fuel-aid extension and historical debt revisions keep their boundaries", () => {
+  const read = file => JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", file), "utf8"));
+  const process = read("nl/2026/prinsjesdag-2026-begroting-2027-gevolgen.json");
+  const followUp = read("nl/2026/prinsjesdagstukken-2026-gelekt-begroting-2027.json");
+  for (const article of [process, followUp]) {
+    assert.match(article.body, /€36,7 miljard/);
+    assert.match(article.body, /€599,6 miljard/);
+    assert.match(article.body, /46,9%/);
+    assert.match(article.body, /raming/);
+    assert.doesNotMatch(article.body, /Op 15 september vervangen we|verschijnen op 15 september/);
+  }
+  assert.match(followUp.body, /€612,4 miljard/);
+  assert.match(followUp.body, /€12,8 miljard/);
+  assert.match(followUp.body, /1,1 procentpunt/);
+  assert.match(followUp.body, /geen controle van iedere afzonderlijke gelekte maatregel/);
+  assert.equal(Number((612.4 - 599.6).toFixed(1)), 12.8);
+
+  const fuel = read("fr/prix-carburant.json");
+  assert.match(fuel.body, /octobre à décembre 2026/);
+  assert.match(fuel.body, /5,5 millions/);
+  assert.match(fuel.body, /automatiquement à partir du 16 octobre/);
+  assert.match(fuel.body, /27 octobre/);
+  assert.match(fuel.body, /22 770 euros par part/);
+  assert.match(fuel.body, /pas doublé/);
+  assert.match(fuel.contentNotes, /Inline external exception/);
+
+  const history = read("en/2026/Eu-debt-april.json");
+  assert.equal(history.author.name, "Simeon");
+  assert.match(history.body, /historical release comparison, not today’s debt update/);
+  assert.match(history.body, /revised the Q4 2025 EU ratio to 81.8%/);
+  assert.match(history.body, /82.9% for Q1 2026/);
+  assert.doesNotMatch(history.body, /France currently shows|fastest-growing live estimate/);
+  assert.equal(Number((206 / 260 * 100).toFixed(1)), 79.2);
+});
+
+test("October debt checkpoint drafts preserve vintage boundaries and local source footers", () => {
+  const fixtures = [
+    ["nl", "nederland-begrotingstekort-staatsschuld-gelijk-kasbuffer", /fictief en sterk vereenvoudigd voorbeeld/, /€524 miljard/],
+    ["fr", "deficit-baisse-dette-augmente-budget-france", /Ce ne sont pas des prévisions pour la France/, /5,0 %/],
+    ["de", "investitionsuhr-neue-schulden-infrastruktur-erfolg", /historische Vergleichsbasis, kein aktueller Oktoberstand/, /64,4 %/],
+    ["en", "greece-france-debt-ratio-level-versus-direction", /same provisional Q1 2026 Eurostat release/, /143\.5%/],
+  ];
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-publication-manifest.json"), "utf8"));
+  const translations = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-translations.json"), "utf8"));
+  const images = new Set();
+  for (const [lang, slug, boundary, figure] of fixtures) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", lang, "2026", slug + ".json"), "utf8"));
+    const prefix = lang === "en" ? "" : "/" + lang;
+    const [prose, footer] = article.body.split("<details id='article-sources'>");
+    assert.match(article.body + article.sourceNote, boundary);
+    assert.match(prose, figure);
+    assert.match(article.contentNotes, /no independent human or native-language review claimed/);
+    assert.match(article.contentNotes, /20 October 2026 source cutoff/);
+    assert.equal(article.dateReviewed, "2026-10-20");
+    assert.ok(manifest.articles.includes(prefix + "/articles/" + slug));
+    assert.ok(prose.includes("href='" + prefix + "/debt-to-gdp'"));
+    assert.ok(footer.includes(prefix + "/methodology"));
+    assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+    assert.doesNotMatch(article.body, /<table\b|<script\b/i);
+    assert.equal((prose.match(/<!-- MID_ARTICLE_AD -->/g) || []).length, 1);
+    assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+    for (const source of article.sources) {
+      assert.equal(source.accessed, "2026-10-20");
+      assert.ok(footer.includes(source.url));
+    }
+    assert.equal(article.imageWidth, 1672);
+    assert.equal(article.imageHeight, 941);
+    assert.ok(fs.existsSync(path.join(ROOT, "public", article.image)));
+    images.add(article.image);
+    assert.ok(!Object.values(translations).some(group => Object.values(group).includes(slug)), "different reader questions must not be marked as translations");
+  }
+  assert.equal(images.size, 4);
+  assert.equal(Number((125 / 105 * 100).toFixed(1)), 119.0);
+  assert.equal(Number((152.9 - 143.5).toFixed(1)), 9.4);
+  assert.equal(Number((117.6 - 113.6).toFixed(1)), 4.0);
+});
+
 test("article recommendations localize their supporting text", () => {
   const rail = fs.readFileSync(
     path.join(ROOT, "components", "ArticleRail.jsx"),
