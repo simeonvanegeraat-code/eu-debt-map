@@ -368,4 +368,3 @@ and multilingual tokenization affect them.
 | NL | [Nederland betaalt richting €12 miljard rente: waarom de staatsschuld duurder wordt](https://www.eudebtmap.com/nl/articles/rentelasten-staatsschuld-nederland-2027) | 1698 | 2026-08-21 | P3 | I, L, T |
 | NL | [Staatsschuld Griekenland 2026: wordt Frankrijk het nieuwe Griekenland?](https://www.eudebtmap.com/nl/articles/staatsschuld-griekenland-2026-frankrijk-vergelijking) | 1517 | 2026-09-27 | P3 | T |
 | NL | [Wie bezit de Nederlandse staatsschuld? Buitenland, DNB, banken en pensioenfondsen](https://www.eudebtmap.com/nl/articles/wie-bezit-nederlandse-staatsschuld-2026) | 1434 | 2026-08-12 | P2 | A, I, T |
-
