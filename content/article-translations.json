@@ -89,5 +89,11 @@
     "nl": "nederlandse-inflatie-energie-waarschuwing-september-2026",
     "de": "inflation-deutschland-33-prozent-energie-warnsignal-2026",
     "fr": "inflation-france-energie-34-pour-cent-septembre-2026"
+  },
+  "france-unrest-budget-trust": {
+    "nl": "frankrijk-rellen-rente-vertrouwen-begroting",
+    "fr": "france-emeutes-taux-confiance-budget",
+    "de": "frankreich-unruhen-zinsen-vertrauen-haushalt",
+    "en": "france-unrest-borrowing-costs-budget-trust"
   }
 }

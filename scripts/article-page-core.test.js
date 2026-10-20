@@ -858,6 +858,55 @@ test("October debt checkpoint drafts preserve vintage boundaries and local sourc
   assert.equal(Number((117.6 - 113.6).toFixed(1)), 4.0);
 });
 
+test("French unrest opinion translations retain the hypothetical rate calculation and its limits", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-translations.json"), "utf8"));
+  const editions = registry["france-unrest-budget-trust"];
+  assert.deepEqual(Object.keys(editions).sort(), ["de", "en", "fr", "nl"]);
+  const deltaPercentagePoints = Number((4.853 - 4.794).toFixed(3));
+  assert.equal(deltaPercentagePoints, 0.059);
+  assert.equal(Number((deltaPercentagePoints * 100).toFixed(1)), 5.9);
+  assert.equal(Math.round(10_000_000_000 * deltaPercentagePoints / 100), 5_900_000);
+  const labels = { nl: /^Opinie:/, fr: /^Opinion :/, de: /^Meinung:/, en: /^Opinion:/ };
+  const fiction = { nl: /fictieve nieuwe/, fr: /emprunt fictif/, de: /fiktiven neuen Kredit/, en: /fictional new/ };
+  const openings = { nl: 'Na de plunderingen van afgelopen weekend', fr: 'Après les pillages du week-end dernier', de: 'Nach den Plünderungen vom vergangenen Wochenende', en: 'After last weekend’s looting' };
+  const images = new Set();
+  for (const [lang, slug] of Object.entries(editions)) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", lang, "2026", slug + ".json"), "utf8"));
+    const prefix = lang === "en" ? "" : "/" + lang;
+    const [prose, footer] = article.body.split("<details id='article-sources'>");
+    assert.equal(article.articleType, "opinion");
+    assert.match(article.title, labels[lang]);
+    assert.match(prose, fiction[lang]);
+    assert.ok(prose.startsWith("<p class='article-intro'>" + openings[lang]));
+    assert.match(prose, lang === "en" ? /4\.794%/ : /4,794\s*%/);
+    assert.match(prose, lang === "en" ? /4\.853%/ : /4,853\s*%/);
+    assert.match(prose, lang === "en" ? /0\.00059/ : /0,00059/);
+    assert.match(prose, lang === "en" ? /5\.9 million/ : /5,9 (miljoen|millions|Millionen)/);
+    assert.match(article.contentNotes, /not a causal estimate of riot costs/);
+    assert.match(article.contentNotes, /never an application to total debt/);
+    assert.match(article.contentNotes, /no independent human or native-language review claimed/);
+    assert.deepEqual(article.relatedCountries, ["FR"]);
+    assert.ok(prose.includes("href='" + prefix + "/country/fr'"));
+    assert.ok(prose.includes("href='" + prefix + "/interest-cost'"));
+    assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+    assert.doesNotMatch(article.body, /<table\b|<script\b/i);
+    assert.equal((prose.match(/<!-- MID_ARTICLE_AD -->/g) || []).length, 1);
+    assert.ok(footer);
+    assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+    for (const source of article.sources) {
+      assert.equal(source.accessed, "2026-10-20");
+      assert.ok(footer.includes(source.url));
+    }
+    const metadata = buildArticleMetadata({article,translations:Object.entries(editions).map(([lang,slug])=>({lang,slug})),slug,lang,ogImage:"https://www.eudebtmap.com" + article.image});
+    assert.equal(metadata.alternates.canonical, "https://www.eudebtmap.com" + prefix + "/articles/" + slug);
+    for (const [targetLang, targetSlug] of Object.entries(editions)) {
+      assert.equal(metadata.alternates.languages[targetLang], "https://www.eudebtmap.com" + (targetLang === "en" ? "" : "/" + targetLang) + "/articles/" + targetSlug);
+    }
+    images.add(article.image);
+  }
+  assert.equal(images.size, 1, "equivalent translations share the same representative illustration");
+});
+
 test("article recommendations localize their supporting text", () => {
   const rail = fs.readFileSync(
     path.join(ROOT, "components", "ArticleRail.jsx"),
