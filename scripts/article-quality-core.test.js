@@ -98,6 +98,49 @@ test("the modern standard rejects image dimensions that do not match the file", 
   );
 });
 
+test("brief news does not receive a generic 600-word warning", () => {
+  for (const wordCount of [80, 350, 599, 600]) {
+    const result = inspectArticle(completeArticle({
+      articleType: "news",
+      body: `<p>${Array(wordCount).fill("word").join(" ")}</p>`,
+    }), { root: ROOT });
+
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.warnings.some((item) => item.code === "short-article"), false);
+  }
+});
+
+test("other genres retain a non-blocking depth-review prompt, not a minimum length", () => {
+  for (const articleType of ["analysis", "explainer", "opinion", "news-analysis", "unknown"]) {
+    const result = inspectArticle(completeArticle({ articleType }), { root: ROOT });
+    assert.deepEqual(result.errors, []);
+    const warning = result.warnings.find((item) => item.code === "short-article");
+    assert.equal(warning?.level, "warning");
+    assert.match(warning.message, /do not add filler/);
+
+    const longer = inspectArticle(completeArticle({
+      articleType,
+      body: `<p>${Array(600).fill("word").join(" ")}</p>`,
+    }), { root: ROOT });
+    assert.equal(longer.warnings.some((item) => item.code === "short-article"), false);
+  }
+});
+
+test("brief news retains the source, body, image and advertising safeguards", () => {
+  const result = inspectArticle(completeArticle({
+    articleType: "news",
+    body: "<!-- MID_ARTICLE_AD --><!-- MID_ARTICLE_AD -->",
+    sources: [],
+    imageWidth: 1200,
+    imageHeight: 630,
+  }), { root: ROOT });
+  for (const code of ["missing-sources", "incorrect-image-dimensions", "too-many-ad-markers"]) {
+    assert.ok(result.errors.some((item) => item.code === code));
+  }
+  const empty = inspectArticle(completeArticle({ articleType: "news", body: "" }), { root: ROOT });
+  assert.ok(empty.errors.some((item) => item.code === "missing-body"));
+});
+
 test("new article generator creates a complete localized draft without overwriting", () => {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "eudebtmap-article-"));
   try {

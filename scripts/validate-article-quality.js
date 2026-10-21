@@ -52,6 +52,7 @@ function validateArticleQuality(root = process.cwd()) {
     throw new Error(`${errors.length} required article quality check(s) failed`);
   }
 
+  console.log("[article-quality] Mechanical checks only; source accuracy, prose and review status require editorial sign-off.");
   console.log("[article-quality] OK");
   return { results, enforced, legacy, errors, summary };
 }

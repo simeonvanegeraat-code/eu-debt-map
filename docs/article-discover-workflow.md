@@ -85,3 +85,20 @@ Legacy articles are reported as an improvement backlog but do not fail the build
 Once an article has been fully revised, add
 `"contentStandard": "discover-2026-v1"`; from that point its mechanical quality
 checks become mandatory.
+
+## Editorial release decision
+
+Apply the genre priorities and compact sign-off in the editorial standard before
+publication. News does not automatically need an opinion thesis, a hypothetical
+example, an FAQ or a concluding recap. Explain what is newly known and distinguish
+the publication date from the measurement period. Keep truthful dated reports
+as archive material; a new release may warrant a new article, while a page that
+promises the current position needs maintenance. Do not rewrite the archive only
+to refresh dates.
+
+The automated audit is a mechanical gate, not an assessment of source truth,
+writing quality or human review. Short `news` reports are not warned merely for
+being below 600 words; other genres retain a non-blocking depth-review prompt.
+Never add filler to satisfy it. Record actual prose revisions, editorial readiness
+and unresolved limitations using the existing dossier. All source, image,
+translation, mobile and publication-preservation requirements above still apply.

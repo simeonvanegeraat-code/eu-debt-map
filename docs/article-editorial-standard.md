@@ -1,7 +1,7 @@
 # EU Debt Map editorial and writing standard
 
-Established: 2026-10-10. Applies to new articles and substantive rewrites in all
-locales. Use alongside [the publication workflow](article-discover-workflow.md)
+Established: 2026-10-10. Operational review: 2026-10-21. Applies to new articles
+and substantive rewrites in all locales. Use alongside [the publication workflow](article-discover-workflow.md)
 and [the image standard](article-image-style.md).
 
 ## Editorial promise
@@ -27,6 +27,20 @@ Do not disguise an opinion as neutral reporting. Do not manufacture a contentiou
 position for a straightforward explainer. The genre should guide the opening,
 structure, evidence, and public labeling under the site's conventions.
 
+### The genre changes the editing task
+
+| Genre | What must arrive early | What must earn its space |
+| --- | --- | --- |
+| News | The verified development, its source, reference period and significance. Distinguish when it was published from when it happened or was measured. | Background, calculations and comparisons that explain this development. A separate thesis, counterargument, FAQ and concluding recap are not compulsory. |
+| Analysis/explainer | The reader's question and the mechanism or answer that resolves it. | Examples and detail that clarify the mechanism, including plausible alternative explanations where relevant. |
+| Opinion | A recognizable, evidence-backed judgment and the stakes for the reader. | The reasoning and strongest reasonable objection; do not manufacture an opposing side or merely announce that an objection exists. |
+
+These are editing priorities, not fixed article templates. `news-analysis`
+requires analysis as well as an identifiable news development; do not label an
+explainer as `news` merely to avoid a review warning. Stop when the reader's
+question is answered. A complete short news report can be better than a padded
+long one; no genre has a compulsory word count or number of subheadings.
+
 ## 2. Complete an editorial brief before drafting
 
 Keep a short working brief. It is a decision aid, not boilerplate to publish.
@@ -42,8 +56,8 @@ Two or three possible angles, with reasons for choosing one:
 Thesis in one sentence (or main answer for news/explainers):
 Original contribution: calculation, comparison, explanation, or reported finding:
 Two or three essential supporting claims:
-Strongest reasonable objection and our response:
-What evidence would weaken or overturn the thesis?
+Strongest reasonable objection and our response (opinion); competing explanation or missing context if relevant for other genres:
+What evidence would weaken the judgment or change the main answer?
 Uncertainties, missing evidence, and boundaries:
 Reader takeaway:
 Likely structure and approximate length:
@@ -58,6 +72,13 @@ Use a new URL when the article answers a meaningfully different question. Update
 an existing URL when it serves the same reader intent and needs substantive
 revision. Do not silently replace a requested new article with an old-article
 update. Explain the recommendation if a different approach is warranted.
+
+A dated news report may remain a truthful record of its original period. A new
+statistical release can warrant a new report with a distinct development, while
+the old story receives a dated follow-up link if useful. A page promising the
+current position must not retain an obsolete present-tense conclusion. Correct
+errors transparently; do not silently turn an archived Q1 report into Q2 news,
+reset its original publication date, or rewrite the archive just to look fresh.
 
 ## 3. Build a source and claim ledger
 
@@ -84,6 +105,12 @@ Check current claims against current sources. A forecast's future reference year
 is not its publication date. Missing data must remain missing unless a documented,
 explicitly labeled model permits estimation. Do not refresh generated data files
 as a routine part of writing.
+
+When a statistical release revises earlier periods, compare endpoints from the
+same source vintage and recalculate differences, ranks and model rates. Separate
+revisions from a new quarter's movement. Do not relabel unchanged annual data or
+forecasts as newly observed quarterly results. Put any qualification that could
+change the headline's meaning beside the claim, not only in the sources footer.
 
 ### Economic distinctions that must survive editing
 
@@ -141,6 +168,19 @@ Do not repeat a fixed formula of introduction, table, FAQ, and conclusion across
 every article. Avoid stock transitions, inflated stakes, gratuitous rhetorical
 questions, and repeated “not X, but Y” constructions. A dash is punctuation, not
 proof of AI authorship; edit for rhythm rather than banning individual characters.
+
+Read the title, opening, headings and ending alongside the three recent related
+articles inspected for the brief. Repeated facts and necessary definitions may
+stay; recurring rhetorical hooks should be reconsidered. Do not replace one
+formula with a quota for different formulas. Do not assume every financial story
+needs a paradox, crisis frame or a hypothetical household example.
+
+Keep the commissioning scaffolding out of the prose. Usually state the objection
+itself rather than writing “the strongest counterargument is”; replace transitions
+that only announce precision or importance with the actual evidence, or cut them.
+Retain direct source attribution and necessary uncertainty. Explain an important
+limitation where it first matters and repeat it only when omission would mislead;
+do not dilute it or turn every paragraph into a defensive methodological aside.
 
 End with a consequence, a qualified judgment, or a practical next question.
 Do not merely repeat the introduction or finish with a promotional slogan.
@@ -224,13 +264,20 @@ The main question and answer, each in one sentence:
 The strongest concrete detail, and why it matters:
 The reasoning step most likely to confuse a reader, and how it was clarified:
 The weakest or repetitive passage, and what was cut or rewritten:
-The strongest objection, and where it receives a fair response:
+The strongest objection, and where it receives a fair response (opinion); relevant alternative explanation or context for other genres:
 Opening/structure compared with three recent related articles (or all if fewer):
 Read-aloud pass: awkward phrasing, rhythm, and local idiom corrected:
 Ending: what it adds beyond the introduction:
 Human reader feedback: actual feedback, or explicitly not performed:
 Remaining limitations:
 ```
+
+Use exact before/after wording or a named deletion for actual revisions, rather
+than a generic claim that the text was polished. If no revision is needed for a
+check, say why; do not invent changes to complete the record. For a news report,
+also check that the opening identifies what is newly known without confusing the
+publication date with the measurement period. For opinion, check that the ending
+follows from the evidence rather than simply repeating the preferred position.
 
 A read-aloud pass means checking how the language sounds when spoken; a model's
 simulated pass must be described as such, not as human listening. Where an actual
@@ -311,10 +358,52 @@ actually happened. Authorization to deploy is not evidence of a human reading th
 article. If human review remains outstanding, state that explicitly. Do not change
 site-wide authorship or disclosure settings as an incidental writing task.
 
+### Learning from other publications
+
+When style research is part of the task, record the reference articles and the
+transferable techniques observed: focus, attribution, structure, explanation,
+rhythm and endings. Learn general craft across multiple examples rather than
+copying distinctive wording, metaphors or the voice of one named writer. Public
+AI policies do not establish the authorship of an individual article. Do not call
+a reference “best read” without audience evidence, or infer that its prose caused
+its reach. Test an adopted technique against our readers' question, not against
+how closely it resembles a newspaper. Evidence and limitations of this review
+are recorded in [the 21 October operational review](editorial-standard-review-2026-10-21.md).
+
 ## 9. Quality gates and presentation review
 
 An unsupported consequential claim, misleading attribution, fabricated evidence,
 or unchecked calculation blocks publication regardless of prose quality.
+
+Mechanical checks and editorial review are separate gates. The article audit can
+check fields, dates, source-link syntax and image dimensions; it cannot establish
+that a linked source supports a claim, that the prose is persuasive, or that a
+human reviewed it. Its non-news warning below 600 words is only a prompt to review
+depth, never a length requirement. Short `news` reports do not receive that
+generic warning. Neither silence nor a green build is editorial sign-off.
+
+### Compact editorial sign-off
+
+Use the existing brief, claim ledger and prose-edit record as evidence; do not
+create another duplicate dossier. Record each decision as ready, revise or
+unverified, with a specific reason:
+
+1. **Promise:** the title and opening deliver the chosen genre and reader question.
+2. **Evidence:** consequential claims and calculations match inspected sources,
+   periods and coverage; limits that affect the meaning are visible.
+3. **Progression:** every retained paragraph adds a fact, reason, explanation or
+   necessary qualification; remove scaffolding and redundant recaps.
+4. **Voice:** concrete language, useful rhythm and an earned ending; compare recent
+   related pieces for repeated hooks without imposing a template.
+5. **Reader path:** localized links have a genuine purpose, and narrow-screen
+   presentation remains usable.
+6. **Accountability:** record actual AI contributions, source checks and human/
+   native-language review status. Never upgrade “unverified” into “passed”.
+
+Unsupported consequential facts block publication. Missing independent human
+feedback remains an explicit limitation, not a fabricated approval; publication
+authorization still follows the project rules. A repeated AI pass is not an
+independent reader test. Do not invent a numeric quality score to close a gate.
 
 Assess the following dimensions with a short reason and a concrete improvement:
 accuracy and sourcing; original contribution; argument and fairness; readability;
@@ -342,10 +431,11 @@ publication workflow. First inspect related articles and the destination page.
 Build a concise editorial brief and a verified claim ledger. Compare possible
 angles and select a defensible thesis, including its strongest objection.
 Then draft in the target locale with a direct opening and original data insight.
-Perform a skeptical argument edit, source verification, and a language edit as
-separate passes. Complete the section 5a prose-edit record and compare recent
-related articles for repetitive writing. Do not invent reporting or review. Include useful localized
-internal links and inspect mobile presentation. Report remaining limitations,
+Perform a genre-appropriate skeptical edit, source verification, and a language
+edit as separate passes. Complete the section 5a prose-edit record and compact
+editorial sign-off; compare recent related articles for repetitive writing.
+Do not invent reporting or review. Include useful localized internal links and
+inspect mobile presentation. Report remaining limitations,
 the actual review status, and the checks performed. Publish only when authorized.
 ```
 
