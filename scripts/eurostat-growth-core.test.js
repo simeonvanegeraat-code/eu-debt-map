@@ -81,14 +81,21 @@ test("five-year overview spans exactly 20 intervals with a complete weighted cou
   assert.ok(Math.abs(overview.latestBreakdown.reduce((s,r)=>s+r.sharePct,0)-100)<1e-10);
   assert.equal(overview.latestBreakdown.reduce((s,r)=>s+r.valueEUR,0),overview.latestTotalDebtEUR);assert.equal(overview.provisional,true);
 });
-test("saved growth data validates and reconciles with the unchanged debt history and latest country inputs",()=>{
+test("saved growth data validates and reconciles with debt history and latest country inputs",()=>{
   validateSnapshot(saved);const old=readHistoryGenerated(path.join(__dirname,"../lib/eurostat.debt.history.gen.js")).history;
   const current=readCurrentGenerated(path.join(__dirname,"../lib/eurostat.debt.gen.js")).series;
   const ratio=readRatioGenerated(path.join(__dirname,"../lib/eurostat.ratio.gen.js")).series;
-  // Reconcile this initial shared vintage; subsequent explicit revisions may legitimately differ.
-  if(saved.latestQuarter===old.latestQuarter&&saved.sources.debt.updated.startsWith("2026-07-21")){
-    for(const q of old.quarters)for(const code of EU27)assert.ok(Math.abs(saved.countries[code].debt[saved.periods.indexOf(q.quarter)]*1e6-q.countries[code])<1);
-    for(const code of EU27){assert.equal(current[code].latestTime,saved.latestQuarter);assert.equal(ratio[code].latestTime,saved.latestQuarter);assert.equal(ratio[code].ratioPct,saved.countries[code].ratio.at(-1));}
+  // All public quarterly views must ship together, including historical revisions.
+  assert.equal(saved.latestQuarter,old.latestQuarter);
+  for(const q of old.quarters){
+    const index=saved.periods.indexOf(q.quarter);assert.ok(index>=0);
+    for(const code of EU27)assert.ok(Math.abs(saved.countries[code].debt[index]*1e6-q.countries[code])<1,`${code} ${q.quarter} history mismatch`);
+  }
+  for(const code of EU27){
+    assert.equal(current[code].latestTime,saved.latestQuarter);
+    assert.equal(ratio[code].latestTime,saved.latestQuarter);
+    assert.equal(ratio[code].ratioPct,saved.countries[code].ratio.at(-1));
+    assert.ok(Math.abs(current[code].endValue-saved.countries[code].debt.at(-1)*1e6)<1,`${code} latest debt mismatch`);
   }
   const s=make();assert.throws(()=>validateSnapshot({...s,periods:s.periods.slice(1)}));
   assert.throws(()=>validateSnapshot({...s,fetchedAt:"2026-08-01"},s),/regression/);

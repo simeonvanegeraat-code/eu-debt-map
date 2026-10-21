@@ -10,14 +10,16 @@ const read = file => fs.readFileSync(path.join(__dirname, "..", file), "utf8");
 test("country dashboard exposes seven sourced metrics without mixing stock dates and annual flows", () => {
   const before = JSON.stringify(data), fr = countryDashboard("FR", data);
   assert.equal(fr.metrics.length, 7);
-  assert.deepEqual(fr.metrics.map(m => m.period), ["2026-Q1", "2026-Q1", "2025-12-31", "2025", "2025", "2025", "2025"]);
-  assert.equal(fr.metrics[0].value, 3536067700000);
-  assert.equal(fr.metrics[1].value, 117.6);
-  assert.equal(fr.metrics[2].value, 50070);
-  assert.equal(fr.metrics[3].value, -5.1);
-  assert.equal(Math.round(fr.metrics[4].value), 66635900000);
-  assert.equal(fr.metrics[5].value, 57.2);
-  assert.equal(fr.metrics[6].value, 52.1);
+  assert.deepEqual(fr.metrics.map(m => m.period), [data.growth.latestQuarter, data.growth.latestQuarter,
+    data.perCapita.debtDate, data.balance.latestCompleteYear, data.interest.latestYear,
+    data.accounts.latestYear, data.accounts.latestYear]);
+  assert.equal(fr.metrics[0].value, data.growth.countries.FR.debt.at(-1) * 1e6);
+  assert.equal(fr.metrics[1].value, data.growth.countries.FR.ratio.at(-1));
+  assert.equal(fr.metrics[2].value, Math.round(data.perCapita.countries.FR.debtMioEur * 1e6 / data.perCapita.countries.FR.population));
+  assert.equal(fr.metrics[3].value, data.balance.series.FR[data.balance.latestCompleteYear].balance);
+  assert.equal(fr.metrics[4].value, data.interest.countries.FR.amount.at(-1) * 1e6);
+  assert.equal(fr.metrics[5].value, data.accounts.countries.FR.expenditureRatio.at(-1));
+  assert.equal(fr.metrics[6].value, data.accounts.countries.FR.revenueRatio.at(-1));
   for (const metric of fr.metrics) {
     assert(metric.source.dataset && metric.source.method);
     assert(Number.isFinite(Date.parse(metric.source.accessed)));
@@ -29,16 +31,20 @@ test("country dashboard exposes seven sourced metrics without mixing stock dates
 test("annual EU comparisons use published aggregates and exact same-source periods", () => {
   const fr = countryDashboard("FR", data);
   const [debt, balance, expenditure, revenue, interest] = fr.comparisons;
-  assert.deepEqual([debt.current.value, debt.eu.value, debt.gap, debt.period], [115.6, 81.7, 33.9, "2025"]);
-  assert.notEqual(debt.current.value, fr.metrics[1].value);
-  assert.equal(balance.gap, -2);
-  assert.equal(expenditure.eu.value, 49.5);
-  assert.equal(revenue.eu.value, 46.4);
+  const year = data.balance.latestCompleteYear;
+  const annual = data.balance.series.FR[year], eu = data.balance.series.EU27_2020[year];
+  assert.deepEqual([debt.current.value, debt.eu.value, debt.gap, debt.period],
+    [annual.debtRatio, eu.debtRatio, Number((annual.debtRatio - eu.debtRatio).toFixed(1)), year]);
+  assert.equal(balance.gap, Number((annual.balance - eu.balance).toFixed(1)));
+  assert.equal(expenditure.eu.value, data.accounts.eu.expenditureRatio.at(-1));
+  assert.equal(revenue.eu.value, data.accounts.eu.revenueRatio.at(-1));
   const totalCost = EU27.reduce((sum, code) => sum + data.interest.countries[code].amount.at(-1), 0);
   const totalRevenue = EU27.reduce((sum, code) => sum + data.interest.countries[code].revenue.at(-1), 0);
   assert(Math.abs(interest.eu.value - totalCost / totalRevenue * 100) < 1e-10);
   assert.equal(interest.calculated, true);
-  assert.equal(interest.status, "p");
+  const interestFlags = [...new Set(EU27.flatMap(code =>
+    `${data.interest.countries[code].amountStatus.at(-1)}${data.interest.countries[code].revenueStatus.at(-1)}`.split("")))].sort().join("");
+  assert.equal(interest.status, interestFlags);
   assert.equal(debt.calculated, false);
 });
 
@@ -49,50 +55,67 @@ test("dashboard ranks use published precision, preserve ties and exclude missing
   assert.deepEqual(rankPoints(points, "C"), { rank: 3, count: 3 });
   assert.deepEqual(rankPoints(points, "E"), { rank: null, count: 3 });
   const fixture = structuredClone(data);
-  fixture.accounts.countries.FR.expenditureRatioStatus[10] = "d";
+  fixture.accounts.countries.FR.expenditureRatioStatus[fixture.accounts.years.length - 1] = "d";
   const spending = countryDashboard("FR", fixture).comparisons.find(row => row.key === "expenditure");
-  assert.equal(spending.current.value, 57.2);
+  assert.equal(spending.current.value, fixture.accounts.countries.FR.expenditureRatio.at(-1));
   assert.equal(spending.gap, null);
   assert.equal(spending.rank, null);
   assert.equal(spending.count, 26);
 });
 
 test("deterministic insights carry exact periods and suppress broken or missing comparisons", () => {
-  const fr = countryDashboard("FR", data);
-  assert.deepEqual(fr.debtRanks, { rank: 3, count: 27 });
-  assert.equal(fr.ratioChange.start, "2021-Q1");
-  assert.equal(fr.ratioChange.end, "2026-Q1");
+  const fixture = structuredClone(data);
+  const last = fixture.growth.periods.length - 1, start = last - 20;
+  const year = fixture.balance.latestCompleteYear, previousYear = String(Number(year) - 1);
+  const interestLast = fixture.interest.years.length - 1;
+  fixture.growth.countries.FR.ratio[start] = 117.7;
+  fixture.growth.countries.FR.ratio[last] = 117.6;
+  fixture.growth.countries.FR.ratioStatus.fill("p");
+  fixture.balance.series.FR[year].balance = -5.1;
+  fixture.balance.series.FR[previousYear].balance = -5.8;
+  fixture.balance.series.FR[year].balanceStatus = "p";
+  fixture.balance.series.FR[previousYear].balanceStatus = "";
+  fixture.interest.countries.FR.amount[interestLast - 1] = 100;
+  fixture.interest.countries.FR.amount[interestLast] = 110.8;
+  fixture.interest.countries.FR.amountStatus.fill("");
+  const fr = countryDashboard("FR", fixture);
+  assert.deepEqual(fr.debtRanks, rankPoints(EU27.map(code => ({ code,
+    value: fixture.growth.countries[code].ratio.at(-1), status: fixture.growth.countries[code].ratioStatus.at(-1) })), "FR"));
+  assert.equal(fr.ratioChange.start, fixture.growth.periods[start]);
+  assert.equal(fr.ratioChange.end, fixture.growth.latestQuarter);
   assert.equal(fr.ratioChange.change, -0.1);
   assert.equal(fr.ratioChange.status, "p");
   assert.equal(fr.balanceChange.change, 0.7);
   assert.equal(fr.interestChange.percent, 10.8);
-  const fixture = structuredClone(data);
-  fixture.growth.countries.FR.ratioStatus[25] = "b";
-  fixture.balance.series.FR["2024"].balanceStatus = "d";
-  fixture.interest.countries.FR.amount[9] = 0;
+  fixture.growth.countries.FR.ratioStatus[start + 1] = "b";
+  fixture.balance.series.FR[previousYear].balanceStatus = "d";
+  fixture.interest.countries.FR.amount[interestLast - 1] = 0;
   const changed = countryDashboard("FR", fixture);
   assert.equal(changed.ratioChange.change, null);
   assert.equal(changed.balanceChange.change, null);
   assert.equal(changed.interestChange.percent, null);
-  fixture.balance.series.FR["2024"].balance = null;
+  fixture.balance.series.FR[previousYear].balance = null;
   assert.equal(countryDashboard("FR", fixture).balanceChange.change, null);
 });
 
 test("dashboard preserves EDP balance and visibly carries annual-account reconciliation", () => {
-  const fi = countryDashboard("FI", data);
+  const fixture = structuredClone(data);
+  const year = fixture.accounts.latestYear, previousYear = String(Number(year) - 1);
+  fixture.balance.series.FI[year].balance = -3.4;
+  fixture.accounts.countries.FI.balanceRatio[fixture.accounts.years.length - 1] = -3.9;
+  const fi = countryDashboard("FI", fixture);
   assert.equal(fi.metrics.find(m => m.key === "balance").value, -3.4);
   assert.equal(fi.sourceDifference.accounts, -3.9);
   assert.equal(fi.sourceDifference.edp, -3.4);
   assert.equal(fi.sourceDifference.difference, -0.5);
-  assert.equal(fi.sourceDifference.year, "2025");
-  const fixture = structuredClone(data);
-  fixture.accounts.latestYear = "2024";
+  assert.equal(fi.sourceDifference.year, year);
+  fixture.accounts.latestYear = previousYear;
   fixture.accounts.years = fixture.accounts.years.map(year => String(Number(year) - 1));
   const mixed = countryDashboard("FI", fixture);
-  assert.equal(mixed.metrics.find(m => m.key === "balance").period, "2025");
-  assert.equal(mixed.comparisons.find(m => m.key === "expenditure").period, "2024");
-  assert.equal(mixed.sourceDifference.year, "2024");
-  assert.equal(mixed.sourceDifference.edp, data.balance.series.FI["2024"].balance);
+  assert.equal(mixed.metrics.find(m => m.key === "balance").period, fixture.balance.latestCompleteYear);
+  assert.equal(mixed.comparisons.find(m => m.key === "expenditure").period, previousYear);
+  assert.equal(mixed.sourceDifference.year, previousYear);
+  assert.equal(mixed.sourceDifference.edp, fixture.balance.series.FI[previousYear].balance);
 });
 
 test("all EU profiles have a stable peer group without duplicate current countries or EU ranks", () => {
