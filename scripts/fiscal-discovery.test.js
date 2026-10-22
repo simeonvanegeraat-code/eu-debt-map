@@ -49,6 +49,20 @@ test("curated analyses have reciprocal links, actual translations and explicit p
   assert.equal(articleFiscalIndicators(translations["eu-debt-per-capita-2026"].nl, "fr"), null);
 });
 
+test("reviewed article recommendations describe June debt without relabelling the annual tool", () => {
+  const june = { en: "30 June 2026", nl: "30 juni 2026", de: "30. Juni 2026", fr: "30 juin 2026" };
+  const january = { en: "1 January 2026", nl: "1 januari 2026", de: "1. Januar 2026", fr: "1er janvier 2026" };
+  const gap = { en: "six months", nl: "zes maanden", de: "sechs Monate", fr: "six mois" };
+  for (const lang of Object.keys(june)) {
+    const copy = getDiscoveryCopy(lang);
+    assert.ok(copy.debtArticle.includes(lang === "fr" ? "T2 2026" : "Q2 2026"));
+    assert.ok(copy.capitaArticle.includes(june[lang]));
+    assert.ok(copy.capitaArticle.includes(january[lang]));
+    assert.ok(copy.capitaArticle.includes(gap[lang]));
+    assert.doesNotMatch(copy.capitaArticle, /[QT]1 2026/);
+  }
+});
+
 test("country descriptions preserve real periods, distinguish estimates and never turn null into zero", () => {
   const debtLead = {
     en: "Example public debt live",

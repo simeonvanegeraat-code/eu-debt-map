@@ -94,6 +94,22 @@ test("article tables keep readable mobile columns and expose localized swipe gui
   assert.match(css, /\.articleTableScrollHint\s*\{[\s\S]*display:flex;/);
 });
 
+test("the four per-capita rankings opt into a compact mobile layout without changing prose matrices", () => {
+  const css = read("app/globals.css");
+  assert.match(css, /\.articleProse \.articleDataTable--ranking\s*\{\s*width:100%;/);
+  assert.match(css, /\.articleDataTable--ranking td:first-child\s*\{ min-width:0; \}/);
+  const fixture = require("./fixtures/article-review-2026-10-22.json");
+  const perCapita = fixture.articles.filter(a => /per-capita|per-inwoner|pro-kopf|par-habitant/.test(a.slug));
+  assert.equal(perCapita.length, 4);
+  for (const entry of perCapita) {
+    const a = JSON.parse(read(entry.file));
+    assert.match(a.body, /class='articleDataTable articleDataTable--ranking'/);
+    assert.match(a.body, /tabindex='0' role='region'/);
+    assert.match(a.body, /horizontaal scrollbaar|horizontally scrollable|horizontal scrollbar|défilement horizontal/);
+    assert.equal((a.body.match(/<tr>/g) || []).length, 28);
+  }
+});
+
 test("the shared footer and skip link stay localized in every supported language", () => {
   const footer = read("components/Footer.jsx");
   const skipLink = read("components/LocalizedSkipLink.jsx");

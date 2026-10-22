@@ -880,6 +880,18 @@ html:has(.site-navigation :focus-visible){ --site-navigation-duration:0ms; }
   }
   .articleDataTable th,
   .articleDataTable td{ padding:.65rem .7rem; }
+  /* Three-column country rankings fit the screen; prose matrices keep their scroll layout. */
+  .articleProse .articleDataTable--ranking{
+    width:100%;
+    font-size:.82rem;
+  }
+  .articleDataTable--ranking th,
+  .articleDataTable--ranking td{ padding:.65rem .45rem; }
+  .articleDataTable--ranking th:first-child,
+  .articleDataTable--ranking td:first-child{ min-width:0; }
+  .articleDataTable--ranking th{ font-size:.68rem; white-space:normal; }
+  .articleDataTable--ranking th:nth-child(2),
+  .articleDataTable--ranking td:nth-child(2){ text-align:left; white-space:normal; }
   .articleDataTableWrap[aria-label^="Matrix van gelekte begrotingsmaatregelen"] .articleDataTable{
     min-width:760px;
     font-size:.82rem;

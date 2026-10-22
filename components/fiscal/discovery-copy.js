@@ -4,8 +4,8 @@ const COPY = {
     articleTitle: "Explore the data behind the topic", homeIntro: "Explore the budget behind the debt:",
     countryBalance: (name, value, year) => `${name} recorded an EDP budget balance of ${value} of GDP in ${year}.`,
     balanceLink: "Compare budget balances across the EU",
-    debtArticle: "Analysis of the Q1 2026 debt release. The comparison pages retain their own reporting periods and source versions.",
-    capitaArticle: "This article uses Q1 2026 debt and population on 1 January 2026. The comparison page uses year-end debt and population on the following 1 January; the figures are not interchangeable.",
+    debtArticle: "Analysis of the Q2 2026 debt release. The comparison pages retain their own reporting periods and source versions.",
+    capitaArticle: "This article uses debt at 30 June 2026 and population on 1 January 2026, six months apart. The comparison page uses year-end debt and population on the following 1 January; the figures are not interchangeable.",
     routes: {
       "deficit": ["Budget deficit and surplus", "Compare annual government balances and the EU reference value."],
       "debt-to-gdp": ["Debt relative to GDP", "Compare the debt stock with the size of each economy."],
@@ -20,8 +20,8 @@ const COPY = {
     articleTitle: "Verken de cijfers achter dit onderwerp", homeIntro: "Bekijk de begroting achter de schuld:",
     countryBalance: (name, value, year) => `${name} had in ${year} een EDP-begrotingssaldo van ${value} van het bbp.`,
     balanceLink: "Vergelijk begrotingssaldi in de EU",
-    debtArticle: "Analyse van de schuldcijfers voor Q1 2026. De vergelijkingspagina’s behouden hun eigen verslagperioden en bronversies.",
-    capitaArticle: "Dit artikel gebruikt de schuld van Q1 2026 en de bevolking op 1 januari 2026. De vergelijkingspagina gebruikt de schuld aan het jaareinde en de bevolking op de daaropvolgende 1 januari; de cijfers zijn niet uitwisselbaar.",
+    debtArticle: "Analyse van de schuldcijfers voor Q2 2026. De vergelijkingspagina’s behouden hun eigen verslagperioden en bronversies.",
+    capitaArticle: "Dit artikel gebruikt de schuld op 30 juni 2026 en de bevolking op 1 januari 2026, zes maanden uiteen. De vergelijkingspagina gebruikt de schuld aan het jaareinde en de bevolking op de daaropvolgende 1 januari; de cijfers zijn niet uitwisselbaar.",
     routes: {
       "deficit": ["Begrotingstekort en overschot", "Vergelijk jaarlijkse begrotingssaldi en de EU-referentiewaarde."],
       "debt-to-gdp": ["Schuld ten opzichte van bbp", "Vergelijk de schuldvoorraad met de omvang van elke economie."],
@@ -36,8 +36,8 @@ const COPY = {
     articleTitle: "Die Daten zum Thema erkunden", homeIntro: "Der Haushalt hinter den Schulden:",
     countryBalance: (name, value, year) => `${name} verzeichnete ${year} einen EDP-Haushaltssaldo von ${value} des BIP.`,
     balanceLink: "Haushaltssalden in der EU vergleichen",
-    debtArticle: "Analyse der Schuldendaten für Q1 2026. Die Vergleichsseiten behalten ihre eigenen Berichtszeiträume und Datenstände bei.",
-    capitaArticle: "Dieser Artikel nutzt Schulden aus Q1 2026 und die Bevölkerung am 1. Januar 2026. Die Vergleichsseite nutzt den Schuldenstand zum Jahresende und die Bevölkerung am folgenden 1. Januar; die Werte sind nicht austauschbar.",
+    debtArticle: "Analyse der Schuldendaten für Q2 2026. Die Vergleichsseiten behalten ihre eigenen Berichtszeiträume und Datenstände bei.",
+    capitaArticle: "Dieser Artikel nutzt Schulden am 30. Juni 2026 und die Bevölkerung am 1. Januar 2026, sechs Monate auseinander. Die Vergleichsseite nutzt den Schuldenstand zum Jahresende und die Bevölkerung am folgenden 1. Januar; die Werte sind nicht austauschbar.",
     routes: {
       "deficit": ["Haushaltsdefizit und Überschuss", "Jährliche Haushaltssalden und den EU-Referenzwert vergleichen."],
       "debt-to-gdp": ["Schulden im Verhältnis zum BIP", "Den Schuldenstand mit der Größe der jeweiligen Wirtschaft vergleichen."],
@@ -52,8 +52,8 @@ const COPY = {
     articleTitle: "Explorer les données sur ce sujet", homeIntro: "Le budget derrière la dette :",
     countryBalance: (name, value, year) => `${name} a enregistré un solde budgétaire PDE de ${value} du PIB en ${year}.`,
     balanceLink: "Comparer les soldes budgétaires dans l’UE",
-    debtArticle: "Analyse des données de dette du T1 2026. Les pages de comparaison conservent leurs propres périodes et versions des sources.",
-    capitaArticle: "Cet article utilise la dette du T1 2026 et la population au 1er janvier 2026. La page de comparaison utilise la dette de fin d’année et la population au 1er janvier suivant ; ces chiffres ne sont pas interchangeables.",
+    debtArticle: "Analyse des données de dette du T2 2026. Les pages de comparaison conservent leurs propres périodes et versions des sources.",
+    capitaArticle: "Cet article utilise la dette au 30 juin 2026 et la population au 1er janvier 2026, soit six mois d’écart. La page de comparaison utilise la dette de fin d’année et la population au 1er janvier suivant ; ces chiffres ne sont pas interchangeables.",
     routes: {
       "deficit": ["Déficit et excédent budgétaires", "Comparer les soldes annuels et la valeur de référence de l’UE."],
       "debt-to-gdp": ["Dette rapportée au PIB", "Comparer le stock de dette à la taille de chaque économie."],
