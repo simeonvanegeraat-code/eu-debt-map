@@ -1460,3 +1460,32 @@
   font-size: var(--type-lede);
   line-height: var(--type-body-leading);
 }
+
+/* The atlas homepage keeps the established content in a quieter, open layout. */
+.atlasContent :is(.trendSection, .articlesSection, .whySection, .homeFaqSection, .trustSection) {
+  width: min(1380px, calc(100% - 96px));
+  margin-bottom: 64px;
+  box-shadow: none;
+  border-radius: 0;
+}
+.atlasContent .articlesSection { padding: 0; border: 0; background: transparent; }
+.atlasContent .articleGrid { gap: 32px; }
+.atlasContent .articleCard { border: 0; border-radius: 0; background: transparent; }
+.atlasContent .articleCard:hover { box-shadow: none; transform: none; }
+.atlasContent .articleContent { padding: 20px 0 0; }
+.atlasContent .articlesHeader > a { border: 0; border-bottom: 1px solid #a8bcd6; border-radius: 0; padding-inline: 0; }
+.atlasContent .trendSection, .atlasContent .whySection { padding: clamp(24px, 4vw, 56px); }
+.atlasContent :is(.trendCopy h2, .articlesHeader h2, .whyHeader h2, .homeFaqSection h2, .trustIntro h2) {
+  font-weight: 500;
+  font-size: clamp(28px, 2.8vw, 40px);
+}
+.atlasContent .homeFaqSection, .atlasContent .trustSection { padding-block: 42px; }
+.atlasContent :is(.trendSection, .whySection) a:focus-visible { outline-color: #78b8ff; }
+@media (max-width: 1000px) {
+  .atlasContent :is(.trendSection, .articlesSection, .whySection, .homeFaqSection, .trustSection) { width: calc(100% - 48px); }
+}
+@media (max-width: 700px) {
+  .atlasContent :is(.trendSection, .articlesSection, .whySection, .homeFaqSection, .trustSection) { width: calc(100% - 36px); margin-bottom: 40px; }
+  .atlasContent .articleGrid { gap: 32px; }
+  .atlasContent .articleContent { min-height: 0; }
+}
