@@ -232,7 +232,8 @@
 .chapterNav {
   position: sticky;
   z-index: 20;
-  top: var(--site-navigation-height, 72px);
+  top: calc(var(--site-navigation-height, 72px) + var(--site-navigation-shift, 0px));
+  transition: top var(--site-navigation-duration, 0ms) ease;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(14px);

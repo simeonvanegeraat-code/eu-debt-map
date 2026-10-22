@@ -12,6 +12,45 @@ const {
 } = require('../lib/navigation');
 const { COUNTRY_DISCOVERY_ORDER, nextDiscoveryCountries } = require('../lib/country-discovery');
 const { toolNavigationFor } = require('../lib/tool-navigation');
+const { nextScrollNavigation } = require('../lib/scroll-navigation');
+
+test('scroll navigation waits for deliberate movement and resets direction after a reversal', () => {
+  const options = { enabled: true, locked: false, headerHeight: 128 };
+  let state = { y: 200, direction: 0, distance: 0, hidden: false };
+  for (const y of [204, 208]) {
+    state = nextScrollNavigation(state, y, options);
+    assert.equal(state.hidden, false);
+  }
+  state = nextScrollNavigation(state, 212, options);
+  assert.equal(state.hidden, true);
+  for (const y of [208, 202]) {
+    state = nextScrollNavigation(state, y, options);
+    assert.equal(state.hidden, true);
+  }
+  state = nextScrollNavigation(state, 200, options);
+  assert.equal(state.hidden, false);
+  state = nextScrollNavigation(state, 205, options);
+  assert.equal(state.hidden, false);
+  state = nextScrollNavigation(state, 201, options);
+  state = nextScrollNavigation(state, 208, options);
+  assert.equal(state.hidden, false, 'opposing small movements do not accumulate');
+  assert.equal(nextScrollNavigation(state, 213, options).hidden, true);
+});
+
+test('top-of-page, mobile and menu/focus locks always reveal navigation and clear pending movement', () => {
+  const hidden = { y: 500, direction: 1, distance: 100, hidden: true };
+  for (const [y, options] of [
+    [152, { enabled: true, locked: false, headerHeight: 128 }],
+    [-20, { enabled: true, locked: false, headerHeight: 128 }],
+    [700, { enabled: false, locked: false, headerHeight: 128 }],
+    [700, { enabled: true, locked: true, headerHeight: 128 }],
+  ]) {
+    const state = nextScrollNavigation(hidden, y, options);
+    assert.deepEqual(state, { y: Math.max(0, y), direction: 0, distance: 0, hidden: false });
+  }
+  const options = { enabled: true, locked: false, headerHeight: 128 };
+  assert.deepEqual(nextScrollNavigation(hidden, 500, options), hidden, 'measurement changes without scroll do not change visibility');
+});
 
 test('tool navigation keeps localized destinations stable across content pages and highlights only the current tool', () => {
   const routes = ['/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/deficit', '/interest-cost', '/government-spending'];

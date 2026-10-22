@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import ToolNavigation from "@/components/ToolNavigation";
+import { nextScrollNavigation } from "@/lib/scroll-navigation";
 import { usePathname, useRouter } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale";
 import { getArticleTranslationHref } from "@/lib/articleTranslations";
@@ -677,19 +678,55 @@ function HeaderNavigation({ pathname }) {
     const tools = shell.querySelector('[data-tool-navigation]');
     const desktop = window.matchMedia('(min-width: 1180px)');
     const root = document.documentElement;
+    let height = 0;
+    let frame = 0;
+    let scrollState = { y: Math.max(0, window.scrollY), direction: 0, distance: 0, hidden: false };
+    function updateScroll() {
+      const locked = Boolean(shell.querySelector('[aria-expanded="true"]')) ||
+        (shell.contains(document.activeElement) && document.activeElement.matches(':focus-visible'));
+      scrollState = nextScrollNavigation(scrollState, window.scrollY, {
+        enabled: desktop.matches && Boolean(tools), locked, headerHeight: height,
+      });
+      root.toggleAttribute('data-navigation-hidden', scrollState.hidden);
+    }
+    function scheduleScroll() {
+      if (!frame) frame = requestAnimationFrame(() => {
+        frame = 0;
+        updateScroll();
+      });
+    }
+    function reveal() {
+      scrollState = { y: Math.max(0, window.scrollY), direction: 0, distance: 0, hidden: false };
+      root.removeAttribute('data-navigation-hidden');
+    }
+    function onKeyDown(event) {
+      if (event.key === 'Tab') reveal();
+    }
     function updateHeight() {
       const extra = desktop.matches && tools ? tools.getBoundingClientRect().height : 0;
-      root.style.setProperty('--site-navigation-height', `${header.getBoundingClientRect().height + extra}px`);
+      height = header.getBoundingClientRect().height + extra;
+      root.style.setProperty('--site-navigation-height', `${height}px`);
       root.style.setProperty('--site-navigation-extra', `${extra}px`);
+      updateScroll();
     }
     const observer = new ResizeObserver(updateHeight);
     observer.observe(header);
     if (tools) observer.observe(tools);
     desktop.addEventListener('change', updateHeight);
+    window.addEventListener('scroll', scheduleScroll, { passive: true });
+    document.addEventListener('keydown', onKeyDown, true);
+    shell.addEventListener('focusin', reveal);
+    shell.addEventListener('pointerenter', reveal);
     updateHeight();
     return () => {
       observer.disconnect();
       desktop.removeEventListener('change', updateHeight);
+      window.removeEventListener('scroll', scheduleScroll);
+      document.removeEventListener('keydown', onKeyDown, true);
+      shell.removeEventListener('focusin', reveal);
+      shell.removeEventListener('pointerenter', reveal);
+      if (frame) cancelAnimationFrame(frame);
+      root.removeAttribute('data-navigation-hidden');
       root.style.removeProperty('--site-navigation-height');
       root.style.removeProperty('--site-navigation-extra');
     };

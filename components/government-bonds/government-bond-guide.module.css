@@ -241,7 +241,8 @@
 
 .chapterNav {
   position: sticky;
-  top: var(--site-navigation-height, 79px);
+  top: calc(var(--site-navigation-height, 79px) + var(--site-navigation-shift, 0px));
+  transition: top var(--site-navigation-duration, 0ms) ease;
   z-index: 190;
   border-bottom: 1px solid var(--bond-line);
   background: rgba(255, 255, 255, 0.96);
@@ -1643,7 +1644,7 @@
 
 @media (max-width: 720px) {
   .chapterNav {
-    top: var(--site-navigation-height, 73px);
+    top: calc(var(--site-navigation-height, 73px) + var(--site-navigation-shift, 0px));
   }
 }
 
