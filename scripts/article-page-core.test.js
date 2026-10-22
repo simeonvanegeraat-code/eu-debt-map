@@ -24,6 +24,101 @@ test("article dates use the publisher timezone around midnight", () => {
     "3. September 2026"
   );
 });
+test("October quarterly country news preserves its periods, source boundaries and local destinations", () => {
+  const editions = [
+  [
+    "nl",
+    "staatsschuld-nederland-tweede-kwartaal-2026-eurostat",
+    "NL"
+  ],
+  [
+    "fr",
+    "dette-france-119-1-pib-eurostat-deuxieme-trimestre-2026",
+    "FR"
+  ],
+  [
+    "de",
+    "staatsschulden-deutschland-22-4-milliarden-zweites-quartal-2026",
+    "DE"
+  ],
+  [
+    "en",
+    "finland-debt-90-percent-gdp-eurostat-q2-2026",
+    "FI"
+  ]
+];
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-publication-manifest.json"), "utf8"));
+  const translations = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-translations.json"), "utf8"));
+  const images = new Set();
+  for (const [lang, slug, country] of editions) {
+    const article = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", lang, "2026", slug + ".json"), "utf8"));
+    const prefix = lang === "en" ? "" : "/" + lang;
+    const [prose, footer] = article.body.split("<details id='article-sources'>");
+    assert.equal(article.articleType, "news");
+    assert.equal(article.datePublished, "2026-10-22");
+    assert.equal(article.dateModified, "2026-10-22");
+    assert.equal(article.dateReviewed, "2026-10-22");
+    assert.deepEqual(article.relatedCountries, [country]);
+    assert.equal(article.countryPageFallback, false);
+    assert.ok(manifest.articles.includes(prefix + "/articles/" + slug));
+    assert.ok(prose.includes("href='" + prefix + "/country/" + country.toLowerCase() + "'"));
+    assert.ok(prose.includes("href='" + prefix + "/debt-to-gdp'"));
+    assert.ok(footer.includes(prefix + "/methodology"));
+    assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+    assert.doesNotMatch(article.body, /<table\b|<script\b/i);
+    assert.equal((prose.match(/<!-- MID_ARTICLE_AD -->/g) || []).length, 1);
+    assert.ok(article.sources.some(source => source.url.endsWith("/2-21102026-bp")), "use the quarterly release, not the annual notification");
+    assert.ok(!article.sources.some(source => source.url.endsWith("/2-21102026-ap")));
+    assert.equal((footer.match(/<li><a /g) || []).length, article.sources.length);
+    for (const source of article.sources) {
+      assert.equal(source.accessed, "2026-10-22");
+      assert.ok(footer.includes(source.url));
+    }
+    assert.match(article.contentNotes, /no independent human or native-language review claimed/);
+    assert.match(article.contentNotes, /not October debt stocks/);
+    assert.ok(!Object.values(translations).some(group => Object.values(group).includes(slug)), "distinct country stories are not equivalent translations");
+    assert.ok(fs.existsSync(path.join(ROOT, "public", article.image)));
+    assert.equal(article.imageWidth, 1672);
+    assert.equal(article.imageHeight, 941);
+    images.add(article.image);
+    const metadata = buildArticleMetadata({article, translations: [], slug, lang, ogImage: "https://www.eudebtmap.com" + article.image});
+    assert.equal(metadata.alternates.canonical, "https://www.eudebtmap.com" + prefix + "/articles/" + slug);
+  }
+  assert.equal(images.size, 4);
+});
+
+test("October news calculations retain the historical release vintage and the Dutch rounding caveat", () => {
+  // These are the 21 October 2026 inputs, not whatever a later snapshot revises them to.
+  const inputs = {
+    NL: [517377, 523795],
+    FR: [3535928.6, 3595524.9],
+    DE: [2902262.5, 2924674.2],
+    FI: [254813, 259585],
+  };
+  const billions = Object.fromEntries(Object.entries(inputs).map(([code, [q1, q2]]) => [code, Number(((q2 - q1) / 1000).toFixed(1))]));
+  assert.deepEqual(billions, {NL: 6.4, FR: 59.6, DE: 22.4, FI: 4.8});
+  assert.equal(Math.round((inputs.NL[1] - inputs.NL[0]) * 1e6 / (91 * 86400)), 816);
+  const load = (lang, slug) => JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles", lang, "2026", slug + ".json"), "utf8"));
+  const nl = load("nl", "staatsschuld-nederland-tweede-kwartaal-2026-eurostat");
+  assert.match(nl.body, /vrijwel stabiel/);
+  assert.match(nl.body, /0,0 procentpunt/);
+  assert.match(nl.body, /91 dagen/);
+  assert.match(nl.body, /€816 per seconde/);
+  const fr = load("fr", "dette-france-119-1-pib-eurostat-deuxieme-trimestre-2026");
+  assert.match(fr.body, /119,0 %/);
+  assert.match(fr.body, /119,1 %/);
+  assert.match(fr.body, /29 septembre/);
+  assert.match(fr.body, /3,7 points/);
+  const de = load("de", "staatsschulden-deutschland-22-4-milliarden-zweites-quartal-2026");
+  assert.match(de.body, /63,5 Prozent/);
+  assert.match(de.body, /63,4 Prozent/);
+  assert.match(de.body, /Bund, Länder, Gemeinden und Sozialversicherung/);
+  const en = load("en", "finland-debt-90-percent-gdp-eurostat-q2-2026");
+  assert.match(en.body, /seven EU countries/);
+  assert.match(en.body, /compared with six in March/);
+  assert.match(en.body, /not an EU legal debt ceiling/);
+  assert.match(en.body, /euro area’s 21 members/);
+});
 
 test("article body without a marker remains unchanged", () => {
   assert.deepEqual(splitArticleBody("<p>Body</p>"), {

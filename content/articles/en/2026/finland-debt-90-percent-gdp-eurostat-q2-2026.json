@@ -1,0 +1,68 @@
+{
+  "contentStandard": "discover-2026-v1",
+  "slug": "finland-debt-90-percent-gdp-eurostat-q2-2026",
+  "title": "Finland’s debt passes 90% of GDP in new European figures",
+  "seoTitle": "Finland’s debt reaches 90.2% of GDP in Q2 2026",
+  "summary": "Finland’s debt ratio rose to 90.2% at the end of June. It was one of seven EU countries above 90%, up from six in March. The grouping is a comparison, not a legal limit.",
+  "excerpt": "The new Eurostat release puts Finland above 90% of GDP this quarter. The shift widens the European high-debt picture beyond its familiar southern focus.",
+  "primaryTopic": "Finland government debt second quarter 2026 Eurostat",
+  "countryPageFallback": false,
+  "relatedCountries": [
+    "FI"
+  ],
+  "articleType": "news",
+  "tags": [
+    "government debt",
+    "Finland",
+    "Eurostat",
+    "European Union"
+  ],
+  "lang": "en",
+  "datePublished": "2026-10-22",
+  "dateModified": "2026-10-22",
+  "dateReviewed": "2026-10-22",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/methodology"
+  },
+  "readingMinutes": 2,
+  "image": "/images/articles/finland-quarterly-debt-helsinki-harbour-2026.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "An anonymous person looks across a Helsinki-inspired harbour towards northern European civic buildings",
+  "imageCredit": "Original AI-generated editorial illustration by EU Debt Map; not a news photograph or a documentary view of the location",
+  "sourceNote": "Reviewed on 22 October 2026. Eurostat release of 21 October, covering provisional debt at 30 June 2026. All comparisons use that release’s data vintage. The country count and stock differences are EU Debt Map calculations, not a risk classification or a historical first-crossing claim.",
+  "relatedLinks": [
+    {
+      "label": "Explore Finland’s debt and quarterly data",
+      "url": "https://www.eudebtmap.com/country/fi"
+    },
+    {
+      "label": "Compare EU debt-to-GDP ratios",
+      "url": "https://www.eudebtmap.com/debt-to-gdp"
+    },
+    {
+      "label": "Read the debt measurement methodology",
+      "url": "https://www.eudebtmap.com/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Eurostat, 21 October 2026: government debt at the end of the second quarter of 2026",
+      "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp",
+      "accessed": "2026-10-22"
+    },
+    {
+      "name": "Eurostat: quarterly government debt methodology",
+      "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm",
+      "accessed": "2026-10-22"
+    }
+  ],
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste raw AdSense scripts into the body.",
+  "contentNotes": "AI-assisted research, full drafting and separate source/arithmetic/language checks; no independent human or native-language review claimed. Source cutoff 22 October 2026. Distinct country news, not a translation of the other three editions. Provisional Q2 observations published on 21 October, not October debt stocks. Same-vintage comparisons throughout. Original generated editorial illustration, not documentary photography.",
+  "body": "<p class='article-intro'>Finland’s government debt rose above 90% of economic output in the second quarter of 2026, according to figures published by Eurostat on 21 October. Its debt-to-GDP ratio reached 90.2% at the end of June, up from 89.5% in March.</p>\n<p>The change means seven EU countries had ratios above 90% that quarter, compared with six in March. That count, calculated by EU Debt Map from the same release, adds Finland to a group that already included Greece, Italy, France, Belgium, Spain and Portugal.</p>\n<h2>A higher ratio and a larger debt stock</h2>\n<p>Finland’s debt reached €259.6 billion at the end of June, against €254.8 billion at the end of March. Subtracting the unrounded official amounts gives an increase of €4.8 billion. The ratio was also higher than a year earlier, when it stood at 88.3% in the current data vintage.</p>\n<p>These are figures for <strong>30 June 2026</strong>, not a measurement of October borrowing. The increase in debt is not automatically the quarter’s budget deficit: financial transactions and cash management can also change the amount of debt outstanding.</p>\n<p>The <a href='/country/fi'>Finland debt page</a> shows the official quarterly observations alongside the site’s moving debt estimate. The estimate extends an observed pace mathematically; it is not a live feed of government borrowing.</p>\n<!-- MID_ARTICLE_AD -->\n<h2>What the 90% comparison does, and does not, mean</h2>\n<p>The 90% line is a grouping chosen for this comparison, not an EU legal debt ceiling or a credit rating. Moving above it does not automatically change a country’s financing conditions.</p>\n<p>The count describes the movement between these two quarters. It does not establish when Finland first crossed 90% historically or suggest that the seven countries face identical problems.</p>\n<p>The <a href='/debt-to-gdp'>European debt-to-GDP comparison</a> shows Finland alongside all 26 other EU countries, using the same reference quarter. It offers a wider picture than comparisons limited to the largest economies.</p>\n<h2>The wider European ratio rose too</h2>\n<p>The debt ratio for the EU’s 27 countries increased from 82.5% in March to 82.9% in June. For the euro area’s 21 members, it rose from 88.4% to 88.8%. These are Eurostat’s aggregate ratios, not simple averages of the country percentages.</p>\n<p>Finland’s 90.2% sits above both. Its quarterly increase of 0.7 percentage points was also larger than the 0.4-point rise in each of the two European aggregates.</p><details id='article-sources'><summary>Sources and methodology</summary><p>AI-assisted research, full drafting and separate source, arithmetic and language checks. No independent human or native-language final review is claimed. Stock differences and the count of countries above 90% are original calculations from official observations. The generated illustration does not document a real news event.</p><p><a href='/methodology'>Our methodology</a></p><ul><li><a href='https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp'>Eurostat, 21 October 2026: government debt at the end of the second quarter of 2026</a> (accessed 22 October 2026).</li><li><a href='https://ec.europa.eu/eurostat/cache/metadata/en/gov_10q_ggdebt_esms.htm'>Eurostat: quarterly government debt methodology</a> (accessed 22 October 2026).</li></ul></details>"
+}
