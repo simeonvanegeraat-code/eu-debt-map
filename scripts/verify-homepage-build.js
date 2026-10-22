@@ -41,7 +41,7 @@ if (process.argv.includes("--capture")) {
     const topics = html.match(/<nav\b[^>]*id="atlas-topics"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
     assert.ok(topics, `${lang}: tool navigation is server rendered`);
     const topicLinks = [...topics.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => match[1]);
-    assert.deepEqual(topicLinks, ["#atlas-map", ...["/debt-to-gdp", "/debt-per-capita", "/debt-growth", "/eu-debt", "/interest-cost", "/government-spending"].map(route => base + route)], `${lang}: direct localized tool links instead of repeated main categories`);
+    assert.deepEqual(topicLinks, ["#atlas-map", ...["/debt-to-gdp", "/debt-per-capita", "/debt-growth", "/eu-debt", "/deficit", "/interest-cost", "/government-spending"].map(route => base + route)], `${lang}: direct localized tool links instead of repeated main categories`);
     const current = inventory(html);
     if (baseline) {
       assert.deepEqual(current.metadata, baseline[lang].metadata, `${lang}: unchanged metadata`);

@@ -232,7 +232,7 @@
 .chapterNav {
   position: sticky;
   z-index: 20;
-  top: 72px;
+  top: var(--site-navigation-height, 72px);
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(14px);

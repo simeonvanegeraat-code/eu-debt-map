@@ -21,7 +21,6 @@ const commonCountries = countries.filter(country => country.official_latest_time
 const officialTotal = commonCountries.reduce((sum, country) => sum + country.last_value_eur, 0);
 const perSecond = commonCountries.reduce((sum, country) => sum + livePerSecondFor(country), 0);
 const legendColors = [MAP_SCALE_COLORS.low, MAP_SCALE_COLORS.medium, MAP_SCALE_COLORS.high, MAP_SCALE_COLORS.highest];
-const topicPaths = ["#atlas-map", "/debt-to-gdp", "/debt-per-capita", "/debt-growth", "/eu-debt", "/interest-cost", "/government-spending"];
 
 function Arrow({ diagonal = false }) {
   return <span aria-hidden="true" className={styles.arrow}>{diagonal ? "↗" : "→"}</span>;
@@ -42,7 +41,6 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
   const [previewCode, setPreviewCode] = useState(null);
   const [relief, setRelief] = useState(true);
   const selectRef = useRef(null);
-  const topicsRef = useRef(null);
   const activeCode = previewCode || selectedCode;
   const activeCountry = localizedCountries.find(country => country.code === activeCode);
   const ratio = activeCountry.official_debt_to_gdp_pct;
@@ -53,26 +51,8 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
     setPreviewCode(null);
   }
 
-  function browseTopics() {
-    const topics = topicsRef.current;
-    if (!topics) return;
-    const atEnd = topics.scrollLeft + topics.clientWidth >= topics.scrollWidth - 2;
-    topics.scrollTo({
-      left: atEnd ? 0 : topics.scrollLeft + topics.clientWidth * 0.75,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
-  }
-
   return (
     <div className={styles.page}>
-      <div className={styles.topicBar}>
-        <div className={styles.topicInner}>
-          <nav ref={topicsRef} id="atlas-topics" className={styles.topicLinks} aria-label={copy.topicsLabel}>
-            {topicPaths.map((path, index) => <Link key={path} href={index === 0 ? path : `${detail.base}${path}`} className={index === 0 ? styles.currentTopic : undefined}>{copy.topics[index]}</Link>)}
-          </nav>
-          <button className={styles.browseTopics} type="button" onClick={browseTopics} aria-label={copy.browse} aria-controls="atlas-topics"><Arrow /></button>
-        </div>
-      </div>
       <section className={styles.hero} aria-labelledby="home-title" id="map">
         <div className={styles.inner}>
           <div className={styles.explore}>

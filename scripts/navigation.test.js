@@ -11,6 +11,33 @@ const {
   normalizeNavigationSearch,
 } = require('../lib/navigation');
 const { COUNTRY_DISCOVERY_ORDER, nextDiscoveryCountries } = require('../lib/country-discovery');
+const { toolNavigationFor } = require('../lib/tool-navigation');
+
+test('tool navigation keeps localized destinations stable across content pages and highlights only the current tool', () => {
+  const routes = ['/debt-to-gdp', '/debt-per-capita', '/debt-growth', '/eu-debt', '/deficit', '/interest-cost', '/government-spending'];
+  for (const lang of ['en', 'nl', 'de', 'fr']) {
+    const base = lang === 'en' ? '' : `/${lang}`;
+    const home = toolNavigationFor(base || '/');
+    assert.equal(home.home, true);
+    assert.equal(home.items[0].href, '#atlas-map');
+    assert.equal(home.items.filter(item => item.current).length, 1);
+    const expected = [`${base || '/'}#atlas-map`, ...routes.map(route => base + route)];
+    for (const route of [...routes, '/country/nl', '/articles/example', '/articles/page/2', '/inflation', '/debt', '/methodology', '/about', '/debt-vs-deficit', '/stability-and-growth-pact']) {
+      const nav = toolNavigationFor(base + route);
+      assert.ok(nav, `${lang}${route}: content navigation`);
+      assert.equal(nav.home, false);
+      assert.deepEqual(nav.items.map(item => item.href), expected);
+      assert.deepEqual(nav.items.map(item => item.label), home.items.map(item => item.label));
+      assert.deepEqual(nav.items.filter(item => item.current).map(item => item.href), routes.includes(route) ? [base + route] : []);
+    }
+    assert.equal(toolNavigationFor(base + '/government-spending/').items.at(-1).current, true);
+    for (const route of ['/privacy', '/cookies', '/debug', '/ads-test', '/preview/home', '/unknown']) assert.equal(toolNavigationFor(base + route), null);
+  }
+  assert.equal(toolNavigationFor('/nl/preview/home-atlas').home, true);
+  assert.equal(toolNavigationFor('/nl/staatsobligaties-nederland').items[0].href, '/nl#atlas-map');
+  assert.equal(toolNavigationFor('/nlx/debt-to-gdp'), null);
+  assert.equal(toolNavigationFor('/nl/debt-to-gdp-extra'), null);
+});
 
 test('country discovery reaches every EU country before repeating and offers two forward steps', () => {
   assert.equal(COUNTRY_DISCOVERY_ORDER.length, 27);

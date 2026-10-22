@@ -227,7 +227,7 @@
 .chapterNav {
   position: sticky;
   z-index: 20;
-  top: var(--site-header-height, 0px);
+  top: var(--site-navigation-height, 79px);
   border-bottom: 1px solid var(--line);
   background: rgba(250, 252, 255, 0.95);
   backdrop-filter: blur(12px);
@@ -616,7 +616,7 @@
 .faqSection header {
   align-self: start;
   position: sticky;
-  top: 156px;
+  top: calc(156px + var(--site-navigation-extra, 0px));
 }
 
 .faqSection h2,

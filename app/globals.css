@@ -99,11 +99,14 @@ html,body{
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
+  /* Clip horizontal overflow without trapping sticky navigation in a scroll container. */
+  overflow-x: clip;
 }
 html{
   scrollbar-gutter: stable;
+  scroll-padding-top: var(--site-navigation-extra, 0px);
 }
+:where(main, main [id]){ scroll-margin-top: calc(var(--site-navigation-height, 79px) - var(--site-navigation-extra, 0px) + 12px); }
 
 /* Belangrijk: maak <img> voorspelbaar en NIET fullscreen */
 img{ display:block; max-width:100%; height:auto; }
@@ -242,6 +245,15 @@ p{ margin: var(--sp-3) 0; }
 /* ===========================
    Header / Nav
    =========================== */
+.site-navigation{ display:contents; }
+@media (min-width:1180px){
+  .site-navigation{ display:block; position:sticky; top:0; z-index:200; }
+  .site-navigation .site-header{ position:relative; top:auto; }
+  html:has(.site-navigation [data-tool-navigation]){
+    --site-navigation-height:128px;
+    --site-navigation-extra:49px;
+  }
+}
 .site-header{
   position: sticky;
   top: 0;

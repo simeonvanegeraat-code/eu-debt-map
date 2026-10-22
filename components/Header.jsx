@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import ToolNavigation from "@/components/ToolNavigation";
 import { usePathname, useRouter } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale";
 import { getArticleTranslationHref } from "@/lib/articleTranslations";
@@ -665,9 +666,34 @@ function HeaderNavigation({ pathname }) {
     setCountryQuery('');
   }, []);
   const brandRef = useRef(null);
+  const navigationRef = useRef(null);
   const countriesGroup = groups.find(group => group.key === 'countries');
   const currentDrawerGroup = groups.find(group => group.key === drawerView);
   const currentLocale = LOCALES.find(option => option.code === locale) || LOCALES[0];
+
+  useEffect(() => {
+    const shell = navigationRef.current;
+    const header = shell.querySelector('.site-header');
+    const tools = shell.querySelector('[data-tool-navigation]');
+    const desktop = window.matchMedia('(min-width: 1180px)');
+    const root = document.documentElement;
+    function updateHeight() {
+      const extra = desktop.matches && tools ? tools.getBoundingClientRect().height : 0;
+      root.style.setProperty('--site-navigation-height', `${header.getBoundingClientRect().height + extra}px`);
+      root.style.setProperty('--site-navigation-extra', `${extra}px`);
+    }
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    if (tools) observer.observe(tools);
+    desktop.addEventListener('change', updateHeight);
+    updateHeight();
+    return () => {
+      observer.disconnect();
+      desktop.removeEventListener('change', updateHeight);
+      root.style.removeProperty('--site-navigation-height');
+      root.style.removeProperty('--site-navigation-extra');
+    };
+  }, []);
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1180px)');
@@ -684,29 +710,32 @@ function HeaderNavigation({ pathname }) {
 
   return (
     <>
-      <header className="site-header site-header--light">
-        <div className="container header-inner">
-          <Link ref={brandRef} href={localeAwareHref('/', locale)} className="brand" aria-label={t.brandHome}>
-            <span className="brand-logo">EU</span>
-            <span className="brand-text">Debt Map</span>
-          </Link>
-          <nav className="nav-desktop" aria-label={t.navigation}>
-            {groups.map(group => <DesktopGroup key={group.key} group={group} locale={locale} pathname={pathname} />)}
-            <NavigationLinks items={links} locale={locale} pathname={pathname} className="nav-link" />
-            <LanguageDropdown key={locale} t={t} />
-          </nav>
-          <button
-            className={`hamburger${open ? ' hamburger--open' : ''}`}
-            type="button"
-            aria-label={t.toggleMenu}
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => setOpen(value => !value)}
-          >
-            <span /><span /><span />
-          </button>
-        </div>
-      </header>
+      <div className="site-navigation" ref={navigationRef}>
+        <header className="site-header site-header--light">
+          <div className="container header-inner">
+            <Link ref={brandRef} href={localeAwareHref('/', locale)} className="brand" aria-label={t.brandHome}>
+              <span className="brand-logo">EU</span>
+              <span className="brand-text">Debt Map</span>
+            </Link>
+            <nav className="nav-desktop" aria-label={t.navigation}>
+              {groups.map(group => <DesktopGroup key={group.key} group={group} locale={locale} pathname={pathname} />)}
+              <NavigationLinks items={links} locale={locale} pathname={pathname} className="nav-link" />
+              <LanguageDropdown key={locale} t={t} />
+            </nav>
+            <button
+              className={`hamburger${open ? ' hamburger--open' : ''}`}
+              type="button"
+              aria-label={t.toggleMenu}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              onClick={() => setOpen(value => !value)}
+            >
+              <span /><span /><span />
+            </button>
+          </div>
+        </header>
+        <ToolNavigation pathname={pathname} />
+      </div>
       <MobileDrawer open={open} onClose={close} label={t.navigation} closeLabel={t.closeMenu}>
         {drawerView === 'countries' && countriesGroup ? (
           <MobileCountries

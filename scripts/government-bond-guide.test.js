@@ -62,8 +62,8 @@ test("chapter navigation sticks below the site header and offsets anchors", () =
   );
 
   assert.match(css, /\.chapterNav\s*\{[^}]*position:\s*sticky;/s);
-  assert.match(css, /\.chapterNav\s*\{[^}]*top:\s*79px;/s);
-  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.chapterNav\s*\{[^}]*top:\s*73px;/s);
+  assert.match(css, /\.chapterNav\s*\{[^}]*top:\s*var\(--site-navigation-height, 79px\);/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.chapterNav\s*\{[^}]*top:\s*var\(--site-navigation-height, 73px\);/s);
   assert.match(css, /\.page section\[id\]\s*\{[^}]*scroll-margin-top:\s*150px;/s);
   assert.match(
     css,
