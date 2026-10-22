@@ -36,13 +36,13 @@
 .page a:hover { text-decoration: underline; text-underline-offset: 5px; }
 .aside { grid-area: 3 / 1; color: #a6c0df; font-size: 12px; line-height: 1.7; margin: 35px 0 0; }
 .atlas { position: relative; grid-area: 1 / 2 / 4 / 3; min-width: 0; scroll-margin-top: 100px; }
-.mapHeading { display: flex; align-items: center; gap: 12px; justify-content: space-between; color: #b8cfe9; font-size: 11px; letter-spacing: .035em; padding-top: 8px; }
+.mapHeading { display: flex; align-items: center; gap: 12px; justify-content: flex-end; color: #b8cfe9; font-size: 11px; letter-spacing: .035em; padding-top: 8px; }
 .mapTools { display: flex; align-items: center; gap: 20px; }
 .reliefToggle { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0; border: 0; border-bottom: 1px solid #789bc7; border-radius: 0; background: transparent; color: #fff; font: inherit; cursor: pointer; }
 .reliefToggle span { color: #bbd5f5; }
 .mapSvg, .mapLoading { width: 100%; aspect-ratio: 4 / 3; display: block; }
 .mapSurface { position: relative; isolation: isolate; }
-.mapSurface::before { content: ""; position: absolute; z-index: -1; inset: -8% -5%; pointer-events: none; background: radial-gradient(ellipse at 54% 46%, rgba(125, 158, 195, .55) 0%, rgba(91, 134, 185, .32) 36%, rgba(63, 106, 165, .12) 57%, transparent 76%); }
+.mapSurface::before { content: ""; position: absolute; z-index: -1; inset: -8% -5%; pointer-events: none; background: radial-gradient(ellipse closest-side at 54% 46%, rgba(125, 158, 195, .55) 0%, rgba(91, 134, 185, .32) 36%, rgba(63, 106, 165, .12) 64%, transparent 100%); }
 .mapLoading { display: grid; place-items: center; color: #b5cee9; }
 .country { stroke: #577ca8; stroke-width: .85; cursor: pointer; transition: stroke 150ms ease, stroke-width 150ms ease, filter 150ms ease; }
 .mapLink:focus-visible { outline: none; }
@@ -50,7 +50,9 @@
 .countryActive, .country:hover, .country:focus-visible { stroke: #fff; stroke-width: 2.6; filter: drop-shadow(0 0 5px rgba(176, 210, 255, .5)); outline: none; }
 .mapRelief .country { filter: drop-shadow(0 3px 0 #123358) drop-shadow(0 6px 3px rgba(3, 16, 36, .35)); }
 .mapRelief :is(.countryActive, .country:hover, .country:focus-visible) { filter: drop-shadow(0 5px 0 #183e6b) drop-shadow(0 9px 5px rgba(3, 16, 36, .5)); }
-.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; color: #d1e0f2; font-size: 11px; margin: -10px 0 22px; }
+.mapCaption { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: baseline; gap: 10px 24px; color: #d1e0f2; font-size: 11px; margin: -10px 0 22px; }
+.legendTitle { color: #b8cfe9; letter-spacing: .035em; }
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 .countryDetails { border-top: 1px solid #47678e; padding-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; align-items: start; }
@@ -135,7 +137,8 @@
   .mapHeading { font-size: 11px; padding-top: 0; align-items: center; }
   .mapTools > span { display: none; }
   .mapSvg, .mapLoading { max-height: 300px; }
-  .legend { gap: 8px 12px; font-size: 10px; margin: 0 0 16px; }
+  .mapCaption { grid-template-columns: minmax(0, 1fr); gap: 8px; margin: 0 0 16px; }
+  .legend { gap: 8px 12px; font-size: 10px; }
   .countryDetails { padding-top: 14px; gap: 8px 18px; }
   .countryPicker select { font-size: 18px; }
   .countryReadout strong { font-size: 29px; }

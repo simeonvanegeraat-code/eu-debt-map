@@ -73,7 +73,6 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
 
             <div className={styles.atlas} id="atlas-map">
               <div className={styles.mapHeading}>
-                <span>{detail.debtRatio}</span>
                 <div className={styles.mapTools}>
                   <span>{copy.mapHint}</span>
                   <button type="button" className={styles.reliefToggle} aria-label={copy.relief} aria-pressed={relief} onClick={() => setRelief(value => !value)}>{copy.relief} <span aria-hidden="true">{relief ? copy.on : copy.off}</span></button>
@@ -82,8 +81,11 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
               <div className={`${styles.mapSurface} ${relief ? styles.mapRelief : ""}`}>
                 <AtlasMap lang={lang} countries={localizedCountries} activeCode={activeCode} onPreview={setPreviewCode} />
               </div>
-              <div className={styles.legend} aria-label={detail.debtRatio}>
-                {copy.legend.map((label, index) => <span key={label}><i style={{ background: legendColors[index] }} aria-hidden="true" />{label}</span>)}
+              <div className={styles.mapCaption}>
+                <span className={styles.legendTitle}>{detail.debtRatio}</span>
+                <div className={styles.legend} aria-label={detail.debtRatio}>
+                  {copy.legend.map((label, index) => <span key={label}><i style={{ background: legendColors[index] }} aria-hidden="true" />{label}</span>)}
+                </div>
               </div>
               <div className={styles.countryDetails}>
                 <div className={styles.countryPicker}>
