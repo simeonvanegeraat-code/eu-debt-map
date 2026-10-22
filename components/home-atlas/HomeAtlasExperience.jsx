@@ -100,7 +100,7 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
                 </div>
               </div>
               <div className={`${styles.mapSurface} ${relief ? styles.mapRelief : ""}`}>
-                <AtlasMap lang={lang} countries={localizedCountries} activeCode={activeCode} selectedCode={selectedCode} onSelect={selectCountry} onPreview={setPreviewCode} />
+                <AtlasMap lang={lang} countries={localizedCountries} activeCode={activeCode} onPreview={setPreviewCode} />
               </div>
               <div className={styles.legend} aria-label={detail.debtRatio}>
                 {copy.legend.map((label, index) => <span key={label}><i style={{ background: legendColors[index] }} aria-hidden="true" />{label}</span>)}

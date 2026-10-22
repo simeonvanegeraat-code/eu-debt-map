@@ -52,6 +52,8 @@
 .mapSurface::before { content: ""; position: absolute; z-index: -1; inset: -8% -5%; pointer-events: none; background: radial-gradient(ellipse at 54% 46%, rgba(125, 158, 195, .55) 0%, rgba(91, 134, 185, .32) 36%, rgba(63, 106, 165, .12) 57%, transparent 76%); }
 .mapLoading { display: grid; place-items: center; color: #b5cee9; }
 .country { stroke: #577ca8; stroke-width: .85; cursor: pointer; transition: stroke 150ms ease, stroke-width 150ms ease, filter 150ms ease; }
+.mapLink:focus-visible { outline: none; }
+.mapLink:focus-visible .country { stroke: #fff; stroke-width: 2.6; }
 .countryActive, .country:hover, .country:focus-visible { stroke: #fff; stroke-width: 2.6; filter: drop-shadow(0 0 5px rgba(176, 210, 255, .5)); outline: none; }
 .mapRelief .country { filter: drop-shadow(0 3px 0 #123358) drop-shadow(0 6px 3px rgba(3, 16, 36, .35)); }
 .mapRelief :is(.countryActive, .country:hover, .country:focus-visible) { filter: drop-shadow(0 5px 0 #183e6b) drop-shadow(0 9px 5px rgba(3, 16, 36, .5)); }
