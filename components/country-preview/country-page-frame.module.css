@@ -1,0 +1,68 @@
+.pageFrame {
+  --surface-hero-fade-height: clamp(72px, 8vw, 104px);
+  --surface-hero:
+    radial-gradient(circle at 82% 14%, rgba(73, 132, 235, .38), transparent 30%),
+    linear-gradient(
+      180deg,
+      var(--surface-dark) 0%,
+      var(--surface-hero-blue) calc(100% - var(--surface-hero-fade-height)),
+      #245ca8 calc(100% - var(--surface-hero-fade-height) * .72),
+      #83a7d8 calc(100% - var(--surface-hero-fade-height) * .38),
+      #dfe9f7 calc(100% - var(--surface-hero-fade-height) * .12),
+      var(--surface-page) 100%
+    );
+}
+
+.pageFrame :global(#debt-now) + nav {
+  padding: 0;
+  background: var(--surface-page);
+}
+
+.pageFrame :global(#debt-now) + nav > div {
+  gap: 28px;
+  align-items: stretch;
+}
+
+.pageFrame :global(#debt-now) + nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 10px 4px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  white-space: nowrap;
+  background: transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.pageFrame :global(#debt-now) + nav a[aria-current="location"] {
+  color: #1259bd;
+  border-bottom-color: #2563eb;
+}
+
+.pageFrame :global(#debt-now) + nav a:hover {
+  color: #1259bd;
+  background: transparent;
+}
+
+.pageFrame :global(#debt-now) + nav a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -4px;
+}
+
+.pageFrame :is(:global(#debt-picture), :global(#snapshot), :global(#sources), :global(#country-context)) {
+  scroll-margin-top: calc(var(--site-navigation-height, 72px) + 64px - var(--site-navigation-extra, 0px));
+}
+
+.pageFrame :global(#debt-picture) {
+  padding-top: 32px;
+}
+
+@media (max-width: 820px) {
+  .pageFrame :global(#debt-now) + nav > div { gap: 20px; }
+  .pageFrame :global(#debt-now) + nav a { min-height: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageFrame :global(#debt-now) + nav a { transition: none; }
+}

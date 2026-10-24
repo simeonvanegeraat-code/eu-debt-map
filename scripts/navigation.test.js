@@ -177,3 +177,32 @@ test('each page activates one navigation destination and unknown locales fall ba
   assert.deepEqual(navigationFor('unknown', COUNTRY_NAMES), navigationFor('en', COUNTRY_NAMES));
   assert.equal(localeAwareHref('/deficit', 'unknown'), '/deficit');
 });
+
+const { activeCountrySection } = require("../lib/country-section-navigation");
+
+test("country section navigation follows the reading boundary in both scroll directions", () => {
+  const sections = [
+    { id: "debt-picture", top: -800 },
+    { id: "snapshot", top: 160 },
+    { id: "sources", top: 900 },
+    { id: "country-context", top: 1400 },
+  ];
+  assert.equal(activeCountrySection(sections, 159), "debt-picture");
+  assert.equal(activeCountrySection(sections, 160), "snapshot");
+  assert.equal(activeCountrySection(sections, 900), "sources");
+  assert.equal(activeCountrySection(sections, 160), "snapshot");
+});
+
+test("country section navigation handles the intro, footer and missing sections", () => {
+  const sections = [{ id: "debt-picture", top: 1000 }, { id: "country-context", top: 2000 }];
+  assert.equal(activeCountrySection(sections, 120), "debt-picture");
+  assert.equal(activeCountrySection(sections, 120, true), "country-context");
+  assert.equal(activeCountrySection([], 120), null);
+});
+
+test("country section navigation recalculates after responsive reflow", () => {
+  const desktop = [{ id: "debt-picture", top: -800 }, { id: "snapshot", top: 100 }];
+  const mobile = [{ id: "debt-picture", top: -800 }, { id: "snapshot", top: 600 }];
+  assert.equal(activeCountrySection(desktop, 180), "snapshot");
+  assert.equal(activeCountrySection(mobile, 180), "debt-picture");
+});

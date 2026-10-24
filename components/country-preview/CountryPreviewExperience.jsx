@@ -18,6 +18,7 @@ import CountryInflationLink from "@/components/inflation/CountryInflationLink";
 import { getCountryCopy, localeBase, localeFor } from "@/components/country/country-copy";
 import { fiscalPath } from "@/lib/fiscal/paths";
 import CountryPreviewHero from "./CountryPreviewHero";
+import CountryPageFrame from "./CountryPageFrame";
 import CountryDebtTrend from "./CountryDebtTrend";
 import AnimatedMetricValue from "./AnimatedMetricValue";
 import { getCountryRedesignCopy } from "./country-redesign-copy";
@@ -121,7 +122,7 @@ export default function CountryPreviewExperience({
     : percent(value, locale, options.signed);
 
   return (
-    <article className={`${styles.page} ${typography.page}`} lang={lang}>
+    <CountryPageFrame key={lang + country.code} className={`${styles.page} ${typography.page}`} lang={lang}>
       <CountryPreviewHero
         country={country}
         name={name}
@@ -261,6 +262,6 @@ export default function CountryPreviewExperience({
           <div className={styles.shareWrap}>{shareSlot || <ShareBar url={publicUrl} title={title} summary={title} lang={lang} variant="country" />}</div>
         </section>
       </div>
-    </article>
+    </CountryPageFrame>
   );
 }
