@@ -1,0 +1,99 @@
+{
+  "contentStandard": "discover-2026-v1",
+  "slug": "france-allemagne-ecart-taux-emprunt-euro",
+  "title": "Pourquoi la France emprunte plus cher que l’Allemagne malgré l’euro",
+  "seoTitle": "Dette française : pourquoi un taux plus élevé qu’en Allemagne ?",
+  "summary": "Même monnaie, mais des rendements différents : pourquoi la France paie un supplément par rapport à l’Allemagne, ce que mesure le spread et comment il atteint progressivement le budget.",
+  "excerpt": "Même monnaie, mais des rendements différents : pourquoi la France paie un supplément par rapport à l’Allemagne, ce que mesure le spread et comment il atteint progressivement le budget.",
+  "primaryTopic": "Écart de taux entre la France et l’Allemagne dans la zone euro",
+  "countryPageFallback": false,
+  "relatedCountries": [
+    "FR",
+    "DE"
+  ],
+  "articleType": "explainer",
+  "tags": [
+    "dette française",
+    "Allemagne",
+    "spread OAT-Bund",
+    "taux d’intérêt",
+    "euro"
+  ],
+  "lang": "fr",
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "dateReviewed": "2026-10-24",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/methodology"
+  },
+  "readingMinutes": 5,
+  "image": "/images/articles/france-allemagne-ecart-taux-emprunt-euro.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "Une personne anonyme monte un large escalier de pierre dans un quartier financier contemporain évoquant La Défense",
+  "imageCredit": "Illustration éditoriale originale générée par IA pour EU Debt Map ; ni photographie d’actualité ni représentation fidèle d’un lieu ou d’une personne réelle",
+  "sourceNote": "Vérifié le 24 octobre 2026. Comparaison mensuelle harmonisée de septembre : France 4,440 %, Allemagne 3,473 %, écart calculé 96,7 points de base ; août 81,5 points, hausse de 15,2 points. Ce n’est pas un spread quotidien d’octobre. TEC10 français du 23 octobre : 5,05 %, autre date et construction. Dette/PIB provisoire au 30 juin, publication du 21 octobre. Le calcul d’intérêt est hypothétique.",
+  "relatedLinks": [
+    {
+      "label": "Dette française et observations officielles",
+      "url": "https://www.eudebtmap.com/fr/country/fr"
+    },
+    {
+      "label": "Comparer les ratios de dette",
+      "url": "https://www.eudebtmap.com/fr/debt-to-gdp"
+    },
+    {
+      "label": "Comparer les charges annuelles d’intérêts",
+      "url": "https://www.eudebtmap.com/fr/interest-cost"
+    },
+    {
+      "label": "Méthodologie et périodes de référence",
+      "url": "https://www.eudebtmap.com/fr/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "BCE : rendements mensuels harmonisés à dix ans, France et Allemagne, août–septembre 2026",
+      "url": "https://data-api.ecb.europa.eu/service/data/IRS/M.FR+DE.L.L40.CI.0000.EUR.N.Z?startPeriod=2026-08&format=csvdata",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "Eurostat : même série de rendements, données mises à jour le 13 octobre 2026",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/irt_lt_mcby_m?lang=en&geo=FR&geo=DE&sinceTimePeriod=2026-08",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "Eurostat : périmètre et méthode des taux de convergence à long terme",
+      "url": "https://ec.europa.eu/eurostat/cache/metadata/en/irt_lt_mcby_esms.htm",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "Agence France Trésor : indice TEC10 du 23 octobre 2026",
+      "url": "https://www.aft.gouv.fr/fr/tec-10-du-jour",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "BCE : objectifs et instruments de la politique monétaire",
+      "url": "https://www.ecb.europa.eu/mopo/intro/html/index.fr.html",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "BCE, Financial Stability Review, novembre 2025, pages 105–106 : structures et liquidité des marchés souverains",
+      "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/pdf/ecb.fsr202511~263b5810d4.en.pdf",
+      "accessed": "2026-10-24"
+    },
+    {
+      "name": "Eurostat, 21 octobre 2026 : dette publique au 30 juin 2026, France et Allemagne",
+      "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp",
+      "accessed": "2026-10-24"
+    }
+  ],
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste raw AdSense scripts into the body.",
+  "contentNotes": "New country-specific article researched and fully drafted with AI assistance. Separate skeptical, source, arithmetic and language passes; no independent human or native-language review claimed. Local draft only until publication is expressly authorized. No old article or official data snapshot is replaced.",
+  "body": "<p class='article-intro'>La France et l’Allemagne empruntent en euros, sous la même politique monétaire. Pourtant, les investisseurs ne leur demandent pas le même rendement. L’explication tient à ce que la monnaie commune n’a pas fusionné : les budgets, les emprunteurs et la confiance accordée à chacun.</p>\n<p>La question est devenue concrète. L’Agence France Trésor affichait un taux de référence à dix ans de <strong>5,05 % pour le 23 octobre 2026</strong>. Il s’agit de l’indice TEC10, le taux de l’échéance constante à dix ans. Mais ce chiffre quotidien ne dit pas quelle part de la tension vient de la France plutôt que du mouvement général des taux. Pour le savoir, il faut regarder aussi l’Allemagne, sur une base comparable.</p>\n<h2>En septembre, un écart d’environ 97 points de base</h2>\n<p>Les séries harmonisées de la Banque centrale européenne et d’Eurostat donnent, pour septembre 2026, un rendement mensuel d’environ <strong>4,44 % pour la France et 3,47 % pour l’Allemagne</strong>. Elles concernent des titres d’État négociés sur le marché secondaire, d’une durée résiduelle proche de dix ans. Septembre est le dernier mois complet disponible dans ces séries au moment de notre vérification.</p>\n<div class='articleKeyNumbers'><div class='articleKeyNumber'><strong>4,44 %</strong><span>France : rendement mensuel harmonisé, septembre 2026, autour de dix ans</span></div><div class='articleKeyNumber'><strong>3,47 %</strong><span>Allemagne : même série et même mois, valeur arrondie</span></div></div>\n<p>Sur les valeurs avant arrondi, la différence atteint 0,967 point de pourcentage, soit <strong>96,7 points de base</strong>, environ 97. Un point de base vaut un centième de point de pourcentage. On parle couramment du <em>spread OAT–Bund</em> : les OAT sont les obligations assimilables du Trésor français, le Bund l’emprunt fédéral allemand.</p>\n<p>Il ne s’agit pas du spread du 24 octobre. Soustraire le taux allemand de septembre au TEC10 français du 23 octobre mélangerait deux dates et deux constructions statistiques. Le résultat serait facile à calculer, mais ne décrirait pas un écart observé entre les deux pays.</p>\n<h2>Une monnaie commune, pas un emprunteur unique</h2>\n<p>Quand un investisseur achète une obligation de l’État français, il détient une créance sur cet État. L’Allemagne ne devient pas automatiquement le débiteur de ce titre. La BCE fixe les conditions de sa politique monétaire pour la zone euro ; elle ne décrète pas un rendement identique à dix ans pour chaque Trésor national.</p>\n<p>Les prêteurs examinent donc des comptes différents. Selon les données provisoires publiées par Eurostat le 21 octobre, la dette publique représentait 119,1 % du produit intérieur brut en France et 63,4 % en Allemagne à la fin juin 2026. Le <a href='/fr/debt-to-gdp'>comparatif européen des ratios de dette</a> permet de replacer ces deux chiffres parmi les autres pays.</p>\n<p>Cette distance compte dans l’analyse, mais elle ne fournit pas une formule pour calculer le spread. Les déficits à venir, la croissance attendue, la capacité politique à tenir un budget et les conditions de marché interviennent aussi. Un ratio de dette n’attribue pas mécaniquement un taux à un pays.</p>\n<p>La <a href='/fr/country/fr'>page consacrée à la dette française</a> donne les observations officielles et leurs périodes, à distinguer du compteur modélisé. Ce stock concerne toutes les administrations publiques. Les rendements que nous comparons ici portent sur des titres de l’État : les deux indicateurs ne couvrent pas exactement le même périmètre.</p>\n<!-- MID_ARTICLE_AD -->\n<h2>Le taux allemand bouge aussi</h2>\n<p>Entre août et septembre, le rendement français de la série harmonisée a augmenté de 44 points de base. Le rendement allemand a lui aussi progressé, de 28,8 points. Le spread s’est donc élargi de <strong>15,2 points de base</strong>, passant de 81,5 à 96,7 points. La totalité de la hausse française ne peut pas être présentée comme une pénalité propre à la France.</p>\n<p>L’inverse mérite la même attention : un écart peut se creuser parce que le taux allemand baisse davantage, sans que le taux français monte. Le Bund est une référence de comparaison ; ce n’est pas une règle immobile.</p>\n<p>Il faut aussi éviter de lire chaque point de spread comme une probabilité de faillite. La BCE souligne que les marchés souverains de la zone euro ont des émetteurs, des pratiques d’émission et des structures de marché différents. La facilité à revendre un titre, autrement dit sa liquidité, et la demande des investisseurs participent à sa valorisation. L’écart observé ne permet pas d’isoler la contribution de chacun de ces facteurs.</p>\n<h2>Ce que cet écart peut coûter au budget</h2>\n<p>Prenons un <strong>emprunt fictif d’un milliard d’euros</strong>, émis au pair à taux fixe, donc vendu à sa valeur nominale, avec le même montant et la même échéance dans les deux cas, sans frais. Si l’on applique seulement la différence de 0,967 point, le surcoût serait de <strong>9,67 millions d’euros pour une année entière</strong>. Le calcul est : un milliard × 0,00967.</p>\n<p>C’est un ordre de grandeur illustratif, pas le coût d’une émission réellement réalisée par le Trésor. Les prix d’émission et les taux obtenus varient ; les rendements du marché secondaire ne sont pas un devis ferme. Ce calcul ne mesure ni la facture de toute la dette française ni son cumul réel sur dix ans.</p>\n<p>Les anciens titres à taux fixe non indexés conservent leurs conditions. La hausse se transmet progressivement lorsque l’État emprunte à nouveau ou remplace des titres arrivés à échéance. Notre <a href='/fr/interest-cost'>comparaison des charges annuelles d’intérêts</a> montre les dépenses effectivement enregistrées selon sa période de référence, pas un taux obligataire en direct. Elle répond à la question de la facture, là où le spread renseigne sur des conditions relatives de marché.</p>\n<p>Une hausse durable du coût des nouveaux emprunts peut ainsi réduire la place disponible pour d’autres dépenses ou demander davantage de recettes. Son effet dépend du volume à financer et des échéances. Une séance de marché ne suffit pas à reconstituer toute la prochaine loi de finances.</p>\n<p>Partager l’euro ne signifie donc pas partager exactement les mêmes conditions de crédit. Pour juger l’alerte, il faut suivre les deux rendements, leur écart et sa durée. Puis regarder ce qui entre réellement dans le budget. C’est ce passage du prix demandé par les prêteurs à la dépense publique qui finit par compter pour les contribuables.</p>\n<details id='article-sources'><summary>Sources et méthode</summary><p>Recherche, rédaction intégrale, calculs et vérifications distinctes des sources et de la langue avec l’aide de l’IA pour EU Debt Map Research. Aucune relecture indépendante humaine ou par un rédacteur de langue maternelle n’a été effectuée. L’illustration est générée et ne documente ni un lieu exact ni une personne ou un événement réel.</p><p>Les rendements mensuels ne sont pas des taux de financement moyens de tout le stock. La BCE et Eurostat diffusent ici la même série, pas deux mesures indépendantes. Les écarts utilisent les valeurs avant arrondi : 4,440 % − 3,473 % = 0,967 point, soit 96,7 points de base. Le calcul sur un milliard d’euros est une illustration, pas une facture constatée.</p><p><a href='/fr/methodology'>Méthodologie d’EU Debt Map</a></p><ul><li><a href='https://data-api.ecb.europa.eu/service/data/IRS/M.FR+DE.L.L40.CI.0000.EUR.N.Z?startPeriod=2026-08&format=csvdata'>BCE : rendements mensuels harmonisés à dix ans, France et Allemagne, août–septembre 2026</a> (consulté le 24 octobre 2026).</li><li><a href='https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/irt_lt_mcby_m?lang=en&geo=FR&geo=DE&sinceTimePeriod=2026-08'>Eurostat : même série de rendements, données mises à jour le 13 octobre 2026</a> (consulté le 24 octobre 2026).</li><li><a href='https://ec.europa.eu/eurostat/cache/metadata/en/irt_lt_mcby_esms.htm'>Eurostat : périmètre et méthode des taux de convergence à long terme</a> (consulté le 24 octobre 2026).</li><li><a href='https://www.aft.gouv.fr/fr/tec-10-du-jour'>Agence France Trésor : indice TEC10 du 23 octobre 2026</a> (consulté le 24 octobre 2026).</li><li><a href='https://www.ecb.europa.eu/mopo/intro/html/index.fr.html'>BCE : objectifs et instruments de la politique monétaire</a> (consulté le 24 octobre 2026).</li><li><a href='https://www.ecb.europa.eu/press/financial-stability-publications/fsr/pdf/ecb.fsr202511~263b5810d4.en.pdf'>BCE, Financial Stability Review, novembre 2025, pages 105–106 : structures et liquidité des marchés souverains</a> (consulté le 24 octobre 2026).</li><li><a href='https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp'>Eurostat, 21 octobre 2026 : dette publique au 30 juin 2026, France et Allemagne</a> (consulté le 24 octobre 2026).</li></ul></details>"
+}

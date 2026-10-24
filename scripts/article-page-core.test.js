@@ -1025,6 +1025,76 @@ test("the Dutch ten-year chart follows all 121 checked annual points through Sep
   }
 });
 
+test("German municipal analysis separates cash figures, investment support and recurring financing", () => {
+  const a = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles/de/2026/kommunen-investitionsmilliarden-haushaltskrise.json"), "utf8"));
+  assert.equal(a.articleType, "analysis");
+  assert.equal(a.lang, "de");
+  assert.equal(a.dateReviewed, "2026-10-24");
+  assert.equal(Number((204.1 - 184).toFixed(1)), 20.1);
+  for (const value of ["20,1", "204,1", "184,0", "21,7", "8,7", "5,7", "100 Milliarden", "2042"]) assert.ok(a.body.includes(value), value);
+  assert.match(a.body, /ohne die Stadtstaaten/);
+  assert.match(a.body, /höhere Zuweisungen das kommunale Defizit 2026 senken/);
+  assert.match(a.body, /weder um 100 Milliarden pro Jahr/);
+  assert.match(a.body, /vorgesehene eigene Mittel entlastet/);
+  assert.match(a.body, /nicht verankert.*tatsächlich zusätzliche Investitionen/);
+  assert.match(a.body, /ersetzt aber keine Rechnung für die eigene Stadt/);
+  assert.match(a.body, /href='\/de\/government-spending'/);
+  assert.match(a.body, /href='\/de\/country\/de'/);
+  assert.doesNotMatch(a.body, /<table\b/);
+  assert.ok(a.sources.some(s => s.url.includes("PD26_349_71137")));
+  assert.ok(a.sources.some(s => s.url.includes("monatsbericht-oktober-2026")));
+});
+
+test("French spread explainer uses matched months and limits its illustrative interest calculation", () => {
+  const a = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles/fr/2026/france-allemagne-ecart-taux-emprunt-euro.json"), "utf8"));
+  const monthly = { august: { fr: 4, de: 3.185 }, september: { fr: 4.44, de: 3.473 } };
+  const gap = pair => Number(((pair.fr - pair.de) * 100).toFixed(1));
+  assert.equal(gap(monthly.august), 81.5);
+  assert.equal(gap(monthly.september), 96.7);
+  assert.equal(Number((gap(monthly.september) - gap(monthly.august)).toFixed(1)), 15.2);
+  assert.equal(Math.round(1e9 * (monthly.september.fr - monthly.september.de) / 100), 9670000);
+  assert.equal(a.articleType, "explainer");
+  assert.equal(a.lang, "fr");
+  for (const value of ["4,44", "3,47", "96,7", "81,5", "15,2", "9,67", "23 octobre 2026", "5,05", "119,1", "63,4"]) assert.ok(a.body.includes(value), value);
+  assert.match(a.body, /ne s’agit pas du spread du 24 octobre/);
+  assert.match(a.body, /deux dates et deux constructions statistiques/);
+  assert.match(a.body, /emprunt fictif d’un milliard d’euros/);
+  assert.match(a.body, /émis au pair à taux fixe/);
+  assert.match(a.body, /donc vendu à sa valeur nominale/);
+  assert.match(a.body, /spread OAT–Bund/);
+  assert.match(a.body, /les OAT sont les obligations assimilables du Trésor français/);
+  assert.match(a.body, /taux de référence à dix ans/);
+  assert.match(a.body, /pas le coût d’une émission réellement réalisée/);
+  assert.match(a.body, /facture de toute la dette française ni son cumul réel sur dix ans/);
+  assert.match(a.body, /pas un taux obligataire en direct/);
+  for (const href of ["/fr/country/fr", "/fr/debt-to-gdp", "/fr/interest-cost"]) assert.ok(a.body.includes("href='" + href + "'"));
+  assert.ok(a.sources.some(s => s.url.includes("IRS/M.FR+DE")));
+  assert.ok(a.sources.some(s => s.url.includes("irt_lt_mcby_m")));
+  assert.doesNotMatch(a.body, /<table\b/);
+});
+
+test("the two October country drafts preserve source visibility and do not invent translations", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-translations.json"), "utf8"));
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-publication-manifest.json"), "utf8"));
+  for (const [lang, slug] of [["de", "kommunen-investitionsmilliarden-haushaltskrise"], ["fr", "france-allemagne-ecart-taux-emprunt-euro"]]) {
+    const a = JSON.parse(fs.readFileSync(path.join(ROOT, `content/articles/${lang}/2026/${slug}.json`), "utf8"));
+    assert.ok(manifest.articles.includes(`/${lang}/articles/${slug}`));
+    assert.ok(!Object.values(registry).some(group => Object.values(group).includes(slug)));
+    const [prose, footer] = a.body.split("<details id='article-sources'>");
+    assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+    assert.ok(footer && footer.includes("/" + lang + "/methodology"));
+    assert.equal(a.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+    for (const source of a.sources) {
+      assert.equal(source.accessed, "2026-10-24");
+      assert.ok(footer.includes(source.url));
+    }
+    assert.match(a.contentNotes, /fully drafted with AI assistance/);
+    assert.match(a.contentNotes, /no independent human or native-language review claimed/);
+    assert.equal(a.imageWidth, 1672);
+    assert.equal(a.imageHeight, 941);
+  }
+});
+
 test("French counter and Greek comparison retain same-vintage data and financing-scope limits", () => {
   const f=require("./fixtures/article-review-2026-10-22.json");
   const entries=f.articles.filter(a=>["franse-staatsschuld-live-teller-record","dette-publique-france-compteur-live-record"].includes(a.slug));
