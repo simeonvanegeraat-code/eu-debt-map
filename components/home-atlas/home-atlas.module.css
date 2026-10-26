@@ -55,10 +55,14 @@
 .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
-.countryDetails { border-top: 1px solid #47678e; padding-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; align-items: start; }
+.countryDetails { border-top: 1px solid #47678e; padding-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px 24px; align-items: start; }
 .countryPicker label, .readoutLabel, .period { display: block; color: #b9cde5; font-size: 11px; }
 .countryPicker select { display: block; width: 100%; max-width: 230px; color: #fff; background: transparent; border: none; border-bottom: 1px solid #83a4cc; border-radius: 0; font: inherit; font-size: 20px; min-height: 44px; cursor: pointer; padding: 4px 22px 4px 0; }
 .countryPicker option { background: #0c2e62; color: #fff; }
+.countrySelection { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 28px; }
+.countrySelection .countryPicker { flex: 1 1 170px; max-width: 230px; min-width: 0; }
+.selectedCountryLink { max-width: 100%; margin-top: 0; font-size: 14px; font-weight: 500; }
+.selectedCountryLink .arrow { flex: none; color: #a9d1ff; }
 .countryInfo { text-align: right; }
 .countryReadout { min-height: 104px; }
 .countryName { display: block; color: #fff; font-size: 18px; font-weight: 500; }
@@ -70,6 +74,9 @@
 .total p { color: #d2e1f2; font-size: 12px; margin: 0; line-height: 1.85; }
 .total p span { color: #b7cde8; }
 .total a { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.totalIntegrated { grid-area: 3 / 1; display: block; min-width: 0; align-self: start; margin-top: 28px; padding-top: 24px; }
+.totalIntegrated p { margin-top: 12px; }
+.totalIntegrated strong { white-space: nowrap; }
 .followOn { padding: 10px 0 50px; }
 .followEyebrow { color: #456286; font-size: 12px; letter-spacing: .08em; margin: 0 0 20px; }
 .followOn h2 { font-family: var(--font-system), sans-serif; font-weight: 500; font-size: clamp(30px, 3.2vw, 46px); line-height: 1.17; letter-spacing: -.04em; margin: 0 0 40px; }
@@ -140,6 +147,11 @@
   .mapCaption { grid-template-columns: minmax(0, 1fr); gap: 8px; margin: 0 0 16px; }
   .legend { gap: 8px 12px; font-size: 10px; }
   .countryDetails { padding-top: 14px; gap: 8px 18px; }
+  .countryDetails .countryInfo { text-align: left; padding-bottom: 12px; }
+  .countryDetails .countryReadout { min-height: 0; }
+  .countrySelection { gap: 12px; }
+  .countrySelection .countryPicker { flex-basis: 130px; }
+  .selectedCountryLink { font-size: 13px; }
   .countryPicker select { font-size: 18px; }
   .countryReadout strong { font-size: 29px; }
   .countryReadout { min-height: 98px; }
@@ -152,6 +164,7 @@
   .total { flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 28px; }
   .total strong { font-size: clamp(23px, 6.6vw, 35px); }
   .total p { font-size: 11px; }
+  .totalIntegrated { grid-area: 4 / 1; padding-top: 24px; }
   .stories { grid-template-columns: 1fr; gap: 26px; }
   .stories h3 { font-size: 24px; }
   .followOn { padding-top: 0; }

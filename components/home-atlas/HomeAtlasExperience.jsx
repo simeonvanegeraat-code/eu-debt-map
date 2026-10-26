@@ -43,6 +43,7 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
   const selectRef = useRef(null);
   const activeCode = previewCode || selectedCode;
   const activeCountry = localizedCountries.find(country => country.code === activeCode);
+  const selectedCountry = localizedCountries.find(country => country.code === selectedCode);
   const ratio = activeCountry.official_debt_to_gdp_pct;
   const ratioText = Number.isFinite(ratio) ? `${ratioFormatter.format(ratio)}%` : copy.missing;
 
@@ -50,6 +51,33 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
     setSelectedCode(code);
     setPreviewCode(null);
   }
+
+  const countryPicker = (
+    <div className={styles.countryPicker}>
+      <label htmlFor="atlas-country">{copy.pickCountry}</label>
+      <select id="atlas-country" ref={selectRef} value={selectedCode} onChange={event => selectCountry(event.target.value)}>
+        {localizedCountries.map(country => <option key={country.code} value={country.code}>{country.localizedName}</option>)}
+      </select>
+    </div>
+  );
+
+  const countryInfo = (
+    <div className={styles.countryInfo}>
+      <div className={styles.countryReadout} aria-live="polite" aria-atomic="true">
+        <span className={styles.countryName}>{activeCountry.localizedName}</span>
+        <strong>{ratioText}</strong>
+        <span className={styles.readoutLabel}>{detail.debtRatio}</span>
+        <span className={styles.period}>Eurostat · {activeCountry.official_debt_to_gdp_time || copy.unknownPeriod}</span>
+      </div>
+    </div>
+  );
+
+  const total = (
+    <div className={`${styles.total} ${styles.totalIntegrated}`}>
+      <div><span className={styles.totalLabel}>{copy.total}</span><PreviewEUTicker officialTotal={officialTotal} perSecond={perSecond} locale={detail.locale} ariaLabel={detail.liveTotalAria} /></div>
+      <p>{detail.totalLabel}<br /><span>{detail.officialAnchor(moneyFormatter.format(officialTotal), commonPeriod)}<br />{detail.coverage(commonCountries.length)}</span><br /><Link href={`${detail.base}/methodology`}>{copy.tickerMethod} <Arrow /></Link></p>
+    </div>
+  );
 
   return (
     <div className={styles.page}>
@@ -88,33 +116,19 @@ export default function HomeAtlasExperience({ lang = "en", children, preview = f
                 </div>
               </div>
               <div className={styles.countryDetails}>
-                <div className={styles.countryPicker}>
-                  <label htmlFor="atlas-country">{copy.pickCountry}</label>
-                  <select id="atlas-country" ref={selectRef} value={selectedCode} onChange={event => selectCountry(event.target.value)}>
-                    {localizedCountries.map(country => <option key={country.code} value={country.code}>{country.localizedName}</option>)}
-                  </select>
-                </div>
-                <div className={styles.countryInfo}>
-                  <div className={styles.countryReadout} aria-live="polite" aria-atomic="true">
-                    <span className={styles.countryName}>{activeCountry.localizedName}</span>
-                    <strong>{ratioText}</strong>
-                    <span className={styles.readoutLabel}>{detail.debtRatio}</span>
-                    <span className={styles.period}>Eurostat · {activeCountry.official_debt_to_gdp_time || copy.unknownPeriod}</span>
-                  </div>
-                  <Link className={styles.countryLink} href={`${detail.base}/country/${activeCode.toLowerCase()}`}>
-                    {copy.openCountry(activeCountry.localizedName)} <Arrow diagonal />
+                {countryInfo}
+                <div className={styles.countrySelection}>
+                  {countryPicker}
+                  <Link className={`${styles.countryLink} ${styles.selectedCountryLink}`} href={`${detail.base}/country/${selectedCode.toLowerCase()}`}>
+                    {copy.openCountry(selectedCountry.localizedName)} <Arrow />
                   </Link>
                 </div>
               </div>
             </div>
 
-            <p className={styles.aside}>{copy.aside}</p>
+            {total}
           </div>
 
-          <div className={styles.total}>
-            <div><span className={styles.totalLabel}>{copy.total}</span><PreviewEUTicker officialTotal={officialTotal} perSecond={perSecond} locale={detail.locale} ariaLabel={detail.liveTotalAria} /></div>
-            <p>{detail.totalLabel}<br /><span>{detail.officialAnchor(moneyFormatter.format(officialTotal), commonPeriod)}<br />{detail.coverage(commonCountries.length)}</span><br /><Link href={`${detail.base}/methodology`}>{copy.tickerMethod} <Arrow /></Link></p>
-          </div>
         </div>
       </section>
 
