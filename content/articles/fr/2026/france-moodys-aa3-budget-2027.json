@@ -1,0 +1,107 @@
+{
+  "contentStandard": "discover-2026-v1",
+  "slug": "france-moodys-aa3-budget-2027",
+  "title": "Moody’s ne dégrade pas la France : pourquoi le budget reste sous pression",
+  "seoTitle": "Moody’s laisse la France à Aa3 : quel enjeu pour le budget ?",
+  "summary": "La France conserve sa note Aa3 et une perspective négative après la revue du 23 octobre. Ce répit n’assure ni l’adoption du budget 2027 ni une baisse des coûts d’emprunt.",
+  "excerpt": "Pas de dégradation chez Moody’s, mais des hypothèses encore à réaliser. Pourquoi la note, les taux d’emprunt et le budget racontent trois choses différentes.",
+  "primaryTopic": "Note Moody’s de la France, perspective négative et budget 2027",
+  "countryPageFallback": false,
+  "relatedCountries": [
+    "FR"
+  ],
+  "articleType": "analysis",
+  "tags": [
+    "France",
+    "Moody’s",
+    "notation souveraine",
+    "budget 2027",
+    "dette publique"
+  ],
+  "lang": "fr",
+  "datePublished": "2026-10-26",
+  "dateModified": "2026-10-26",
+  "dateReviewed": "2026-10-26",
+  "author": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/about"
+  },
+  "reviewedBy": {
+    "name": "EU Debt Map Research",
+    "url": "https://www.eudebtmap.com/fr/methodology"
+  },
+  "readingMinutes": 5,
+  "image": "/images/articles/france-moodys-aa3-budget-2027.jpg",
+  "imageWidth": 1672,
+  "imageHeight": 941,
+  "imageAlt": "Un portail en fer forgé ouvert sur une cour pavée et un bâtiment institutionnel français fictif, avec un arbre aux feuilles d’automne",
+  "imageCredit": "Illustration éditoriale originale générée par IA pour EU Debt Map ; architecture fictive, sans représentation d’une réunion ou d’un événement réel",
+  "sourceNote": "Vérifié le 26 octobre 2026. Revue périodique du 23 octobre : Aa3 et perspective négative inchangées, sans nouvelle action de notation annoncée. Précisions de Moody’s rapportées par Reuters et AFP/AWP, non consultées directement auprès de l’agence. Dette Eurostat provisoire au 30 juin ; déficit 2027 visé, non réalisé ; TEC10 daté du 23 octobre, sans attribution d’un effet de l’annonce sur les marchés.",
+  "relatedLinks": [
+    {
+      "label": "Dette française : niveaux officiels et historique",
+      "url": "https://www.eudebtmap.com/fr/country/fr"
+    },
+    {
+      "label": "Comparer les ratios de dette dans l’Union européenne",
+      "url": "https://www.eudebtmap.com/fr/debt-to-gdp"
+    },
+    {
+      "label": "Comprendre l’écart de taux avec l’Allemagne",
+      "url": "https://www.eudebtmap.com/fr/articles/france-allemagne-ecart-taux-emprunt-euro"
+    },
+    {
+      "label": "Déficit, dette et budget français",
+      "url": "https://www.eudebtmap.com/fr/articles/deficit-baisse-dette-augmente-budget-france"
+    },
+    {
+      "label": "Méthodologie et périodes",
+      "url": "https://www.eudebtmap.com/fr/methodology"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Ministère de l’Économie, 23 octobre 2026 : réaction au maintien de la note",
+      "url": "https://presse.economie.gouv.fr/notation-moodys-reaction-de-roland-lescure/",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Reuters, événement du 23 octobre, mise à jour du 24 : revue périodique et hypothèses de Moody’s",
+      "url": "https://live.euronext.com/en/financial-news/france-spared-moodys-ratings-downgrade-it-struggles-unrest",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "AFP/AWP, 23 octobre 2026 : absence d’action de notation annoncée",
+      "url": "https://www.zonebourse.com/actualite-bourse/france-moody-s-maintient-la-note-souveraine-a-aa3-avec-perspective-negative-ce785cdfdc8cf026",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Agence France Trésor : objectif de déficit du projet de budget 2027",
+      "url": "https://www.aft.gouv.fr/fr/budget-etat",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Eurostat, 21 octobre 2026 : dette publique provisoire à la fin juin",
+      "url": "https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Agence France Trésor : indice TEC10 du 23 octobre 2026",
+      "url": "https://www.aft.gouv.fr/fr/tec-10-du-jour",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Ministère de l’Économie, Faciléco : le rôle des agences de notation",
+      "url": "https://www.economie.gouv.fr/facileco/les-acteurs-boursiers",
+      "accessed": "2026-10-26"
+    },
+    {
+      "name": "Agence France Trésor : calendrier prévisionnel des notations",
+      "url": "https://www.aft.gouv.fr/fr/calendrier-notations-france",
+      "accessed": "2026-10-26"
+    }
+  ],
+  "note": "Place the mid-article ad at the marker <!-- MID_ARTICLE_AD -->. Do not paste raw AdSense scripts into the body.",
+  "contentNotes": "New French-only article researched and fully drafted with AI assistance. Separate skeptical, source and language passes; no independent human or native-language review claimed. Local draft only, publication not authorized. Original Moody's statement unavailable; agency details attributed to inspected Reuters and AFP/AWP reports. No market-reaction estimate, predicted rating action, data refresh or replacement of an old article.",
+  "body": "<p class='article-intro'>La France a évité une dégradation de sa note le 23 octobre. Moody’s a laissé son appréciation à Aa3, avec une perspective négative. Le gouvernement peut y voir un répit. Pour les finances publiques, le travail reste pourtant devant lui : une note inchangée ne finance aucune dépense et ne fait pas adopter le budget de 2027.</p>\n<p>La nuance commence dans la nature même de l’annonce. Selon Reuters, l’agence a achevé une revue périodique. L’AFP précise qu’elle n’a annoncé aucune action de notation et que cette publication ne préjuge pas d’une décision prochaine. Il serait donc excessif d’y lire une nouvelle approbation formelle du projet budgétaire. À l’inverse, annoncer que la dégradation serait désormais certaine irait au-delà de ce qui a été dit.</p>\n<h2>Le gouvernement salue la note ; la perspective reste négative</h2>\n<p>Dans son communiqué du 23 octobre, le ministre de l’Économie, Roland Lescure, présente le maintien comme une reconnaissance de la crédibilité du budget. C’est la lecture du gouvernement. Elle doit être distinguée des hypothèses de l’agence et des résultats qui seront finalement enregistrés.</p>\n<p>Une agence de notation émet une opinion sur la capacité d’un emprunteur à honorer sa dette. La <strong>perspective négative</strong> conserve un avertissement sur l’évolution possible de cette appréciation. Selon Reuters, cette perspective accompagne déjà la note depuis octobre 2025. Elle n’est ni une baisse déjà décidée ni une date limite à laquelle la France cesserait de pouvoir emprunter.</p>\n<p>Ne pas avoir subi une dégradation compte : un signal défavorable supplémentaire a été évité. Mais l’absence de ce signal ne transforme pas les risques existants en problèmes résolus. C’est toute la différence entre conserver une appréciation et améliorer les comptes qui la soutiennent.</p>\n<h2>Des hypothèses qui restent à réaliser</h2>\n<p>Reuters rapporte que l’évaluation de Moody’s repose notamment sur l’adoption d’un budget réduisant le déficit en 2027, ainsi que sur une certaine détente des coûts de financement et des tensions sociales dans les mois suivants. Ce sont des hypothèses, pas des évolutions déjà acquises.</p>\n<p>Le gouvernement peut proposer des recettes, des dépenses et des économies. Il doit encore obtenir leur adoption, puis les mettre en œuvre. Il ne peut pas, par la seule présentation d’un budget, fixer le rendement auquel les investisseurs accepteront de prêter à l’État.</p>\n<p>L’objectif présenté par l’Agence France Trésor est un <strong>déficit public de 5,0 % du produit intérieur brut en 2027</strong>. Atteindre cette cible signifierait encore que les administrations dépensent davantage qu’elles ne perçoivent. La question de la dette ne disparaîtrait donc pas avec celle du vote. Notre analyse du <a href='/fr/articles/deficit-baisse-dette-augmente-budget-france'>budget français et de la différence entre déficit et dette</a> explique pourquoi une amélioration du solde ne garantit pas une baisse du ratio de dette.</p>\n<!-- MID_ARTICLE_AD -->\n<h2>La note ne remplace pas le prix demandé par les prêteurs</h2>\n<p>Les investisseurs ne prêtent pas à un taux fixé par Moody’s. La note synthétise une appréciation du risque de crédit. Le taux d’un emprunt est un prix de marché, qui dépend aussi des taux généraux, de l’échéance et de la demande pour les titres.</p>\n<p>L’AFT publie ainsi un <strong>taux de référence à dix ans de 5,05 % pour le 23 octobre</strong>, appelé TEC10, ou taux de l’échéance constante à dix ans. Cette observation quotidienne ne mesure pas, à elle seule, la réaction à l’annonce de Moody’s vendredi soir. Nous n’en déduisons aucune économie procurée par le maintien de la note.</p>\n<p>Ce taux n’est pas non plus celui payé sur toute la dette déjà en circulation. Pour comprendre les conditions auxquelles la France se finance par rapport à son voisin, notre article sur <a href='/fr/articles/france-allemagne-ecart-taux-emprunt-euro'>l’écart de taux entre la France et l’Allemagne</a> distingue les rendements de marché de leur transmission progressive au budget.</p>\n<h2>Ce qu’il faut regarder après l’annonce</h2>\n<p>Le point de départ reste lourd : selon les données provisoires publiées par Eurostat le 21 octobre, la dette publique représentait <strong>119,1 % du PIB à la fin juin 2026</strong>. Ce chiffre porte sur l’ensemble des administrations publiques. Il n’est ni un relevé de la dette d’octobre ni une conséquence de la revue de Moody’s.</p>\n<p>La <a href='/fr/country/fr'>page consacrée à la dette française</a> permet d’examiner les observations officielles, leur date et leur historique, séparément du compteur estimatif. Pour situer ce niveau parmi les autres pays, le <a href='/fr/debt-to-gdp'>classement européen dette-PIB</a> utilise une même mesure statistique. Aucun de ces classements ne fournit à lui seul une note de crédit.</p>\n<p>Le calendrier de l’AFT indique une prochaine échéance prévisionnelle pour S&amp;P le 27 novembre. Ce rendez-vous sera à suivre, sans lui prêter d’avance une décision. Entre-temps, le contenu du budget, les conditions réelles de financement et, ensuite, l’exécution des comptes apportent davantage qu’un pronostic sur la prochaine lettre attribuée à la France.</p>\n<p>Pour les contribuables et les usagers des services publics, l’enjeu se joue dans les marges qui resteront pour financer les choix collectifs. Si le financement coûte durablement plus cher, il faut trouver les ressources correspondantes ou revoir ces choix. Le répit obtenu vendredi sera utile s’il permet de rendre ces arbitrages plus solides. Il ne les évite pas.</p>\n<details id='article-sources'><summary>Sources et méthode</summary><p>Recherche, rédaction intégrale et vérifications distinctes des sources et de la langue avec l’aide de l’IA pour EU Debt Map Research. Aucune relecture indépendante humaine ou par un rédacteur de langue maternelle n’a été effectuée. Le communiqué original de Moody’s n’a pas été consulté directement : ses précisions sont attribuées aux dépêches Reuters et AFP/AWP. La réaction ministérielle est une source primaire sur la position du gouvernement, pas une expertise indépendante de son budget.</p><p>Situation vérifiée le 26 octobre 2026. Revue de notation du 23 octobre ; dette provisoire au 30 juin, publiée le 21 octobre ; objectif de déficit pour 2027 ; TEC10 du 23 octobre, sans mesure de réaction après l’annonce. Le calendrier des agences est prévisionnel. L’illustration générée représente une architecture fictive, aucun événement réel.</p><p><a href='/fr/methodology'>Méthodologie d’EU Debt Map</a></p><ul><li><a href='https://presse.economie.gouv.fr/notation-moodys-reaction-de-roland-lescure/'>Ministère de l’Économie, 23 octobre 2026 : réaction au maintien de la note</a> (consulté le 26 octobre 2026).</li><li><a href='https://live.euronext.com/en/financial-news/france-spared-moodys-ratings-downgrade-it-struggles-unrest'>Reuters, événement du 23 octobre, mise à jour du 24 : revue périodique et hypothèses de Moody’s</a> (consulté le 26 octobre 2026).</li><li><a href='https://www.zonebourse.com/actualite-bourse/france-moody-s-maintient-la-note-souveraine-a-aa3-avec-perspective-negative-ce785cdfdc8cf026'>AFP/AWP, 23 octobre 2026 : absence d’action de notation annoncée</a> (consulté le 26 octobre 2026).</li><li><a href='https://www.aft.gouv.fr/fr/budget-etat'>Agence France Trésor : objectif de déficit du projet de budget 2027</a> (consulté le 26 octobre 2026).</li><li><a href='https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-bp'>Eurostat, 21 octobre 2026 : dette publique provisoire à la fin juin</a> (consulté le 26 octobre 2026).</li><li><a href='https://www.aft.gouv.fr/fr/tec-10-du-jour'>Agence France Trésor : indice TEC10 du 23 octobre 2026</a> (consulté le 26 octobre 2026).</li><li><a href='https://www.economie.gouv.fr/facileco/les-acteurs-boursiers'>Ministère de l’Économie, Faciléco : le rôle des agences de notation</a> (consulté le 26 octobre 2026).</li><li><a href='https://www.aft.gouv.fr/fr/calendrier-notations-france'>Agence France Trésor : calendrier prévisionnel des notations</a> (consulté le 26 octobre 2026).</li></ul></details>"
+}

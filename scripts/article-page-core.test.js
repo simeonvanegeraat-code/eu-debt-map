@@ -1025,6 +1025,46 @@ test("the Dutch ten-year chart follows all 121 checked annual points through Sep
   }
 });
 
+test("French Moody's analysis separates a periodic review from a rating action and a budget result", () => {
+  const a = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles/fr/2026/france-moodys-aa3-budget-2027.json"), "utf8"));
+  assert.equal(a.lang, "fr");
+  assert.equal(a.articleType, "analysis");
+  assert.equal(a.dateReviewed, "2026-10-26");
+  assert.match(a.body, /revue périodique/);
+  assert.match(a.body, /n’a annoncé aucune action de notation/);
+  assert.match(a.body, /Selon Reuters.*octobre 2025/);
+  assert.match(a.body, /C’est la lecture du gouvernement/);
+  assert.match(a.body, /Ce sont des hypothèses, pas des évolutions déjà acquises/);
+  assert.match(a.body, /5,0 % du produit intérieur brut en 2027/);
+  assert.match(a.body, /119,1 % du PIB à la fin juin 2026/);
+  assert.match(a.body, /5,05 % pour le 23 octobre/);
+  assert.match(a.body, /ne mesure pas, à elle seule, la réaction/);
+  assert.match(a.body, /n’en déduisons aucune économie/);
+  assert.match(a.body, /prévisionnelle pour S&amp;P le 27 novembre/);
+  assert.match(a.body, /communiqué original de Moody’s n’a pas été consulté directement/);
+  assert.match(a.contentNotes, /no independent human or native-language review claimed/);
+});
+
+test("French Moody's analysis preserves localized reading paths and visible source attribution", () => {
+  const a = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles/fr/2026/france-moodys-aa3-budget-2027.json"), "utf8"));
+  const [prose, footer] = a.body.split("<details id='article-sources'>");
+  assert.doesNotMatch(prose, /href=['"]https?:\/\//);
+  assert.doesNotMatch(a.body, /<table\b/);
+  assert.equal(a.body.split(ARTICLE_AD_MARKER).length - 1, 1);
+  for (const url of ["/fr/country/fr", "/fr/debt-to-gdp", "/fr/articles/france-allemagne-ecart-taux-emprunt-euro", "/fr/articles/deficit-baisse-dette-augmente-budget-france"]) {
+    assert.ok(prose.includes("href='" + url + "'"), url);
+  }
+  assert.ok(footer.includes("/fr/methodology"));
+  for (const source of a.sources) {
+    assert.equal(source.accessed, "2026-10-26");
+    assert.ok(footer.includes(source.url), source.url);
+  }
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-publication-manifest.json"), "utf8"));
+  assert.ok(manifest.articles.includes("/fr/articles/" + a.slug));
+  const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "content/article-translations.json"), "utf8"));
+  assert.ok(!Object.values(registry).some(group => Object.values(group).includes(a.slug)));
+});
+
 test("German municipal analysis separates cash figures, investment support and recurring financing", () => {
   const a = JSON.parse(fs.readFileSync(path.join(ROOT, "content/articles/de/2026/kommunen-investitionsmilliarden-haushaltskrise.json"), "utf8"));
   assert.equal(a.articleType, "analysis");
