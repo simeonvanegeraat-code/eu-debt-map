@@ -246,4 +246,3 @@ from the exact article commit; run audit, tests, build, local HTTP verification
 and publication preflight before pushing. Verify the exact GitHub/Vercel preview
 before promoting the same commit through main, then verify the public origin.
 No independent human/native-language review is inferred from publication consent.
-
