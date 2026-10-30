@@ -2,23 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { activeCountrySection } from "@/lib/country-section-navigation";
+import { getEUDebtCopy } from "./eu-debt-copy";
 import styles from "./eu-debt-preview.module.css";
 
-const sections = [
-  ["trend", "Schuldtrend"],
-  ["verdeling", "Verdeling per land"],
-  ["betekenis", "Wat betekent dit?"],
-  ["bronnen", "Bron en methode"],
-];
+const sectionIds = ["trend", "verdeling", "betekenis", "bronnen"];
 
-export default function EUDebtSectionNav() {
+export default function EUDebtSectionNav({ lang = "nl" }) {
+  const copy = getEUDebtCopy(lang).nav;
   const navRef = useRef(null);
   const linksRef = useRef(null);
   const [active, setActive] = useState(null);
 
   useEffect(() => {
     let frame = 0;
-    const entries = sections.map(([id]) => document.getElementById(id)).filter(Boolean);
+    const entries = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
     function update() {
       frame = 0;
       const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--site-navigation-height")) || 72;
@@ -60,5 +57,5 @@ export default function EUDebtSectionNav() {
     links.scrollTo({ left: atEnd ? 0 : links.scrollLeft + links.clientWidth * 0.7, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   }
 
-  return <nav ref={navRef} className={styles.chapterNav} aria-label="Op deze pagina"><div className={styles.container}><span className={styles.navTitle}>EU-schuld</span><div ref={linksRef} className={styles.chapterLinks} id="eu-debt-sections">{sections.map(([id, label]) => <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>)}</div><button type="button" className={styles.browseSections} onClick={browseSections} aria-label="Blader door paginaonderdelen" aria-controls="eu-debt-sections"><span aria-hidden="true">→</span></button></div></nav>;
+  return <nav ref={navRef} className={styles.chapterNav} aria-label={copy.label}><div className={styles.container}><span className={styles.navTitle}>{copy.title}</span><div ref={linksRef} className={styles.chapterLinks} id="eu-debt-sections">{sectionIds.map((id, index) => <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined}>{copy.sections[index]}</a>)}</div><button type="button" className={styles.browseSections} onClick={browseSections} aria-label={copy.browse} aria-controls="eu-debt-sections"><span aria-hidden="true">→</span></button></div></nav>;
 }

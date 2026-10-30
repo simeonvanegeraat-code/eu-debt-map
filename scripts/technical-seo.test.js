@@ -564,10 +564,57 @@ test("the Dutch EU debt redesign preserves public metadata, schema and its ad sl
   assert.match(preview, /index: false/);
   assert.match(preview, /<EUDebtPageExperience preview \/>/);
   assert.match(experience, /!preview \? <script type="application\/ld\+json"/);
-  assert.match(experience, /generateEUDebtArticleSchema\("nl"\)/);
+  assert.match(experience, /generateEUDebtArticleSchema\(lang\)/);
   assert.match(experience, /!preview \? <div className=\{styles.container\}><InArticleAd \/>/);
   assert.match(localized, /const jsonLd = generateEUDebtArticleSchema\(safe\)/);
   assert.match(localized, /dateModified: growthSnapshot.fetchedAt/);
+});
+
+test("all EU debt editions share the experience while retaining their own metadata and language", () => {
+  for (const lang of ["en", "de", "fr"]) {
+    const route = read(`app/${lang === "en" ? "" : `${lang}/`}eu-debt/page.jsx`);
+    assert(route.includes(`generateEUDebtMetadata("${lang}")`));
+    assert(route.includes(`<EUDebtPageExperience lang="${lang}" />`));
+    assert.doesNotMatch(route, /index: false/);
+  }
+  const experience = read("components/eu-debt-preview/EUDebtPageExperience.jsx");
+  assert.match(experience, /countryName\(row.code, lang\)/);
+  assert.match(experience, /<EUDebtSummary[^>]*lang=\{lang\}/);
+  assert.match(experience, /<DebtTrend[^>]*lang=\{lang\}/);
+  assert.match(experience, /<EUDebtSectionNav lang=\{lang\}/);
+});
+
+test("EU debt translations preserve units, local destinations and complete interface copy", () => {
+  const { getEUDebtCopy, euDebtText, euDebtAmount, euDebtQuarter, euDebtHref, euDebtPercent } = require("../components/eu-debt-preview/eu-debt-copy");
+  function leaves(value, prefix = "") {
+    return Object.entries(value).flatMap(([key, item]) => item && typeof item === "object" ? leaves(item, `${prefix}${key}.`) : [[`${prefix}${key}`, item]]);
+  }
+  const reference = leaves(getEUDebtCopy("nl")).map(([key]) => key).sort();
+  const samples = { count: 21, period: "2026-Q2", percent: "24.9%", first: "first", last: "last", lower: 12, countries: "countries", leaders: "71.1%", rest: "28.9%" };
+  for (const lang of ["en", "nl", "de", "fr"]) {
+    const copy = getEUDebtCopy(lang);
+    const entries = leaves(copy);
+    assert.deepEqual(entries.map(([key]) => key).sort(), reference, lang);
+    for (const [key, value] of entries) {
+      if (typeof value !== "string") continue;
+      if (key !== "base") assert(value.trim(), `${lang}.${key}`);
+      assert.doesNotMatch(euDebtText(value, samples), /\{\w+\}/, `${lang}.${key}`);
+      if (lang !== "nl") assert.doesNotMatch(value, /overheidsschuld|Geselecteerd|vorig kwartaal|Bron en methode|miljard euro|Op deze pagina/);
+    }
+    const base = lang === "en" ? "" : `/${lang}`;
+    assert.equal(euDebtHref("/country/fr", lang), `${base}/country/fr`);
+    assert.equal(euDebtHref("/", lang), base || "/");
+    assert.equal(euDebtHref("/debt-growth#debt-growth-methodology", lang), `${base}/debt-growth#debt-growth-methodology`);
+    assert.equal(euDebtQuarter("2026-Q2", lang), lang === "fr" ? "2026-T2" : "2026-Q2");
+    assert(euDebtPercent(24.9, lang).includes(lang === "en" ? "24.9" : "24,9"));
+  }
+  assert.equal(euDebtAmount(1e12, "en"), "€ 1.00 tn");
+  assert.equal(euDebtAmount(1e12, "nl"), "€ 1,00 bln.");
+  assert.equal(euDebtAmount(1e12, "de"), "1,00 Bio. €");
+  assert.equal(euDebtAmount(1e12, "fr"), "1\u202f000,00 Md€");
+  assert.equal(euDebtAmount(1e9, "fr", "billions"), "1 Md€");
+  assert.equal(euDebtAmount(16157459300000, "fr"), "16\u202f157,46 Md€");
+  assert.throws(() => euDebtText("{missing}", {}), /Missing EU debt text value/);
 });
 
 test("all existing localized EU debt routes are included in the multilingual sitemap", () => {
