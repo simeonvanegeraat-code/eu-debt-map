@@ -342,6 +342,27 @@ export function generateEUDebtMetadata(lang = "en") {
   };
 }
 
+export function generateEUDebtArticleSchema(lang = "en") {
+  const safe = safeLang(lang);
+  const t = TEXT[safe];
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: t.headline,
+    description: t.description,
+    inLanguage: safe,
+    datePublished: EUROSTAT_DEBT_HISTORY_UPDATED_AT || new Date().toISOString(),
+    dateModified: growthSnapshot.fetchedAt,
+    mainEntityOfPage: { "@type": "WebPage", "@id": absoluteRouteFor(safe, "/eu-debt") },
+    author: { "@type": "Organization", name: "EU Debt Map" },
+    publisher: {
+      "@type": "Organization",
+      name: "EU Debt Map",
+      logo: { "@type": "ImageObject", url: `${SITE}/eu_favicon_512.png` },
+    },
+  };
+}
+
 function CountryLinks({ lang, codes }) {
   const t = TEXT[safeLang(lang)];
 
@@ -380,8 +401,6 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
     style: "long",
     type: "conjunction",
   }).format(top4Labels);
-  const url = absoluteRouteFor(safe, "/eu-debt");
-
   const css = `
     .page { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
     .article { max-width: 760px; margin: 0 auto; }
@@ -404,22 +423,7 @@ export default function LocalizedEUDebtPage({ lang = "en" }) {
     @media (max-width: 760px) { .highlightGrid { grid-template-columns: 1fr; } .countryList { grid-template-columns: 1fr; } }
   `;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: t.headline,
-    description: t.description,
-    inLanguage: safe,
-    datePublished: EUROSTAT_DEBT_HISTORY_UPDATED_AT || new Date().toISOString(),
-    dateModified: growthSnapshot.fetchedAt,
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    author: { "@type": "Organization", name: "EU Debt Map" },
-    publisher: {
-      "@type": "Organization",
-      name: "EU Debt Map",
-      logo: { "@type": "ImageObject", url: `${SITE}/eu_favicon_512.png` },
-    },
-  };
+  const jsonLd = generateEUDebtArticleSchema(safe);
 
   return (
     <div className={`page ${typography.page}`}>

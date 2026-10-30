@@ -78,6 +78,16 @@ test('tool navigation keeps localized destinations stable across content pages a
   assert.equal(toolNavigationFor('/nl/debt-to-gdp-extra'), null);
 });
 
+test('the Dutch EU debt preview reuses the live topic navigation without enabling other preview routes', () => {
+  const live = toolNavigationFor('/nl/eu-debt');
+  assert.deepEqual(toolNavigationFor('/nl/preview/eu-debt'), live);
+  assert.deepEqual(toolNavigationFor('/nl/preview/eu-debt/'), live);
+  assert.deepEqual(live.items.filter(item => item.current).map(item => item.href), ['/nl/eu-debt']);
+  for (const route of ['/preview/eu-debt', '/de/preview/eu-debt', '/fr/preview/eu-debt', '/nl/preview/eu-debt-extra', '/nl/preview/eu-debt/other']) {
+    assert.equal(toolNavigationFor(route), null, route);
+  }
+});
+
 test('country discovery reaches every EU country before repeating and offers two forward steps', () => {
   assert.equal(COUNTRY_DISCOVERY_ORDER.length, 27);
   assert.deepEqual([...COUNTRY_DISCOVERY_ORDER].sort(), [...EU27].sort());

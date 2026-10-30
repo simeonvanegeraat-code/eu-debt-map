@@ -553,6 +553,23 @@ test("localized explainer routes are included in the sitemap", () => {
   assert.match(sitemap, /path: "\/stability-and-growth-pact"/);
 });
 
+test("the Dutch EU debt redesign preserves public metadata, schema and its ad slot while isolating the preview", () => {
+  const route = read("app/nl/eu-debt/page.jsx");
+  const preview = read("app/nl/preview/eu-debt/page.jsx");
+  const experience = read("components/eu-debt-preview/EUDebtPageExperience.jsx");
+  const localized = read("components/LocalizedEUDebtPage.jsx");
+  assert.match(route, /generateEUDebtMetadata\("nl"\)/);
+  assert.match(route, /<EUDebtPageExperience \/>/);
+  assert.doesNotMatch(route, /index: false/);
+  assert.match(preview, /index: false/);
+  assert.match(preview, /<EUDebtPageExperience preview \/>/);
+  assert.match(experience, /!preview \? <script type="application\/ld\+json"/);
+  assert.match(experience, /generateEUDebtArticleSchema\("nl"\)/);
+  assert.match(experience, /!preview \? <div className=\{styles.container\}><InArticleAd \/>/);
+  assert.match(localized, /const jsonLd = generateEUDebtArticleSchema\(safe\)/);
+  assert.match(localized, /dateModified: growthSnapshot.fetchedAt/);
+});
+
 test("all existing localized EU debt routes are included in the multilingual sitemap", () => {
   const sitemap = read("app/sitemap.js");
 
