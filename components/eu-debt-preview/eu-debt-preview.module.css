@@ -20,7 +20,7 @@
 .actions a { display: inline-flex; gap: 18px; align-items: center; justify-content: space-between; min-height: 46px; padding: 10px 16px; border: 1px solid #ffffff30; border-radius: 6px; color: #fff; font-size: .76rem; font-weight: 650; text-decoration: none; }
 .actions a:first-child { background: #fff; color: var(--ink); }
 .summary { padding: 30px; border: 1px solid #b3d0ff45; border-top: 3px solid #91b8f5; border-radius: 9px; background: #061a38a6; }
-.summaryHeader { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-bottom: 24px; }
+.summaryHeader { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 14px; align-items: center; margin-bottom: 24px; }
 .summaryHeader > span { color: #fff; font-size: .85rem; font-weight: 700; }
 .summarySwitch { display: inline-flex; flex-shrink: 0; padding: 3px; background: #ffffff1f; border-radius: 9px; }
 .summarySwitch button { min-height: 36px; border: 0; border-radius: 7px; background: transparent; color: #fff; padding: 6px 10px; font: inherit; font-size: .75rem; font-weight: 750; cursor: pointer; }

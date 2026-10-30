@@ -1,13 +1,12 @@
 export const runtime = "nodejs";
 
-import LocalizedEUDebtPage, {
-  generateEUDebtMetadata,
-} from "@/components/LocalizedEUDebtPage";
+import { generateEUDebtMetadata } from "@/components/LocalizedEUDebtPage";
+import EUDebtPageExperience from "@/components/eu-debt-preview/EUDebtPageExperience";
 
 export function generateMetadata() {
   return generateEUDebtMetadata("en");
 }
 
 export default function EUDebtPage() {
-  return <LocalizedEUDebtPage lang="en" />;
+  return <EUDebtPageExperience lang="en" />;
 }
