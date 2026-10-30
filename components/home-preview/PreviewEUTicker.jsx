@@ -16,6 +16,7 @@ export default function PreviewEUTicker({
   perSecond,
   locale,
   ariaLabel,
+  className = "",
 }) {
   const [value, setValue] = useState(officialTotal);
 
@@ -33,7 +34,7 @@ export default function PreviewEUTicker({
   }, [officialTotal, perSecond]);
 
   return (
-    <div className={styles.liveTicker} role="img" aria-label={`${ariaLabel}: ${formatEuro(value, locale)}`} aria-live="off">
+    <div className={`${styles.liveTicker} ${className}`} role="img" aria-label={`${ariaLabel}: ${formatEuro(value, locale)}`} aria-live="off">
       <strong aria-hidden="true" suppressHydrationWarning>
         {formatEuro(value, locale)}
       </strong>
