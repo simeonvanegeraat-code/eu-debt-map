@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { debtGuideSeries } = require('../lib/debt-guide-model');
 const { toolNavigationFor } = require('../lib/tool-navigation');
+const { navigationFor, localeAwareHref, isActivePath } = require('../lib/navigation');
 const { getGuideSchemas } = require('../components/debt-guide-preview/guide-schema');
 const { getGuideCopy } = require('../components/debt-guide-preview/guide-copy');
 const { getDebtDeficitCopy } = require('../components/debt-guide/debt-deficit-copy');
@@ -56,5 +57,17 @@ test('published guide schema preserves each language URL, publisher and real log
     assert.equal(article.inLanguage, lang);
     assert.equal(article.headline, getGuideCopy(lang).title);
     assert.equal(article.publisher.logo.url, 'https://www.eudebtmap.com/eu_favicon_512.png');
+  }
+});
+
+test('the header debt menu links once to the guide with its localized title and active state', () => {
+  for (const lang of ['en', 'nl', 'de', 'fr']) {
+    const navigation = navigationFor(lang, {});
+    const entries = navigation.groups.flatMap(group => group.items).filter(item => item.href === '/debt');
+    assert.equal(entries.length, 1, `${lang}: one guide entry`);
+    assert.equal(entries[0].label, getGuideCopy(lang).title);
+    const path = `${lang === 'en' ? '' : `/${lang}`}/debt`;
+    assert.equal(localeAwareHref(entries[0].href, lang), path);
+    assert(isActivePath(path, entries[0].href, lang));
   }
 });

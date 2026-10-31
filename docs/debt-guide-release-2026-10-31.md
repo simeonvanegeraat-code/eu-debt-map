@@ -16,6 +16,11 @@ The public experience omits the design-preview banner. The definition,
 self-paced borrowing steps, illustrative model, creditor categories, fictional
 GDP comparison and neutral EU27 selector match the approved design.
 
+The header debt menu exposes the guide on desktop and mobile in every language.
+The Dutch entry is aligned with the approved title, `Wat is staatsschuld?`;
+the other three labels already match. A regression test verifies one menu entry,
+the localized route and its active state for all four languages.
+
 Each route retains its existing title, description, canonical, language
 alternates, social image and indexability. The modification date is updated
 for this substantive rewrite. The shared Article and WebPage schema describe
@@ -32,7 +37,7 @@ environment configuration or Vercel project settings. No new dependencies.
 ## Verification and release process
 
 - Lint: no errors, 15 existing warnings.
-- Full test suite: 249 passed, including FAQ/schema and language-URL coverage.
+- Full test suite: 250 passed, including FAQ/schema, language-URL and header-menu coverage.
 - Production build: 337 static pages; data validation and 105-article audit pass.
 - Local production HTTP: four public guides and four previews passed metadata,
   schemas, unique anchors, single main landmark and neutral EU27 selector checks.
