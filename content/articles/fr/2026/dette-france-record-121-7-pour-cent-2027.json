@@ -26,7 +26,7 @@
   "relatedLinks": [
     {"label": "Voir la dette française et son estimation en direct", "url": "https://www.eudebtmap.com/fr/country/fr"},
     {"label": "Comparer les ratios de dette dans l'UE", "url": "https://www.eudebtmap.com/fr/debt-to-gdp"},
-    {"label": "Déficit budgétaire et dette publique", "url": "https://www.eudebtmap.com/fr/debt-vs-deficit"},
+    {"label": "Déficit budgétaire et dette publique", "url": "https://www.eudebtmap.com/fr/debt#debt-vs-deficit"},
     {"label": "Méthodologie d'EU Debt Map", "url": "https://www.eudebtmap.com/fr/methodology"}
   ],
   "sources": [

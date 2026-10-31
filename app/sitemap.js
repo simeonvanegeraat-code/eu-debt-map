@@ -45,11 +45,6 @@ const STATIC_PATHS = [
     priority: 0.75,
   },
   {
-    path: "/debt-vs-deficit",
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  {
     path: "/stability-and-growth-pact",
     changeFrequency: "monthly",
     priority: 0.7,

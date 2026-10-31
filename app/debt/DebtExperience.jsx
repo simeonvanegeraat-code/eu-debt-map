@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { DEBT_DEFICIT_SOURCE, DEBT_DEFICIT_REVIEWED, getDebtDeficitCopy } from "@/components/debt-guide/debt-deficit-copy";
 import styles from "./debt.module.css";
 
 const STORY_STEPS = [
@@ -176,6 +177,8 @@ function formatBillions(value, locale) {
 }
 
 export function DebtBuilder({ copy = DEFAULT_BUILDER_COPY, locale = "en-GB" }) {
+  const explanation = getDebtDeficitCopy(locale.split("-")[0]);
+  const reviewed = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${DEBT_DEFICIT_REVIEWED}T00:00:00Z`));
   const [openingDebt, setOpeningDebt] = useState(800);
   const [annualDeficit, setAnnualDeficit] = useState(30);
   const years = 10;
@@ -189,10 +192,20 @@ export function DebtBuilder({ copy = DEFAULT_BUILDER_COPY, locale = "en-GB" }) {
   const maxValue = Math.max(...series, 1);
 
   return (
-    <section className={styles.modelSection} id="debt-vs-deficit" aria-labelledby="model-title">
+    <section className={styles.modelSection} aria-labelledby="model-title">
+      <header className={styles.stockFlowIntroduction} id="debt-vs-deficit">
+        <p className={styles.eyebrow}>{explanation.eyebrow}</p>
+        <h2 id="model-title">{explanation.title}</h2>
+        <dl className={styles.stockFlowFacts}>
+          {explanation.facts.map(([label, detail]) => <div key={label}><dt>{label}</dt><dd>{detail}</dd></div>)}
+        </dl>
+        <p>{explanation.relationship}</p>
+        <a href={DEBT_DEFICIT_SOURCE} target="_blank" rel="noopener noreferrer">{explanation.source} ↗</a>
+        <small>{explanation.reviewed}: <time dateTime={DEBT_DEFICIT_REVIEWED}>{reviewed}</time></small>
+      </header>
       <div className={styles.modelCopy}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
-        <h2 id="model-title">{copy.title}</h2>
+        <h3>{copy.title}</h3>
         <p>{copy.intro}</p>
 
         <div className={styles.controls}>

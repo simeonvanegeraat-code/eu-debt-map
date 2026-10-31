@@ -56,7 +56,7 @@ export default function BalancePage({ lang = "en" }) {
     </div></header>
     <BalanceExplorer rows={rows} history={history} year={year} lang={lang} />
     <section className={`${styles.context} ${styles.shell}`} aria-labelledby="balance-context-title"><p className={styles.eyebrow}>{copy.shortTitle} / {copy.debt}</p><h2 id="balance-context-title">{copy.contextTitle}</h2>
-      <div className={styles.contextGrid}><div><h3>{copy.definitionTitle}</h3><p>{copy.definition}</p><Link href={fiscalPath("/debt-vs-deficit", lang)}>{copy.moreDebt} →</Link></div>
+      <div className={styles.contextGrid}><div><h3>{copy.definitionTitle}</h3><p>{copy.definition}</p><Link href={fiscalPath("/debt#debt-vs-deficit", lang)}>{copy.moreDebt} →</Link></div>
       <div><h3>{copy.connectionTitle}</h3><p>{copy.connection}</p><Link href={fiscalPath("/debt-to-gdp", lang)}>{copy.ratioLink} →</Link></div></div>
       <aside id="balance-reference" className={styles.reference}><h3>{copy.referenceTitle}</h3><p>{copy.reference}</p><a href={BALANCE.referenceUrl}>{copy.referenceSource} ↗</a></aside>
       <Link className={styles.textLink} href={fiscalPath("/", lang)}>{copy.debtLink} →</Link>

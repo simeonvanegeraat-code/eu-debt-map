@@ -26,7 +26,7 @@
   "relatedLinks": [
     {"label": "Frankreichs Staatsschulden und Live-Schätzung", "url": "https://www.eudebtmap.com/de/country/fr"},
     {"label": "Schuldenquoten aller EU-Länder vergleichen", "url": "https://www.eudebtmap.com/de/debt-to-gdp"},
-    {"label": "Haushaltsdefizit und Staatsschulden", "url": "https://www.eudebtmap.com/de/debt-vs-deficit"},
+    {"label": "Haushaltsdefizit und Staatsschulden", "url": "https://www.eudebtmap.com/de/debt#debt-vs-deficit"},
     {"label": "Methodik von EU Debt Map", "url": "https://www.eudebtmap.com/de/methodology"}
   ],
   "sources": [

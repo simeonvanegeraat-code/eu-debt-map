@@ -26,7 +26,7 @@
   "relatedLinks": [
     {"label": "View France's government debt and live estimate", "url": "https://www.eudebtmap.com/country/fr"},
     {"label": "Compare debt-to-GDP ratios across the EU", "url": "https://www.eudebtmap.com/debt-to-gdp"},
-    {"label": "Budget deficits versus government debt", "url": "https://www.eudebtmap.com/debt-vs-deficit"},
+    {"label": "Budget deficits versus government debt", "url": "https://www.eudebtmap.com/debt#debt-vs-deficit"},
     {"label": "EU Debt Map methodology", "url": "https://www.eudebtmap.com/methodology"}
   ],
   "sources": [

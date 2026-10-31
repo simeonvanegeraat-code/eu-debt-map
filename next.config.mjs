@@ -10,14 +10,18 @@ const nextConfig = {
 
   async redirects() {
     return [
+      { source: "/debt-vs-deficit", destination: "/debt#debt-vs-deficit", permanent: true },
+      { source: "/nl/debt-vs-deficit", destination: "/nl/debt#debt-vs-deficit", permanent: true },
+      { source: "/de/debt-vs-deficit", destination: "/de/debt#debt-vs-deficit", permanent: true },
+      { source: "/fr/debt-vs-deficit", destination: "/fr/debt#debt-vs-deficit", permanent: true },
       {
         source: "/de/de/debt-vs-deficit",
-        destination: "/de/debt-vs-deficit",
+        destination: "/de/debt#debt-vs-deficit",
         permanent: true,
       },
       {
         source: "/fr/fr/debt-vs-deficit",
-        destination: "/fr/debt-vs-deficit",
+        destination: "/fr/debt#debt-vs-deficit",
         permanent: true,
       },
       {

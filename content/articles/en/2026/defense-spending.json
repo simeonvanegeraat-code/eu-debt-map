@@ -26,7 +26,7 @@
   "relatedLinks": [
     { "label": "Compare EU government debt", "url": "https://www.eudebtmap.com/" },
     { "label": "Compare debt-to-GDP ratios", "url": "https://www.eudebtmap.com/debt-to-gdp" },
-    { "label": "How debt and deficits differ", "url": "https://www.eudebtmap.com/debt-vs-deficit" }
+    { "label": "How debt and deficits differ", "url": "https://www.eudebtmap.com/debt#debt-vs-deficit" }
   ],
   "sources": [
     { "name": "NATO: Defence investment and the 5% commitment", "url": "https://www.nato.int/en/what-we-do/introduction-to-nato/defence-expenditures-and-natos-5-commitment", "accessed": "2026-08-24" },

@@ -48,9 +48,18 @@ function jsonFilesBelow(relativeDir) {
   return files;
 }
 
-test("localized debt-vs-deficit pages use the intended public routes", () => {
-  assert.equal(exists("app/de/debt-vs-deficit/page.jsx"), true);
-  assert.equal(exists("app/fr/debt-vs-deficit/page.jsx"), true);
+test("retired debt-vs-deficit pages are consolidated into the localized debt guides", async () => {
+  const config = (await import(pathToFileURL(path.join(ROOT, "next.config.mjs")).href)).default;
+  const redirects = await config.redirects();
+  for (const base of ["", "/nl", "/de", "/fr"]) {
+    assert.equal(exists(`app${base}/debt-vs-deficit/page.jsx`), false);
+    assert.equal(exists(`app${base}/debt/page.jsx`), true);
+    assert.deepEqual(redirects.find(row => row.source === `${base}/debt-vs-deficit`), {
+      source: `${base}/debt-vs-deficit`, destination: `${base}/debt#debt-vs-deficit`, permanent: true,
+    });
+    assert(!redirects.some(row => row.source === `${base}/debt`), "Guide must be the final destination");
+  }
+  assert.match(read("app/debt/DebtExperience.jsx"), /<header className=\{styles.stockFlowIntroduction\} id="debt-vs-deficit"/);
   assert.equal(exists("app/de/de/debt-vs-deficit/page.jsx"), false);
   assert.equal(exists("app/fr/fr/debt-vs-deficit/page.jsx"), false);
 });
@@ -67,14 +76,18 @@ test("legacy duplicate and retired article routes permanently redirect", async (
       permanent,
     })),
     [
+      { source: "/debt-vs-deficit", destination: "/debt#debt-vs-deficit", permanent: true },
+      { source: "/nl/debt-vs-deficit", destination: "/nl/debt#debt-vs-deficit", permanent: true },
+      { source: "/de/debt-vs-deficit", destination: "/de/debt#debt-vs-deficit", permanent: true },
+      { source: "/fr/debt-vs-deficit", destination: "/fr/debt#debt-vs-deficit", permanent: true },
       {
         source: "/de/de/debt-vs-deficit",
-        destination: "/de/debt-vs-deficit",
+        destination: "/de/debt#debt-vs-deficit",
         permanent: true,
       },
       {
         source: "/fr/fr/debt-vs-deficit",
-        destination: "/fr/debt-vs-deficit",
+        destination: "/fr/debt#debt-vs-deficit",
         permanent: true,
       },
       {
@@ -547,10 +560,36 @@ test("France debt-clock SEO is route-scoped and preserves the Dutch country page
   assert.doesNotMatch(intro, /3[\s\u202f]536,1/);
 });
 
-test("localized explainer routes are included in the sitemap", () => {
+test("the sitemap promotes current guides and excludes retired explainers", () => {
   const sitemap = read("app/sitemap.js");
-  assert.match(sitemap, /path: "\/debt-vs-deficit"/);
+  assert.doesNotMatch(sitemap, /path: "\/debt-vs-deficit"/);
+  assert.match(sitemap, /path: "\/debt"/);
   assert.match(sitemap, /path: "\/stability-and-growth-pact"/);
+});
+
+test("article references point directly to the consolidated explanation in their existing language", () => {
+  const retiredLink = /\/(?:nl\/|de\/|fr\/)?debt-vs-deficit(?=["'\\\s]|$)/;
+  for (const file of jsonFilesBelow("content/articles")) {
+    assert.doesNotMatch(fs.readFileSync(file, "utf8"), retiredLink, path.relative(ROOT, file));
+  }
+  assert.match(read("components/fiscal/BalancePage.jsx"), /fiscalPath\("\/debt#debt-vs-deficit", lang\)/);
+});
+
+test("the consolidated explanation provides localized stock-flow definitions and a shared source", () => {
+  const { getDebtDeficitCopy, DEBT_DEFICIT_SOURCE, DEBT_DEFICIT_REVIEWED } = require("../components/debt-guide/debt-deficit-copy");
+  for (const lang of ["en", "nl", "de", "fr"]) {
+    const copy = getDebtDeficitCopy(lang);
+    assert.equal(copy.facts.length, 2, lang);
+    assert(copy.facts.every(pair => pair.length === 2 && pair.every(text => text.trim())));
+    assert(copy.relationship.trim());
+    assert.equal(copy.ratioFAQ.length, 2);
+  }
+  assert.equal(new URL(DEBT_DEFICIT_SOURCE).hostname, "ec.europa.eu");
+  assert.match(DEBT_DEFICIT_REVIEWED, /^\d{4}-\d{2}-\d{2}$/);
+  const experience = read("app/debt/DebtExperience.jsx");
+  assert.match(experience, /<dl className=\{styles.stockFlowFacts\}>/);
+  assert.match(experience, /explanation.relationship/);
+  assert.match(experience, /href=\{DEBT_DEFICIT_SOURCE\}/);
 });
 
 test("the Dutch EU debt redesign preserves public metadata, schema and its ad slot while isolating the preview", () => {

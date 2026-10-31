@@ -6,6 +6,7 @@ import typography from "@/components/typography/typography.module.css";
 import { DebtBuilder, DebtMechanismStory } from "@/app/debt/DebtExperience";
 import styles from "@/app/debt/debt.module.css";
 import { getDebtGuideCopy } from "./debt-guide-copy";
+import { getDebtDeficitCopy } from "./debt-deficit-copy";
 
 const SITE = "https://www.eudebtmap.com";
 const REVIEW_DATE = "2026-08-28";
@@ -91,6 +92,7 @@ function DefinitionStrip({ copy }) {
 
 export default function LocalizedDebtGuidePage({ lang }) {
   const copy = getDebtGuideCopy(lang);
+  const faq = [...copy.faq, getDebtDeficitCopy(lang).ratioFAQ];
   const latestPeriod = debtDataSummary.dominantLatestTime;
   const currentCountries = countries.filter(
     (country) => country.official_latest_time === latestPeriod && country.last_value_eur > 0
@@ -138,7 +140,7 @@ export default function LocalizedDebtGuidePage({ lang }) {
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: copy.faq.map(([question, answer]) => ({
+    mainEntity: faq.map(([question, answer]) => ({
       "@type": "Question",
       name: question,
       acceptedAnswer: { "@type": "Answer", text: answer },
@@ -275,7 +277,7 @@ export default function LocalizedDebtGuidePage({ lang }) {
       <section className={styles.faqSection} aria-labelledby="faq-title">
         <div className={styles.faqHeading}><p className={styles.eyebrow}>{copy.faqEyebrow}</p><h2 id="faq-title">{copy.faqTitle}</h2></div>
         <div className={styles.faqList}>
-          {copy.faq.map(([question, answer], index) => (
+          {faq.map(([question, answer], index) => (
             <details key={question}>
               <summary><span>{String(index + 1).padStart(2, "0")}</span>{question}<i aria-hidden="true" /></summary>
               <p>{answer}</p>
@@ -294,7 +296,7 @@ export default function LocalizedDebtGuidePage({ lang }) {
       <section className={styles.nextSection} aria-labelledby="next-title">
         <div><p className={styles.eyebrow}>{copy.next.eyebrow}</p><h2 id="next-title">{copy.next.title}</h2></div>
         <div className={styles.nextLinks}>
-          {[copy.base, `${copy.base}/debt-to-gdp`, `${copy.base}/debt-vs-deficit`, `${copy.base}/methodology`].map((href, index) => (
+          {[copy.base, `${copy.base}/debt-to-gdp`, `${copy.base}/deficit`, `${copy.base}/methodology`].map((href, index) => (
             <Link href={href} key={href}><span>{String(index + 1).padStart(2, "0")}</span><strong>{copy.next.links[index]}</strong><ArrowIcon /></Link>
           ))}
         </div>

@@ -3,6 +3,7 @@ import { countries, debtDataSummary } from "@/lib/data";
 import typography from "@/components/typography/typography.module.css";
 import { DebtBuilder, DebtMechanismStory } from "./DebtExperience";
 import styles from "./debt.module.css";
+import { getDebtDeficitCopy } from "@/components/debt-guide/debt-deficit-copy";
 
 const SITE = "https://www.eudebtmap.com";
 const PATH = "/debt";
@@ -160,6 +161,7 @@ export default function DebtExplainer() {
     ],
   };
   const faqItems = [
+    { question: getDebtDeficitCopy("en").ratioFAQ[0], answer: getDebtDeficitCopy("en").ratioFAQ[1] },
     {
       question: "Is all government debt bad?",
       answer: "No. Borrowing can finance investment or help stabilise the economy during a downturn. What matters is why the money is borrowed, the interest cost, the growth of the economy and whether the debt remains manageable.",
@@ -342,7 +344,7 @@ export default function DebtExplainer() {
         <div className={styles.nextLinks}>
           <Link href="/"><span>01</span><strong>Live EU debt map</strong><ArrowIcon /></Link>
           <Link href="/debt-to-gdp"><span>02</span><strong>Debt-to-GDP ranking</strong><ArrowIcon /></Link>
-          <Link href="/debt-vs-deficit"><span>03</span><strong>Debt vs deficit</strong><ArrowIcon /></Link>
+          <Link href="/deficit"><span>03</span><strong>Compare budget balances</strong><ArrowIcon /></Link>
           <Link href="/methodology"><span>04</span><strong>Data methodology</strong><ArrowIcon /></Link>
         </div>
       </section>
