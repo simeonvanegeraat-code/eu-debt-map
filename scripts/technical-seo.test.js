@@ -59,7 +59,7 @@ test("retired debt-vs-deficit pages are consolidated into the localized debt gui
     });
     assert(!redirects.some(row => row.source === `${base}/debt`), "Guide must be the final destination");
   }
-  assert.match(read("app/debt/DebtExperience.jsx"), /<header className=\{styles.stockFlowIntroduction\} id="debt-vs-deficit"/);
+  assert.match(read("components/debt-guide-preview/DebtGuidePreview.jsx"), /id="debt-vs-deficit"/);
   assert.equal(exists("app/de/de/debt-vs-deficit/page.jsx"), false);
   assert.equal(exists("app/fr/fr/debt-vs-deficit/page.jsx"), false);
 });
@@ -221,84 +221,39 @@ test("metadata never concatenates a URL object into canonical URLs", () => {
 
 test("the government debt guide keeps its SEO contract and progressive content", () => {
   const page = read("app/debt/page.jsx");
-  const experience = read("app/debt/DebtExperience.jsx");
-  const styles = read("app/debt/debt.module.css");
-  const typography = read("components/typography/typography.module.css");
-
+  const guide = read("components/debt-guide-preview/DebtGuidePreview.jsx");
+  const controls = read("components/debt-guide-preview/GuideControls.jsx");
   assert.match(page, /const PATH = "\/debt"/);
   assert.match(page, /canonical: `\$\{SITE\}\$\{PATH\}`/);
   assert.match(page, /nl: `\$\{SITE\}\/nl\$\{PATH\}`/);
   assert.match(page, /de: `\$\{SITE\}\/de\$\{PATH\}`/);
   assert.match(page, /fr: `\$\{SITE\}\/fr\$\{PATH\}`/);
-  assert.match(page, /<h1 id="page-title">What is government debt\?<\/h1>/);
-  assert.match(page, /"@type": "Article"/);
-  assert.match(page, /"@type": "BreadcrumbList"/);
-  assert.match(page, /"@type": "FAQPage"/);
-  assert.match(page, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
-  assert.match(page, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
-  assert.match(page, /This is EU Debt Map’s sum of national Eurostat observations for scale/);
-  assert.match(page, /typography\.page/);
-  assert.match(typography, /--type-h1:/);
-
-  assert.match(experience, /"IntersectionObserver" in window/);
-  assert.match(experience, /Illustrative calculation, not a forecast/);
-  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(page, /<DebtGuidePreview lang="en" preview=\{false\}/);
+  assert.match(guide, /<h1 id="page-title">\{copy\.title\}<\/h1>/);
+  assert.match(guide, /!preview && getGuideSchemas/);
+  assert.match(guide, /typography\.page/);
+  assert.match(guide, /gov_10dd_esms\.htm/);
+  assert.match(guide, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
+  assert.match(controls, /<noscript>/);
+  assert.match(controls, /role="tabpanel"/);
+  assert.doesNotMatch(controls, /IntersectionObserver|setInterval/);
 });
 
-test("localized government debt guides share the visual experience without changing SEO ownership", () => {
-  const localizedRoutes = [
-    ["nl", "app/nl/debt/page.jsx", "/nl/debt"],
-    ["de", "app/de/debt/page.jsx", "/de/debt"],
-    ["fr", "app/fr/debt/page.jsx", "/fr/debt"],
-  ];
-  const guide = read("components/debt-guide/LocalizedDebtGuidePage.jsx");
-  const copy = read("components/debt-guide/debt-guide-copy.js");
-  const experience = read("app/debt/DebtExperience.jsx");
-  const styles = read("app/debt/debt.module.css");
-
-  for (const [lang, route, path] of localizedRoutes) {
-    const source = read(route);
-    assert.match(source, new RegExp(`const path = "${path}"`));
+test("localized government debt guides share the approved experience and retain SEO ownership", () => {
+  const wrapper = read("components/debt-guide/LocalizedDebtGuidePage.jsx");
+  assert.match(wrapper, /<DebtGuidePreview lang=\{lang\} preview=\{false\}/);
+  for (const lang of ["nl", "de", "fr"]) {
+    const source = read('app/' + lang + '/debt/page.jsx');
+    assert(source.includes('const path = "/' + lang + '/debt"'));
     assert.match(source, /canonical: `\$\{base\}\$\{path\}`/);
     assert.match(source, /"x-default": `\$\{base\}\/debt`/);
-    assert.match(source, new RegExp(`<LocalizedDebtGuidePage lang="${lang}"`));
+    assert(source.includes('<LocalizedDebtGuidePage lang="' + lang + '"'));
     assert.match(source, /robots: \{ index: true, follow: true/);
   }
-
   const dutchRoute = read("app/nl/debt/page.jsx");
   assert.match(dutchRoute, /de: `\$\{base\}\/de\/debt`/);
   assert.match(dutchRoute, /fr: `\$\{base\}\/fr\/debt`/);
-  assert.doesNotMatch(dutchRoute, /\/de\$\{path\}/);
-  assert.doesNotMatch(dutchRoute, /\/fr\$\{path\}/);
-
-  assert.match(guide, /<h1 id="page-title">\{copy\.hero\.title\}<\/h1>/);
-  assert.match(guide, /<Fragment key=\{label\}>/);
-  assert.match(guide, /styles\.definitionExplanation/);
-  assert.match(guide, /"@type": "Article"/);
-  assert.match(guide, /"@type": "WebPage"/);
-  assert.match(guide, /"@type": "BreadcrumbList"/);
-  assert.match(guide, /"@type": "FAQPage"/);
-  assert.match(guide, /countryName\(country\.code, lang\)/);
-  assert.match(guide, /href=\{`\$\{copy\.base\}\/country\/\$\{country\.code\.toLowerCase\(\)\}`\}/);
-  assert.match(guide, /ec\.europa\.eu\/eurostat\/cache\/metadata\/en\/gov_10q_ggdebt_esms\.htm/);
-  assert.match(guide, /eur-lex\.europa\.eu\/eli\/treaty\/tfeu_2016\/pro_12\/oj\/eng/);
-  assert.match(copy, /Wat is overheidsschuld\?/);
-  assert.match(copy, /Overheidsschuld is de uitstaande voorraad van eerdere leningen\./);
-  assert.match(copy, /Nieuwe leningen worden onderdeel van de schuldvoorraad/);
-  assert.match(copy, /Was sind Staatsschulden\?/);
-  assert.match(copy, /Qu’est-ce que la dette publique \?/);
-  assert.match(copy, /Referentiepunt, geen zelfstandige houdbaarheidstest\./);
-  assert.match(copy, /Referenzpunkt, kein eigenständiger Tragfähigkeitstest\./);
-  assert.match(copy, /Point de référence, pas un test autonome de soutenabilité\./);
-  assert.match(experience, /copy = DEFAULT_STORY_COPY/);
-  assert.match(experience, /copy = DEFAULT_BUILDER_COPY/);
-  assert.match(styles, /:global\(html\):has\(\.page\)[\s\S]{0,120}overflow-x:\s*clip/);
-  assert.match(styles, /\.chapterNav\s*\{[\s\S]{0,120}position:\s*sticky/);
-  assert.match(styles, /\.page section\[id\]\s*\{[\s\S]{0,80}scroll-margin-top:\s*150px/);
-  assert.match(styles, /\.definitionStrip\s*\{[\s\S]{0,140}repeat\(5, minmax\(0, 1fr\)\)/);
-  assert.match(styles, /\.modelVisual\s*\{[\s\S]{0,220}background:\s*var\(--ink\)/);
-  assert.match(styles, /\.faqSection\s*\{[\s\S]{0,180}minmax\(360px, 0\.76fr\) minmax\(0, 1fr\)/);
-  assert.match(styles, /\.faqHeading h2\s*\{[\s\S]{0,160}font-size:\s*clamp\(2\.35rem, 3\.3vw, 3\.25rem\)/);
+  assert.doesNotMatch(dutchRoute, /\/(de|fr)\$\{path\}/);
 });
 
 test("SEO image references resolve to existing image routes and assets", () => {

@@ -28,6 +28,7 @@ export async function generateMetadata() {
       type: "article",
       url: `${base}${path}`,
       siteName: "EU Debt Map",
+      modifiedTime: "2026-10-31",
       images: [{
         url: "/og/debt-explainer-1200x630.jpg",
         width: 1200,
